@@ -11,5 +11,7 @@ public class Main {
         MessageBusFactory.getEventBus().register(player);
         player.doSomething();
 
+        System.out.println("hi");
+
     }
 }
