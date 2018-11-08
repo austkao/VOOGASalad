@@ -4,5 +4,6 @@ module com.yeet.player {
     requires com.yeet.messenger;
     requires com.yeet.physics;
     requires com.yeet.renderer;
+    requires com.google.common;
     exports player.external;
 }

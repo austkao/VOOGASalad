@@ -8,6 +8,6 @@ public class MessageBus {
     }
 
     public void talk(){
-        System.out.println("Hello, I am the Messenger!");
+
     }
 }
