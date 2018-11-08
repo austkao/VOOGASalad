@@ -1,7 +1,5 @@
 package messenger.external;
 
-import com.google.common.eventbus.AsyncEventBus;
-import com.google.common.eventbus.EventBus;
 
 public class MessageBus {
 
