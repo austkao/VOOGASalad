@@ -1,7 +1,6 @@
 package player.external;
 
 import com.google.common.eventbus.EventBus;
-import messenger.external.MessageBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.MessageBusFactory;
 import messenger.external.TestSuccesfulEvent;
