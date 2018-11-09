@@ -82,4 +82,21 @@ public interface Renderer{
      *  @param options The possible options for the {@code Carousel}*/
     public Carousel makeCarousel(List<String> options);
 
+    /** Creates an animation using a {@code Sprite}
+     * @param sprite The {@code Sprite} that will be animated
+     * @param duration The total length of the animation
+     * @param count The total number of frames
+     * @param columns The number of frames per row
+     * @param offsetX The offset of the first frame in the x direction
+     * @param offsetY The offset of the first frame in the y direction */
+    public SpriteAnimation makeSpriteAnimation(Sprite sprite, Double duration,
+                                               Integer count, Integer columns,
+                                               Double offsetX, Double offsetY,
+                                               Double width, Double height);
+
+    /** Creates a {@code Sprite} from an {@code Image} and sets its viewport to the default frame
+     *  @param image The {@code Image} to conver to a {@code Sprite}
+     *  @param offsetX The offset of the first frame in the x direction
+     *  @param offsetY The offset of the first frame in the y direction */
+    public Sprite makeSprite(Image image, Double offsetX, Double offsetY);
 }
