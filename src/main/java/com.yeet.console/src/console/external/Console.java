@@ -46,6 +46,7 @@ public class Console {
         T.start();
     }
 
+    /** Converts user console input to an actual {@code Event} which can be posted to the {@code EventBus}*/
     private void createEvent(String event){
         if (event.equalsIgnoreCase("test")) {
             myEventBus.post(new TestSuccesfulEvent());
@@ -53,6 +54,7 @@ public class Console {
     }
 
 
+    /** Prints any {@code Event} sent through the {@code EventBus} to the console for debugging purposes.*/
     @Subscribe
     public  void printEvent(Event event){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
