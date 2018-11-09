@@ -3,6 +3,8 @@ package console.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
+import messenger.external.MessageBusFactory;
+import messenger.external.TestSuccesfulEvent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +15,7 @@ public class Console {
     EventBus myEventBus;
 
     public Console(){
+        myEventBus = MessageBusFactory.getEventBus();
         startConsole();
     }
 
@@ -27,7 +30,7 @@ public class Console {
                     e.printStackTrace();
                 }
 
-                System.out.print(line+"\n");
+                createEvent(line);
             }
 
             try {
@@ -39,6 +42,13 @@ public class Console {
         Thread T = new Thread(runner);
         T.start();
     }
+
+    private void createEvent(String event){
+        if (event.equalsIgnoreCase("test")) {
+            myEventBus.post(new TestSuccesfulEvent());
+        }
+    }
+
 
     @Subscribe
     public  void printEvent(Event event){
