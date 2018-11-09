@@ -1,8 +1,8 @@
 package messenger.external;
 
-/** Interface for anything that will be sent through the {@code EventBus}*/
-public interface Event {
+/** Superclass for anything that will be sent through the {@code EventBus}*/
+public abstract class Event {
 
     /** Return the name of the event*/
-    public String getName();
+    public abstract String getName();
 }
