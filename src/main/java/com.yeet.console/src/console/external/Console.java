@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 
 public class Console {
 
-    EventBus myEventBus;
+    private EventBus myEventBus;
 
     public Console(){
         myEventBus = EventBusFactory.getEventBus();
