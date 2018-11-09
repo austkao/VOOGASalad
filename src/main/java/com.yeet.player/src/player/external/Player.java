@@ -20,7 +20,7 @@ public class Player {
     @Subscribe
     public  void printMessage(TestSuccesfulEvent testSuccessfulEvent){
         // Simulate sending reciept
-        System.out.println("Message bus is a go!");
+        System.out.println("Player: Test successful!");
     }
 
 }

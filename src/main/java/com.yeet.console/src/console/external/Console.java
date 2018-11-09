@@ -9,6 +9,7 @@ import messenger.external.TestSuccesfulEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 
 public class Console {
 
@@ -52,7 +53,7 @@ public class Console {
 
     @Subscribe
     public  void printEvent(Event event){
-        // Simulate sending reciept
-        System.out.println(event.getName());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println("["+timestamp+"]"+" Console: "+event.getName());
     }
 }
