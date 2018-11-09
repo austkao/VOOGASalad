@@ -3,7 +3,7 @@ package main;
 import console.external.Console;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import messenger.external.MessageBusFactory;
+import messenger.external.EventBusFactory;
 import player.external.Player;
 
 public class Main extends Application {
@@ -18,8 +18,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Player player = new Player();
         myConsole = new Console();
-        MessageBusFactory.getEventBus().register(player);
-        MessageBusFactory.getEventBus().register(myConsole);
+        EventBusFactory.getEventBus().register(player);
+        EventBusFactory.getEventBus().register(myConsole);
         player.doSomething();
     }
 }

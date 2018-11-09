@@ -2,14 +2,14 @@ package player.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import messenger.external.MessageBusFactory;
+import messenger.external.EventBusFactory;
 import messenger.external.TestSuccesfulEvent;
 
 public class Player {
     EventBus myMessageBus;
 
     public Player(){
-        myMessageBus = MessageBusFactory.getEventBus();
+        myMessageBus = EventBusFactory.getEventBus();
     }
 
     public void doSomething(){

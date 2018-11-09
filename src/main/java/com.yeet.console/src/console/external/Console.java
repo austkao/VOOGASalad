@@ -3,7 +3,7 @@ package console.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
-import messenger.external.MessageBusFactory;
+import messenger.external.EventBusFactory;
 import messenger.external.TestSuccesfulEvent;
 
 import java.io.BufferedReader;
@@ -15,7 +15,7 @@ public class Console {
     EventBus myEventBus;
 
     public Console(){
-        myEventBus = MessageBusFactory.getEventBus();
+        myEventBus = EventBusFactory.getEventBus();
         startConsole();
     }
 
