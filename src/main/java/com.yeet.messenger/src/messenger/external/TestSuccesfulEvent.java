@@ -1,6 +1,6 @@
 package messenger.external;
 
-public class TestSuccesfulEvent {
+public class TestSuccesfulEvent extends Event{
 
     private String name = "TestSuccesful";
 

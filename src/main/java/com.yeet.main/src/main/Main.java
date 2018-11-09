@@ -1,17 +1,26 @@
 package main;
 
-
-import messenger.external.MessageBusFactory;
+import console.external.Console;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import messenger.external.EventBusFactory;
 import player.external.Player;
 
-public class Main {
+public class Main extends Application {
+
+    static Console myConsole;
 
     public static void main(String[] args){
-        Player player = new Player();
-        MessageBusFactory.getEventBus().register(player);
-        player.doSomething();
+        launch(args);
+    }
 
-        System.out.println("hi");
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Player player = new Player();
+        myConsole = new Console();
+        EventBusFactory.getEventBus().register(player);
+        EventBusFactory.getEventBus().register(myConsole);
+        player.doSomething();
 
     }
 }

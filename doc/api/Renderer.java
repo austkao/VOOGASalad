@@ -63,14 +63,40 @@ public interface Renderer{
      *  @param text The default text to display in the {@code TextField}*/
     public TextField makeTextField(String text);
 
+    /** Creates a {@code Slider} that modifies a field
+     *  @param field The {@code Double} that will be modified by the {@code Slider}*/
     public Slider makeSlider(Double field);
 
+    /** Creates a {@code FileChooser} for a specific file type
+     *  @param filetype The file type to be accepted, can be "image","audio",or "xml" */
     public FileChooser makeFileChooser(String filetype);
 
+    /** Creates a {@code DirectoryChooser}*/
     public DirectoryChooser makeDirectoryChooser();
 
+    /** Creates a horizontal set of string-labelled {@code Button} objects where only one can be active at a time
+     *  @param options The possible options for the buttons */
     public SwitchButton makeSwitchButtons(List<String> options);
 
+    /** Creates a {@code Carousel} that displays {@code String} objects, that can be cycled through with left and right arrow buttons
+     *  @param options The possible options for the {@code Carousel}*/
     public Carousel makeCarousel(List<String> options);
 
+    /** Creates an animation using a {@code Sprite}
+     * @param sprite The {@code Sprite} that will be animated
+     * @param duration The total length of the animation
+     * @param count The total number of frames
+     * @param columns The number of frames per row
+     * @param offsetX The offset of the first frame in the x direction
+     * @param offsetY The offset of the first frame in the y direction */
+    public SpriteAnimation makeSpriteAnimation(Sprite sprite, Double duration,
+                                               Integer count, Integer columns,
+                                               Double offsetX, Double offsetY,
+                                               Double width, Double height);
+
+    /** Creates a {@code Sprite} from an {@code Image} and sets its viewport to the default frame
+     *  @param image The {@code Image} to conver to a {@code Sprite}
+     *  @param offsetX The offset of the first frame in the x direction
+     *  @param offsetY The offset of the first frame in the y direction */
+    public Sprite makeSprite(Image image, Double offsetX, Double offsetY);
 }
