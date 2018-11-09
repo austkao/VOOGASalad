@@ -20,6 +20,7 @@ public class Console {
         startConsole();
     }
 
+    /** Creates a separate {@code Thread} that waits for console input, and exits upon the 'quit' command*/
     private void startConsole() {
         Runnable runner = () -> {
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -36,6 +37,7 @@ public class Console {
 
             try {
                 in.close();
+                System.out.println("Console shutting down.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
