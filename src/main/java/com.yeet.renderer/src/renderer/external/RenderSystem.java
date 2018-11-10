@@ -107,13 +107,13 @@ public class RenderSystem {
     /** Creates a scrollable Pane that displays its contents in a grid
      *  @param contentList The content list, contains {@code ImageView} objects to display on the grid*/
     public ScrollPane makeGridScrollPane(List<ImageView> contentList){
-
+        return new ScrollPane();
     }
 
     /** Creates a scrollable Pane that displays its contents in a list
      *  @param dataList contains the {@code ScrollableItem} to display */
     public ScrollPane makeListScrollPane(List<ScrollableItem> dataList){
-
+        return new ScrollPane();
     }
 
     /** Draws a {@code Level} to the specified target
@@ -126,36 +126,36 @@ public class RenderSystem {
     /** Creates an editable {@code TextField}
      *  @param text The default text to display in the {@code TextField}*/
     public TextField makeTextField(String text){
-
+        return new TextField();
     }
 
     /** Creates a {@code Slider} that modifies a field
      *  @param field The {@code Double} that will be modified by the {@code Slider}*/
     public Slider makeSlider(Double field){
-
+        return new Slider();
     }
 
     /** Creates a {@code FileChooser} for a specific file type
      *  @param filetype The file type to be accepted, can be "image","audio",or "xml" */
     public FileChooser makeFileChooser(String filetype){
-
+        return new FileChooser();
     }
 
     /** Creates a {@code DirectoryChooser}*/
     public DirectoryChooser makeDirectoryChooser(){
-
+        return new DirectoryChooser();
     }
 
     /** Creates a horizontal set of string-labelled {@code Button} objects where only one can be active at a time
      *  @param options The possible options for the buttons */
     public SwitchButton makeSwitchButtons(List<String> options){
-
+        return new SwitchButton();
     }
 
     /** Creates a {@code Carousel} that displays {@code String} objects, that can be cycled through with left and right arrow buttons
      *  @param options The possible options for the {@code Carousel}*/
     public Carousel makeCarousel(List<String> options){
-
+        return new Carousel();
     }
 
     /** Creates an animation using a {@code Sprite}
@@ -171,7 +171,7 @@ public class RenderSystem {
                                                Integer count, Integer columns,
                                                Double offsetX, Double offsetY,
                                                Double width, Double height){
-
+        return null;
     }
 
     /** Creates a {@code Sprite} from an {@code Image} and sets its viewport to the default frame
@@ -182,6 +182,6 @@ public class RenderSystem {
      *  @param height The height of the first frame
      */
     public Sprite makeSprite(Image image, Double offsetX, Double offsetY, Double width, Double height){
-
+        return null;
     }
 }
