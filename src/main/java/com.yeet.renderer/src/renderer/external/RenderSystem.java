@@ -15,27 +15,37 @@ import javafx.stage.FileChooser;
 
 /** Provides a high-level tool for the rapid creation of core UI elements and graphics */
 public class RenderSystem {
-    private Font myFont;
+    private Font myEmphasisFont;
+    private Font myPlainFont;
 
     /** Create a new {@code RenderSystem} with the specified default stylistic options*/
-    public RenderSystem(Font font){
-        myFont = font;
+    public RenderSystem(Font plainFont,Font emphasisfont){
+        myPlainFont=plainFont;
+        myEmphasisFont = emphasisfont;
     }
 
 
     /** Creates a {@code Button} with a label
      *  @param text The label for the button
      *  @param buttonColor The hex string for the color of the button background
+     *  @param emphasis Whether to use emphasis text or plain text
      *  @param textColor The fill {@code Color} for the label
      *  @param fontSize The font size for the text label of the button
      *  @param x The x position of the button
      *  @param y The y position of the button
      *  @param width The width of the button
      *  @param height The height of the button */
-    public Button makeStringButton(String text, String buttonColor, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
+    public Button makeStringButton(String text, String buttonColor, Boolean emphasis, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
+        Font font = new Font(myPlainFont.getSize());
+        if(emphasis){
+            font = myEmphasisFont;
+        }
+        else{
+            font = myPlainFont;
+        }
         Button button = new Button(text);
         button.setStyle("-fx-background-color: "+buttonColor+"; " +
-                "-fx-font-family: '"+myFont.getName()+"';" +
+                "-fx-font-family: '"+ font.getName()+"';" +
                 "-fx-background-radius: "+height+";" +
                 "-fx-background-insets: 0;" +
                 "-fx-font-size: "+fontSize+";");
@@ -43,21 +53,21 @@ public class RenderSystem {
         button.setLayoutX(x);
         button.setLayoutY(y);
         button.setPrefSize(width,height);
+        Font finalFont = font;
         button.setOnMouseEntered(event->button.setStyle("-fx-background-color: "+buttonColor+"; " +
-                "-fx-font-family: '"+myFont.getName()+"';" +
+                "-fx-font-family: '"+ finalFont.getName()+"';" +
                 "-fx-background-radius: 1000; " +
                 "-fx-background-insets: 0;" +
                 "-fx-font-size: "+fontSize+";" +
-                "-fx-scale-x: 1.5;" +
-                "-fx-scale-y: 1.5;"));
+                "-fx-scale-x: 1.2;" +
+                "-fx-scale-y: 1.2;"));
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: "+buttonColor+"; " +
-                "-fx-font-family: '"+myFont.getName()+"';" +
+                "-fx-font-family: '"+ finalFont.getName()+"';" +
                 "-fx-background-radius: 1000; " +
                 "-fx-background-insets: 0;" +
                 "-fx-font-size: "+fontSize+";" +
                 "-fx-scale-x: 1;" +
                 "-fx-scale-y: 1;"));
-        button.setFont(myFont);
         return button;
     }
 
@@ -84,8 +94,10 @@ public class RenderSystem {
      *  @param y The y position of the text*/
     public Text makeEmphasisText(String text, Integer fontsize, Color color, Double x, Double y){
         Text newtext = new Text(text);
-        Font newFont = new Font(myFont.getName(),fontsize);
-        newtext.setFont(myFont);
+        newtext.setFont(myEmphasisFont);
+        newtext.setX(x);
+        newtext.setY(y);
+        return newtext;
     }
 
     /** Creates normal text
