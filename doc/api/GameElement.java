@@ -1,4 +1,4 @@
-interface PhysicsEngine{
+interface GameElement{
 
     RigidBody getRigidBody();
     void translateX(double x);
