@@ -21,5 +21,6 @@ public class Main extends Application {
         EventBusFactory.getEventBus().register(player);
         EventBusFactory.getEventBus().register(myConsole);
         player.doSomething();
+
     }
 }

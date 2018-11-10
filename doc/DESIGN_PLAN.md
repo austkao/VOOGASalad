@@ -69,6 +69,8 @@ Our design will be composed of a multi-level module structure. At the lowest lev
 *This section describes how the user will interact with your program (keep it simple to start). Describe the overall appearance of program's user interface components and how users interact with these components (especially those specific to your program, i.e., means of input other than menus or toolbars). Include a wireframe of your GUI(s) as well as describing how a game is represented to the designer and what support is provided to make it easy to create a game. Finally, describe any erroneous situations that are reported to the user (i.e., bad input data, empty data, etc.).*
 
 The user interface will consist of a main window. Upon starting the program, the user will be taken to a start screen, where they can select the option to either create a new fighting game, edit an existing fighting game, or play a fighting game.
+[UI Layout](../doc/ui_concept_voogasalad-2.pdf)
+
 
 ## Design Details
 
