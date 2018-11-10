@@ -1,11 +1,14 @@
 package renderer.external;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -19,7 +22,11 @@ import java.util.function.Consumer;
 
 import static renderer.internal.RenderUtils.toRGBCode;
 
-/** Provides a high-level tool for the rapid creation of core UI elements and graphics */
+/** Provides a high-level tool for the rapid creation of standardized and stylized core UI elements and graphics
+ *  @author bpx
+ *  @author ob29
+ *  @author rr202
+ */
 public class RenderSystem {
 
     public static final String BUTTON_FORMAT = "-fx-background-color: %s; -fx-font-family: '%s'; -fx-background-radius: %s; -fx-background-insets: 0; -fx-font-size: %s;";
@@ -27,6 +34,7 @@ public class RenderSystem {
     public static final double BUTTON_SCALE_FACTOR = 1.2;
     public static final Double SLIDER_DEFAULT = 50.0;
     public static final double SLIDER_HEIGHT = 50.0;
+    public static final double VBOX_SPACING = 5.0;
 
     private Font myEmphasisFont;
     private Font myPlainFont;
@@ -128,9 +136,44 @@ public class RenderSystem {
     }
 
     /** Creates an editable {@code TextField}
-     *  @param text The default text to display in the {@code TextField}*/
-    public TextField makeTextField(String text){
+     *  @param text The default text to display in the {@code TextField}
+     *  @param x The x position of the {@code TextField}
+     *  @param y The y position of the {@code TextField}
+     *  @param w The width of the {@code TextField}
+     *  @param h The height of the {@code TextField}
+     */
+    public VBox makeTextField(Consumer<String> fieldSetter, String text, Double x, Double y, Double w, Double h, Font font){
+        VBox textBox = new VBox(VBOX_SPACING);
+        textBox.setAlignment(Pos.CENTER_RIGHT);
+        TextField textField = new TextField(text);
+        textField.setUserData(text);
+        textField.setLayoutX(x);
+        textField.setLayoutY(y);
+        textField.setPrefSize(w,h);
+        textField.setFont(font);
+        Label textLabel = new Label("");
+        textLabel.setFont(font);
+        textLabel.setTextFill(Color.RED);
+        textField.setOnKeyPressed(event -> {
+            if(event.getCode()== KeyCode.ENTER){
+                // field reverts to previous value if consumer fails
+                try{
+                    fieldSetter.accept(textField.getText());
+                    textField.setUserData(textField.getText());
+                    textLabel.setText("");
+                }
+                catch(Exception e){
+                    textField.setText((String)textField.getUserData());
+                    textLabel.setText("Invalid input.");
+                }
 
+            }
+            else if(event.getCode()==KeyCode.ESCAPE){
+                textField.setText((String)textField.getUserData());
+            }
+        });
+        textBox.getChildren().addAll(textField,textLabel);
+        return textBox;
     }
 
     /** Creates a {@code Slider} that modifies a field
@@ -138,7 +181,8 @@ public class RenderSystem {
      *  @param x The x position of the {@code Slider}
      *  @param y The y position of the {@code Slider}
      *  @param w The width of the {@code Slider}
-     *  @param font The font of the label text */
+     *  @param font The font of the label text
+     */
     public HBox makeSlider(Consumer<Double> fieldSetter, Double x, Double y, Double w, Font font){
         HBox sliderBox = new HBox();
         sliderBox.setAlignment(Pos.CENTER);
@@ -162,7 +206,8 @@ public class RenderSystem {
     }
 
     /** Creates a {@code FileChooser} for a specific file type
-     *  @param filetype The file type to be accepted, can be "image","audio",or "xml", or "all"*/
+     *  @param filetype The file type to be accepted, can be "image","audio",or "xml", or "all"
+     */
     public FileChooser makeFileChooser(String filetype){
         FileChooser.ExtensionFilter extensionFilter;
         if(filetype.equalsIgnoreCase("xml")){
@@ -185,13 +230,15 @@ public class RenderSystem {
         return fileChooser;
     }
 
-    /** Creates a {@code DirectoryChooser}*/
+    /** Creates a {@code DirectoryChooser}
+     */
     public DirectoryChooser makeDirectoryChooser(){
         return new DirectoryChooser();
     }
 
     /** Creates a horizontal set of string-labelled {@code Button} objects where only one can be active at a time
-     *  @param options The possible options for the buttons */
+     *  @param options The possible options for the buttons
+     */
     public SwitchButton makeSwitchButtons(List<String> options, boolean emphasis, Color bgColor, Color textColor, Double spacing, Double x, Double y, Double w, Double h){
         if(emphasis){
             return new SwitchButton(options,spacing,x,y,w,h,bgColor,textColor,myEmphasisFont);
@@ -210,7 +257,8 @@ public class RenderSystem {
      *  @param x X position of the {@code Carousel}
      *  @param y Y Position of the {@code Carousel}
      *  @param w The width of the {@code Carousel} {@code String} display
-     *  @param h The height of the {@code Carousel}*/
+     *  @param h The height of the {@code Carousel}
+     */
     public Carousel makeCarousel(List<String> options, boolean emphasis, Color bgColor, Color textColor, Double spacing, Double x, Double y, Double w, Double h){
         if(emphasis){
             return new Carousel(options,spacing, x,y,w,h,bgColor,textColor,myEmphasisFont);
@@ -228,7 +276,8 @@ public class RenderSystem {
      * @param offsetX The offset of the first frame in the x direction
      * @param offsetY The offset of the first frame in the y direction
      * @param width The width of each animation frame
-     * @param height The height of each animation frame*/
+     * @param height The height of each animation frame
+     */
     public SpriteAnimation makeSpriteAnimation(Sprite sprite, Duration duration,
                                                Integer count, Integer columns,
                                                Double offsetX, Double offsetY,
