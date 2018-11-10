@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import renderer.external.Structures.*;
 
 import java.util.List;
 
@@ -104,14 +105,14 @@ public class RenderSystem {
     }
 
     /** Creates a scrollable Pane that displays its contents in a grid
-     *  @param blockList The content list, contains {@code ImageView} objects to display on the grid*/
+     *  @param contentList The content list, contains {@code ImageView} objects to display on the grid*/
     public ScrollPane makeGridScrollPane(List<ImageView> contentList){
 
     }
 
     /** Creates a scrollable Pane that displays its contents in a list
-     *  @param dataList contains the {@code Data} to display */
-    public ScrollPane makeListScrollPane(List<Data> dataList){
+     *  @param dataList contains the {@code ScrollableItem} to display */
+    public ScrollPane makeListScrollPane(List<ScrollableItem> dataList){
 
     }
 
