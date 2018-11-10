@@ -17,6 +17,8 @@ import renderer.external.Structures.*;
 
 import java.util.List;
 
+import static renderer.internal.RenderUtils.toRGBCode;
+
 /** Provides a high-level tool for the rapid creation of core UI elements and graphics */
 public class RenderSystem {
 
@@ -47,7 +49,7 @@ public class RenderSystem {
      *  @param y The y position of the button
      *  @param width The width of the button
      *  @param height The height of the button */
-    public Button makeStringButton(String text, String buttonColor, Boolean emphasis, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
+    public Button makeStringButton(String text, Color buttonColor, Boolean emphasis, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
         Font font;
         if(emphasis){
             font = myEmphasisFont;
@@ -56,16 +58,16 @@ public class RenderSystem {
             font = myPlainFont;
         }
         Button button = new Button(text);
-        //BUTTON_FORMAT: String buttonColor, String fontName, Double borderRadius, Double fontSize
-        button.setStyle(String.format(BUTTON_FORMAT,buttonColor,font.getName(),height,fontSize));
+        //BUTTON_FORMAT: Color buttonColor, String fontName, Double borderRadius, Double fontSize
+        button.setStyle(String.format(BUTTON_FORMAT,toRGBCode(buttonColor),font.getName(),height,fontSize));
         button.setTextFill(textColor);
         button.setLayoutX(x);
         button.setLayoutY(y);
         button.setPrefSize(width,height);
         Font finalFont = font;
         //BUTTON_SCALE: Double xScale, Double yScale
-        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,buttonColor,finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
-        button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,buttonColor,finalFont.getName(),height,fontSize,1.0,1.0)));
+        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
+        button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize,1.0,1.0)));
         return button;
     }
 
@@ -94,10 +96,10 @@ public class RenderSystem {
     public Text makeText(String text, Boolean emphasis, Integer fontsize, Color color, Double x, Double y){
         Text newtext = new Text(text);
         if(emphasis){
-            newtext.setFont(myEmphasisFont);
+            newtext.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;",myEmphasisFont.getName(),fontsize,toRGBCode(color)));
         }
         else{
-            newtext.setFont(myPlainFont);
+            newtext.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;",myPlainFont.getName(),fontsize,toRGBCode(color)));
         }
         newtext.setX(x);
         newtext.setY(y);
@@ -154,8 +156,13 @@ public class RenderSystem {
 
     /** Creates a {@code Carousel} that displays {@code String} objects, that can be cycled through with left and right arrow buttons
      *  @param options The possible options for the {@code Carousel}*/
-    public Carousel makeCarousel(List<String> options){
-
+    public Carousel makeCarousel(List<String> options, boolean emphasis, Color bgColor, Color textColor, Double spacing, Double x, Double y, Double w, Double h){
+        if(emphasis){
+            return new Carousel(options,spacing, x,y,w,h,bgColor,textColor,myEmphasisFont);
+        }
+        else{
+            return new Carousel(options,spacing, x,y,w,h,bgColor,textColor,myPlainFont);
+        }
     }
 
     /** Creates an animation using a {@code Sprite}
