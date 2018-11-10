@@ -35,13 +35,29 @@ public class RenderSystem {
     public Button makeStringButton(String text, String buttonColor, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
         Button button = new Button(text);
         button.setStyle("-fx-background-color: "+buttonColor+"; " +
-                        "-fx-background-radius: 30; " +
-                        "-fx-background-insets: 0;" +
-                        "-fx-font-size: "+fontSize+";");
+                "-fx-font-family: '"+myFont.getName()+"';" +
+                "-fx-background-radius: "+height+";" +
+                "-fx-background-insets: 0;" +
+                "-fx-font-size: "+fontSize+";");
         button.setTextFill(textColor);
         button.setLayoutX(x);
         button.setLayoutY(y);
-        button.setMaxSize(width,height);
+        button.setPrefSize(width,height);
+        button.setOnMouseEntered(event->button.setStyle("-fx-background-color: "+buttonColor+"; " +
+                "-fx-font-family: '"+myFont.getName()+"';" +
+                "-fx-background-radius: 1000; " +
+                "-fx-background-insets: 0;" +
+                "-fx-font-size: "+fontSize+";" +
+                "-fx-scale-x: 1.5;" +
+                "-fx-scale-y: 1.5;"));
+        button.setOnMouseExited(event -> button.setStyle("-fx-background-color: "+buttonColor+"; " +
+                "-fx-font-family: '"+myFont.getName()+"';" +
+                "-fx-background-radius: 1000; " +
+                "-fx-background-insets: 0;" +
+                "-fx-font-size: "+fontSize+";" +
+                "-fx-scale-x: 1;" +
+                "-fx-scale-y: 1;"));
+        button.setFont(myFont);
         return button;
     }
 
@@ -67,7 +83,9 @@ public class RenderSystem {
      *  @param x The x position of the text
      *  @param y The y position of the text*/
     public Text makeEmphasisText(String text, Integer fontsize, Color color, Double x, Double y){
-
+        Text newtext = new Text(text);
+        Font newFont = new Font(myFont.getName(),fontsize);
+        newtext.setFont(myFont);
     }
 
     /** Creates normal text
