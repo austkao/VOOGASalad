@@ -155,7 +155,15 @@ public class RenderSystem {
     }
 
     /** Creates a {@code Carousel} that displays {@code String} objects, that can be cycled through with left and right arrow buttons
-     *  @param options The possible options for the {@code Carousel}*/
+     *  @param options The possible options for the {@code Carousel}
+     *  @param emphasis Whether to use emphasis font or plain font
+     *  @param bgColor The main background fill for the {@code Carousel}
+     *  @param textColor The text fill color
+     *  @param spacing Amount of spacing between main carousel elements
+     *  @param x X position of the {@code Carousel}
+     *  @param y Y Position of the {@code Carousel}
+     *  @param w The width of the {@code Carousel} {@code String} display
+     *  @param h The height of the {@code Carousel}*/
     public Carousel makeCarousel(List<String> options, boolean emphasis, Color bgColor, Color textColor, Double spacing, Double x, Double y, Double w, Double h){
         if(emphasis){
             return new Carousel(options,spacing, x,y,w,h,bgColor,textColor,myEmphasisFont);
