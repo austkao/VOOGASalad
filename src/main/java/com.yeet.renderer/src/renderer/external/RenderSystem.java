@@ -12,6 +12,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
+
+import java.util.List;
 
 /** Provides a high-level tool for the rapid creation of core UI elements and graphics */
 public class RenderSystem {
@@ -52,13 +55,14 @@ public class RenderSystem {
             font = myPlainFont;
         }
         Button button = new Button(text);
+        //BUTTON_FORMAT: String buttonColor, String fontName, Double borderRadius, Double fontSize
         button.setStyle(String.format(BUTTON_FORMAT,buttonColor,font.getName(),height,fontSize));
-
         button.setTextFill(textColor);
         button.setLayoutX(x);
         button.setLayoutY(y);
         button.setPrefSize(width,height);
         Font finalFont = font;
+        //BUTTON_SCALE: Double xScale, Double yScale
         button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,buttonColor,finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
         button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,buttonColor,finalFont.getName(),height,fontSize,1.0,1.0)));
         return button;
@@ -159,8 +163,10 @@ public class RenderSystem {
      * @param count The total number of frames
      * @param columns The number of frames per row
      * @param offsetX The offset of the first frame in the x direction
-     * @param offsetY The offset of the first frame in the y direction */
-    public SpriteAnimation makeSpriteAnimation(Sprite sprite, Double duration,
+     * @param offsetY The offset of the first frame in the y direction
+     * @param width The width of each animation frame
+     * @param height The height of each animation frame*/
+    public SpriteAnimation makeSpriteAnimation(Sprite sprite, Duration duration,
                                                Integer count, Integer columns,
                                                Double offsetX, Double offsetY,
                                                Double width, Double height){
@@ -170,8 +176,11 @@ public class RenderSystem {
     /** Creates a {@code Sprite} from an {@code Image} and sets its viewport to the default frame
      *  @param image The {@code Image} to conver to a {@code Sprite}
      *  @param offsetX The offset of the first frame in the x direction
-     *  @param offsetY The offset of the first frame in the y direction */
-    public Sprite makeSprite(Image image, Double offsetX, Double offsetY){
+     *  @param offsetY The offset of the first frame in the y direction
+     *  @param width The width of the first frame
+     *  @param height The height of the first frame
+     */
+    public Sprite makeSprite(Image image, Double offsetX, Double offsetY, Double width, Double height){
 
     }
 }
