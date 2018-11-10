@@ -150,8 +150,13 @@ public class RenderSystem {
 
     /** Creates a horizontal set of string-labelled {@code Button} objects where only one can be active at a time
      *  @param options The possible options for the buttons */
-    public SwitchButton makeSwitchButtons(List<String> options){
-
+    public SwitchButton makeSwitchButtons(List<String> options, boolean emphasis, Color bgColor, Color textColor, Double spacing, Double x, Double y, Double w, Double h){
+        if(emphasis){
+            return new SwitchButton(options,spacing,x,y,w,h,bgColor,textColor,myEmphasisFont);
+        }
+        else{
+            return new SwitchButton(options,spacing,x,y,w,h,bgColor,textColor,myPlainFont);
+        }
     }
 
     /** Creates a {@code Carousel} that displays {@code String} objects, that can be cycled through with left and right arrow buttons
