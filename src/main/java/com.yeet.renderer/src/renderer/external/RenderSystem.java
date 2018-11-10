@@ -18,33 +18,52 @@ import java.util.List;
 
 /** Provides a high-level tool for the rapid creation of core UI elements and graphics */
 public class RenderSystem {
-    private Font myFont;
+
+    public static final String BUTTON_FORMAT = "-fx-background-color: %s; -fx-font-family: '%s'; -fx-background-radius: %s; -fx-background-insets: 0; -fx-font-size: %s;";
+    public static final String BUTTON_SCALE = "-fx-scale-x: %s; -fx-scale-y: %s;";
+    public static final double BUTTON_SCALE_FACTOR = 1.2;
+
+    private Font myEmphasisFont;
+    private Font myPlainFont;
+
+    private Double myButtonScaleFactor;
 
     /** Create a new {@code RenderSystem} with the specified default stylistic options*/
-    public RenderSystem(Font font){
-        myFont = font;
+    public RenderSystem(Font plainFont,Font emphasisfont){
+        myPlainFont=plainFont;
+        myEmphasisFont = emphasisfont;
+        myButtonScaleFactor = BUTTON_SCALE_FACTOR;
     }
 
 
     /** Creates a {@code Button} with a label
      *  @param text The label for the button
      *  @param buttonColor The hex string for the color of the button background
+     *  @param emphasis Whether to use emphasis text or plain text
      *  @param textColor The fill {@code Color} for the label
      *  @param fontSize The font size for the text label of the button
      *  @param x The x position of the button
      *  @param y The y position of the button
      *  @param width The width of the button
      *  @param height The height of the button */
-    public Button makeStringButton(String text, String buttonColor, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
+    public Button makeStringButton(String text, String buttonColor, Boolean emphasis, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
+        Font font;
+        if(emphasis){
+            font = myEmphasisFont;
+        }
+        else{
+            font = myPlainFont;
+        }
         Button button = new Button(text);
-        button.setStyle("-fx-background-color: "+buttonColor+"; " +
-                        "-fx-background-radius: 30; " +
-                        "-fx-background-insets: 0;" +
-                        "-fx-font-size: "+fontSize+";");
+        button.setStyle(String.format(BUTTON_FORMAT,buttonColor,font.getName(),height,fontSize));
+
         button.setTextFill(textColor);
         button.setLayoutX(x);
         button.setLayoutY(y);
-        button.setMaxSize(width,height);
+        button.setPrefSize(width,height);
+        Font finalFont = font;
+        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,buttonColor,finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
+        button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,buttonColor,finalFont.getName(),height,fontSize,1.0,1.0)));
         return button;
     }
 
@@ -63,24 +82,24 @@ public class RenderSystem {
         return button;
     }
 
-    /** Creates emphatic text
+    /** Creates text
      *  @param text The text to display
+     *  @param emphasis Whether to use emphasis font or plain font
      *  @param fontsize The size of the font
      *  @param color The fill {@code Color} for the font
      *  @param x The x position of the text
      *  @param y The y position of the text*/
-    public Text makeEmphasisText(String text, Integer fontsize, Color color, Double x, Double y){
-
-    }
-
-    /** Creates normal text
-     *  @param text The text to display
-     *  @param fontsize The size of the font
-     *  @param color The fill {@code Color} for the font
-     *  @param x The x position of the text
-     *  @param y The y position of the text*/
-    public Text makePlainText(String text, Integer fontsize, Color color, Double x, Double y){
-
+    public Text makeText(String text, Boolean emphasis, Integer fontsize, Color color, Double x, Double y){
+        Text newtext = new Text(text);
+        if(emphasis){
+            newtext.setFont(myEmphasisFont);
+        }
+        else{
+            newtext.setFont(myPlainFont);
+        }
+        newtext.setX(x);
+        newtext.setY(y);
+        return newtext;
     }
 
     /** Creates a scrollable Pane that displays its contents in a grid
