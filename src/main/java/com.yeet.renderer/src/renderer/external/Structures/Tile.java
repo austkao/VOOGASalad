@@ -1,0 +1,21 @@
+package renderer.external.Structures;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+public class Tile extends ImageView{
+
+    private int width;
+    private int height;
+
+    public Tile (Image image, int w, int h){
+        super(image);
+        width = w;
+        height = h;
+    }
+
+    public void setLocation(int x, int y){
+        setX(x*width);
+        setY(y*height);
+    }
+}
