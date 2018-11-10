@@ -12,6 +12,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import renderer.external.Structures.*;
+
+import java.util.List;
 
 /** Provides a high-level tool for the rapid creation of core UI elements and graphics */
 public class RenderSystem {
@@ -81,14 +84,14 @@ public class RenderSystem {
     }
 
     /** Creates a scrollable Pane that displays its contents in a grid
-     *  @param blockList The content list, contains {@code ImageView} objects to display on the grid*/
+     *  @param contentList The content list, contains {@code ImageView} objects to display on the grid*/
     public ScrollPane makeGridScrollPane(List<ImageView> contentList){
 
     }
 
     /** Creates a scrollable Pane that displays its contents in a list
-     *  @param dataList contains the {@code Data} to display */
-    public ScrollPane makeListScrollPane(List<Data> dataList){
+     *  @param dataList contains the {@code ScrollableItem} to display */
+    public ScrollPane makeListScrollPane(List<ScrollableItem> dataList){
 
     }
 
