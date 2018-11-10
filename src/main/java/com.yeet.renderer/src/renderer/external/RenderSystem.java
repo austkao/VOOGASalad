@@ -1,12 +1,11 @@
 package renderer.external;
 
+import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -16,6 +15,7 @@ import javafx.util.Duration;
 import renderer.external.Structures.*;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import static renderer.internal.RenderUtils.toRGBCode;
 
@@ -25,6 +25,7 @@ public class RenderSystem {
     public static final String BUTTON_FORMAT = "-fx-background-color: %s; -fx-font-family: '%s'; -fx-background-radius: %s; -fx-background-insets: 0; -fx-font-size: %s;";
     public static final String BUTTON_SCALE = "-fx-scale-x: %s; -fx-scale-y: %s;";
     public static final double BUTTON_SCALE_FACTOR = 1.2;
+    public static final Double SLIDER_DEFAULT = 50.0;
 
     private Font myEmphasisFont;
     private Font myPlainFont;
@@ -132,9 +133,27 @@ public class RenderSystem {
     }
 
     /** Creates a {@code Slider} that modifies a field
-     *  @param field The {@code Double} that will be modified by the {@code Slider}*/
-    public Slider makeSlider(Double field){
-
+     *  @param fieldSetter The lambda that will modify the necessary parameter using the {@code Slider} value
+     *  @param x The x position of the {@code Slider}
+     *  @param y The y position of the {@code Slider}*/
+    public HBox makeSlider(Consumer<Double> fieldSetter, Double x, Double y){
+        HBox sliderBox = new HBox();
+        sliderBox.setAlignment(Pos.CENTER);
+        sliderBox.setLayoutX(x);
+        sliderBox.setLayoutY(y);
+        Slider slider =  new Slider();
+        slider.setShowTickMarks(false);
+        slider.setShowTickLabels(false);
+        slider.setValue(SLIDER_DEFAULT);
+        Label sliderValue = new Label(String.valueOf(SLIDER_DEFAULT));
+        sliderValue.setLabelFor(slider);
+        slider.setOnMouseReleased(event -> {
+            //rounds slider value to 1 decimal place
+            fieldSetter.accept(Math.round(slider.getValue() * 10.0) / 10.0);
+            sliderValue.setText(String.valueOf(Math.round(slider.getValue() * 10.0) / 10.0));
+        });
+        sliderBox.getChildren().addAll(slider,sliderValue);
+        return sliderBox;
     }
 
     /** Creates a {@code FileChooser} for a specific file type
