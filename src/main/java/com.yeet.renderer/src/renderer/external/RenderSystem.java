@@ -138,14 +138,32 @@ public class RenderSystem {
     }
 
     /** Creates a {@code FileChooser} for a specific file type
-     *  @param filetype The file type to be accepted, can be "image","audio",or "xml" */
+     *  @param filetype The file type to be accepted, can be "image","audio",or "xml", or "all"*/
     public FileChooser makeFileChooser(String filetype){
-
+        FileChooser.ExtensionFilter extensionFilter;
+        if(filetype.equalsIgnoreCase("xml")){
+            extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+        }
+        else if(filetype.equalsIgnoreCase("audio")){
+            extensionFilter = new FileChooser.ExtensionFilter("Audio files (*.mp3, *.wav, *.aac, *.aiff)", "*.mp3","*.wav","*.aac","*.aiff");
+        }
+        else if(filetype.equalsIgnoreCase("image")){
+            extensionFilter = new FileChooser.ExtensionFilter("Image files (*.png, *.gif, *.jpg, *.mpo)", "*.png","*.gif","*.jpg","*.mpo");
+        }
+        else if(filetype.equalsIgnoreCase("all")){
+            return new FileChooser();
+        }
+        else{
+            throw new IllegalArgumentException("Invalid filetype parameter");
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        return fileChooser;
     }
 
     /** Creates a {@code DirectoryChooser}*/
     public DirectoryChooser makeDirectoryChooser(){
-
+        return new DirectoryChooser();
     }
 
     /** Creates a horizontal set of string-labelled {@code Button} objects where only one can be active at a time
