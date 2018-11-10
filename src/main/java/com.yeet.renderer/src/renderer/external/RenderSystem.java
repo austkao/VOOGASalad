@@ -26,6 +26,7 @@ public class RenderSystem {
     public static final String BUTTON_SCALE = "-fx-scale-x: %s; -fx-scale-y: %s;";
     public static final double BUTTON_SCALE_FACTOR = 1.2;
     public static final Double SLIDER_DEFAULT = 50.0;
+    public static final double SLIDER_HEIGHT = 50.0;
 
     private Font myEmphasisFont;
     private Font myPlainFont;
@@ -135,8 +136,10 @@ public class RenderSystem {
     /** Creates a {@code Slider} that modifies a field
      *  @param fieldSetter The lambda that will modify the necessary parameter using the {@code Slider} value
      *  @param x The x position of the {@code Slider}
-     *  @param y The y position of the {@code Slider}*/
-    public HBox makeSlider(Consumer<Double> fieldSetter, Double x, Double y){
+     *  @param y The y position of the {@code Slider}
+     *  @param w The width of the {@code Slider}
+     *  @param font The font of the label text */
+    public HBox makeSlider(Consumer<Double> fieldSetter, Double x, Double y, Double w, Font font){
         HBox sliderBox = new HBox();
         sliderBox.setAlignment(Pos.CENTER);
         sliderBox.setLayoutX(x);
@@ -145,8 +148,10 @@ public class RenderSystem {
         slider.setShowTickMarks(false);
         slider.setShowTickLabels(false);
         slider.setValue(SLIDER_DEFAULT);
+        slider.setPrefSize(w, SLIDER_HEIGHT);
         Label sliderValue = new Label(String.valueOf(SLIDER_DEFAULT));
         sliderValue.setLabelFor(slider);
+        sliderValue.setFont(font);
         slider.setOnMouseReleased(event -> {
             //rounds slider value to 1 decimal place
             fieldSetter.accept(Math.round(slider.getValue() * 10.0) / 10.0);
