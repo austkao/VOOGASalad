@@ -172,6 +172,7 @@ public class RenderSystem {
                                                Double offsetX, Double offsetY,
                                                Double width, Double height){
 
+        return new SpriteAnimation(sprite, duration, count, columns, offsetX, offsetY, width, height);
     }
 
     /** Creates a {@code Sprite} from an {@code Image} and sets its viewport to the default frame
@@ -182,6 +183,8 @@ public class RenderSystem {
      *  @param height The height of the first frame
      */
     public Sprite makeSprite(Image image, Double offsetX, Double offsetY, Double width, Double height){
-
+        Sprite sprite = new Sprite(image, width, height);
+        sprite.setViewport(offsetX,offsetY);
+        return sprite;
     }
 }
