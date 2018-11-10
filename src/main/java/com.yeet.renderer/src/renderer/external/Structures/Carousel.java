@@ -11,12 +11,27 @@ import java.util.List;
 
 import static renderer.internal.RenderUtils.toRGBCode;
 
+/**
+ * Creates a carousel of {@code String} elements that can be progressed or regressed through arrow controls
+ *  @author bpx
+ */
 public class Carousel extends HBox {
 
     public static final int INACTIVE = 30;
     public static final String FORMAT_FONT = "-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;";
+
     private int index;
 
+    /** Create a new Carousel with the specified parameters
+     *  @param content The possible options for the {@code Carousel}
+     *  @param x X position of the {@code Carousel}
+     *  @param y Y Position of the {@code Carousel}
+     *  @param w The width of the {@code Carousel} {@code String} display
+     *  @param h The height of the {@code Carousel}
+     *  @param spacing Amount of spacing between main carousel elements
+     *  @param mainColor The main background fill for the {@code Carousel}
+     *  @param secondaryColor The text fill color
+     *  @param font The font for the text display */
     public Carousel(List<String> content, Double x, Double y, Double w, Double h, Double spacing, Color mainColor, Color secondaryColor, Font font){
         super(spacing);
         this.setLayoutX(x);
