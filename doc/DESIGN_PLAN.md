@@ -136,7 +136,7 @@ When using the character editor, users will have the option to create a characte
 
 If playing a game, users will be taken to a screen listing the different options for games to play. After selecting the game, users will then go to a character selection screen. After selecting the characters, users will then go to a map selection screen. After selecting the map, users will finally be able to begin playing the game.
 
-![Editor UI Layout](editor_ui_layout.png "Editor UI Layout")
+![Editor UI Layout](editor_ui_layout.PNG "Editor UI Layout")
 
 
 ## Design Details
