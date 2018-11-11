@@ -1,6 +1,5 @@
 package renderer.external;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
@@ -27,7 +26,7 @@ import static renderer.internal.RenderUtils.toRGBCode;
  *  @author ob29
  *  @author rr202
  */
-public class RenderSystem {
+public class RenderSystem implements Renderer{
 
     public static final String BUTTON_FORMAT = "-fx-background-color: %s; -fx-font-family: '%s'; -fx-background-radius: %s; -fx-background-insets: 0; -fx-font-size: %s;";
     public static final String BUTTON_SCALE = "-fx-scale-x: %s; -fx-scale-y: %s;";
@@ -119,13 +118,14 @@ public class RenderSystem {
     /** Creates a scrollable Pane that displays its contents in a grid
      *  @param contentList The content list, contains {@code ImageView} objects to display on the grid*/
     public ScrollPane makeGridScrollPane(List<ImageView> contentList){
+        return new ScrollPane();
 
     }
 
     /** Creates a scrollable Pane that displays its contents in a list
      *  @param dataList contains the {@code ScrollableItem} to display */
     public ScrollPane makeListScrollPane(List<ScrollableItem> dataList){
-
+        return new ScrollPane();
     }
 
     /** Draws a {@code Level} to the specified target
