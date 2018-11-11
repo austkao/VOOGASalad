@@ -131,8 +131,9 @@ public class RenderSystem implements Renderer{
     /** Draws a {@code Level} to the specified target
      *  @param root The target {@code Group} to draw to
      *  @param level The {@code Level} to draw */
-    public void drawStage(Group root, Level level){
-
+    public void drawStage(Group root, Image image){
+        Level level = new Level(image);
+        root.getChildren().add(level.getWindow());
     }
 
     /** Creates an editable {@code TextField}
