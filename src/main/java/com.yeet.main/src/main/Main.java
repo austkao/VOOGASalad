@@ -1,9 +1,12 @@
 package main;
 
 import console.external.Console;
+import editor.EditorManager;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -20,6 +23,7 @@ public class Main extends Application {
     private static Console myConsole;
     private Font myEmphasisFont;
     private Font myPlainFont;
+    private EditorManager em;
 
     public static void main(String[] args){
         launch(args);
@@ -49,5 +53,14 @@ public class Main extends Application {
         player.doSomething();
         root.getChildren().add(renderSystem.makeStringButton("Hello World", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0));
 
+        em = new EditorManager(primaryStage,homeScene);
+        Button editorButton = renderSystem.makeStringButton("Editor", Color.BLACK,true, Color.WHITE, 30.0, 800.0, 500.0, 350.0, 50.0);
+        editorButton.setOnMouseClicked(event -> processClick(event));
+        root.getChildren().add(editorButton);
+    }
+
+    private void processClick(MouseEvent e){
+        System.out.println("yes");
+        em.changeScene();
     }
 }
