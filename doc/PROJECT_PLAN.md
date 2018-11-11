@@ -1,1 +1,23 @@
-describes the program modules each team member plans to take primary and secondary responsibility for and a high-level plan of how the team will complete the program. Specifically, each person should take responsibility for specific features and use cases they intend to work on during the first sprint (core features) and during the second sprint (extensions). This requires the team to agree on the feature priorities and set a goal for what to show at the midpoint demo.
+PROJECT_PLAN.md
+===
+We plan to complete this project by working on a basic implementation of the game that supports two characters, one map, and a basic physics engine for the midpoint demo. We will be primarily working within our assigned roles and will communicate with others when needed. We will then try to flesh out the features and make them as extensible as possible after the midpoint demo.
+
+## Role Division:
+
+### Game Engine
+* Joshua
+* Scott
+* Jose
+
+### Game Player/Front End
+* Ben
+
+### Message Bus
+* Xi
+
+### Data
+* Austin
+
+### Game Authoring Environment
+* Rahul
+* Orgil
