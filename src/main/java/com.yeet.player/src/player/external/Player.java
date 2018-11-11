@@ -2,13 +2,22 @@ package player.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import javafx.stage.Stage;
 import messenger.external.EventBusFactory;
 import messenger.external.TestSuccesfulEvent;
+import renderer.external.Renderer;
 
+/** Visualizer for game data and gameplay
+ *  @author bpx
+ */
 public class Player {
-    EventBus myMessageBus;
 
-    public Player(){
+    private EventBus myMessageBus;
+    private Stage myStage;
+    private Renderer myRenderer;
+
+    public Player(Stage stage, Renderer renderer){
+        myRenderer = renderer;
         myMessageBus = EventBusFactory.getEventBus();
     }
 

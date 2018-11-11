@@ -21,6 +21,7 @@ public class Level {
     public Level(Image bk){
         grid = new Tile[WINDOW_HEIGHT/TILE_HEIGHT][WINDOW_WIDTH/TILE_WIDTH];
         background = new ImageView();
+        setBackground(bk);
         window = new Pane();
         window.setPrefWidth(WINDOW_WIDTH);
         window.setPrefHeight(WINDOW_HEIGHT);
@@ -37,6 +38,10 @@ public class Level {
     public void setBackground(Image bk){
         background.setImage(bk);
 
+    }
+
+    public Pane getWindow(){
+        return window;
     }
 
 
