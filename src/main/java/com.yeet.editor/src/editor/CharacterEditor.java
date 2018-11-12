@@ -7,14 +7,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import renderer.external.RenderSystem;
 
+/**
+ * @author ob29
+ */
+
 public class CharacterEditor extends EditorSuper{
 
-
-
-
-    private Group root;
-    private Scene myScene;
-    private EditorManager em;
 
     public CharacterEditor(EditorManager em){
         super(em);
