@@ -1,6 +1,4 @@
-package input.external;
-
-import messenger.external.Event;
+package messenger.external;
 
 public class ActionEvent extends Event {
 

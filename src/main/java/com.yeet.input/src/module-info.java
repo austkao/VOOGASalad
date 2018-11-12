@@ -4,4 +4,5 @@ module com.yeet.input {
     requires com.google.common;
     requires java.desktop;
     requires javafx.graphics;
+    requires java.sql;
 }
