@@ -4,6 +4,7 @@ import java.util.Vector;
 
 public class ForceVector extends Vector {
     public ForceVector (XForce x, YForce y) {
-
+        double degree;
+        double magnitude;
     }
 }

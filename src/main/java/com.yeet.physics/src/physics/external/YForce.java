@@ -2,7 +2,9 @@ package physics.external;
 
 public class YForce {
 
+    private double magnitude;
+    
     public YForce(double mag) {
-        double magnitude = mag; // NEG: UP, POS: DOWN
+        this.magnitude = mag; // NEG: UP, POS: DOWN
     }
 }
