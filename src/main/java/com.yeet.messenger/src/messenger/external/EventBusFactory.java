@@ -5,7 +5,7 @@ import com.google.common.eventbus.EventBus;
 
 import java.util.concurrent.Executors;
 
-public class MessageBusFactory {
+public class EventBusFactory {
 
     //hold the instance of the event bus here
     private static EventBus eventBus = new AsyncEventBus(Executors.newCachedThreadPool());
