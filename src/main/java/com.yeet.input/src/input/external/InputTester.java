@@ -9,6 +9,8 @@ import messenger.external.ActionEvent;
 import messenger.external.EventBusFactory;
 import messenger.external.KeyInputEvent;
 
+import audio.external.AudioSystem;
+
 public class InputTester extends Application {
 
     EventBus myMessageBus;
@@ -30,12 +32,12 @@ public class InputTester extends Application {
         KeyInputEvent test = new KeyInputEvent(KeyCode.A);
         myMessageBus.post(test);
 
-        KeyInputEvent test2 = new KeyInputEvent(KeyCode.S);
-        myMessageBus.post(test2);
-        KeyInputEvent test3 = new KeyInputEvent(KeyCode.W);
-        myMessageBus.post(test3);
-        KeyInputEvent test4 = new KeyInputEvent(KeyCode.D);
-        myMessageBus.post(test4);
+        //KeyInputEvent test2 = new KeyInputEvent(KeyCode.S);
+        //myMessageBus.post(test2);
+        //KeyInputEvent test3 = new KeyInputEvent(KeyCode.W);
+        //myMessageBus.post(test3);
+        //KeyInputEvent test4 = new KeyInputEvent(KeyCode.D);
+        //myMessageBus.post(test4);
     }
 
 
@@ -47,6 +49,8 @@ public class InputTester extends Application {
     public void start(Stage primaryStage) throws Exception {
         InputSystem IS = new InputSystem();
         InputTester IT = new InputTester();
+        AudioSystem AS = new AudioSystem();
+        EventBusFactory.getEventBus().register(AS);
         EventBusFactory.getEventBus().register(IS);
         EventBusFactory.getEventBus().register(IT);
         //player.doSomething();

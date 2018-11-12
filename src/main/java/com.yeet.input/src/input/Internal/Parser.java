@@ -10,7 +10,7 @@ public class Parser {
     private TimeHandler timer;
     public Parser(){
         attackMapping = new HashMap<>();
-        attackMapping.put("A", "LEFT");
+        attackMapping.put("A", "JAB");
         attackMapping.put("S", "DOWN");
         attackMapping.put("W", "UP");
         attackMapping.put("D", "RIGHT");

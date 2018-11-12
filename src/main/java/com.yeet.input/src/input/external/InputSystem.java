@@ -28,7 +28,7 @@ public class InputSystem {
      a class that represents an attack input
      */
     public void postEvent(String s){
-        ActionEvent keyEvent = new ActionEvent(s);
+        ActionEvent keyEvent = new ActionEvent(s, "attacks");
         myMessageBus.post(keyEvent);
     }
     /**
