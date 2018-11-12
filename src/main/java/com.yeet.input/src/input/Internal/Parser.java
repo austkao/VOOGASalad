@@ -1,24 +1,44 @@
 package input.Internal;
 
-import javafx.scene.input.KeyCode;
 import messenger.external.KeyInputEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Parser {
 
-    Map<KeyCode, String> attackMapping;
+    private Map<String, String> attackMapping;
+    private TimeHandler timer;
     public Parser(){
         attackMapping = new HashMap<>();
-        attackMapping.put(KeyCode.A, "LEFT");
-        attackMapping.put(KeyCode.S, "DOWN");
-        attackMapping.put(KeyCode.W, "UP");
-        attackMapping.put(KeyCode.D, "RIGHT");
+        attackMapping.put("A", "LEFT");
+        attackMapping.put("S", "DOWN");
+        attackMapping.put("W", "UP");
+        attackMapping.put("D", "RIGHT");
+        attackMapping.put("AB", "SMASH");
+        attackMapping.put("WS", "SHORYUKEN");
+
+        timer = new TimeHandler();
+
     }
 
 
+    /**
+     * Parsing for handling combos (NOT IMPLEMENTED CORRECTLY)
+     * @param q
+     * @return
+     */
+    public List<String> parse(Queue<KeyInputEvent> q){
+
+
+        var output = timer.comboHandler(q);
+        List<String> parsed = new ArrayList<>();
+        for(String o :output){
+            parsed.add(attackMapping.get(o));
+        }
+        return parsed;
+    }
+
     public String parse(KeyInputEvent e){
-        return attackMapping.get(e.getKey());
+        return attackMapping.get(e.getKey().getChar());
     }
 }

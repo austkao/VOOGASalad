@@ -33,10 +33,10 @@ public class TimeHandler {
             }
             stringEvents.replace(combo, "");
             }
-            for(String remaining: Arrays.asList(stringEvents.split(","))){
+            for(String remaining: Arrays.asList(stringEvents.split(""))){
                 output.add(remaining);
         }
-        q.clear();
+        //q.clear();
         return output;
 
 
