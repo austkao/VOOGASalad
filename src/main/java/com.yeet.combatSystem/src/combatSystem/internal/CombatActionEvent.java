@@ -1,11 +1,14 @@
 package combatSystem.internal;
 
+import com.google.common.eventbus.EventBus;
 import messenger.external.Event;
+import messenger.external.EventBusFactory;
 
 public abstract class CombatActionEvent extends Event {
 
     protected int initiatorID;
     protected PlayerState nextPlayerState;
+    protected static EventBus eventBus = EventBusFactory.getEventBus();
 
     protected CombatActionEvent(int initiatorID, PlayerState playerState){
         this.initiatorID = initiatorID;

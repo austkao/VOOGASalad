@@ -16,19 +16,11 @@ public class CombatSystem {
         eventBus = EventBusFactory.getEventBus();
     }
 
-    public void jump(int index){
-        JumpEvent event = new JumpEvent(index);
-        Player player = new Player();
-        player.onCombatActionEvent(event);
-        eventBus.post(event);
-    }
-
     @Subscribe
-    public void sendMessage(JumpEvent event){
-//        System.out.println(event.getName());
+    public void onJumpEvent(JumpEvent event){
         Player player = new Player();
-        boolean result = player.onCombatActionEvent(event);
-//        System.out.println(event);
+        int id = event.getInitiatorID();
+        player.changePlayerStateOnEvent(event);
     }
 
 }

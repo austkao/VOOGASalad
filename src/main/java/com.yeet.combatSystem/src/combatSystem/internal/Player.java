@@ -22,9 +22,8 @@ public class Player {
         return playerState;
     }
 
-    public boolean onCombatActionEvent(CombatActionEvent event){
+    public void changePlayerStateOnEvent(CombatActionEvent event){
         playerState = playerState.changeStatesOnEvent(event);
-        return ((JumpEvent)event).getResponse();
     }
 
     @Override

@@ -5,13 +5,11 @@ import messenger.external.EventBusFactory;
 
 public class Tester {
 
-
     public static void main(String[] args){
         CombatSystem combatSystem = new CombatSystem();
         EventBusFactory.getEventBus().register(combatSystem);
         JumpEvent event = new JumpEvent(1);
 
         EventBusFactory.getEventBus().post(event);
-        System.out.println(event.getResponse());
     }
 }

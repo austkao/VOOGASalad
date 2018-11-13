@@ -2,25 +2,19 @@ package combatSystem.internal;
 
 public class JumpEvent extends CombatActionEvent {
 
-    JumpResponseEvent event;
-
     public JumpEvent(int initiatorID) {
         super(initiatorID, PlayerState.SINGLE_JUMP);
     }
 
     @Override
     void onSuccess() {
-        System.out.println("Fuck");
-        event = new JumpResponseEvent(initiatorID, true);
+        eventBus.post(new JumpSuccessfulEvent(initiatorID));
     }
 
     @Override
     void onFailure() {
-        event = new JumpResponseEvent(initiatorID, false);
-    }
-
-    public boolean getResponse(){
-        return event.getResult();
+        System.out.println(String.format("Player with id(%d) fails to jump.", initiatorID));
+//        event = new JumpSuccessfulEvent(initiatorID, false);
     }
 
     @Override
