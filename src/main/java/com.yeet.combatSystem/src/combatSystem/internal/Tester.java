@@ -1,13 +1,17 @@
 package combatSystem.internal;
 
+import combatSystem.external.CombatSystem;
+import messenger.external.EventBusFactory;
+
 public class Tester {
 
 
     public static void main(String[] args){
-        Player player = new Player();
-        player.onCombatActionEvent(new JumpSuccessfulEvent(0));
-        System.out.println(player.getPlayerState());
-        player.onCombatActionEvent(new JumpSuccessfulEvent(0));
-        System.out.println(player.getPlayerState());
+        CombatSystem combatSystem = new CombatSystem();
+        EventBusFactory.getEventBus().register(combatSystem);
+        JumpEvent event = new JumpEvent(1);
+
+        EventBusFactory.getEventBus().post(event);
+        System.out.println(event.getResponse());
     }
 }

@@ -2,7 +2,8 @@ package combatSystem.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import combatSystem.internal.JumpSuccessfulEvent;
+import combatSystem.internal.JumpEvent;
+import combatSystem.internal.Player;
 import combatSystem.internal.PlayerManager;
 import messenger.external.EventBusFactory;
 
@@ -15,10 +16,19 @@ public class CombatSystem {
         eventBus = EventBusFactory.getEventBus();
     }
 
-    @Subscribe
-    public void sendMessage(JumpSuccessfulEvent event){
+    public void jump(int index){
+        JumpEvent event = new JumpEvent(index);
+        Player player = new Player();
+        player.onCombatActionEvent(event);
+        eventBus.post(event);
+    }
 
-//        eventBus.post();
+    @Subscribe
+    public void sendMessage(JumpEvent event){
+//        System.out.println(event.getName());
+        Player player = new Player();
+        boolean result = player.onCombatActionEvent(event);
+//        System.out.println(event);
     }
 
 }

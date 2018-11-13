@@ -20,6 +20,9 @@ public abstract class CombatActionEvent extends Event {
         return nextPlayerState;
     }
 
+    abstract void onSuccess();
+    abstract void onFailure();
+
     @Override
     public String getName() {
         return null;

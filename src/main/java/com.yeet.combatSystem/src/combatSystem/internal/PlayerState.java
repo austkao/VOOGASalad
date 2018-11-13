@@ -5,6 +5,11 @@ public enum PlayerState {
     INITIAL{
         @Override
         PlayerState changeStatesOnEvent(CombatActionEvent event){
+            switch (event.getNextPlayerState()){
+                case SINGLE_JUMP:
+                    event.onSuccess();
+                    return SINGLE_JUMP;
+            }
             return event.getNextPlayerState();
         }
 
@@ -28,7 +33,9 @@ public enum PlayerState {
         @Override
         PlayerState changeStatesOnEvent(CombatActionEvent event){
             switch (event.getNextPlayerState()){
-                case SINGLE_JUMP: return DOUBLE_JUMP;
+                case SINGLE_JUMP:
+                    event.onSuccess();
+                    return DOUBLE_JUMP;
             }
             return SINGLE_JUMP;
         }
@@ -37,6 +44,11 @@ public enum PlayerState {
     DOUBLE_JUMP{
         @Override
         PlayerState changeStatesOnEvent(CombatActionEvent event){
+            switch (event.getNextPlayerState()){
+                case SINGLE_JUMP:
+                    event.onFailure();
+                    return DOUBLE_JUMP;
+            }
             return INITIAL;
         }
     },
