@@ -15,6 +15,7 @@ import renderer.external.Structures.Level;
 /**
  * @author ob29
  */
+import java.io.File;
 import java.util.Random;
 
 public class MapEditor extends EditorSuper{
@@ -44,6 +45,14 @@ public class MapEditor extends EditorSuper{
         mapPane = new Pane();
         mapPane.setPrefWidth(width);
         mapPane.setPrefHeight(height);
+    }
+
+    private void chooseBackground(){
+        FileChooser fileChooser = getRenderSystem().makeFileChooser("image");
+        fileChooser.setTitle("Open Background Image");
+        File backgroundFile = fileChooser.showOpenDialog(getWindow());
+        if (backgroundFile != null)
+            level.setBackground(new Image(backgroundFile.getAbsolutePath()));
     }
 
 
