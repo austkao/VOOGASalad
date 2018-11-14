@@ -24,12 +24,12 @@ public class MapEditor extends EditorSuper{
 
     Pane mapPane;
     ScrollPane blocks;
-    FileChooser fileChooser;
     Level level;
 
     public MapEditor(Group root,EditorManager em){
         super(root,em);
-        initializeMap(500, 500);
+        initializeMap(500, 500, root);
+        initializeScrollPane();
 
         Image backgroundDefault = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_BACKGROUND_IMAGE));
         level = new Level(backgroundDefault, (int)mapPane.getPrefWidth(), (int)mapPane.getPrefHeight());
@@ -48,10 +48,14 @@ public class MapEditor extends EditorSuper{
 
     }
 
-    private void initializeMap(int width, int height){
+    private void initializeScrollPane(){
+
+    }
+    private void initializeMap(int width, int height, Group root){
         mapPane = new Pane();
         mapPane.setPrefWidth(width);
         mapPane.setPrefHeight(height);
+        root.getChildren().add(mapPane);
     }
 
     private void chooseBackground(){
@@ -59,7 +63,7 @@ public class MapEditor extends EditorSuper{
         fileChooser.setTitle("Open Background Image");
         File backgroundFile = fileChooser.showOpenDialog(getWindow());
         if (backgroundFile != null)
-            level.setBackground(new Image(backgroundFile.getAbsolutePath()));
+            level.setBackground(new Image(backgroundFile.toURI().toString()));
     }
 
 
