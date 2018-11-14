@@ -13,8 +13,8 @@ import renderer.external.Structures.Level;
 public class MapEditor extends EditorSuper{
 
 
-    public MapEditor(EditorManager em){
-        super(em);
+    public MapEditor(Group root,EditorManager em){
+        super(root,em);
 
     }
     public String toString(){

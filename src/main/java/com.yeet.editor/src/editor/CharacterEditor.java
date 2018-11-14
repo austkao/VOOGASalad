@@ -14,8 +14,8 @@ import renderer.external.RenderSystem;
 public class CharacterEditor extends EditorSuper{
 
 
-    public CharacterEditor(EditorManager em){
-        super(em);
+    public CharacterEditor(Group root, EditorManager em){
+        super(root,em);
 
     }
 
