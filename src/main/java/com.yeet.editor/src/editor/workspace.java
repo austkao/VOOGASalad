@@ -19,7 +19,6 @@ public class workspace {
     private Pane root;
     private Rectangle selection;
 
-    private Tile [][] grid;
 
     public workspace() {
         root = new Pane();
