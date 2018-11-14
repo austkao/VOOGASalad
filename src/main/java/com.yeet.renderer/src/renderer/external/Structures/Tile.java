@@ -10,6 +10,8 @@ public class Tile extends ImageView{
 
     public Tile (Image image, int w, int h){
         super(image);
+        setFitWidth(w);
+        setFitHeight(h);
         width = w;
         height = h;
     }

@@ -37,6 +37,8 @@ public class Level {
 
     public void setBackground(Image bk){
         background.setImage(bk);
+        background.setFitHeight(WINDOW_HEIGHT);
+        background.setFitWidth(WINDOW_WIDTH);
 
     }
 
