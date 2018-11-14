@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -129,10 +130,10 @@ public class RenderSystem implements Renderer{
     }
 
     /** Draws a {@code Level} to the specified target
-     *  @param root The target {@code Group} to draw to
+     *  @param pane The target {@code Pane} to draw to
      *  @param level The {@code Level} to draw */
-    public void drawStage(Group root, Level level){
-        root.getChildren().add(level.getWindow());
+    public void drawStage(Pane pane, Level level){
+        pane.getChildren().add(level.getWindow());
     }
 
     /** Creates an editable {@code TextField}

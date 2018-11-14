@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -63,9 +64,9 @@ public interface Renderer{
     ScrollPane makeListScrollPane(List<ScrollableItem> dataList);
 
     /** Draws a {@code Level} to the specified target
-     *  @param root The target {@code Group} to draw to
+     *  @param pane The target {@code Pane} to draw to
      *  @param level The {@code Level} to draw */
-    void drawStage(Group root, Level level);
+    void drawStage(Pane pane, Level level);
 
     /** Creates an editable {@code TextField}
      *  @param text The default text to display in the {@code TextField}

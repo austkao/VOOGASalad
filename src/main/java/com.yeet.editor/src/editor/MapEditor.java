@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.Level;
 
@@ -19,7 +20,13 @@ public class MapEditor extends EditorSuper{
         Image back = new Image(this.getClass().getClassLoader().getResourceAsStream("hs.png"));
         Image tile = new Image(this.getClass().getClassLoader().getResourceAsStream("activator_rail.png"));
         Level level = new Level(back);
-        getRenderSystem().drawStage(root, level);
+        Pane pane = new Pane();
+        pane.setPrefWidth(500);
+        pane.setPrefHeight(500);
+        pane.setLayoutX(500);
+        pane.setLayoutY(500);
+        getRenderSystem().drawStage(pane, level);
+        root.getChildren().add(pane);
         level.addTile(0, 0, tile);
     }
     public String toString(){
