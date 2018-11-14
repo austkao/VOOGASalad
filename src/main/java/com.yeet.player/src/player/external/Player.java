@@ -27,20 +27,28 @@ public class Player {
     private CombatScreen myCombatScreen;
     private CombatResultsScreen myCombatResultsScreen;
 
+    private Image myLoadingImage;
     private Image mySplashImage;
 
     public Player(Stage stage, Renderer renderer){
         myRenderer = renderer;
         myMessageBus = EventBusFactory.getEventBus();
+        myStage = stage;
         //create loading screen
-        myLoadingScreen = new LoadingScreen(new Group());
+        myLoadingScreen = new LoadingScreen(myStage,myRenderer);
+    }
+
+    public void start(){
+        myLoadingScreen.setActive();
         //pre-load all other screens
-        mySplashScreen = new SplashScreen(new Group());
+        mySplashScreen = new SplashScreen(new Group(),myRenderer);
         myMainMenuScreen = new MainMenuScreen(new Group());
         myCharacterSelectScreen = new CharacterSelectScreen(new Group());
         myMatchRulesScreen = new MatchRulesScreen(new Group());
         myCombatScreen =  new CombatScreen(new Group());
         myCombatResultsScreen = new CombatResultsScreen(new Group());
+        //finished loading
+        //myStage.setScene(mySplashScreen);
     }
 
     public void doSomething(){

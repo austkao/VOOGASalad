@@ -6,9 +6,14 @@ import javafx.scene.Scene;
 /** Displays a stage and visualizes character combat animation
  *  @author bpx
  */
-public class CombatScreen extends Scene {
+public class CombatScreen implements Screen {
 
     public CombatScreen(Parent root) {
-        super(root);
+
+    }
+
+    @Override
+    public void setActive() {
+
     }
 }

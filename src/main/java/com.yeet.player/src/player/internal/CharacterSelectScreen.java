@@ -7,9 +7,14 @@ import javafx.scene.Scene;
  *  character for a fight
  *  @author bpx
  */
-public class CharacterSelectScreen extends Scene {
+public class CharacterSelectScreen implements Screen{
 
     public CharacterSelectScreen(Parent root) {
-        super(root);
+
+    }
+
+    @Override
+    public void setActive() {
+
     }
 }

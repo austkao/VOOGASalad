@@ -7,9 +7,14 @@ import javafx.scene.Scene;
  *  a stage to do battle on
  *  @author bpx
  */
-public class StageSelectScreen extends Scene {
+public class StageSelectScreen implements Screen{
 
     public StageSelectScreen(Parent root) {
-        super(root);
+
+    }
+
+    @Override
+    public void setActive() {
+
     }
 }

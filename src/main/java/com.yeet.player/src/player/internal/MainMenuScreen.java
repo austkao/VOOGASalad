@@ -6,10 +6,14 @@ import javafx.scene.Scene;
 /** Central hub for access to all game functionality
  *  @author bpx
  */
-public class MainMenuScreen extends Scene {
+public class MainMenuScreen implements Screen{
 
     public MainMenuScreen(Parent root) {
-        super(root);
+
     }
 
+    @Override
+    public void setActive() {
+
+    }
 }

@@ -78,6 +78,7 @@ public class Main extends Application {
         loadButton.setOnMousePressed(e -> setDirectory());
         root.getChildren().add(loadButton);
         Button playButton = myRenderSystem.makeStringButton("Play",Color.RED,true,Color.WHITE,60.0,901.0,578.0,288.0,123.0);
+        playButton.setOnMousePressed(event -> player.start());
         root.getChildren().add(playButton);
         //program start
         player.doSomething();
