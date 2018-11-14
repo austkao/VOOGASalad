@@ -26,7 +26,7 @@ public class MapEditor extends EditorSuper{
         Pane pane = new Pane();
         pane.setPrefWidth(500);
         pane.setPrefHeight(500);
-        Level level = new Level(back, (int)pane.getWidth(), (int)pane.getHeight());
+        Level level = new Level(back, (int)pane.getPrefWidth(), (int)pane.getPrefHeight());
         pane.setLayoutX(500);
         pane.setLayoutY(0);
         getRenderSystem().drawStage(pane, level);
