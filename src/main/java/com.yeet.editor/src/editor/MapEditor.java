@@ -54,6 +54,14 @@ public class MapEditor extends EditorSuper{
         mapPane.setPrefHeight(height);
     }
 
+    private void chooseBackground(){
+        FileChooser fileChooser = getRenderSystem().makeFileChooser("image");
+        fileChooser.setTitle("Open Background Image");
+        File backgroundFile = fileChooser.showOpenDialog(getWindow());
+        if (backgroundFile != null)
+            level.setBackground(new Image(backgroundFile.getAbsolutePath()));
+    }
+
 
     public void process(Level level, Image image){
         level.addTile(0,0,image);
