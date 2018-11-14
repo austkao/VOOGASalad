@@ -19,10 +19,11 @@ public class MapEditor extends EditorSuper{
         super(root,em);
         Image back = new Image(this.getClass().getClassLoader().getResourceAsStream("hs.png"));
         Image tile = new Image(this.getClass().getClassLoader().getResourceAsStream("activator_rail.png"));
-        Level level = new Level(back);
+
         Pane pane = new Pane();
         pane.setPrefWidth(500);
         pane.setPrefHeight(500);
+        Level level = new Level(back, (int)pane.getWidth(), (int)pane.getHeight());
         pane.setLayoutX(500);
         pane.setLayoutY(500);
         getRenderSystem().drawStage(pane, level);
