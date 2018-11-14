@@ -44,7 +44,7 @@ public class EditorSuper extends Scene{
      */
     public void setBack(){
 
-        Button back = rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0);
+        Button back = rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,0.0,350.0,50.0);
         back.setOnMouseClicked(e -> em.setEditorHomeScene());
         root.getChildren().add(back);
     }

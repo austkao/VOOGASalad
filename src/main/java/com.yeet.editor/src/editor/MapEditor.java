@@ -23,10 +23,10 @@ import java.io.File;
 import java.util.Random;
 
 public class MapEditor extends EditorSuper{
-    private static final String DEFAULT_BACKGROUND_IMAGE = "hs.png";
+    private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_TILE = "acacia_log.png";
 
-    private String currentTileFile = DEFAULT_TILE;
+    private Image currentTileFile;
 
     Pane mapPane;
     ScrollPane blocks;
@@ -42,8 +42,10 @@ public class MapEditor extends EditorSuper{
     public MapEditor(Group root,EditorManager em){
         super(root,em);
         this.root = root;
-        initializeMap(500, 500);
+        initializeMap(960, 600);
         initializeScrollPane();
+
+        currentTileFile = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_TILE));
 
         Image backgroundDefault = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_BACKGROUND_IMAGE));
         level = new Level(backgroundDefault, (int)mapPane.getPrefWidth(), (int)mapPane.getPrefHeight());
@@ -60,6 +62,11 @@ public class MapEditor extends EditorSuper{
                 30.0,50.0, 275.0, 200.0, 50.0);
         root.getChildren().add(resetGrid);
         resetGrid.setOnMouseClicked(e -> level.resetGrid());
+
+        Button chooseTile = getRenderSystem().makeStringButton("Choose Tile", Color.CRIMSON, true, Color.WHITE,
+                30.0,50.0, 350.0, 200.0, 50.0);
+        root.getChildren().add(chooseTile);
+        chooseTile.setOnMouseClicked(e -> chooseTileImage());
     }
 
     private void initializeScrollPane(){
@@ -81,30 +88,40 @@ public class MapEditor extends EditorSuper{
     }
 
     /**
+     * general method for choosing an image
+     * @returns file chosen
+     */
+    private File chooseImage(String message){
+        FileChooser fileChooser = getRenderSystem().makeFileChooser("image");
+        fileChooser.setTitle(message);
+        return fileChooser.showOpenDialog(getWindow());
+    }
+
+    /**
      * User selects background, and it is applied to level.
      */
     private void chooseBackground(){
-        FileChooser fileChooser = getRenderSystem().makeFileChooser("image");
-        fileChooser.setTitle("Open Background Image");
-        File backgroundFile = fileChooser.showOpenDialog(getWindow());
+        File backgroundFile = chooseImage("Choose Background File");
         if (backgroundFile != null)
             level.setBackground(new Image(backgroundFile.toURI().toString()));
     }
 
+    private void chooseTileImage(){
+        File tileFile = chooseImage("Choose Tile Image");
+        if (tileFile != null)
+            currentTileFile = new Image(tileFile.toURI().toString());
+    }
+
+    /**
+     * Given mouse event, approximates position in relation to grid and
+     * either adds or removes tile currently at that position.
+     * @param e
+     */
     private void clickProcessTile(MouseEvent e){
         int xindex = (int)e.getX()/level.getTileWidth();
         int yindex = (int)e.getY()/level.getTileHeight();
-
-        Image tileDefault = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_TILE));
-
-        level.processTile(xindex, yindex, tileDefault);
+        level.processTile(xindex, yindex, currentTileFile);
     }
-
-
-    public void process(Level level, Image image){
-        level.processTile(0,0,image);
-    }
-
 
 
     public String toString(){
