@@ -4,9 +4,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.Level;
 
@@ -16,38 +18,37 @@ import renderer.external.Structures.Level;
 import java.util.Random;
 
 public class MapEditor extends EditorSuper{
+    private static final String DEFAULT_BACKGROUND_IMAGE = "hs.png";
 
+
+    Pane mapPane;
+    ScrollPane blocks;
+    FileChooser fileChooser;
+    Level level;
 
     public MapEditor(Group root,EditorManager em){
         super(root,em);
-        Image back = new Image(this.getClass().getClassLoader().getResourceAsStream("hs.png"));
-        Image tile = new Image(this.getClass().getClassLoader().getResourceAsStream("activator_rail.png"));
+        initializeMap(500, 500);
 
-        Pane pane = new Pane();
-        pane.setPrefWidth(500);
-        pane.setPrefHeight(500);
-        Level level = new Level(back, (int)pane.getPrefWidth(), (int)pane.getPrefHeight());
-        pane.setLayoutX(500);
-        pane.setLayoutY(0);
-        getRenderSystem().drawStage(pane, level);
-        root.getChildren().add(pane);
-        level.addTile(0, 0, tile);
+        Image backgroundDefault = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_BACKGROUND_IMAGE));
+        level = new Level(backgroundDefault, (int)mapPane.getPrefWidth(), (int)mapPane.getPrefHeight());
+        getRenderSystem().drawStage(mapPane, level);
+
         Button addTile = getRenderSystem().makeStringButton("add tile", Color.BLACK,true,Color.WHITE,30.0,50.0,100.0,200.0,50.0);
         root.getChildren().add(addTile);
         addTile.setOnMouseClicked(e -> process(level,tile));
 
     }
 
+    private void initializeMap(int width, int height){
+        mapPane = new Pane();
+        mapPane.setPrefWidth(width);
+        mapPane.setPrefHeight(height);
+    }
+
+
     public void process(Level level, Image image){
-        Random rand = new Random();
-        for (int i = 0; i < 8; i++){
-            for (int j = 0; j < 8 ; j++){
-                level.addTile(i, j, image);
-            }
-        }
-        //int  x = rand.nextInt(7) + 1;
-        //int  y = rand.nextInt(7) + 1;
-        //level.addTile(x,y,image);
+        level.addTile(0,0,image);
     }
 
     public String toString(){
