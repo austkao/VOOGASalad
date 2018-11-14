@@ -3,6 +3,7 @@ package player.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import messenger.external.EventBusFactory;
 import messenger.external.TestSuccesfulEvent;
@@ -25,6 +26,8 @@ public class Player {
     private MatchRulesScreen myMatchRulesScreen;
     private CombatScreen myCombatScreen;
     private CombatResultsScreen myCombatResultsScreen;
+
+    private Image mySplashImage;
 
     public Player(Stage stage, Renderer renderer){
         myRenderer = renderer;
