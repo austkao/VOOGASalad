@@ -1,3 +1,7 @@
+/**
+ * Class representation of each level or stage.
+ */
+
 package renderer.external.Structures;
 
 import javafx.scene.image.Image;
@@ -17,6 +21,12 @@ public class Level {
     ImageView background;
     Pane window;
 
+    /**
+     * Constructs the level
+     * @param bk = background image
+     * @param windowWidth = width of window of pane
+     * @param windowHeight = height of window of pane
+     */
     public Level(Image bk, int windowWidth, int windowHeight){
         this.windowHeight = windowHeight;
         this.windowWidth = windowWidth;
@@ -30,6 +40,12 @@ public class Level {
 
     }
 
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param tileImage
+     */
     public void addTile(int x, int y, Image tileImage){
         grid[y][x] = new Tile(tileImage, TILE_WIDTH, TILE_HEIGHT);
         grid[y][x].setLocation(x, y);
