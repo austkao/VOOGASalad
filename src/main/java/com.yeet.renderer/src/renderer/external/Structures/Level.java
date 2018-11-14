@@ -2,13 +2,12 @@ package renderer.external.Structures;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 
 public class Level {
 
-    private static final int WINDOW_HEIGHT = 400;
-    private static final int WINDOW_WIDTH = 400;
+    private int windowHeight;
+    private int windowWidth;
 
 
     private static final int TILE_WIDTH = 50;
@@ -18,13 +17,15 @@ public class Level {
     ImageView background;
     Pane window;
 
-    public Level(Image bk){
-        grid = new Tile[WINDOW_HEIGHT/TILE_HEIGHT][WINDOW_WIDTH/TILE_WIDTH];
+    public Level(Image bk, int windowWidth, int windowHeight){
+        this.windowHeight = windowHeight;
+        this.windowWidth = windowWidth;
+        grid = new Tile[windowHeight/TILE_HEIGHT][windowWidth/TILE_WIDTH];
         background = new ImageView();
         setBackground(bk);
         window = new Pane();
-        window.setPrefWidth(WINDOW_WIDTH);
-        window.setPrefHeight(WINDOW_HEIGHT);
+        window.setPrefWidth(windowWidth);
+        window.setPrefHeight(windowHeight);
         window.getChildren().add(background);
 
     }
@@ -37,8 +38,8 @@ public class Level {
 
     public void setBackground(Image bk){
         background.setImage(bk);
-        background.setFitHeight(WINDOW_HEIGHT);
-        background.setFitWidth(WINDOW_WIDTH);
+        background.setFitHeight(windowHeight);
+        background.setFitWidth(windowWidth);
 
     }
 
