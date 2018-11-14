@@ -148,8 +148,8 @@ public class RenderSystem implements Renderer{
         textBox.setAlignment(Pos.CENTER_RIGHT);
         TextField textField = new TextField(text);
         textField.setUserData(text);
-        textField.setLayoutX(x);
-        textField.setLayoutY(y);
+        textBox.setLayoutX(x);
+        textBox.setLayoutY(y);
         textField.setPrefSize(w,h);
         textField.setFont(font);
         Label textLabel = new Label("");
