@@ -15,6 +15,7 @@ import renderer.external.Structures.Level;
 /**
  * @author ob29
  */
+import java.io.File;
 import java.util.Random;
 
 public class MapEditor extends EditorSuper{
@@ -36,7 +37,14 @@ public class MapEditor extends EditorSuper{
 
         Button addTile = getRenderSystem().makeStringButton("add tile", Color.BLACK,true,Color.WHITE,30.0,50.0,100.0,200.0,50.0);
         root.getChildren().add(addTile);
-        addTile.setOnMouseClicked(e -> process(level,tile));
+        //addTile.setOnMouseClicked(e -> process(level, );
+
+        FileChooser setBG = getRenderSystem().makeFileChooser("image");
+        Button addBG = getRenderSystem().makeStringButton("set Background", Color.BLACK,true,Color.WHITE,30.0,50.0,200.0,200.0,50.0);
+
+        root.getChildren().add(addBG);
+        addBG.setOnMouseClicked(e -> );
+
 
     }
 
@@ -50,6 +58,8 @@ public class MapEditor extends EditorSuper{
     public void process(Level level, Image image){
         level.addTile(0,0,image);
     }
+
+
 
     public String toString(){
         return "MapEditor";
