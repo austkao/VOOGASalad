@@ -60,7 +60,6 @@ public class Main extends Application {
     }
 
     private void processClick(MouseEvent e){
-        System.out.println("yes");
         em.setEditorHomeScene();
     }
 }

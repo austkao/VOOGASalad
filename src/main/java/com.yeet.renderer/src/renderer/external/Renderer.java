@@ -65,7 +65,7 @@ public interface Renderer{
     /** Draws a {@code Level} to the specified target
      *  @param root The target {@code Group} to draw to
      *  @param level The {@code Level} to draw */
-    void drawStage(Group root, Image image);
+    void drawStage(Group root, Level level);
 
     /** Creates an editable {@code TextField}
      *  @param text The default text to display in the {@code TextField}
