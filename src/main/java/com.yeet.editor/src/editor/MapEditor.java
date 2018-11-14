@@ -43,7 +43,7 @@ public class MapEditor extends EditorSuper{
         Button addBG = getRenderSystem().makeStringButton("set Background", Color.BLACK,true,Color.WHITE,30.0,50.0,200.0,200.0,50.0);
 
         root.getChildren().add(addBG);
-        addBG.setOnMouseClicked(e -> );
+        addBG.setOnMouseClicked(e -> chooseBackground());
 
 
     }
