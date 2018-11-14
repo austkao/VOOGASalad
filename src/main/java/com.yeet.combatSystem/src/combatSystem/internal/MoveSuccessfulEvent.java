@@ -1,17 +1,20 @@
 package combatSystem.internal;
 
-public class MoveSuccessfulEvent extends CombatActionEvent{
-    public MoveSuccessfulEvent(int initiatorID) {
-        super(initiatorID, PlayerState.MOVING);
+public class MoveSuccessfulEvent extends SuccessfulEvent{
+
+    boolean isGoingLeft;
+
+    public MoveSuccessfulEvent(int initiatorID, boolean isGoingLeft) {
+        super(initiatorID);
+        this.isGoingLeft = isGoingLeft;
+    }
+
+    public boolean getDirection(){
+        return isGoingLeft;
     }
 
     @Override
-    void onSuccess() {
-
-    }
-
-    @Override
-    void onFailure() {
-
+    public String getName() {
+        return null;
     }
 }

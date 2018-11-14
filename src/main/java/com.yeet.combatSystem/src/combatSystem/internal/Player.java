@@ -2,6 +2,12 @@ package combatSystem.internal;
 
 import java.util.List;
 
+/*
+    Represents the character a specific player controls. Responsible for keeping track of
+    the character's stats and states
+    @author xp19
+ */
+
 public class Player {
 
     private int id;
@@ -22,6 +28,7 @@ public class Player {
         return playerState;
     }
 
+    // update the current player's state based on the event passed in
     public void changePlayerStateOnEvent(CombatActionEvent event){
         playerState = playerState.changeStatesOnEvent(event);
     }

@@ -11,14 +11,15 @@ public class CombatSystem {
 
     EventBus eventBus;
     PlayerManager playerManager;
+    Player player = new Player();
 
     public CombatSystem(){
         eventBus = EventBusFactory.getEventBus();
     }
 
+    // called when a JumpEvent is posted through the event bus
     @Subscribe
     public void onJumpEvent(JumpEvent event){
-        Player player = new Player();
         int id = event.getInitiatorID();
         player.changePlayerStateOnEvent(event);
     }
