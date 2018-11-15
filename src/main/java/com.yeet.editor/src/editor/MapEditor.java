@@ -13,6 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.Level;
+import renderer.external.Structures.ScrollableItem;
+import renderer.external.Structures.ScrollablePane;
 import renderer.external.Structures.Tile;
 
 /**
@@ -67,6 +69,12 @@ public class MapEditor extends EditorSuper{
                 30.0,50.0, 350.0, 200.0, 50.0);
         root.getChildren().add(chooseTile);
         chooseTile.setOnMouseClicked(e -> chooseTileImage());
+
+        ScrollablePane scrollablePane = new ScrollablePane();
+        for(ScrollableItem b: scrollablePane.getItems()){
+            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage(),e));
+        }
+        root.getChildren().add(scrollablePane.getScrollPane());
     }
 
     private void initializeScrollPane(){
@@ -121,6 +129,10 @@ public class MapEditor extends EditorSuper{
         int xindex = (int)e.getX()/level.getTileWidth();
         int yindex = (int)e.getY()/level.getTileHeight();
         level.processTile(xindex, yindex, currentTileFile);
+    }
+
+    private void selectTileFromScroll(Image image, MouseEvent e){
+        currentTileFile = image;
     }
 
 
