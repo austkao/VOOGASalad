@@ -72,7 +72,7 @@ public class MapEditor extends EditorSuper{
 
         ScrollablePane scrollablePane = new ScrollablePane();
         for(ScrollableItem b: scrollablePane.getItems()){
-            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage(),e));
+            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
         }
         root.getChildren().add(scrollablePane.getScrollPane());
     }
@@ -131,7 +131,7 @@ public class MapEditor extends EditorSuper{
         level.processTile(xindex, yindex, currentTileFile);
     }
 
-    private void selectTileFromScroll(Image image, MouseEvent e){
+    private void selectTileFromScroll(Image image){
         currentTileFile = image;
     }
 

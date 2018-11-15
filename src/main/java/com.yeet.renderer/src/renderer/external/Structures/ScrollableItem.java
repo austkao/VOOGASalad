@@ -26,6 +26,10 @@ public class ScrollableItem {
         button = rs.makeImageButton(image,x,y,20.0,25.0);
     }
 
+//    public ScrollableItem(String text, double x, double y){
+//
+//    }
+
     public Button getButton() {
         return button;
     }

@@ -19,14 +19,8 @@ public class ScrollablePane extends Pane {
     public ScrollablePane(){
         items = FXCollections.observableArrayList();
         scrollPane = new ScrollPane();
+        loadFiles();
 
-        File dir = new File(DEFAULT_IMAGE_DIR);
-        System.out.println(dir.getAbsolutePath());
-        for(File imgFile : dir.listFiles()) {
-            if(imgFile.toString().endsWith(".png")){
-                addItem(new Image(imgFile.toURI().toString()));
-            }
-        }
         for(int i = 0; i < items.size(); i++){
             items.get(i).setPos(0,120*i);
             this.getChildren().add(items.get(i).getButton());
@@ -36,7 +30,9 @@ public class ScrollablePane extends Pane {
         scrollPane.setLayoutY(0);
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(this);
-
+        scrollPane.setLayoutX(50);
+        scrollPane.setLayoutY(400);
+        scrollPane.setScaleY(.8);
     }
 
     public void addItem(Image image){
@@ -46,10 +42,22 @@ public class ScrollablePane extends Pane {
     public void removeItem(){
 
     }
-    public ObservableList<ScrollableItem> getItems()
-    {
+
+    public void loadFiles(){
+        File dir = new File(DEFAULT_IMAGE_DIR);
+        System.out.println(dir.getAbsolutePath());
+        for(File imgFile : dir.listFiles()) {
+            if(imgFile.toString().endsWith(".png")){
+                addItem(new Image(imgFile.toURI().toString()));
+            }
+        }
+    }
+
+
+    public ObservableList<ScrollableItem> getItems() {
         return items;
     }
+
     public ScrollPane getScrollPane(){
         return scrollPane;
     }
