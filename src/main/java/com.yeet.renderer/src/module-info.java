@@ -6,4 +6,5 @@ module com.yeet.renderer {
     requires javafx.base;
     requires javafx.graphics;
     requires javafx.controls;
+    requires org.junit.jupiter.api;
 }
