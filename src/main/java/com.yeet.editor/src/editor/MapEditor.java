@@ -31,7 +31,7 @@ public class MapEditor extends EditorSuper{
     private Image currentTileFile;
 
     Pane mapPane;
-    ScrollPane blocks;
+    ScrollablePane scrollablePane;
     Level level;
     private Group root;
 
@@ -70,7 +70,7 @@ public class MapEditor extends EditorSuper{
         root.getChildren().add(chooseTile);
         chooseTile.setOnMouseClicked(e -> chooseTileImage());
 
-        ScrollablePane scrollablePane = new ScrollablePane();
+        scrollablePane = new ScrollablePane();
         for(ScrollableItem b: scrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
         }
@@ -118,6 +118,7 @@ public class MapEditor extends EditorSuper{
         File tileFile = chooseImage("Choose Tile Image");
         if (tileFile != null)
             currentTileFile = new Image(tileFile.toURI().toString());
+        scrollablePane.addItem(currentTileFile);
     }
 
     /**
