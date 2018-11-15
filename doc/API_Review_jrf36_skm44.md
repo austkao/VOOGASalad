@@ -1,6 +1,6 @@
 jrf36
 Part 1
-What about your API/design is intended to be flexible?
+# What about your API/design is intended to be flexible?
 Coordinates are designed to be easily extended to multiple dimensions. 
 How is your API/design encapsulating your implementation decisions?
 Encapsulates all location updating logic. 
