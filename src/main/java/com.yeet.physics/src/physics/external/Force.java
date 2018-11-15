@@ -2,9 +2,9 @@ package physics.external;
 
 public abstract class Force {
 
-    double magnitude;
+    protected double myMagnitude;
 
-    Force (double mag) {
-        magnitude = mag;
+    Force (double magnitude) {
+        myMagnitude = magnitude;
     }
 }

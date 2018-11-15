@@ -2,13 +2,12 @@ package physics.external;
 
 public class XForce extends Force {
 
-    double magnitude;
 
-    XForce() {
+    XForce(double magnitude) {
         super(magnitude); // NEG: LEFT, POS: RIGHT
     }
 
     double getMagnitude() {
-        return magnitude;
+        return myMagnitude;
     }
 }

@@ -2,11 +2,11 @@ package physics.external;
 
 public class YForce extends Force {
 
-    YForce() {
+    YForce(double magnitude) {
         super(magnitude); // NEG: UP, POS: DOWN
     }
 
     double getMagnitude() {
-        return magnitude;
+        return myMagnitude;
     }
 }
