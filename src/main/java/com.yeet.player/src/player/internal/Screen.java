@@ -1,10 +1,16 @@
 package player.internal;
 
-/** Interface for all scenes for the player
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import renderer.external.Renderer;
+
+/** Super class for all scenes for the player
  *  @author bpx
  */
-public interface Screen {
+public abstract class Screen extends Scene {
 
-    /** Loads the {@code Screen} to the {@code Stage}*/
-    void setActive();
+    public Screen(Group root, Renderer renderer) {
+        super(root);
+    }
+
 }

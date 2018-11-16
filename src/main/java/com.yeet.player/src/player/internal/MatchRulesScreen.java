@@ -1,19 +1,14 @@
 package player.internal;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Group;
+import renderer.external.Renderer;
 
 /** Allows user to change certain parameters for a match, such as win condition
  *  @author bpx
  */
-public class MatchRulesScreen implements Screen {
+public class MatchRulesScreen extends Screen {
 
-    public MatchRulesScreen(Parent root) {
-
-    }
-
-    @Override
-    public void setActive() {
-
+    public MatchRulesScreen(Group root, Renderer renderer) {
+        super(root, renderer);
     }
 }

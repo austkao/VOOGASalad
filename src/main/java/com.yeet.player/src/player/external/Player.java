@@ -35,18 +35,18 @@ public class Player {
         myMessageBus = EventBusFactory.getEventBus();
         myStage = stage;
         //create loading screen
-        myLoadingScreen = new LoadingScreen(myStage,myRenderer);
+        myLoadingScreen = new LoadingScreen(new Group(),myRenderer);
     }
 
     public void start(){
-        myLoadingScreen.setActive();
+        myStage.setScene(myLoadingScreen);
         //pre-load all other screens
         mySplashScreen = new SplashScreen(new Group(),myRenderer);
-        myMainMenuScreen = new MainMenuScreen(new Group());
-        myCharacterSelectScreen = new CharacterSelectScreen(new Group());
-        myMatchRulesScreen = new MatchRulesScreen(new Group());
-        myCombatScreen =  new CombatScreen(new Group());
-        myCombatResultsScreen = new CombatResultsScreen(new Group());
+        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer);
+        myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer);
+        myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
+        myCombatScreen =  new CombatScreen(new Group(),myRenderer);
+        myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
         //finished loading
         //myStage.setScene(mySplashScreen);
     }

@@ -1,19 +1,15 @@
 package player.internal;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Group;
+import renderer.external.Renderer;
 
 /** Central hub for access to all game functionality
  *  @author bpx
  */
-public class MainMenuScreen implements Screen{
+public class MainMenuScreen extends Screen {
 
-    public MainMenuScreen(Parent root) {
 
-    }
-
-    @Override
-    public void setActive() {
-
+    public MainMenuScreen(Group root, Renderer renderer) {
+        super(root, renderer);
     }
 }
