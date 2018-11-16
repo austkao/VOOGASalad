@@ -63,9 +63,9 @@ public class EditorStart extends Scene {
      * @param editor
      */
     private void go(MouseEvent e, EditorSuper editor){
-        //editor.setRoot(new Group());
-//        em.changeScene(editor.getScene());
-        editor.setBack();
+
+        editor.createBack();
+        editor.createSave();
         em.changeScene(editor);
 
     }

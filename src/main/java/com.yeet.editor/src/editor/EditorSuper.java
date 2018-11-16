@@ -39,16 +39,23 @@ public class EditorSuper extends Scene{
     }
 
     /**
-     * Creates scene with a back button to the editor landing page
-     * @param root
+     * Creates back button to the editor landing page
      */
-    public void setBack(){
-
-        Button back = rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,0.0,350.0,50.0);
+    public void createBack(){
+        Button back = rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,1000.0,0.0,150.0,50.0);
         back.setOnMouseClicked(e -> em.setEditorHomeScene());
         root.getChildren().add(back);
     }
 
+    /**
+     * Creates save button to the editor landing page
+     */
+    public void createSave(){
+        Button save = rs.makeStringButton("Save", Color.BLACK,true,Color.WHITE,30.0,800.0,0.0,150.0,50.0);
+        //TODO figure out save functionality
+        //save.setOnMouseClicked(e -> em.setEditorHomeScene());
+        root.getChildren().add(save);
+    }
 
     public RenderSystem getRenderSystem(){
         return rs;

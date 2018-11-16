@@ -26,7 +26,7 @@ public class ScrollableItem {
         myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         rs = new RenderSystem(myPlainFont,myEmphasisFont);
         button = rs.makeImageButton(image,x,y,0.0,0.0);
-        
+
 
     }
 
