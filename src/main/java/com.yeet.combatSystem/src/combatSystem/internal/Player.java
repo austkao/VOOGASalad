@@ -18,6 +18,7 @@ public class Player {
     private int attackDamage;
     private float attackSpeed;
     private List<Player> isAttackingTargets;
+    private List<List<Integer>> hitboxes;
     private Player beingAttackedBy;
     private PlayerState playerState;
 
@@ -34,9 +35,25 @@ public class Player {
         return playerState;
     }
 
-    // update the current player's state based on the event passed in
+    /* update the current player's state based on the event passed in */
     public void changePlayerStateOnEvent(CombatActionEvent event){
         playerState = playerState.changeStatesOnEvent(event);
+    }
+
+    /*  */
+    public void landOnGround(){
+
+    }
+
+    /* add who is being attacked by this player */
+    public void addAttackingTargets(Player target){
+        isAttackingTargets.add(target);
+        target.setBeingAttackedBy(this);
+    }
+
+    /* set who is attacking this player */
+    private void setBeingAttackedBy(Player attacker){
+        this.beingAttackedBy = attacker;
     }
 
     @Override

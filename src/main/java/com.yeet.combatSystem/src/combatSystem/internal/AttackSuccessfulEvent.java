@@ -8,6 +8,6 @@ public class AttackSuccessfulEvent extends SuccessfulEvent{
 
     @Override
     public String getName() {
-        return null;
+        return String.format("Player with id(%d) attacks successfully", initiatorID);
     }
 }
