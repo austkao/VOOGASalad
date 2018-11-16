@@ -15,7 +15,9 @@ public class Parser {
         attackMapping.put("W", "UP");
         attackMapping.put("D", "RIGHT");
         attackMapping.put("AB", "SMASH");
-        attackMapping.put("WS", "SHORYUKEN");
+        attackMapping.put("SHORYUKEN", "SHORYUKEN");
+        attackMapping.put("SMASH", "SMASH");
+        //attackMapping.put("KAMI", "KAMI");
 
         timer = new TimeHandler();
 
@@ -26,9 +28,12 @@ public class Parser {
      * Parsing for handling combos (NOT IMPLEMENTED CORRECTLY)
      * @param q
      * @return
+     *
      */
     public List<String> parse(Queue<KeyInputEvent> q){
-
+        //for(KeyInputEvent k : q){
+        //    return attackMapping.get(k.getKey().getChar());
+        //}
 
         var output = timer.comboHandler(q);
         List<String> parsed = new ArrayList<>();

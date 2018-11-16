@@ -32,10 +32,10 @@ public class InputTester extends Application {
         KeyInputEvent test = new KeyInputEvent(KeyCode.A);
         myMessageBus.post(test);
 
-        //KeyInputEvent test2 = new KeyInputEvent(KeyCode.S);
+        //KeyInputEvent test2 = new KeyInputEvent(KeyCode.B);
         //myMessageBus.post(test2);
-        //KeyInputEvent test3 = new KeyInputEvent(KeyCode.W);
-        //myMessageBus.post(test3);
+        KeyInputEvent test3 = new KeyInputEvent(KeyCode.S);
+        myMessageBus.post(test3);
         //KeyInputEvent test4 = new KeyInputEvent(KeyCode.D);
         //myMessageBus.post(test4);
     }

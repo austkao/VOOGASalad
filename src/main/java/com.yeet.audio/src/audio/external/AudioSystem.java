@@ -22,8 +22,8 @@ public class AudioSystem {
      */
     @Subscribe
     public void playAction(ActionEvent event){
-        path+= event.getType()+"/"+event.getName()+".mp3";
-        System.out.println(path);
-        myPlayer.playMedia(path);
+        String newPath = path + event.getType()+"/"+event.getName()+".mp3";
+        System.out.println(newPath);
+        myPlayer.playMedia(newPath);
     }
 }

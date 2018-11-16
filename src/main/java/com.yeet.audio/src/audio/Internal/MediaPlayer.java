@@ -8,9 +8,9 @@ public class MediaPlayer {
 
     public void playMedia(String path){
         URL resource = getClass().getResource(path);
-        System.out.println(resource);
         AudioClip clip = new AudioClip(resource.toString());
-        clip.play(1.0);
+        clip.play(5.0);
+        System.out.println("hey");
 
     }
 }

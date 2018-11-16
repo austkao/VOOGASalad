@@ -12,8 +12,9 @@ public class TimeHandler {
 
     public TimeHandler(){
         testCombos = new HashMap<>();
-        testCombos.put("AB", "SMASH");
-        testCombos.put("BC", "SHORYUKEN");
+        testCombos.put("S", "SMASH");
+        //testCombos.put("A", "SHORYUKEN");
+        //testCombos.put("AB", "KAMI");
     }
 
 
@@ -26,15 +27,19 @@ public class TimeHandler {
         for(KeyInputEvent k : q){
             stringEvents+=(k.getKey().getChar());
         }
+
         List output = new ArrayList<>();
         for(String combo:testCombos.keySet()){
             if(stringEvents.toLowerCase().contains(combo.toLowerCase())){
                 output.add(testCombos.get(combo));
+                stringEvents = stringEvents.replace(combo, "");
             }
-            stringEvents.replace(combo, "");
             }
-            for(String remaining: Arrays.asList(stringEvents.split(""))){
+        for(String remaining: Arrays.asList(stringEvents.split(""))) {
+            if(!remaining.equals("")){
                 output.add(remaining);
+            }
+
         }
         //q.clear();
         return output;
