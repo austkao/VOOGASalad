@@ -10,6 +10,8 @@ public class ScrollableItem {
     public static final int DEFAULT_EMPHASIS_FONTSIZE = 50;
     public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
     public static final int DEFAULT_PLAIN_FONTSIZE = 25;
+    private static final double TILE_WIDTH = 128;
+
 
     private Button button;
     private RenderSystem rs;
@@ -23,7 +25,9 @@ public class ScrollableItem {
         myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
         myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         rs = new RenderSystem(myPlainFont,myEmphasisFont);
-        button = rs.makeImageButton(image,x,y,20.0,25.0);
+        button = rs.makeImageButton(image,x,y,0.0,0.0);
+        
+
     }
 
 //    public ScrollableItem(String text, double x, double y){

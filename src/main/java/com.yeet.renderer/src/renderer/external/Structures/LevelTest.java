@@ -1,8 +1,8 @@
 package renderer.external.Structures;
 import javafx.scene.image.Image;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
+
+import static org.testng.Assert.assertEquals;
 
 
 public class LevelTest {
@@ -20,6 +20,7 @@ public class LevelTest {
         level.processTile(0,0,tile);
         level.processTile(0,0,tile);
         level.processTile(0,0,tile);
+
 
         assertEquals(expected, level.window.getChildren().size(), "Add size");
     }

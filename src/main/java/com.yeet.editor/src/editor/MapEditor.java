@@ -116,9 +116,12 @@ public class MapEditor extends EditorSuper{
 
     private void chooseTileImage(){
         File tileFile = chooseImage("Choose Tile Image");
+        Image image = new Image(tileFile.toURI().toString());
         if (tileFile != null)
-            currentTileFile = new Image(tileFile.toURI().toString());
+            currentTileFile = image;
         scrollablePane.addItem(currentTileFile);
+        int size = scrollablePane.getItems().size();
+        scrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
     }
 
     /**
