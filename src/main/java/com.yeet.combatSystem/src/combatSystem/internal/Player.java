@@ -13,6 +13,7 @@ public class Player {
     private int id;
     private String name;
     private int health;
+    private int numOfLives;
     private int powerLevel;
     private int attackDamage;
     private float attackSpeed;
@@ -22,6 +23,11 @@ public class Player {
 
     public Player(){
         playerState = PlayerState.INITIAL;
+    }
+
+    public Player(int id){
+        this();
+        this.id = id;
     }
 
     public PlayerState getPlayerState(){

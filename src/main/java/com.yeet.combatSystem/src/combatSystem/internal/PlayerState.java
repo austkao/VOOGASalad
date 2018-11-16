@@ -2,6 +2,7 @@ package combatSystem.internal;
 
 public enum PlayerState {
 
+    // the default player state when the player is not taking any action
     INITIAL{
         @Override
         PlayerState changeStatesOnEvent(CombatActionEvent event){
@@ -21,10 +22,12 @@ public enum PlayerState {
         }
     },
 
+    // the state when the player is during attack animation
     ATTACKING{
         @Override
         PlayerState changeStatesOnEvent(CombatActionEvent event){
-            return INITIAL;
+            event.onSuccess();
+            return event.getInputPlayerState();
         }
     },
 
@@ -42,7 +45,7 @@ public enum PlayerState {
     },
 
     /* the state when the player presses jump button two times consecutively to
-    complete a double jump and still in the air*/
+    complete a double jump and still in the air */
     DOUBLE_JUMP{
         @Override
         PlayerState changeStatesOnEvent(CombatActionEvent event){

@@ -2,26 +2,23 @@ package combatSystem.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import combatSystem.internal.JumpEvent;
-import combatSystem.internal.Player;
-import combatSystem.internal.PlayerManager;
+import combatSystem.internal.*;
 import messenger.external.EventBusFactory;
 
 public class CombatSystem {
 
     EventBus eventBus;
     PlayerManager playerManager;
-    Player player = new Player();
 
-    public CombatSystem(){
+    public CombatSystem(int numOfPlayers){
         eventBus = EventBusFactory.getEventBus();
+        playerManager = new PlayerManager(numOfPlayers);
     }
 
-    // called when a JumpEvent is posted through the event bus
     @Subscribe
-    public void onJumpEvent(JumpEvent event){
+    public void onCombatEvent(CombatActionEvent event){
         int id = event.getInitiatorID();
-        player.changePlayerStateOnEvent(event);
+        playerManager.changePlayerStateByIDOnEvent(id, event);
     }
 
 }
