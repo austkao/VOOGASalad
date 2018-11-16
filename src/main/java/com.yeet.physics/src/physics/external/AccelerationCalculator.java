@@ -2,11 +2,9 @@ package physics.external;
 
 public class AccelerationCalculator {
 
-    private XForce myXForce;
-    private YForce myYForce;
+    private Force myForce;
 
-    AccelerationCalculator(XForce x, YForce y) {
-        this.myXForce = x;
-        this.myYForce = y;
+    AccelerationCalculator(Force f) {
+        this.myForce = f;
     }
 }
