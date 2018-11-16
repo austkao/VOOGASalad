@@ -16,6 +16,7 @@ public class Tile extends ImageView{
         height = h;
     }
 
+    //unused
     public void setLocation(int x, int y){
         setX(x*width);
         setY(y*height);

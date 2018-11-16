@@ -6,7 +6,10 @@ package renderer.external.Structures;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 
 public class Level {
 
@@ -19,7 +22,7 @@ public class Level {
 
     Tile [][] grid;
     ImageView background;
-    Pane window;
+    GridPane window;
 
 
 
@@ -33,9 +36,24 @@ public class Level {
         this.windowHeight = windowHeight;
         this.windowWidth = windowWidth;
 
-        window = new Pane();
+        window = new GridPane();
         window.setPrefWidth(windowWidth);
         window.setPrefHeight(windowHeight);
+
+        int numCols = windowWidth/TILE_WIDTH;
+        int numRows = windowHeight/TILE_HEIGHT;
+
+        for (int i = 0; i < numCols; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / numCols);
+            window.getColumnConstraints().add(colConst);
+        }
+        for (int i = 0; i < numRows; i++) {
+            RowConstraints rowConst = new RowConstraints();
+            rowConst.setPercentHeight(100.0 / numRows);
+            window.getRowConstraints().add(rowConst);
+        }
+        //window.setMaxSize(windowWidth/TILE_WIDTH, windowHeight/TILE_HEIGHT);
 
         background = new ImageView();
         setBackground(bk);
@@ -49,7 +67,8 @@ public class Level {
     public void resetGrid(){
         grid = new Tile[windowHeight/TILE_HEIGHT][windowWidth/TILE_WIDTH];
         window.getChildren().clear();
-        window.getChildren().add(background);
+
+        //window.getChildren().add(background);
     }
 
     /**
@@ -61,8 +80,9 @@ public class Level {
     public void processTile(int x, int y, Image tileImage){
         if (!isTile(x, y)){
             grid[y][x] = new Tile(tileImage, TILE_WIDTH, TILE_HEIGHT);
-            grid[y][x].setLocation(x, y);
-            window.getChildren().add(grid[y][x]);
+            //grid[y][x].setLocation(x, y);
+            window.add(grid[y][x], x, y);
+            //window.getChildren().add(grid[y][x], x, y, 1, 1);
         }
         else{
             window.getChildren().remove(grid[y][x]);
