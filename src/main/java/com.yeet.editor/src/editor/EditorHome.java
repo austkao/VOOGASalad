@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.ScrollablePane;
 
@@ -25,6 +26,9 @@ public abstract class EditorHome extends Scene {
         this.em = em;
         rs = new RenderSystem();
         initializeVBox();
+        Text t = rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
+        root.getChildren().add(t);
+
     }
 
     private void initializeScroll() {

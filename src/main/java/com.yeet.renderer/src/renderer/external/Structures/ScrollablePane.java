@@ -20,7 +20,7 @@ public class ScrollablePane extends Pane {
         items = FXCollections.observableArrayList();
         scrollPane = new ScrollPane();
         loadFiles();
-        scrollPane.setPrefSize(140, 400);
+        scrollPane.setPrefSize(150, 400);
         scrollPane.setLayoutX(0);
         scrollPane.setLayoutY(0);
         scrollPane.setFitToWidth(true);
@@ -33,7 +33,7 @@ public class ScrollablePane extends Pane {
     public void addItem(Image image){
         items.add(new ScrollableItem(image,0,0));
         this.getChildren().add(items.get(items.size()-1).getButton());
-        items.get(items.size()-1).setPos(0,120*items.size());
+        items.get(items.size()-1).setPos(0,125*items.size());
         System.out.println(items.get(items.size()-1).getButton().getLayoutX());
     }
 

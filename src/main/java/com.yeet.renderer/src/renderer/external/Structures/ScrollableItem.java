@@ -2,6 +2,7 @@ package renderer.external.Structures;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
 import javafx.scene.text.Font;
 import renderer.external.RenderSystem;
 
@@ -25,7 +26,8 @@ public class ScrollableItem {
         myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
         myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         rs = new RenderSystem(myPlainFont,myEmphasisFont);
-        button = rs.makeImageButton(image,x,y,0.0,0.0);
+        button = rs.makeImageButton(image,x,y,128.0,128.0);
+        button.setBackground(Background.EMPTY); //toggle background
 
 
     }
