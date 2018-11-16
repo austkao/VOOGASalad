@@ -14,25 +14,17 @@ import renderer.external.RenderSystem;
  */
 
 public class EditorSuper extends Scene{
-    public static final String DEFAULT_EMPHASIS_FONT = "AlegreyaSansSC-Black.ttf";
-    public static final int DEFAULT_EMPHASIS_FONTSIZE = 50;
-    public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
-    public static final int DEFAULT_PLAIN_FONTSIZE = 25;
 
     private Group root;
     private Scene myScene;
     private EditorManager em;
     private RenderSystem rs;
-    private Font myEmphasisFont;
-    private Font myPlainFont;
 
     public EditorSuper(Group root, EditorManager em){
         super(root);
         this.root = root;
         this.em = em;
-        myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
-        myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
-        rs = new RenderSystem(myPlainFont,myEmphasisFont);
+        rs = new RenderSystem();
         Text t = rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
         root.getChildren().add(t);
 
@@ -41,9 +33,9 @@ public class EditorSuper extends Scene{
     /**
      * Creates back button to the editor landing page
      */
-    public void createBack(){
+    public void createBack(Scene scene){
         Button back = rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,1000.0,0.0,150.0,50.0);
-        back.setOnMouseClicked(e -> em.setEditorHomeScene());
+        back.setOnMouseClicked(e -> em.changeScene(scene));
         root.getChildren().add(back);
     }
 

@@ -29,6 +29,11 @@ import static renderer.internal.RenderUtils.toRGBCode;
  */
 public class RenderSystem implements Renderer{
 
+    public static final String DEFAULT_EMPHASIS_FONT = "AlegreyaSansSC-Black.ttf";
+    public static final int DEFAULT_EMPHASIS_FONTSIZE = 50;
+    public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
+    public static final int DEFAULT_PLAIN_FONTSIZE = 25;
+
     public static final String BUTTON_FORMAT = "-fx-background-color: %s; -fx-font-family: '%s'; -fx-background-radius: %s; -fx-background-insets: 0; -fx-font-size: %s;";
     public static final String BUTTON_SCALE = "-fx-scale-x: %s; -fx-scale-y: %s;";
     public static final double BUTTON_SCALE_FACTOR = 1.2;
@@ -45,6 +50,13 @@ public class RenderSystem implements Renderer{
     public RenderSystem(Font plainFont,Font emphasisfont){
         myPlainFont=plainFont;
         myEmphasisFont = emphasisfont;
+        myButtonScaleFactor = BUTTON_SCALE_FACTOR;
+    }
+
+    /** Default RenderSystem with default fonts**/
+    public RenderSystem(){
+        myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT), DEFAULT_EMPHASIS_FONTSIZE);
+        myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT), DEFAULT_PLAIN_FONTSIZE);
         myButtonScaleFactor = BUTTON_SCALE_FACTOR;
     }
 

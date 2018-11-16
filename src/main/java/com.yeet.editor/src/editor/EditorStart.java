@@ -18,27 +18,20 @@ import java.util.List;
  */
 
 public class EditorStart extends Scene {
-    public static final String DEFAULT_EMPHASIS_FONT = "AlegreyaSansSC-Black.ttf";
-    public static final int DEFAULT_EMPHASIS_FONTSIZE = 50;
-    public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
-    public static final int DEFAULT_PLAIN_FONTSIZE = 25;
 
-
-    private Font myEmphasisFont;
-    private Font myPlainFont;
     private Group root;
     private EditorManager em;
     private List<EditorSuper> editors;
+    private List<EditorHome> editorHomes;
     private RenderSystem renderSystem;
 
-    public EditorStart(Group root, EditorManager em, List<EditorSuper> editors){
+    public EditorStart(Group root, EditorManager em, List<EditorSuper> editors, List<EditorHome> editorHomes){
         super(root);
         this.root = root;
         this.em = em;
         this.editors = editors;
-        myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
-        myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
-        renderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
+        this.editorHomes = editorHomes;
+        renderSystem = new RenderSystem();
         Button back = renderSystem.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0);
         back.setOnMouseClicked(e -> em.goHome());
         root.getChildren().add(back);
@@ -52,7 +45,7 @@ public class EditorStart extends Scene {
             String name = editors.get(i).toString();
             final int pos = i;
             Button nextEditor = renderSystem.makeStringButton(name, Color.BLACK,true,Color.WHITE,30.0,800.0,100.0*i,350.0,50.0);
-            nextEditor.setOnMouseClicked(e -> go(e,editors.get(pos)));
+            nextEditor.setOnMouseClicked(e -> go(e,editorHomes.get(pos)));
             root.getChildren().add(nextEditor);
         }
     }
@@ -62,11 +55,13 @@ public class EditorStart extends Scene {
      * @param e
      * @param editor
      */
-    private void go(MouseEvent e, EditorSuper editor){
+    private void go(MouseEvent e, EditorHome editorHome){
 
-        editor.createBack();
-        editor.createSave();
-        em.changeScene(editor);
+//        editor.createBack();
+//        editor.createSave();
+//        editorHome.createBack();
+//        editorHome.createSave();
+        em.changeScene(editorHome);
 
     }
 

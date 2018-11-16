@@ -16,6 +16,7 @@ import java.util.List;
 public class EditorManager {
     private Scene myScene;
     private List<EditorSuper> myEditors;
+    private List<EditorHome> myEditorHomes;
     private Group root;
     private Stage myStage;
     private Scene homeScene;
@@ -25,7 +26,8 @@ public class EditorManager {
         homeScene = scene;
         root = new Group();
         myEditors = makeEditors();
-        myScene = new EditorStart(root,this, myEditors);
+        myEditorHomes = makeEditorHomes();
+        myScene = new EditorStart(root,this, myEditors,myEditorHomes);
     }
 
     public void setEditorHomeScene(){
@@ -45,7 +47,11 @@ public class EditorManager {
         Collections.addAll(editors,new MapEditor(new Group(), this),new CharacterEditor(new Group(),this),new GameplayEditor(new Group(),this));
         return editors;
     }
-
+    private List<EditorHome> makeEditorHomes(){
+        List<EditorHome> editors = new ArrayList<EditorHome>();
+        Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this));
+        return editors;
+    }
 
 
 }
