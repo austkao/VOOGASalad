@@ -15,6 +15,5 @@ public class XForceTest {
         Force YTest = new YForce(120);
         assertEquals(XTest.myMagnitude, expected, 1);
         assertEquals(YTest.myMagnitude, expected, 1);
-
     }
 }

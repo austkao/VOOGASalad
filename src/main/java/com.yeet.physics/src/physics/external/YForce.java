@@ -6,7 +6,4 @@ public class YForce extends Force {
         super(magnitude); // NEG: UP, POS: DOWN
     }
 
-    double getMagnitude() {
-        return myMagnitude;
-    }
 }
