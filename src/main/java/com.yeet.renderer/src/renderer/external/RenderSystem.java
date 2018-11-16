@@ -101,10 +101,12 @@ public class RenderSystem implements Renderer{
      *  @param height The height of the button */
     public Button makeImageButton(Image image, Double x, Double y, Double width, Double height){
         Button button = new Button();
-        button.setGraphic(new ImageView(image));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+        button.setGraphic(imageView);
         button.setLayoutX(x);
         button.setLayoutY(y);
-        button.setMaxSize(width,height);
         return button;
     }
 
