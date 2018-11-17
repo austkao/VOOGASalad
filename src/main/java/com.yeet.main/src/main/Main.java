@@ -30,6 +30,8 @@ public class Main extends Application {
 
     private static Console myConsole;
     private RenderSystem myRenderSystem;
+    private Player myPlayer;
+
     private Font myEmphasisFont;
     private Font myPlainFont;
 
@@ -37,6 +39,7 @@ public class Main extends Application {
     private File myDirectory;
 
     private ImageView mySplashDisplay;
+    private Button playButton;
 
 
     public static void main(String[] args){
@@ -60,11 +63,11 @@ public class Main extends Application {
         myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
         myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         myRenderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
-        Player player = new Player(primaryStage,myRenderSystem);
+        myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
         myConsole = new Console();
         myDirectoryChooser = myRenderSystem.makeDirectoryChooser();
         //register event listeners
-        EventBusFactory.getEventBus().register(player);
+        EventBusFactory.getEventBus().register(myPlayer);
         EventBusFactory.getEventBus().register(myConsole);
         //display setup
         myPopup = createErrorPopup();
@@ -77,32 +80,50 @@ public class Main extends Application {
         Button loadButton = myRenderSystem.makeStringButton("Load Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,440.4,307.21,94.6);
         loadButton.setOnMousePressed(e -> setDirectory());
         root.getChildren().add(loadButton);
-        Button playButton = myRenderSystem.makeStringButton("Play",Color.RED,true,Color.WHITE,60.0,901.0,578.0,288.0,123.0);
-        playButton.setOnMousePressed(event -> player.start());
+        playButton = myRenderSystem.makeStringButton("Play",Color.RED,true,Color.WHITE,60.0,901.0,578.0,288.0,123.0);
+        playButton.setDisable(true);
+        playButton.setOnMousePressed(event -> {
+            myPlayer.start();
+        });
         root.getChildren().add(playButton);
         //program start
-        player.doSomething();
+        myPlayer.doSomething();
 
 
     }
 
+    /** Create a {@code DirectoryChooser} and set the active game directory if it is valid*/
     private void setDirectory(){
         File directory = myDirectoryChooser.showDialog(myStage);
-        if(directory!=null){
+        if(directory!=null && checkDirectory(directory)){
             Image splash = new Image(String.format("%s%s",directory.toURI(),"splash.png"));
             if(!splash.isError()){
-                System.out.println("nono");
                 mySplashDisplay.setImage(splash);
                 myDirectory = directory;
+                myPlayer.setDirectory(directory);
+                playButton.setDisable(false);
             }
             else{
-                System.out.println("haha");
+                playButton.setDisable(true);
                 myPopup.show();
             }
         }
 
     }
 
+    /** Returns true if the {@code File} is a valid game directory
+     *  @param directory The directory to check
+     */
+    private boolean checkDirectory(File directory){
+        for(File f : directory.listFiles()){
+            if(f.getName().equalsIgnoreCase("gameproperties.xml")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Create the popup that displays upon attempting to load an invalid game directory*/
     private Stage createErrorPopup(){
         Stage stage = new Stage();
         stage.initStyle(StageStyle.UNDECORATED);
@@ -123,6 +144,7 @@ public class Main extends Application {
         return stage;
     }
 
+    /** Create the display for the game splash image*/
     private ImageView createSplashDisplay(){
         ImageView display = new ImageView();
         display.setFitHeight(560);
