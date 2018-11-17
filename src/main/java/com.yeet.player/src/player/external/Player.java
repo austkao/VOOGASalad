@@ -44,7 +44,7 @@ public class Player {
     public void start(){
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
-        mySplashScreen = new SplashScreen(new Group(),myRenderer,myDirectory);
+        mySplashScreen = new SplashScreen(new Group(), myRenderer, myDirectory, () -> myStage.setScene(myMainMenuScreen));
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer);
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer);
         myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);

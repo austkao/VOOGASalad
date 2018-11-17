@@ -1,8 +1,11 @@
 package player.internal;
 
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -16,7 +19,7 @@ import java.io.File;
  */
 public class SplashScreen extends Screen {
 
-    public SplashScreen(Group root, Renderer renderer, File directory) {
+    public SplashScreen(Group root, Renderer renderer, File directory, SceneSwitch sceneSwitch) {
         super(root, renderer);
         ImageView splash = new ImageView(new Image(String.format("%s%s",directory.toURI(),"splash.png")));
         splash.setFitHeight(800);
@@ -28,6 +31,6 @@ public class SplashScreen extends Screen {
         textbox.setLayoutX(920.0);
         textbox.setLayoutY(705.0);
         super.getMyRoot().getChildren().addAll(splash,rect,textbox);
-
+        super.setOnKeyPressed(event -> sceneSwitch.switchScene());
     }
 }
