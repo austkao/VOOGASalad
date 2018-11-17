@@ -112,6 +112,7 @@ public class RenderSystem implements Renderer{
         else{
             newtext.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;",myPlainFont.getName(),fontsize,toRGBCode(color)));
         }
+        newtext.setFill(color);
         newtext.setX(x);
         newtext.setY(y);
         return newtext;

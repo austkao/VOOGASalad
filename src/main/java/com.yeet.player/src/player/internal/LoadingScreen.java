@@ -32,8 +32,6 @@ public class LoadingScreen extends Screen {
         animation = new OrbitAnimation(dynamicCircle,640.0,400.0,200.0,Duration.seconds(3));
         animation.setCycleCount(Animation.INDEFINITE);
         super.getMyRoot().getChildren().add(dynamicCircle);
-        System.out.println(dynamicCircle.getLayoutX());
-        System.out.println(dynamicCircle.getLayoutY());
         animation.play();
     }
 
