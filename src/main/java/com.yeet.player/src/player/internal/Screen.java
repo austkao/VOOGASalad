@@ -9,8 +9,21 @@ import renderer.external.Renderer;
  */
 public abstract class Screen extends Scene {
 
+    private Group myRoot;
+    private Renderer myRenderer;
+
     public Screen(Group root, Renderer renderer) {
         super(root);
+        myRoot = root;
+        myRenderer = renderer;
+    }
+
+    Group getMyRoot(){
+        return myRoot;
+    }
+
+    Renderer getMyRenderer(){
+        return myRenderer;
     }
 
 }
