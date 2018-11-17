@@ -10,6 +10,8 @@ import messenger.external.TestSuccesfulEvent;
 import player.internal.*;
 import renderer.external.Renderer;
 
+import java.io.File;
+
 /** Visualizer for game data and gameplay
  *  @author bpx
  */
@@ -27,30 +29,40 @@ public class Player {
     private CombatScreen myCombatScreen;
     private CombatResultsScreen myCombatResultsScreen;
 
-    private Image myLoadingImage;
-    private Image mySplashImage;
+    private File myDirectory;
 
-    public Player(Stage stage, Renderer renderer){
+    public Player(Stage stage, File gameDirectory, Renderer renderer){
         myRenderer = renderer;
         myMessageBus = EventBusFactory.getEventBus();
         myStage = stage;
+        myDirectory = gameDirectory;
         //create loading screen
         myLoadingScreen = new LoadingScreen(new Group(),myRenderer);
     }
 
+    /** Gives control of the {@code Stage} to the {@code Player} and begins sub-screen loading*/
     public void start(){
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
-        mySplashScreen = new SplashScreen(new Group(),myRenderer);
+        mySplashScreen = new SplashScreen(new Group(),myRenderer,myDirectory);
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer);
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer);
         myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
         myCombatScreen =  new CombatScreen(new Group(),myRenderer);
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
         //finished loading
-        //myStage.setScene(mySplashScreen);
+        System.out.println("finished loading!");
+        myStage.setScene(mySplashScreen);
     }
 
+    /** Sets the location of the active game directory to load files from
+     *  @param directory The new game directory
+     */
+    public void setDirectory(File directory){
+        myDirectory = directory;
+    }
+
+    /** Test */
     public void doSomething(){
         TestSuccesfulEvent testSuccesfulEvent = new TestSuccesfulEvent();
         myMessageBus.post(testSuccesfulEvent);
