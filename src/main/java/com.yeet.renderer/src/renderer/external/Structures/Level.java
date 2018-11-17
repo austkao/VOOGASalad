@@ -5,10 +5,8 @@
 package renderer.external.Structures;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 
 public class Level {
@@ -20,23 +18,23 @@ public class Level {
     private static final int TILE_WIDTH = 50;
     private static final int TILE_HEIGHT = 50;
 
-    Tile [][] grid;
-    ImageView background;
-    GridPane window;
-
+    private Tile [][] grid;
+    private GridPane window;
+    private String backgroundURL;
 
 
     /**
      * Constructs the level
-     * @param bk = background image
      * @param windowWidth = width of window of pane
      * @param windowHeight = height of window of pane
+     * @param backgroundURL = url for background image
      */
-    public Level(Image bk, int windowWidth, int windowHeight){
+    public Level(int windowWidth, int windowHeight, String backgroundURL){
         this.windowHeight = windowHeight;
         this.windowWidth = windowWidth;
 
         window = new GridPane();
+        window.setGridLinesVisible(true);
         window.setPrefWidth(windowWidth);
         window.setPrefHeight(windowHeight);
 
@@ -53,11 +51,8 @@ public class Level {
             rowConst.setPercentHeight(100.0 / numRows);
             window.getRowConstraints().add(rowConst);
         }
-        //window.setMaxSize(windowWidth/TILE_WIDTH, windowHeight/TILE_HEIGHT);
 
-        background = new ImageView();
-        setBackground(bk);
-
+        this.backgroundURL = backgroundURL;
         resetGrid();
     }
 
@@ -67,8 +62,7 @@ public class Level {
     public void resetGrid(){
         grid = new Tile[windowHeight/TILE_HEIGHT][windowWidth/TILE_WIDTH];
         window.getChildren().clear();
-
-        //window.getChildren().add(background);
+        setBackground(backgroundURL);
     }
 
     /**
@@ -79,30 +73,27 @@ public class Level {
      */
     public void processTile(int x, int y, Image tileImage){
         if (!isTile(x, y)){
-            grid[y][x] = new Tile(tileImage, TILE_WIDTH, TILE_HEIGHT);
-            //grid[y][x].setLocation(x, y);
+            grid[y][x] = new Tile(tileImage, TILE_WIDTH, TILE_HEIGHT, x, y);
             window.add(grid[y][x], x, y);
-            //window.getChildren().add(grid[y][x], x, y, 1, 1);
         }
         else{
             window.getChildren().remove(grid[y][x]);
             grid[y][x] = null;
         }
-
     }
 
     /**
      * sets background image
-     * @param bk image for background
+     * @param backgroundURL image for background
      */
-    public void setBackground(Image bk){
-        background.setImage(bk);
-        background.setFitHeight(windowHeight);
-        background.setFitWidth(windowWidth);
-
+    public void setBackground(String backgroundURL){
+        this.backgroundURL = backgroundURL;
+        String formatted = String.format("-fx-background-image: url('%s');", backgroundURL);
+        formatted = formatted + String.format("-fx-background-size: cover;");
+        window.setStyle(formatted);
     }
 
-    public Pane getWindow(){
+    public GridPane getWindow(){
         return window;
     }
 
@@ -122,8 +113,4 @@ public class Level {
     public boolean isTile(int x, int y){
         return grid[y][x] != null;
     }
-
-
-
-
 }

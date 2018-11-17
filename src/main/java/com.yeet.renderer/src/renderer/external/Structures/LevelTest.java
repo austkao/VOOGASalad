@@ -15,7 +15,7 @@ public class LevelTest {
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_BACKGROUND_IMAGE));
         Image tile = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_TILE));
 
-        Level level = new Level(image,500,500);
+        Level level = new Level(500,500, null);
         level.processTile(0,0,tile);
         level.processTile(0,0,tile);
         level.processTile(0,0,tile);

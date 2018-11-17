@@ -5,20 +5,22 @@ import javafx.scene.image.ImageView;
 
 public class Tile extends ImageView{
 
-    private int width;
-    private int height;
+    private int xIndex;
+    private int yIndex;
 
-    public Tile (Image image, int w, int h){
+    public Tile (Image image, int w, int h, int x, int y){
         super(image);
         setFitWidth(w);
         setFitHeight(h);
-        width = w;
-        height = h;
+        xIndex = x;
+        yIndex = y;
     }
 
     //unused
     public void setLocation(int x, int y){
-        setX(x*width);
-        setY(y*height);
+        //setX(x*width);
+        //setY(y*height);
+        xIndex = x;
+        yIndex = y;
     }
 }

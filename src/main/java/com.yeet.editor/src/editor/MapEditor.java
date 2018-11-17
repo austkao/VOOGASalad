@@ -22,6 +22,7 @@ import renderer.external.Structures.Tile;
  * @author rr202
  */
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Random;
 
 public class MapEditor extends EditorSuper{
@@ -49,8 +50,12 @@ public class MapEditor extends EditorSuper{
 
         currentTileFile = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_TILE));
 
-        Image backgroundDefault = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_BACKGROUND_IMAGE));
-        level = new Level(backgroundDefault, (int)mapPane.getPrefWidth(), (int)mapPane.getPrefHeight());
+        try {
+            level = new Level((int)mapPane.getPrefWidth(), (int)mapPane.getPrefHeight(),
+                    this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         getRenderSystem().drawStage(mapPane, level);
 
         mapPane.setOnMouseClicked(e -> clickProcessTile(e));
@@ -111,7 +116,7 @@ public class MapEditor extends EditorSuper{
     private void chooseBackground(){
         File backgroundFile = chooseImage("Choose Background File");
         if (backgroundFile != null)
-            level.setBackground(new Image(backgroundFile.toURI().toString()));
+            level.setBackground(backgroundFile.toURI().toString());
     }
 
     private void chooseTileImage(){
