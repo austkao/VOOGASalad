@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VOOGASalad author="yeet">
-    <map x="3" y="5"/>
-    <map x="4" y="0"/>
-    <map x="5" y="0"/>
-    <map x="6" y="0"/>
-    <map x="6" y="4"/>
-    <map x="8" y="1"/>
-    <map x="8" y="4"/>
-    <map x="11" y="0"/>
+    <map x="6" y="2"/>
+    <map x="6" y="5"/>
+    <map x="7" y="1"/>
+    <map x="7" y="3"/>
+    <map x="8" y="2"/>
+    <map x="9" y="1"/>
+    <map x="9" y="6"/>
+    <map x="10" y="3"/>
 </VOOGASalad>

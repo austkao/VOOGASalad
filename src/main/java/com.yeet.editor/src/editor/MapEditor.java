@@ -30,7 +30,6 @@ import XML.XMLSaveBuilder;
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_TILE = "acacia_log.png";
-    private static final String RESOURCE_PATH = "/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
 
     private Image currentTileFile;
 
@@ -155,23 +154,16 @@ public class MapEditor extends EditorSuper{
 
 
     private void createSaveFile() {
-        FileChooser fileChooser = getRenderSystem().makeFileChooser("xml");
-        fileChooser.setTitle("Save File As");
-        File defaultFile = new File(RESOURCE_PATH);
-        fileChooser.setInitialDirectory(defaultFile);
-        File file = fileChooser.showSaveDialog(new Stage());
-        if (file != null) {
-            try {
-                HashMap<String, ArrayList<String>> structure = new HashMap<>();
-                ArrayList<String> mapAttributes = new ArrayList<>();
-                mapAttributes.add("x");
-                mapAttributes.add("y");
-                structure.put("map", mapAttributes);
-                new XMLSaveBuilder(file.getPath(), structure, level.createLevelMap());
-            } catch (Exception ex) {
-                System.out.println("Invalid save");
-                ex.printStackTrace();
-            }
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        ArrayList<String> mapAttributes = new ArrayList<>();
+        mapAttributes.add("x");
+        mapAttributes.add("y");
+        structure.put("map", mapAttributes);
+        try {
+            new XMLSaveBuilder(structure, level.createLevelMap());
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+            ex.printStackTrace();
         }
     }
 }
