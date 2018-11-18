@@ -63,15 +63,6 @@ public class InputSystem {
     @Subscribe
     public void getKey(KeyInputEvent inputEvent){
         commandHolder.add(inputEvent);
-        //postEvent(myParser.parse(inputEvent));
-
-
-        //TODO: COMBOS (NOT DONE)
-        //List<String> events = myParser.parse(commandHolder);
-        //for(String event:events){
-        //    System.out.println(event);
-        //    //postEvent(event);
-        //}
 
 
     }
