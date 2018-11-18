@@ -84,7 +84,7 @@ public interface Renderer{
      *  @param w The width of the {@code Slider}
      *  @param font The font of the label text
      */
-    HBox makeSlider(Consumer<Double> fieldSetter, Double x, Double y, Double w, Font font);
+    HBox makeSlider(String text,Consumer<Double> fieldSetter, Double x, Double y, Double w);
 
     /** Creates a {@code FileChooser} for a specific file type
      *  @param filetype The file type to be accepted, can be "image","audio",or "xml", or "all"
