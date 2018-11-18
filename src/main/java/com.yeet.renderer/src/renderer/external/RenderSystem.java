@@ -134,7 +134,6 @@ public class RenderSystem implements Renderer{
      *  @param contentList The content list, contains {@code ImageView} objects to display on the grid*/
     public ScrollPane makeGridScrollPane(List<ImageView> contentList){
         return new ScrollPane();
-
     }
 
     /** Creates a scrollable Pane that displays its contents in a list
@@ -147,7 +146,7 @@ public class RenderSystem implements Renderer{
      *  @param pane The target {@code Pane} to draw to
      *  @param level The {@code Level} to draw */
     public void drawStage(Pane pane, Level level){
-        pane.getChildren().add(level.getWindow());
+        pane.getChildren().add(level);
     }
 
     /** Creates an editable {@code TextField}

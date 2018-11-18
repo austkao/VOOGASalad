@@ -34,7 +34,6 @@ public class ScrollablePane extends Pane {
         items.add(new ScrollableItem(image,0,0));
         this.getChildren().add(items.get(items.size()-1).getButton());
         items.get(items.size()-1).setPos(0,125*items.size());
-        System.out.println(items.get(items.size()-1).getButton().getLayoutX());
     }
 
     public void removeItem(){
