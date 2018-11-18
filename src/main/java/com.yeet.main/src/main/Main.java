@@ -54,6 +54,8 @@ public class Main extends Application {
         primaryStage.setHeight(800);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Yeet Fighter Game Engine");
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.setOnCloseRequest(event -> System.exit(-1));
         Group root = new Group();
         Scene homeScene = new Scene(root);
         primaryStage.setScene(homeScene);
