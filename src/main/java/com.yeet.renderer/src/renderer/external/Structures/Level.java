@@ -11,6 +11,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Level {
 
     private int windowHeight;
@@ -20,10 +23,11 @@ public class Level {
     private static final int TILE_WIDTH = 50;
     private static final int TILE_HEIGHT = 50;
 
-    Tile [][] grid;
-    ImageView background;
-    GridPane window;
-
+    private Tile [][] grid;
+    private ImageView background;
+    private GridPane window;
+    private int numCols;
+    private int numRows;
 
 
     /**
@@ -40,8 +44,8 @@ public class Level {
         window.setPrefWidth(windowWidth);
         window.setPrefHeight(windowHeight);
 
-        int numCols = windowWidth/TILE_WIDTH;
-        int numRows = windowHeight/TILE_HEIGHT;
+        numCols = windowWidth/TILE_WIDTH;
+        numRows = windowHeight/TILE_HEIGHT;
 
         for (int i = 0; i < numCols; i++) {
             ColumnConstraints colConst = new ColumnConstraints();
@@ -121,6 +125,21 @@ public class Level {
      */
     public boolean isTile(int x, int y){
         return grid[y][x] != null;
+    }
+
+    public HashMap<String, ArrayList<String>> createLevelMap() {
+        HashMap<String, ArrayList<String>> levelMap = new HashMap<>();
+        levelMap.put("x", new ArrayList<>());
+        levelMap.put("y", new ArrayList<>());
+        for(int i = 0; i < numCols; i++) {
+            for(int j = 0; j < numRows; j++) {
+                if(isTile(i,j)) {
+                    levelMap.get("x").add(Integer.toString(i));
+                    levelMap.get("y").add(Integer.toString(j));
+                }
+            }
+        }
+        return levelMap;
     }
 
 

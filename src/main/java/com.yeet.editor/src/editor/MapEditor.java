@@ -1,8 +1,6 @@
 package editor;
 
 import javafx.scene.Group;
-import javafx.scene.Scene;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -11,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollableItem;
@@ -20,19 +19,24 @@ import renderer.external.Structures.Tile;
 /**
  * @author ob29
  * @author rr202
+ * @author ak457
  */
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
+import XML.XMLSaveBuilder;
 
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_TILE = "acacia_log.png";
+    private static final String RESOURCE_PATH = "/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
 
     private Image currentTileFile;
 
-    Pane mapPane;
-    ScrollablePane scrollablePane;
-    Level level;
+    private Pane mapPane;
+    private ScrollablePane scrollablePane;
+    private Level level;
     private Group root;
 
 
@@ -69,6 +73,11 @@ public class MapEditor extends EditorSuper{
                 30.0,50.0, 350.0, 200.0, 50.0);
         root.getChildren().add(chooseTile);
         chooseTile.setOnMouseClicked(e -> chooseTileImage());
+
+        Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
+                30.0,50.0, 350.0, 200.0, 50.0);
+        root.getChildren().add(saveFile);
+        saveFile.setOnMouseClicked(e -> createSaveFile());
 
         scrollablePane = new ScrollablePane();
         for(ScrollableItem b: scrollablePane.getItems()){
@@ -145,5 +154,24 @@ public class MapEditor extends EditorSuper{
     }
 
 
-
+    private void createSaveFile() {
+        FileChooser fileChooser = getRenderSystem().makeFileChooser("xml");
+        fileChooser.setTitle("Save File As");
+        File defaultFile = new File(RESOURCE_PATH);
+        fileChooser.setInitialDirectory(defaultFile);
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            try {
+                HashMap<String, ArrayList<String>> structure = new HashMap<>();
+                ArrayList<String> mapAttributes = new ArrayList<>();
+                mapAttributes.add("x");
+                mapAttributes.add("y");
+                structure.put("map", mapAttributes);
+                new XMLSaveBuilder(file.getPath(), structure, level.createLevelMap());
+            } catch (Exception ex) {
+                System.out.println("Invalid save");
+                ex.printStackTrace();
+            }
+        }
+    }
 }

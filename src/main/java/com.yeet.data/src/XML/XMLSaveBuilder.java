@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 public class XMLSaveBuilder {
 
-    public XMLSaveBuilder(String filePath, HashMap<String, ArrayList<String>> structure, HashMap<String, String> data) {
+    public XMLSaveBuilder(String filePath, HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbf.newDocumentBuilder();
@@ -35,15 +35,23 @@ public class XMLSaveBuilder {
             Attr authorAttribute = saveDocument.createAttribute("author");
             authorAttribute.setValue("yeet");
             root.setAttributeNode(authorAttribute);
-            for(String elementTag : structure.keySet()) {
-                Element tag = saveDocument.createElement(elementTag);
-                saveDocument.appendChild(tag);
-                for(String attributeTag : structure.get(elementTag)) {
-                    Attr tagAttribute = saveDocument.createAttribute(attributeTag);
-                    if(data.containsKey(attributeTag)) {
-                        tagAttribute.setValue(data.get(attributeTag));
+            int maxSize = 0;
+            for(String s : data.keySet()) {
+                if(data.get(s).size() > maxSize) {
+                    maxSize = data.get(s).size();
+                }
+            }
+            for(int i = 0; i < maxSize; i++) {
+                for(String elementTag : structure.keySet()) {
+                    Element tag = saveDocument.createElement(elementTag);
+                    root.appendChild(tag);
+                    for(String attributeTag : structure.get(elementTag)) {
+                        Attr tagAttribute = saveDocument.createAttribute(attributeTag);
+                        if(data.containsKey(attributeTag)) {
+                            tagAttribute.setValue(data.get(attributeTag).get(i));
+                        }
+                        tag.setAttributeNode(tagAttribute);
                     }
-                    tag.setAttributeNode(tagAttribute);
                 }
             }
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
