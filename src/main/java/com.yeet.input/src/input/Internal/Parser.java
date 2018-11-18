@@ -31,10 +31,6 @@ public class Parser {
      *
      */
     public List<String> parse(Queue<KeyInputEvent> q){
-        //for(KeyInputEvent k : q){
-        //    return attackMapping.get(k.getKey().getChar());
-        //}
-
         var output = timer.comboHandler(q);
         List<String> parsed = new ArrayList<>();
         for(String o :output){
