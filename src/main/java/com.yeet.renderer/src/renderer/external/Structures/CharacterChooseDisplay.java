@@ -76,7 +76,6 @@ public class CharacterChooseDisplay extends StackPane {
     }
 
     private void nextState(){
-        System.out.println("changing state!");
         switch(myState){
             case NONE:
                 myState = State.HUMAN;
