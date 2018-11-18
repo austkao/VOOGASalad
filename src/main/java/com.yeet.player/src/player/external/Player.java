@@ -45,7 +45,7 @@ public class Player {
         //pre-load all other screens
         mySplashScreen = new SplashScreen(new Group(), myRenderer, myDirectory, () -> myStage.setScene(myMainMenuScreen));
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()->myStage.setScene(myCharacterSelectScreen));
-        myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer);
+        myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory);
         myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
         myCombatScreen =  new CombatScreen(new Group(),myRenderer);
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
