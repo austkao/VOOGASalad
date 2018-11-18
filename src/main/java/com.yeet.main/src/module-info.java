@@ -8,6 +8,7 @@ module com.yeet.main {
     requires com.yeet.player;
     requires com.yeet.editor;
     requires com.yeet.console;
+    requires com.yeet.input;
 
     exports main;
 }
