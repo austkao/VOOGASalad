@@ -302,4 +302,13 @@ public class RenderSystem implements Renderer{
         sprite.setViewport(offsetX,offsetY);
         return sprite;
     }
+
+    /** Creates a character display for choosing characters on the {@code CharacterSelectScreen}
+     *  @param color The {@code Color} representing the player
+     *  @param defaultText The default name of the player
+     */
+    public CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText){
+        return new CharacterChooseDisplay(color,defaultText,myPlainFont);
+    }
+
 }

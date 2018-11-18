@@ -1,7 +1,8 @@
 package renderer.external;
 
 import javafx.scene.Group;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -136,4 +137,9 @@ public interface Renderer{
      */
     Sprite makeSprite(Image image, Double offsetX, Double offsetY, Double width, Double height);
 
+    /** Creates a character display for choosing characters on the {@code CharacterSelectScreen}
+     *  @param color The {@code Color} representing the player
+     *  @param defaultText The default name of the player
+     */
+    CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText);
 }

@@ -3,7 +3,6 @@ package player.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import messenger.external.EventBusFactory;
 import messenger.external.TestSuccesfulEvent;
@@ -45,7 +44,7 @@ public class Player {
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
         mySplashScreen = new SplashScreen(new Group(), myRenderer, myDirectory, () -> myStage.setScene(myMainMenuScreen));
-        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer);
+        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()->myStage.setScene(myCharacterSelectScreen));
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer);
         myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
         myCombatScreen =  new CombatScreen(new Group(),myRenderer);

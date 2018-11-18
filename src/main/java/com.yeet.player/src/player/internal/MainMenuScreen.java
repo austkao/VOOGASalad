@@ -3,7 +3,6 @@ package player.internal;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.SVGPath;
 import renderer.external.Renderer;
 
 /** Central hub for access to all game functionality
@@ -11,7 +10,7 @@ import renderer.external.Renderer;
  */
 public class MainMenuScreen extends Screen {
 
-    public MainMenuScreen(Group root, Renderer renderer) {
+    public MainMenuScreen(Group root, Renderer renderer, SceneSwitch sceneSwitch) {
         super(root, renderer);
         ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("mainmenu_bg.png")));
         background.setFitHeight(800.0);
@@ -29,7 +28,7 @@ public class MainMenuScreen extends Screen {
             smashButton.setScaleY(1.0);
             smashButton.setScaleX(1.0);
         });
-        smashButton.setOnMousePressed(event -> System.out.println("hello :)"));
+        smashButton.setOnMousePressed(event -> sceneSwitch.switchScene());
         super.getMyRoot().getChildren().addAll(background,smashButton);
     }
 }
