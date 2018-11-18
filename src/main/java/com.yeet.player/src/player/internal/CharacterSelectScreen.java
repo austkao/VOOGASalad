@@ -35,6 +35,7 @@ public class CharacterSelectScreen extends Screen {
         charBox.getChildren().addAll(char1, char2, char3, char4);
         holder.getChildren().addAll(bg,charBox);
         super.getMyRoot().getChildren().addAll(holder);
+        char1.setPortrait(new Image(this.getClass().getClassLoader().getResourceAsStream("lucina.png")));
     }
 
 }

@@ -11,6 +11,10 @@ import javafx.scene.text.Text;
 
 import static renderer.internal.RenderUtils.toRGBCode;
 
+/** Custom extension of {@code StackPane} that is used to display what character the player has chosen, as well as toggle
+ *  whether the selected player should be a human, computer, or none.
+ *  @author bpx
+ */
 public class CharacterChooseDisplay extends StackPane {
 
     public static final String FORMAT_RECT = "-fx-border-radius: %s;-fx-background-radius: %s; -fx-background-color: %s";
@@ -29,6 +33,8 @@ public class CharacterChooseDisplay extends StackPane {
     private StackPane namepiece;
     private StackPane iconHolder;
 
+    private ImageView portrait;
+
     private ImageView icon;
     private final Image none = new Image(this.getClass().getClassLoader().getResourceAsStream("none_icon.png"));
     private final Image human = new Image(this.getClass().getClassLoader().getResourceAsStream("human_icon.png"));
@@ -36,14 +42,23 @@ public class CharacterChooseDisplay extends StackPane {
 
     private Text text;
 
+    /** Creates a new {@code CharacterChooseDisplay} using the specified parameters
+     *  @param color The {@code Color} the player will be represented by
+     *  @param defaultText The default name of the player
+     *  @param font The {@code Font} to display the name in
+     */
     public CharacterChooseDisplay(Color color, String defaultText, Font font){
         super();
         myState = State.NONE;
         myColor = color;
         myText = defaultText;
-        super.setAlignment(Pos.BOTTOM_CENTER);
+        super.setAlignment(Pos.BOTTOM_RIGHT);
         super.setPrefSize(305.0,332.0);
         super.setStyle(String.format(FORMAT_RECT,"100 0 0 0","100 0 0 0","transparent"));
+        portrait = new ImageView();
+        portrait.setPreserveRatio(true);
+        portrait.setFitHeight(332);
+        portrait.setOpacity(0);
         bottom = new StackPane();
         bottom.setAlignment(Pos.TOP_LEFT);
         bottom.setMaxSize(305.0,107.0);
@@ -66,7 +81,7 @@ public class CharacterChooseDisplay extends StackPane {
         icon.setFitHeight(33);
         text = new Text("None");
         text.setFont(font);
-        super.getChildren().addAll(bottom);
+        super.getChildren().addAll(portrait,bottom);
         bottom.getChildren().addAll(colorblock);
         colorblock.getChildren().addAll(namepiece);
         namepiece.getChildren().addAll(nameBox);
@@ -75,6 +90,7 @@ public class CharacterChooseDisplay extends StackPane {
         iconHolder.setOnMousePressed(event -> nextState());
     }
 
+    /** Advances the {@code CharacterChooseDisplay} to the next state, NONE->HUMAN->CPU, then goes back to NONE*/
     private void nextState(){
         switch(myState){
             case NONE:
@@ -83,6 +99,7 @@ public class CharacterChooseDisplay extends StackPane {
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35",toRGBCode(myColor)));
                 icon.setImage(human);
                 text.setText(myText);
+                portrait.setOpacity(1);
                 break;
             case HUMAN:
                 myState = State.CPU;
@@ -97,9 +114,30 @@ public class CharacterChooseDisplay extends StackPane {
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35","transparent"));
                 icon.setImage(none);
                 text.setText("None");
+                portrait.setOpacity(0);
                 break;
         }
 
+    }
+
+    /** Set the character portrait
+     *  @param image The image representing the character chosen
+     */
+    public void setPortrait(Image image){
+        portrait.setImage(image);
+    }
+
+    /** Returns the current {@code State} of the {@code CharacterChooseDisplay}*/
+    public State getState(){
+        if(myState.equals(State.HUMAN)){
+            return State.HUMAN;
+        }
+        else if(myState.equals(State.CPU)){
+            return State.CPU;
+        }
+        else{
+            return State.NONE;
+        }
     }
 
 }
