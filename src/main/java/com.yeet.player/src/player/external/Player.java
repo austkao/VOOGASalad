@@ -3,6 +3,8 @@ package player.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import messenger.external.EventBusFactory;
 import messenger.external.TestSuccesfulEvent;
@@ -19,6 +21,12 @@ public class Player {
     private EventBus myMessageBus;
     private Stage myStage;
     private Renderer myRenderer;
+
+
+    private MediaPlayer myBGMPlayer;
+    private Media myBGM;
+    private MediaPlayer myFightMusicPlayer;
+    private Media myFightMusic;
 
     private LoadingScreen myLoadingScreen;
     private SplashScreen mySplashScreen;
@@ -43,8 +51,22 @@ public class Player {
     public void start(){
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
-        mySplashScreen = new SplashScreen(new Group(), myRenderer, myDirectory, () -> myStage.setScene(myMainMenuScreen));
-        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()->myStage.setScene(myCharacterSelectScreen));
+        myBGM = new Media(new File(myDirectory.getPath()).toURI().toString()+"Theme.m4a");
+        myBGMPlayer = new MediaPlayer(myBGM);
+        myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        myFightMusic = new Media(new File(myDirectory.getPath()).toURI().toString()+"Fight.m4a");
+        myFightMusicPlayer = new MediaPlayer(myFightMusic);
+        myFightMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mySplashScreen = new SplashScreen(new Group(), myRenderer, myDirectory, () -> {
+            myStage.setScene(myMainMenuScreen);
+            myBGMPlayer.play();
+        });
+        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()-> {
+            myBGMPlayer.stop();
+            myFightMusicPlayer.play();
+            myStage.setScene(myCharacterSelectScreen);
+
+        });
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory);
         myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
         myCombatScreen =  new CombatScreen(new Group(),myRenderer);
