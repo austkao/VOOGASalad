@@ -5,7 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -59,11 +61,15 @@ public class CharacterChooseDisplay extends StackPane {
         myText = defaultText;
         super.setAlignment(Pos.BOTTOM_RIGHT);
         super.setPrefSize(305.0,332.0);
+        super.setMaxSize(305.0,332.0);
+        super.setMinSize(305.0,332.0);
         super.setStyle(String.format(FORMAT_RECT,"100 0 0 0","100 0 0 0","transparent"));
-        portrait = new ImageView();
+        VBox portraitHolder = new VBox();
+        portrait = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("empty.png")));
         portrait.setPreserveRatio(true);
-        portrait.setFitHeight(225);
+        portrait.setFitWidth(305.0);
         portrait.setOpacity(0);
+        Rectangle spacer = new Rectangle(305,107,Color.TRANSPARENT);
         bottom = new StackPane();
         bottom.setAlignment(Pos.TOP_LEFT);
         bottom.setMaxSize(305.0,107.0);
@@ -86,7 +92,8 @@ public class CharacterChooseDisplay extends StackPane {
         icon.setFitHeight(33);
         text = new Text("None");
         text.setFont(font);
-        super.getChildren().addAll(portrait,bottom);
+        portraitHolder.getChildren().addAll(portrait,spacer);
+        super.getChildren().addAll(portraitHolder,bottom);
         bottom.getChildren().addAll(colorblock);
         colorblock.getChildren().addAll(namepiece);
         namepiece.getChildren().addAll(nameBox);
@@ -135,6 +142,7 @@ public class CharacterChooseDisplay extends StackPane {
      *  @param image The image representing the character chosen
      */
     public void setPortrait(Image image){
+        portrait.setOpacity(1);
         portrait.setImage(image);
     }
 
