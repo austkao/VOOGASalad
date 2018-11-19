@@ -12,6 +12,7 @@ public enum PlayerState {
         }
     },
 
+    /* the state when the player is moving in the left or right direction */
     MOVING{
         @Override
         PlayerState changeStatesOnEvent(CombatActionEvent event){
@@ -58,6 +59,7 @@ public enum PlayerState {
         }
     },
 
+    /* the state when the player is being attacked by another player */
     BEING_ATTACKED{
         @Override
         PlayerState changeStatesOnEvent(CombatActionEvent event){

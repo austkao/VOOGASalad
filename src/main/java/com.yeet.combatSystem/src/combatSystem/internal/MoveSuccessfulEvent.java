@@ -2,6 +2,7 @@ package combatSystem.internal;
 
 public class MoveSuccessfulEvent extends SuccessfulEvent{
 
+    // true if player is going left, false if player is going right
     boolean isGoingLeft;
 
     public MoveSuccessfulEvent(int initiatorID, boolean isGoingLeft) {
