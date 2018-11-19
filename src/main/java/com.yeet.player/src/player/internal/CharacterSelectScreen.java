@@ -2,8 +2,10 @@ package player.internal;
 
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -49,6 +51,15 @@ public class CharacterSelectScreen extends Screen {
         bg.setFitWidth(1280);
         bg.setFitHeight(800);
         bg.setOpacity(0.52);
+        HBox menuBlock = new HBox(30.0);
+        menuBlock.setPrefSize(1280,75);
+        menuBlock.setAlignment(Pos.CENTER_LEFT);
+        Rectangle menuSpacer = new Rectangle(15,75,Color.TRANSPARENT);
+        Button backButton = super.getMyRenderer().makeImageButton(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png")),0.0,0.0,60.0,60.0);
+        backButton.setBackground(Background.EMPTY);
+        HBox menuTop = new HBox(5.0);
+        menuTop.setAlignment(Pos.CENTER);
+        //TODO: FINISH MENU TOPPER
         myCharGrid = super.getMyRenderer().makeCharacterGrid(myDirectory,CHAR_PER_ROW,this::setCharacter);
         Rectangle spacer = new Rectangle(1280,10,Color.TRANSPARENT);
         HBox charBox = new HBox(10);
@@ -63,7 +74,8 @@ public class CharacterSelectScreen extends Screen {
         display3 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#FFF61B"),"Player 3", button3);
         display4 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#1FCB17"),"Player 4", button4);
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
-        holder.getChildren().addAll(myCharGrid,spacer,charBox);
+        menuBlock.getChildren().addAll(menuSpacer,backButton);
+        holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
     }
 
