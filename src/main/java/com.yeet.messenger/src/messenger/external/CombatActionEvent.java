@@ -29,9 +29,9 @@ public abstract class CombatActionEvent extends Event {
     }
 
     // called when this combat action event is successful
-    abstract void onSuccess();
+    public abstract void onSuccess();
     // called when this combat action event fails
-    abstract void onFailure();
+    public abstract void onFailure();
 
     @Override
     public String getName() {
