@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import renderer.external.Structures.*;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /** External API for Renderer system, focused on creating UI elements and other graphical
@@ -140,6 +141,17 @@ public interface Renderer{
     /** Creates a character display for choosing characters on the {@code CharacterSelectScreen}
      *  @param color The {@code Color} representing the player
      *  @param defaultText The default name of the player
+     *  @param button The token for choosing characters
      */
-    CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText);
+    CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText, DragToken button);
+
+    /** Creates a new {@code DragToken} using the specified parameters
+     *  @param text The {@code Text} to use for the label
+     *  @param color The {@code Color} of the token
+     *  @param x The initial x position of the token
+     *  @param y The initial y position of the token
+     *  @param radius The size of the token
+     *  @param biConsumer Accepts the coordinates of the center of the token upon being released
+     */
+    DragToken makeDragToken(String text, Color color, int fontSize, double x, double y, double radius, BiConsumer<Double, Double> biConsumer);
 }

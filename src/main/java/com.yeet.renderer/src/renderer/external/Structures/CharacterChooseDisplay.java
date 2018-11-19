@@ -23,6 +23,7 @@ public class CharacterChooseDisplay extends StackPane {
         HUMAN, CPU, NONE;
     }
 
+    private DragToken myButton;
     private State myState;
     private Color myColor;
     private String myText;
@@ -46,9 +47,13 @@ public class CharacterChooseDisplay extends StackPane {
      *  @param color The {@code Color} the player will be represented by
      *  @param defaultText The default name of the player
      *  @param font The {@code Font} to display the name in
+     *  @param button The token for choosing characters
      */
-    public CharacterChooseDisplay(Color color, String defaultText, Font font){
+    public CharacterChooseDisplay(Color color, String defaultText, Font font, DragToken button){
         super();
+        myButton = button;
+        myButton.setDisable(true);
+        myButton.setOpacity(0);
         myState = State.NONE;
         myColor = color;
         myText = defaultText;
@@ -100,6 +105,9 @@ public class CharacterChooseDisplay extends StackPane {
                 icon.setImage(human);
                 text.setText(myText);
                 portrait.setOpacity(1);
+                myButton.resetColor();
+                myButton.setOpacity(1);
+                myButton.setDisable(false);
                 break;
             case HUMAN:
                 myState = State.CPU;
@@ -107,6 +115,7 @@ public class CharacterChooseDisplay extends StackPane {
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35",toRGBCode(Color.web("#5B585C"))));
                 icon.setImage(cpu);
                 text.setText("CPU");
+                myButton.setColor(Color.web("#848484"));
                 break;
             case CPU:
                 myState = State.NONE;
@@ -115,6 +124,8 @@ public class CharacterChooseDisplay extends StackPane {
                 icon.setImage(none);
                 text.setText("None");
                 portrait.setOpacity(0);
+                myButton.setOpacity(0);
+                myButton.setDisable(true);
                 break;
         }
 

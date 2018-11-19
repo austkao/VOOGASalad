@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import renderer.external.Structures.*;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static renderer.internal.RenderUtils.toRGBCode;
@@ -133,7 +134,7 @@ public class RenderSystem implements Renderer{
 
     /** Draws a {@code Level} to the specified target
      *  @param root The target {@code Group} to draw to
-     *  @param level The {@code Level} to draw */
+     *  @param image The {@code Level} to draw */
     public void drawStage(Group root, Image image){
         Level level = new Level(image);
         root.getChildren().add(level.getWindow());
@@ -306,9 +307,22 @@ public class RenderSystem implements Renderer{
     /** Creates a character display for choosing characters on the {@code CharacterSelectScreen}
      *  @param color The {@code Color} representing the player
      *  @param defaultText The default name of the player
+     *  @param button The token for choosing characters
      */
-    public CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText){
-        return new CharacterChooseDisplay(color,defaultText,myPlainFont);
+    public CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText, DragToken button){
+        return new CharacterChooseDisplay(color,defaultText,myPlainFont,button);
+    }
+
+    /** Creates a draggable token that does activates a {@code BiConsumer} upon being released
+     *  @param text The {@code Text} to use for the label
+     *  @param color The {@code Color} of the token
+     *  @param x The initial x position of the token
+     *  @param y The initial y position of the token
+     *  @param radius The size of the token
+     *  @param biConsumer Accepts the coordinates of the center of the token upon being released
+     */
+    public DragToken makeDragToken(String text, Color color, int fontSize, double x, double y, double radius, BiConsumer<Double, Double> biConsumer) {
+        return new DragToken(makeText(text,true,fontSize,Color.WHITE,0.0,0.0),color,x,y,radius, biConsumer);
     }
 
 }

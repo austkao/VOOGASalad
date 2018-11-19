@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import renderer.external.Renderer;
 import renderer.external.Structures.CharacterChooseDisplay;
+import renderer.external.Structures.DragToken;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +22,16 @@ import java.util.ArrayList;
 public class CharacterSelectScreen extends Screen {
 
     public static final int CHAR_PER_ROW = 8;
+    public static final int BUTTON_SIZE = 40;
     private File myDirectory;
+
+    private VBox myCharGrid;
+
+    private CharacterChooseDisplay display1;
+    private CharacterChooseDisplay display2;
+    private CharacterChooseDisplay display3;
+    private CharacterChooseDisplay display4;
+
 
     public CharacterSelectScreen(Group root, Renderer renderer, File gameDirectory) {
         super(root, renderer);
@@ -34,19 +44,27 @@ public class CharacterSelectScreen extends Screen {
         bg.setFitWidth(1280);
         bg.setFitHeight(800);
         bg.setOpacity(0.52);
-        VBox charGrid = setUpCharGrid();
+        myCharGrid = setUpCharGrid();
         HBox charBox = new HBox(10);
         charBox.setMaxHeight(332.0);
         charBox.setAlignment(Pos.CENTER);
-        CharacterChooseDisplay char1 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#FD1B1B"),"Player 1");
-        CharacterChooseDisplay char2 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#4C7FFF"),"Player 2");
-        CharacterChooseDisplay char3 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#FFF61B"),"Player 3");
-        CharacterChooseDisplay char4 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#1FCB17"),"Player 4");
-        super.getMyRoot().getChildren().addAll(bg,holder);
-        holder.getChildren().addAll(charGrid,charBox);
-        charBox.getChildren().addAll(char1, char2, char3, char4);
-        char1.setPortrait(new Image(this.getClass().getClassLoader().getResourceAsStream("lucina.png")));
+        DragToken button1 = super.getMyRenderer().makeDragToken("P1",Color.web("#FD1B1B"), 40,130,548,40, this::getCharacter);
+        DragToken button2 = super.getMyRenderer().makeDragToken("P2",Color.web("#4C7FFF"),40,439,548,40, this::getCharacter);
+        DragToken button3 = super.getMyRenderer().makeDragToken("P3",Color.web("#FFF61B"),40,752,545,40, this::getCharacter);
+        DragToken button4 = super.getMyRenderer().makeDragToken("P4",Color.web("#1FCB17"),40,1079,545,40, this::getCharacter);
+        display1 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#FD1B1B"),"Player 1", button1);
+        display2 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#4C7FFF"),"Player 2", button2);
+        display3 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#FFF61B"),"Player 3", button3);
+        display4 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#1FCB17"),"Player 4", button4);
+        super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
+        holder.getChildren().addAll(myCharGrid,charBox);
+        charBox.getChildren().addAll(display1,display2,display3,display4);
     }
+
+    private void getCharacter(Double x, Double y){
+
+    }
+
 
     /** Algorithmically creates a grid of characters based on number of directories available */
     private VBox setUpCharGrid(){
