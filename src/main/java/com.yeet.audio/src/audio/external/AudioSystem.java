@@ -26,4 +26,18 @@ public class AudioSystem {
         System.out.println(newPath);
         myPlayer.playMedia(newPath);
     }
+
+    /**
+     / Listens for the combat system to play the sound
+     */
+    public void playAction(SuccessfulEvent event){
+
+    }
+
+    /**
+     / This is the subscription to the ActionEvents that are posted by the inputsystem.
+     */
+    public void gameOver(GameOverEvent gameOver){
+
+    }
 }

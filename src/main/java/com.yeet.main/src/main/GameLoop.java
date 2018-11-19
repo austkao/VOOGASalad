@@ -1,8 +1,14 @@
 package main;
 
-public class GameLoop {
+import physics.external.PhysicsSystem;
+import renderer.external.RenderSystem;
 
-    private boolean running = false;
+public class GameLoop {
+    private PhysicsSystem physicsEngine;
+    private RenderSystem renderEngine;
+
+
+    private boolean running = true;
     private boolean paused = false;
     private int fps = 60;
     private int frameCount= 0;
@@ -18,9 +24,8 @@ public class GameLoop {
 
 
     public GameLoop(){
-        /**
-         * Instantiate all of the systems.
-         */
+        physicsEngine = new PhysicsSystem();
+        //renderEngine= new RenderSystem(Font);
     }
 
     /**
@@ -54,8 +59,7 @@ public class GameLoop {
                 //Do as many game updates as we need to, potentially playing catchup.
                 while( now - lastUpdateTime > TIME_BETWEEN_UPDATES && updateCount < MAX_UPDATES_BEFORE_RENDER )
                 {
-                    //Update physics engine
-                    //updateGame();
+                    physicsEngine.update();
                     lastUpdateTime += TIME_BETWEEN_UPDATES;
                     updateCount++;
                 }
