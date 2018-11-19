@@ -4,16 +4,16 @@ import java.util.List;
 
 class NetVectorCalculator {
 
-    private List<Vector> myVectors;
+    private List<PhysicsVector> myVectors;
 
-    NetVectorCalculator(List<Vector> vectors) {
+    NetVectorCalculator(List<PhysicsVector> vectors) {
         myVectors = vectors;
     }
 
-    Vector getNetForce() {
+    PhysicsVector getNetForce() {
         while(myVectors.size() > 1) {
-            Vector vector1 = myVectors.get(0);
-            Vector vector2 = myVectors.get(1);
+            PhysicsVector vector1 = myVectors.get(0);
+            PhysicsVector vector2 = myVectors.get(1);
             double newX = getX(vector1) + getX(vector2);
             double newY = getY(vector1) + getY(vector2);
             double newMagnitude = Math.sqrt(Math.pow(newX, 2) + Math.pow(newY, 2));
@@ -25,11 +25,11 @@ class NetVectorCalculator {
         return myVectors.get(0);
     }
 
-    private double getX(Vector v) {
+    private double getX(PhysicsVector v) {
         return v.getMagnitude() * Math.cos(v.getDirection());
     }
 
-    private double getY(Vector v) {
+    private double getY(PhysicsVector v) {
         return v.getMagnitude() * Math.sin(v.getDirection());
     }
 }

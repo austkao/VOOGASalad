@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NetForceCalculatorTest {
 
-    List<Vector> forces = new ArrayList<>();
+    List<PhysicsVector> forces = new ArrayList<>();
 
     @Test
     void getNetForce() {

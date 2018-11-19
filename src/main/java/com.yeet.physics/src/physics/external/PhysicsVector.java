@@ -1,10 +1,10 @@
 package physics.external;
 
-public abstract class Vector {
+public abstract class PhysicsVector {
     protected double magnitude;
     protected double direction; // IN RADIANS
 
-    Vector (double magnitude, double direction) {
+    PhysicsVector (double magnitude, double direction) {
         this.magnitude = magnitude;
         this.direction = direction;
     }
