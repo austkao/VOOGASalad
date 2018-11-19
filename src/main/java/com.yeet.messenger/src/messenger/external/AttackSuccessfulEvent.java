@@ -1,4 +1,4 @@
-package combatSystem.internal;
+package messenger.external;
 
 public class AttackSuccessfulEvent extends SuccessfulEvent{
 
