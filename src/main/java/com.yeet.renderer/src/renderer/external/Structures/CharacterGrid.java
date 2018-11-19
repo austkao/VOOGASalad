@@ -17,6 +17,9 @@ import java.util.function.BiConsumer;
  */
 public class CharacterGrid extends VBox {
 
+    public static final int THUMB_WIDTH = 132;
+    public static final int THUMB_HEIGHT = 95;
+
     private HashMap<ImageView,String> myImageMap;
 
     private BiConsumer<String,String> myCharacterConsumer;
@@ -44,7 +47,7 @@ public class CharacterGrid extends VBox {
         int rowcount = (int)Math.ceil(charcount/(double)charactersPerRow);
         for(int i = 0;i<rowcount;i++){
             HBox row = new HBox(1.0);
-            row.setMinSize(1280,95);
+            row.setMinSize(1280,THUMB_HEIGHT);
             row.setAlignment(Pos.CENTER);
             for(int j = 0; j < charactersPerRow; j++){
                 if((charactersPerRow*(i))+j+1>charcount){
@@ -54,7 +57,7 @@ public class CharacterGrid extends VBox {
                     ImageView portrait = new ImageView(new Image(String.format("%s/%s",files.get((charactersPerRow*(i))+j).toURI(),"portrait.png")));
                     portrait.setPreserveRatio(true);
                     portrait.setFitWidth(132);
-                    portrait.setViewport(new Rectangle2D(56,25,132,95));
+                    portrait.setViewport(new Rectangle2D(95,106, THUMB_WIDTH, THUMB_HEIGHT));
                     myImageMap.put(portrait,files.get((charactersPerRow*(i))+j).getName());
                     row.getChildren().add(portrait);
                 }
