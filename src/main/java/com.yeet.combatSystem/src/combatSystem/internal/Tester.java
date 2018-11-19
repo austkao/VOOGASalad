@@ -1,7 +1,9 @@
 package combatSystem.internal;
 
 import combatSystem.external.CombatSystem;
+import messenger.external.CombatActionEvent;
 import messenger.external.EventBusFactory;
+import messenger.external.JumpEvent;
 
 public class Tester {
 

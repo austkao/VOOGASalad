@@ -13,13 +13,13 @@ public class JumpEvent extends CombatActionEvent {
     /* called if this jump event is successful, will post a JumpSuccessfulEvent
      through the event bus for physics engine to handle */
     @Override
-    void onSuccess() {
+    public void onSuccess() {
         eventBus.post(new JumpSuccessfulEvent(initiatorID));
         System.out.println(getName());
     }
 
     @Override
-    void onFailure() {
+    public void onFailure() {
         System.out.println(String.format("Player with id(%d) fails to jump.", initiatorID));
     }
 
