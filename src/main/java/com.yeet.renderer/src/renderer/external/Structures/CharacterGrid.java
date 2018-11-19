@@ -6,6 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class CharacterGrid extends VBox {
 
     public static final int THUMB_WIDTH = 132;
     public static final int THUMB_HEIGHT = 95;
+    public static final int TEXT_HEIGHT = 10;
 
     private HashMap<ImageView,String> myImageMap;
 
@@ -27,9 +30,10 @@ public class CharacterGrid extends VBox {
     /** Creates a new {@code CharacterGrid} using the specified parameters
      *  @param directory The game directory
      *  @param charactersPerRow Number of thumbnails to show per row
+     *  @param text The text base to use when labelling character thumbnails
      *  @param characterConsumer Lambda that will use the name of the character chosen
      *  */
-    public CharacterGrid(File directory, int charactersPerRow, BiConsumer<String,String> characterConsumer){
+    public CharacterGrid(File directory, int charactersPerRow, Text text, BiConsumer<String,String> characterConsumer){
         super(1.0);
         super.setAlignment(Pos.CENTER);
         super.setMinSize(1280,382);
@@ -47,7 +51,7 @@ public class CharacterGrid extends VBox {
         int rowcount = (int)Math.ceil(charcount/(double)charactersPerRow);
         for(int i = 0;i<rowcount;i++){
             HBox row = new HBox(1.0);
-            row.setMinSize(1280,THUMB_HEIGHT);
+            row.setPrefSize(1280,THUMB_HEIGHT+ TEXT_HEIGHT);
             row.setAlignment(Pos.CENTER);
             for(int j = 0; j < charactersPerRow; j++){
                 if((charactersPerRow*(i))+j+1>charcount){
@@ -59,7 +63,16 @@ public class CharacterGrid extends VBox {
                     portrait.setFitWidth(132);
                     portrait.setViewport(new Rectangle2D(95,106, THUMB_WIDTH, THUMB_HEIGHT));
                     myImageMap.put(portrait,files.get((charactersPerRow*(i))+j).getName());
-                    row.getChildren().add(portrait);
+                    Text label = new Text(files.get((charactersPerRow*(i))+j).getName());
+                    label.setFont(text.getFont());
+                    label.setFill(Color.WHITE);
+                    label.setStyle("-fx-font-size: 15");
+                    System.out.println("making label: "+files.get((charactersPerRow*(i))+j).getName());
+                    VBox portraitHolder = new VBox(1.0);
+                    portraitHolder.setPrefSize(THUMB_WIDTH,THUMB_HEIGHT+TEXT_HEIGHT);
+                    portraitHolder.setAlignment(Pos.BOTTOM_CENTER);
+                    portraitHolder.getChildren().addAll(portrait,label);
+                    row.getChildren().add(portraitHolder);
                 }
             }
             super.getChildren().add(row);
