@@ -29,6 +29,7 @@ public class CharacterChooseDisplay extends StackPane {
     private State myState;
     private Color myColor;
     private String myText;
+    private Text myCharacterName;
 
 
     private StackPane bottom;
@@ -65,6 +66,11 @@ public class CharacterChooseDisplay extends StackPane {
         super.setMinSize(305.0,332.0);
         super.setStyle(String.format(FORMAT_RECT,"100 0 0 0","100 0 0 0","transparent"));
         VBox portraitHolder = new VBox();
+        StackPane portraitInner = new StackPane();
+        portraitInner.setAlignment(Pos.BOTTOM_CENTER);
+        myCharacterName = new Text("");
+        myCharacterName.setFont(font);
+        myCharacterName.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 3px; -fx-font-size: 60");
         portrait = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("empty.png")));
         portrait.setPreserveRatio(true);
         portrait.setFitWidth(305.0);
@@ -80,10 +86,13 @@ public class CharacterChooseDisplay extends StackPane {
         colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35","transparent"));
         namepiece = new StackPane();
         namepiece.setAlignment(Pos.CENTER_LEFT);
+        namepiece.setMinSize(257.0,33.0);
+        namepiece.setPrefSize(257.0,33.0);
         namepiece.setMaxSize(257.0,33.0);
         namepiece.setStyle(String.format(FORMAT_RECT,"17 17 17 17","17 17 17 17",toRGBCode(Color.WHITE)));
         iconHolder = new StackPane();
         HBox nameBox = new HBox(16.5);
+        nameBox.setAlignment(Pos.CENTER_LEFT);
         iconHolder.setAlignment(Pos.CENTER);
         iconHolder.setMaxSize(33,33);
         iconHolder.setStyle(String.format(FORMAT_RECT,"17 17 17 17","17 17 17 17",toRGBCode(Color.web("#1F1C1F"))));
@@ -92,7 +101,9 @@ public class CharacterChooseDisplay extends StackPane {
         icon.setFitHeight(33);
         text = new Text("None");
         text.setFont(font);
-        portraitHolder.getChildren().addAll(portrait,spacer);
+        text.setStyle("-fx-font-size: 30");
+        portraitInner.getChildren().addAll(portrait,myCharacterName);
+        portraitHolder.getChildren().addAll(portraitInner,spacer);
         super.getChildren().addAll(portraitHolder,bottom);
         bottom.getChildren().addAll(colorblock);
         colorblock.getChildren().addAll(namepiece);
@@ -144,6 +155,10 @@ public class CharacterChooseDisplay extends StackPane {
     public void setPortrait(Image image){
         portrait.setOpacity(1);
         portrait.setImage(image);
+    }
+
+    public void setCharacterName(String text){
+        myCharacterName.setText(text);
     }
 
     /** Returns the current {@code State} of the {@code CharacterChooseDisplay}*/

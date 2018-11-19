@@ -72,15 +72,19 @@ public class CharacterSelectScreen extends Screen {
     private void setCharacter(String player, String charName){
         if(player.equalsIgnoreCase("P1")){
             display1.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+            display1.setCharacterName(charName);
         }
         else if(player.equalsIgnoreCase("P2")){
             display2.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+            display2.setCharacterName(charName);
         }
         else if(player.equalsIgnoreCase("P3")){
             display3.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+            display3.setCharacterName(charName);
         }
         else if(player.equalsIgnoreCase("P4")){
             display4.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+            display4.setCharacterName(charName);
         }
     }
 

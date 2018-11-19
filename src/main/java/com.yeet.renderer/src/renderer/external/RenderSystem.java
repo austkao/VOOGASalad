@@ -313,7 +313,7 @@ public class RenderSystem implements Renderer{
      *  @param button The token for choosing characters
      */
     public CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText, DragToken button){
-        return new CharacterChooseDisplay(color,defaultText,myPlainFont,button);
+        return new CharacterChooseDisplay(color,defaultText,myEmphasisFont,button);
     }
 
     /** Creates a draggable token that does activates a {@code BiConsumer} upon being released
