@@ -335,7 +335,6 @@ public class RenderSystem implements Renderer{
      */
     public CharacterGrid makeCharacterGrid(File directory, int charactersPerRow, BiConsumer<String, String> biConsumer){
         Text text = makeText("",true,15,Color.WHITE,0.0,0.0);
-        System.out.println(text.getFont());
         return new CharacterGrid(directory,charactersPerRow, text, biConsumer);
     }
 

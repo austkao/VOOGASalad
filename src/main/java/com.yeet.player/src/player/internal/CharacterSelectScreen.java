@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import renderer.external.Renderer;
 import renderer.external.Structures.CharacterChooseDisplay;
 import renderer.external.Structures.CharacterGrid;
@@ -41,7 +42,7 @@ public class CharacterSelectScreen extends Screen {
         super(root, renderer);
         super.setFill(Color.WHITE);
         myDirectory = gameDirectory;
-        VBox holder = new VBox(15);
+        VBox holder = new VBox(0.0);
         holder.setPrefSize(1280,800);
         holder.setAlignment(Pos.BOTTOM_CENTER);
         ImageView bg = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("characterselect_bg.jpg")));
@@ -49,6 +50,7 @@ public class CharacterSelectScreen extends Screen {
         bg.setFitHeight(800);
         bg.setOpacity(0.52);
         myCharGrid = super.getMyRenderer().makeCharacterGrid(myDirectory,CHAR_PER_ROW,this::setCharacter);
+        Rectangle spacer = new Rectangle(1280,10,Color.TRANSPARENT);
         HBox charBox = new HBox(10);
         charBox.setMaxHeight(332.0);
         charBox.setAlignment(Pos.CENTER);
@@ -61,7 +63,7 @@ public class CharacterSelectScreen extends Screen {
         display3 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#FFF61B"),"Player 3", button3);
         display4 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#1FCB17"),"Player 4", button4);
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
-        holder.getChildren().addAll(myCharGrid,charBox);
+        holder.getChildren().addAll(myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
     }
 
