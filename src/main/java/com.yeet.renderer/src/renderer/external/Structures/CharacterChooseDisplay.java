@@ -62,7 +62,7 @@ public class CharacterChooseDisplay extends StackPane {
         super.setStyle(String.format(FORMAT_RECT,"100 0 0 0","100 0 0 0","transparent"));
         portrait = new ImageView();
         portrait.setPreserveRatio(true);
-        portrait.setFitHeight(332);
+        portrait.setFitHeight(225);
         portrait.setOpacity(0);
         bottom = new StackPane();
         bottom.setAlignment(Pos.TOP_LEFT);
