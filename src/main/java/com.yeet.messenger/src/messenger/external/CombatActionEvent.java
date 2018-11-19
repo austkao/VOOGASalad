@@ -1,4 +1,4 @@
-package combatSystem.internal;
+package messenger.external;
 
 import com.google.common.eventbus.EventBus;
 import messenger.external.Event;

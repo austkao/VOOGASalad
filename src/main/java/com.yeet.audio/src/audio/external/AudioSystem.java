@@ -5,6 +5,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.ActionEvent;
 import messenger.external.EventBusFactory;
+import messenger.external.GameOverEvent;
+import messenger.external.SuccessfulEvent;
 
 public class AudioSystem {
 

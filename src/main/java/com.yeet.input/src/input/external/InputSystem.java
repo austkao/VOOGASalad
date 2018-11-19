@@ -5,6 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import input.Internal.Parser;
 import messenger.external.ActionEvent;
 import messenger.external.EventBusFactory;
+import messenger.external.GameOverEvent;
 import messenger.external.KeyInputEvent;
 
 import java.util.*;
