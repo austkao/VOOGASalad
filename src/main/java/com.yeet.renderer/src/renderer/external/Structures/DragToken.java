@@ -59,7 +59,6 @@ public class DragToken extends StackPane {
             setPosition(event.getSceneX(), event.getSceneY());
         });
         this.setOnMouseReleased(event -> {
-            System.out.println("Consuming token");
             tokenConsumer.accept(this);
         });
 
