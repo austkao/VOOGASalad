@@ -1,7 +1,6 @@
 package player.internal;
 
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,10 +9,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import renderer.external.Renderer;
 import renderer.external.Structures.CharacterChooseDisplay;
+import renderer.external.Structures.CharacterGrid;
 import renderer.external.Structures.DragToken;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /** Dynamic layout for the display of all available characters, allows users to select their
  *  character for a fight
@@ -25,7 +24,7 @@ public class CharacterSelectScreen extends Screen {
     public static final int BUTTON_SIZE = 40;
     private File myDirectory;
 
-    private VBox myCharGrid;
+    private CharacterGrid myCharGrid;
 
     private CharacterChooseDisplay display1;
     private CharacterChooseDisplay display2;
@@ -44,7 +43,7 @@ public class CharacterSelectScreen extends Screen {
         bg.setFitWidth(1280);
         bg.setFitHeight(800);
         bg.setOpacity(0.52);
-        myCharGrid = setUpCharGrid();
+        myCharGrid = super.getMyRenderer().makeCharacterGrid(myDirectory,CHAR_PER_ROW,this::setCharacter);
         HBox charBox = new HBox(10);
         charBox.setMaxHeight(332.0);
         charBox.setAlignment(Pos.CENTER);
@@ -61,44 +60,24 @@ public class CharacterSelectScreen extends Screen {
         charBox.getChildren().addAll(display1,display2,display3,display4);
     }
 
-    private void getCharacter(Double x, Double y){
-
+    private void setCharacter(String player, String charName){
+        if(player.equalsIgnoreCase("P1")){
+            display1.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+        }
+        else if(player.equalsIgnoreCase("P2")){
+            display2.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+        }
+        else if(player.equalsIgnoreCase("P3")){
+            display3.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+        }
+        else if(player.equalsIgnoreCase("P4")){
+            display4.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+        }
     }
 
 
-    /** Algorithmically creates a grid of characters based on number of directories available */
-    private VBox setUpCharGrid(){
-        VBox grid = new VBox(1.0);
-        grid.setAlignment(Pos.CENTER);
-        grid.setPrefSize(1280,382);
-        grid.setStyle("-fx-background-color: #201D20;");
-        int charcount = 0;
-        ArrayList<File> files  = new ArrayList<>();
-        for(File f : new File(myDirectory.getPath()+"\\characters").listFiles()){
-            if(!f.getName().contains(".")){
-                charcount++;
-                files.add(f);
-            }
-        }
-        int rowcount = (int)Math.ceil(charcount/(double)CHAR_PER_ROW);
-        for(int i = 0;i<rowcount;i++){
-            HBox row = new HBox(1.0);
-            row.setAlignment(Pos.CENTER);
-            for(int j = 0; j < CHAR_PER_ROW; j++){
-                if((CHAR_PER_ROW*(i))+j+1>charcount){
-                    break;
-                }
-                else{
-                    ImageView portrait = new ImageView(new Image(String.format("%s/%s",files.get((CHAR_PER_ROW*(i))+j).toURI(),"portrait.png")));
-                    portrait.setPreserveRatio(true);
-                    portrait.setFitWidth(132);
-                    portrait.setViewport(new Rectangle2D(56,25,132,95));
-                    row.getChildren().add(portrait);
-                }
-            }
-            grid.getChildren().add(row);
-        }
-        return grid;
+    private void getCharacter(DragToken token){
+        myCharGrid.getCharacter(token);
     }
 
 }

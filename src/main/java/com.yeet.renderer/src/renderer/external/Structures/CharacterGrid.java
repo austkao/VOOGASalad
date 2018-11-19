@@ -1,0 +1,77 @@
+package renderer.external.Structures;
+
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.function.BiConsumer;
+
+/** Algorithmically creates a grid of characters based on number of directories available
+ *  @author bpx
+ */
+public class CharacterGrid extends VBox {
+
+    private HashMap<ImageView,String> myImageMap;
+
+    private BiConsumer<String,String> myCharacterConsumer;
+
+    /** Creates a new {@code CharacterGrid} using the specified parameters
+     *  @param directory The game directory
+     *  @param charactersPerRow Number of thumbnails to show per row
+     *  @param characterConsumer Lambda that will use the name of the character chosen
+     *  */
+    public CharacterGrid(File directory, int charactersPerRow, BiConsumer<String,String> characterConsumer){
+        super(1.0);
+        super.setAlignment(Pos.CENTER);
+        super.setMinSize(1280,382);
+        super.setStyle("-fx-background-color: #201D20;");
+        myImageMap = new HashMap<>();
+        myCharacterConsumer = characterConsumer;
+        int charcount = 0;
+        ArrayList<File> files  = new ArrayList<>();
+        for(File f : new File(directory.getPath()+"\\characters").listFiles()){
+            if(!f.getName().contains(".")){
+                charcount++;
+                files.add(f);
+            }
+        }
+        int rowcount = (int)Math.ceil(charcount/(double)charactersPerRow);
+        for(int i = 0;i<rowcount;i++){
+            HBox row = new HBox(1.0);
+            row.setMinSize(1280,95);
+            row.setAlignment(Pos.CENTER);
+            for(int j = 0; j < charactersPerRow; j++){
+                if((charactersPerRow*(i))+j+1>charcount){
+                    break;
+                }
+                else{
+                    ImageView portrait = new ImageView(new Image(String.format("%s/%s",files.get((charactersPerRow*(i))+j).toURI(),"portrait.png")));
+                    portrait.setPreserveRatio(true);
+                    portrait.setFitWidth(132);
+                    portrait.setViewport(new Rectangle2D(56,25,132,95));
+                    myImageMap.put(portrait,files.get((charactersPerRow*(i))+j).getName());
+                    row.getChildren().add(portrait);
+                }
+            }
+            super.getChildren().add(row);
+        }
+    }
+
+    public void getCharacter(DragToken dragToken){
+        for(ImageView img : myImageMap.keySet()){
+            if(dragToken.isInside(new Rectangle2D(img.localToScene(img.getBoundsInLocal()).getMinX(),img.localToScene(img.getBoundsInLocal()).getMinY(),img.localToScene(img.getBoundsInLocal()).getWidth(),img.localToScene(img.getBoundsInLocal()).getHeight()))){
+                myCharacterConsumer.accept(dragToken.getLabel(),myImageMap.get(img));
+                return;
+            }
+        }
+        myCharacterConsumer.accept(dragToken.getLabel(),null);
+    }
+
+
+}
