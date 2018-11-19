@@ -109,10 +109,12 @@ public class RenderSystem implements Renderer{
     public Text makeText(String text, Boolean emphasis, Integer fontsize, Color color, Double x, Double y){
         Text newtext = new Text(text);
         if(emphasis){
-            newtext.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;",myEmphasisFont.getName(),fontsize,toRGBCode(color)));
+            newtext.setFont(myEmphasisFont);
+            newtext.setStyle(String.format("-fx-font-size: %s; -fx-text-fill: %s;",fontsize,toRGBCode(color)));
         }
         else{
-            newtext.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;",myPlainFont.getName(),fontsize,toRGBCode(color)));
+            newtext.setFont(myPlainFont);
+            newtext.setStyle(String.format("-fx-font-size: %s; -fx-text-fill: %s;",fontsize,toRGBCode(color)));
         }
         newtext.setFill(color);
         newtext.setX(x);
@@ -316,7 +318,7 @@ public class RenderSystem implements Renderer{
 
     /** Creates a draggable token that does activates a {@code BiConsumer} upon being released
      * @param text The {@code Text} to use for the label
-     *  @param color The {@code Color} of the token
+     * @param color The {@code Color} of the token
      * @param x The initial x position of the token
      * @param y The initial y position of the token
      * @param radius The size of the token
@@ -328,11 +330,13 @@ public class RenderSystem implements Renderer{
 
     /** Creates a new {@code CharacterGrid} using the specified parameters
      * @param directory The game directory
-     *  @param charactersPerRow Number of thumbnails to show per row
+     * @param charactersPerRow Number of thumbnails to show per row
      * @param biConsumer Lambda that will use the name of the character chosen
      */
     public CharacterGrid makeCharacterGrid(File directory, int charactersPerRow, BiConsumer<String, String> biConsumer){
-        return new CharacterGrid(directory,charactersPerRow, biConsumer);
+        Text text = makeText("",true,15,Color.WHITE,0.0,0.0);
+        System.out.println(text.getFont());
+        return new CharacterGrid(directory,charactersPerRow, text, biConsumer);
     }
 
 }

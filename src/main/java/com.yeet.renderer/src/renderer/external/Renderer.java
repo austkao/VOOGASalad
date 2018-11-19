@@ -148,7 +148,7 @@ public interface Renderer{
 
     /** Creates a new {@code DragToken} using the specified parameters
      * @param text The {@code Text} to use for the label
-     *  @param color The {@code Color} of the token
+     * @param color The {@code Color} of the token
      * @param x The initial x position of the token
      * @param y The initial y position of the token
      * @param radius The size of the token
@@ -158,7 +158,7 @@ public interface Renderer{
 
     /** Creates a new {@code CharacterGrid} using the specified parameters
      * @param directory The game directory
-     *  @param charactersPerRow Number of thumbnails to show per row
+     * @param charactersPerRow Number of thumbnails to show per row
      * @param biConsumer Lambda that will use the name of the character chosen
      */
     CharacterGrid makeCharacterGrid(File directory, int charactersPerRow, BiConsumer<String, String> biConsumer);
