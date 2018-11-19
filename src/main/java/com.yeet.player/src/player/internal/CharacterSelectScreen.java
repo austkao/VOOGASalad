@@ -32,6 +32,11 @@ public class CharacterSelectScreen extends Screen {
     private CharacterChooseDisplay display4;
 
 
+    /** Creates a new {@code CharacterSelectScreen} with the specified parameters
+     *  @param root The {@code Group} to instantiate the internal {@code Scene} using
+     *  @param renderer The {@code Renderer} to use to generate graphics
+     *  @param gameDirectory The directory where the game files are located
+     */
     public CharacterSelectScreen(Group root, Renderer renderer, File gameDirectory) {
         super(root, renderer);
         super.setFill(Color.WHITE);
@@ -60,6 +65,10 @@ public class CharacterSelectScreen extends Screen {
         charBox.getChildren().addAll(display1,display2,display3,display4);
     }
 
+    /** Sets a specific player's character based on name
+     *  @param player The player to set, can be P1, P2, P3, or P4
+     *  @param charName The name of the character's data directory under the characters folder
+     */
     private void setCharacter(String player, String charName){
         if(player.equalsIgnoreCase("P1")){
             display1.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
@@ -76,6 +85,9 @@ public class CharacterSelectScreen extends Screen {
     }
 
 
+    /** Uses the {@code CharacterGrid} to identify the target of the {@code DragToken}
+     *  @param token The {@code DragToken} to use
+     */
     private void getCharacter(DragToken token){
         myCharGrid.getCharacter(token);
     }

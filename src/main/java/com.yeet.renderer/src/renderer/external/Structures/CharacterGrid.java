@@ -63,6 +63,9 @@ public class CharacterGrid extends VBox {
         }
     }
 
+    /** Checks whether the given {@code DragToken} intersects any portraits and activates lambda if true
+     *  @param dragToken The {@code DragToken} to check intersections for
+     */
     public void getCharacter(DragToken dragToken){
         for(ImageView img : myImageMap.keySet()){
             if(dragToken.isInside(new Rectangle2D(img.localToScene(img.getBoundsInLocal()).getMinX(),img.localToScene(img.getBoundsInLocal()).getMinY(),img.localToScene(img.getBoundsInLocal()).getWidth(),img.localToScene(img.getBoundsInLocal()).getHeight()))){

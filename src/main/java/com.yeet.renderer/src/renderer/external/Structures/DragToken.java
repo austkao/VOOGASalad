@@ -64,6 +64,7 @@ public class DragToken extends StackPane {
 
     }
 
+    /** Returns the text associated with the token */
     public String getLabel() {
         return myLabel.getText();
     }
@@ -106,6 +107,9 @@ public class DragToken extends StackPane {
         myCircle.setFill(myColor);
     }
 
+    /** Checks whether the token's center is inside the given bounds
+     *  @param bounds The {@code Rectangle2D} representing the area to check bounds for
+     */
     public boolean isInside(Rectangle2D bounds) {
         return (getPosition().getX() >= bounds.getMinX() && getPosition().getX() <= bounds.getMaxX() && getPosition().getY() >= bounds.getMinY() && getPosition().getY() < bounds.getMaxY());
     }
