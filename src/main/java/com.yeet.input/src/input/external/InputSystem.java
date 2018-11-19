@@ -5,6 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import input.Internal.Parser;
 import messenger.external.ActionEvent;
 import messenger.external.EventBusFactory;
+import messenger.external.GameOverEvent;
 import messenger.external.KeyInputEvent;
 
 import java.util.*;
@@ -22,7 +23,7 @@ public class InputSystem {
         myParser = new Parser();
         commandHolder = new LinkedList<>();
         timer = new Timer();
-        setUpTimer();
+        //setUpTimer();
 
     }
 
@@ -49,6 +50,7 @@ public class InputSystem {
      a class that represents an attack input
      */
     public void postEvent(List<String> s){
+        //TRUE if left, FALSE if right
         for(String action:s){
             System.out.println(action);
             ActionEvent keyEvent = new ActionEvent(action, "attacks");
@@ -63,8 +65,21 @@ public class InputSystem {
     @Subscribe
     public void getKey(KeyInputEvent inputEvent){
         commandHolder.add(inputEvent);
+    }
 
+    /**
+     / Listens for the start of a match. Tells the system to start listening for inpits
+     */
+    public void startListening(){
+        setUpTimer();
+    }
 
+    /**
+     / Listens for game over. Tells this system to stop listening for inputs
+     */
+    public void stopListening(GameOverEvent gameOver){
+        timer.cancel();
+        timer.purge();
     }
 
 }
