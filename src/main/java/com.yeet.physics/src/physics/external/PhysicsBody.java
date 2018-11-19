@@ -2,21 +2,26 @@ package physics.external;
 
 import java.util.List;
 
-public abstract class PhysicsBody {
+public class PhysicsBody {
 
-    private CoordinateBody body;
+    //private CoordinateBody body;
 
     double mass;
+    Acceleration acceleration;
+    Velocity velocity;
 
-    double velocityX;
-    double velocityY;
-
-    public PhysicsBody(CoordinateBody body, double mass){
-
+    PhysicsBody(double mass){
+        this.mass = mass;
+        //this.body = body;
+        this.acceleration = new Acceleration(0, 0);
+        this.velocity = new Velocity(0, 0);
     }
 
-    public void applyForce(Force f){
+    public void applyForce(Force force){
 
+        AccelerationCalculator ACalc = new AccelerationCalculator(force, acceleration, velocity, mass);
+        this.acceleration = ACalc.updateAcceleration();
+        this.velocity = ACalc.updateVelocity();
     }
 
 }

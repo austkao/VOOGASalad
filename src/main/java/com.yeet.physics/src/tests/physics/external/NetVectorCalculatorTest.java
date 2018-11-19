@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NetForceCalculatorTest {
 
-    List<Force> forces = new ArrayList<>();
+    List<Vector> forces = new ArrayList<>();
 
     @Test
     void getNetForce() {
         forces.add(new Force(100, 0));
         forces.add(new Force(100, PI/2));
-        NetForceCalculator calc = new NetForceCalculator(forces);
+        NetVectorCalculator calc = new NetVectorCalculator(forces);
         Force expected = new Force(Math.sqrt(20000), PI/4);
 
         assertEquals(expected.getMagnitude(), calc.getNetForce().getMagnitude());
@@ -33,7 +33,7 @@ class NetForceCalculatorTest {
         forces.add(new Force(100, -PI/2));
         forces.add(new Force(200, 0));
         forces.add(new Force(100, 1*PI));
-        NetForceCalculator calc = new NetForceCalculator(forces);
+        NetVectorCalculator calc = new NetVectorCalculator(forces);
         Force expected = new Force(100, 0);
 
         assertEquals(expected.getMagnitude(), calc.getNetForce().getMagnitude(), 1);
