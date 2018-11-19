@@ -67,7 +67,6 @@ public class CharacterGrid extends VBox {
                     label.setFont(text.getFont());
                     label.setFill(Color.WHITE);
                     label.setStyle("-fx-font-size: 15");
-                    System.out.println("making label: "+files.get((charactersPerRow*(i))+j).getName());
                     VBox portraitHolder = new VBox(1.0);
                     portraitHolder.setPrefSize(THUMB_WIDTH,THUMB_HEIGHT+TEXT_HEIGHT);
                     portraitHolder.setAlignment(Pos.BOTTOM_CENTER);
