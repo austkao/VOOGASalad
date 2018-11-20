@@ -6,13 +6,14 @@ import org.junit.jupiter.api.Test;
 import physics.external.Line;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public class LineTest {
 
     @Test
     public void testBounds(){
-        Point p1 = new Point(0,1);
-        Point p2 = new Point(0,1);
+        Point2D.Double p1 = new Point2D.Double(0,1);
+        Point2D.Double p2 = new Point2D.Double(0,1);
         Line ln = new Line(p1, p2);
 
         int outSize = 2;
@@ -31,8 +32,8 @@ public class LineTest {
             assertEquals(targ[i], ln.getYBounds()[i], 0.01, "getYBounds is messed up");
         }
 
-        p1 = new Point(0,0);
-        p2 = new Point(1,1);
+        p1 = new Point2D.Double(0,0);
+        p2 = new Point2D.Double(1,1);
         ln = new Line(p1, p2);
 
         outSize = 2;

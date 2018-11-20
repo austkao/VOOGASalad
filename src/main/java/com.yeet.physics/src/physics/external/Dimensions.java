@@ -1,6 +1,7 @@
 package physics.external;
 
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Dimensions {
@@ -8,6 +9,7 @@ public class Dimensions {
     private List<Double> dims;
 
     public Dimensions(double x, double y){
+        dims = new ArrayList<>();
         this.dims.add(x);
         this.dims.add(y);
     }
@@ -22,21 +24,21 @@ public class Dimensions {
     }
 
     public double getSizeX(){
-        if(dims.size() > 1) {
+        if(dims.size() >= 1) {
             return dims.get(0);
         }
         return 0.0;
     }
 
     public double getSizeY(){
-        if(dims.size() > 2) {
+        if(dims.size() >= 2) {
             return dims.get(1);
         }
         return 0.0;
     }
 
     public double getSizeZ(){
-        if(dims.size() > 3) {
+        if(dims.size() >= 3) {
             return dims.get(2);
         }else{
             return 0.0;

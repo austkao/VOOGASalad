@@ -10,6 +10,7 @@ public class Square extends Shape {
 
     public Square(List<Line> shapeLines){
         super(shapeLines);
+        this.path = shapeLines;
     }
 
     private double[] getXBound(){
@@ -26,7 +27,7 @@ public class Square extends Shape {
         return null;
     }
 
-    private double getMinX(){
+    public double getMinX(){
         double pos = Double.MAX_VALUE;
 
         for(int i = 0; i < this.getPath().size(); i++){
@@ -38,20 +39,20 @@ public class Square extends Shape {
         return pos;
     }
 
-    private double getMinY(){
+    public double getMinY(){
         double pos = Double.MAX_VALUE;
 
         for(int i = 0; i < this.getPath().size(); i++){
             Line thisLine = this.getPath().get(i);
             if(thisLine.getYBounds()[0] < pos){
-                pos = thisLine.getXBounds()[0];
+                pos = thisLine.getYBounds()[0];
             }
         }
         return pos;
     }
 
-    private double getMaxX(){
-        double pos = Double.MIN_VALUE;
+    public double getMaxX(){
+        double pos = -Double.MAX_VALUE;
 
         for(int i = 0; i < this.getPath().size(); i++){
             Line thisLine = this.getPath().get(i);
@@ -62,19 +63,19 @@ public class Square extends Shape {
         return pos;
     }
 
-    private double getMaxY(){
-        double pos = Double.MIN_VALUE;
+    public double getMaxY(){
+        double pos = -Double.MAX_VALUE;
 
         for(int i = 0; i < this.getPath().size(); i++){
             Line thisLine = this.getPath().get(i);
             if(thisLine.getXBounds()[1] > pos){
-                pos = thisLine.getXBounds()[1];
+                pos = thisLine.getYBounds()[1];
             }
         }
         return pos;
     }
 
     public List<Line> getPath() {
-        return path;
+        return this.path;
     }
 }
