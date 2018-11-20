@@ -13,7 +13,10 @@ public class CoordinateBody {
 
     private List<Line> path;
 
+    private Coordinate pos;
+
     public CoordinateBody(Coordinate start, Dimensions dims){
+        this.pos = start;
 
     }
 
