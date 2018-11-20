@@ -14,4 +14,36 @@ public class Line {
         this.second = second;
     }
 
+    public double[] getXBounds(){
+        double[] bounds = new double[2];
+        if(this.getFirst().getX() > this.getSecond().getX()){
+            bounds[0] = this.getSecond().getX();
+            bounds[1] = this.getFirst().getX();
+        }else{
+            bounds[1] = this.getSecond().getX();
+            bounds[0] = this.getFirst().getX();
+        }
+        return bounds;
+    }
+
+    public double[] getYBounds(){
+        double[] bounds = new double[2];
+        if(this.getFirst().getY() > this.getSecond().getY()){
+            bounds[0] = this.getSecond().getY();
+            bounds[1] = this.getFirst().getY();
+        }else{
+            bounds[1] = this.getSecond().getY();
+            bounds[0] = this.getFirst().getY();
+        }
+        return bounds;
+    }
+
+    public Point getFirst(){
+        return this.first;
+    }
+
+    public Point getSecond(){
+        return this.second;
+    }
+
 }
