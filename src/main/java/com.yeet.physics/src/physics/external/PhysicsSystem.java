@@ -8,25 +8,25 @@ public class PhysicsSystem {
 
 
     public static final double defaultMass = 50;
-
-    private int numBodies;
+    List<PhysicsBody> bodies = new ArrayList<>();
     private double gravityAcceleration;
     private double gravityDirection;
 
-    PhysicsSystem(int numBods, double gravityAcc, double gravityDir) {
-        this.numBodies = numBods;
+    PhysicsSystem(double gravityAcc, double gravityDir) {
         this.gravityAcceleration = gravityAcc;
         this.gravityDirection = gravityDir;
     }
 
-    List<PhysicsBody> createPhysicsBodies(int num) {
-        List<PhysicsBody> newBodies = new ArrayList<>();
+    void updatePhysics() {
+        applyGravity(bodies);
+    }
+
+    void addPhysicsBodies(int num) {
         int count = 0;
         while (count < num) {
-            newBodies.add(new PhysicsBody(defaultMass));
+            bodies.add(new PhysicsBody(defaultMass));
             count ++;
         }
-        return newBodies;
     }
 
     void applyGravity(List<PhysicsBody> bodies){
@@ -35,5 +35,9 @@ public class PhysicsSystem {
             gravity = new PhysicsVector(b.getMass()*gravityAcceleration, gravityDirection);
             b.applyForce(gravity);
         }
+    }
+
+    List<PhysicsBody> getBodies() {
+        return this.bodies;
     }
 }
