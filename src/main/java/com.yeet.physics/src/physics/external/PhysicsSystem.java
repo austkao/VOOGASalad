@@ -3,17 +3,20 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.PI;
 
 public class PhysicsSystem {
 
 
     public static final double defaultMass = 50;
-    public static final double gravityDirection = PI/2;
-    public static final double gravityAcceleration = 9.8;
 
-    PhysicsSystem() {
+    private int numBodies;
+    private double gravityAcceleration;
+    private double gravityDirection;
 
+    PhysicsSystem(int numBods, double gravityAcc, double gravityDir) {
+        this.numBodies = numBods;
+        this.gravityAcceleration = gravityAcc;
+        this.gravityDirection = gravityDir;
     }
 
     List<PhysicsBody> createPhysicsBodies(int num) {
