@@ -7,6 +7,7 @@ import java.util.List;
 public class PhysicsSystem {
 
 
+<<<<<<< HEAD
     public static final double defaultMass = 50;
     List<PhysicsBody> bodies = new ArrayList<>();
     private double gravityAcceleration;
@@ -39,5 +40,9 @@ public class PhysicsSystem {
 
     List<PhysicsBody> getBodies() {
         return this.bodies;
+=======
+    public void update(){
+
+>>>>>>> 3a63c53e08738dca3a6ef60ba4ac594f87251060
     }
 }

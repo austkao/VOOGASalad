@@ -1,4 +1,4 @@
-package combatSystem.internal;
+package messenger.external;
 
 public class MoveEvent extends CombatActionEvent{
 
@@ -11,12 +11,12 @@ public class MoveEvent extends CombatActionEvent{
     }
 
     @Override
-    void onSuccess() {
+    public void onSuccess() {
         eventBus.post(new MoveSuccessfulEvent(initiatorID, isGoingLeft));
     }
 
     @Override
-    void onFailure() {
+    public void onFailure() {
 
     }
 }
