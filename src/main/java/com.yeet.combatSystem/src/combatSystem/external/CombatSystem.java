@@ -3,6 +3,7 @@ package combatSystem.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import combatSystem.internal.*;
+import messenger.external.CombatActionEvent;
 import messenger.external.EventBusFactory;
 
 public class CombatSystem {
