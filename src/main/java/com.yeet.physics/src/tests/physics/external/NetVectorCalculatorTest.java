@@ -10,35 +10,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NetForceCalculatorTest {
 
-    List<Vector> forces = new ArrayList<>();
+    List<PhysicsVector> forces = new ArrayList<>();
 
     @Test
     void getNetForce() {
-        forces.add(new Force(100, 0));
-        forces.add(new Force(100, PI/2));
+        forces.add(new PhysicsVector(100, 0));
+        forces.add(new PhysicsVector(100, PI/2));
         NetVectorCalculator calc = new NetVectorCalculator(forces);
-        Force expected = new Force(Math.sqrt(20000), PI/4);
+        PhysicsVector expected = new PhysicsVector(Math.sqrt(20000), PI/4);
 
-        assertEquals(expected.getMagnitude(), calc.getNetForce().getMagnitude());
-        assertEquals(expected.getDirection(), calc.getNetForce().getDirection());
-        System.out.println("Result Magnitude: " + calc.getNetForce().getMagnitude());
-        System.out.println("Result Direction: " + calc.getNetForce().getDirection());
+        assertEquals(expected.getMagnitude(), calc.getNetVector().getMagnitude());
+        assertEquals(expected.getDirection(), calc.getNetVector().getDirection());
+        System.out.println("Result Magnitude: " + calc.getNetVector().getMagnitude());
+        System.out.println("Result Direction: " + calc.getNetVector().getDirection());
     }
 
     @Test
     void manyForces() {
-        forces.add(new Force(100, PI/2));
-        forces.add(new Force(100, -PI/2));
-        forces.add(new Force(100, PI/2));
-        forces.add(new Force(100, -PI/2));
-        forces.add(new Force(200, 0));
-        forces.add(new Force(100, 1*PI));
+        forces.add(new PhysicsVector(100, PI/2));
+        forces.add(new PhysicsVector(100, -PI/2));
+        forces.add(new PhysicsVector(100, PI/2));
+        forces.add(new PhysicsVector(100, -PI/2));
+        forces.add(new PhysicsVector(200, 0));
+        forces.add(new PhysicsVector(100, 1*PI));
         NetVectorCalculator calc = new NetVectorCalculator(forces);
-        Force expected = new Force(100, 0);
+        PhysicsVector expected = new PhysicsVector(100, 0);
 
-        assertEquals(expected.getMagnitude(), calc.getNetForce().getMagnitude(), 1);
-        assertEquals(expected.getDirection(), calc.getNetForce().getDirection(), 1);
-        System.out.println("Result Magnitude: " + calc.getNetForce().getMagnitude());
-        System.out.println("Result Direction: " + calc.getNetForce().getDirection());
+        assertEquals(expected.getMagnitude(), calc.getNetVector().getMagnitude(), 1);
+        assertEquals(expected.getDirection(), calc.getNetVector().getDirection(), 1);
+        System.out.println("Result Magnitude: " + calc.getNetVector().getMagnitude());
+        System.out.println("Result Direction: " + calc.getNetVector().getDirection());
     }
 }
