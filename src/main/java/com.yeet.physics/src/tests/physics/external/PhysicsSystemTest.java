@@ -9,9 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PhysicsSystemTest {
 
+    public static final int defaultNumBodies = 50;
+    public static final double defaultGravityAcceleration = 9.8;
+    public static final double defaultGravityDirection = PI/2;
+
     @Test
     void createPhysicsBodies() {
-        PhysicsSystem testSystem = new PhysicsSystem();
+        PhysicsSystem testSystem = new PhysicsSystem(defaultNumBodies, defaultGravityAcceleration, defaultGravityDirection);
         List<PhysicsBody> testBodies = testSystem.createPhysicsBodies(10);
         double expected = 0;
 
@@ -25,7 +29,7 @@ class PhysicsSystemTest {
 
     @Test
     void applyGravity() {
-        PhysicsSystem testSystem = new PhysicsSystem();
+        PhysicsSystem testSystem = new PhysicsSystem(defaultNumBodies, defaultGravityAcceleration, defaultGravityDirection);
         List<PhysicsBody> testBodies = testSystem.createPhysicsBodies(10);
         double expectedAccMag = 9.8;
         double expectedVelMag = 9.8*0.125;
