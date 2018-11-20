@@ -17,8 +17,6 @@ class NetVectorCalculator {
             double newX = getX(vector1) + getX(vector2);
             double newY = getY(vector1) + getY(vector2);
             double newMagnitude = Math.sqrt(Math.pow(newX, 2) + Math.pow(newY, 2));
-            System.out.println(newX);
-            System.out.println(newY);
             double newDirection = Math.atan(newY/newX);
             myVectors.add(new PhysicsVector(newMagnitude, newDirection));
             myVectors.remove(vector1);

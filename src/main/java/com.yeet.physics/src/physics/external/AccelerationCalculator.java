@@ -9,6 +9,7 @@ public class AccelerationCalculator {
     private List<PhysicsVector> myAccelerations = new ArrayList<>();
     private List<PhysicsVector> myVelocities = new ArrayList<>();
     private double myMass;
+    public static final double timeOfFrame = 0.125; // Assume each frame is 1/8 of a sec
 
     AccelerationCalculator(PhysicsVector f, PhysicsVector a, PhysicsVector v, double mass) {
         this.newForce = f;
@@ -24,11 +25,13 @@ public class AccelerationCalculator {
     }
 
     PhysicsVector updateVelocity(){
-        //PhysicsVector newVelocity = new PhysicsVector()
-        return new PhysicsVector(20,0);
+        PhysicsVector currentAcceleration = condenseVector(myAccelerations);
+        PhysicsVector newVelocity = new PhysicsVector(currentAcceleration.getMagnitude() * timeOfFrame, currentAcceleration.getDirection()); // Vf = Vo + at
+        myVelocities.add(newVelocity);
+        return condenseVector(myVelocities);
     }
 
-    PhysicsVector condenseVector(List<PhysicsVector> vectors) {
+    private PhysicsVector condenseVector(List<PhysicsVector> vectors) {
         NetVectorCalculator calc = new NetVectorCalculator(vectors);
         return calc.getNetVector();
     }
