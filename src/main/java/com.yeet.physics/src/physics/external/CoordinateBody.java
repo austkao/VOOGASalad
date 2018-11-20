@@ -1,9 +1,8 @@
 package physics.external;
 
 import java.util.List;
-import java.awt.geom.*;
 
-public abstract class CoordinateBody {
+public class CoordinateBody {
 
 
     private Dimensions dims;
@@ -12,7 +11,7 @@ public abstract class CoordinateBody {
 
     private List<Double> centerCoords;
 
-    private List<Line2D> path;
+    private List<Line> path;
 
     public CoordinateBody(Coordinate start, Dimensions dims){
 
@@ -23,6 +22,7 @@ public abstract class CoordinateBody {
     OUTPUT: T or F depending on weather or not this body intersects with the one passed into the parameter
      */
     public boolean intersects(CoordinateBody c){
+
 
 
         return false; 
