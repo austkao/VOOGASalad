@@ -18,7 +18,7 @@ public class CollisionDetector {
         for(PhysicsBody bod: bodies){
             for(PhysicsBody bod2: bodies){
                 if(!bod.equals(bod2)){
-
+                    
                 }
             }
         }

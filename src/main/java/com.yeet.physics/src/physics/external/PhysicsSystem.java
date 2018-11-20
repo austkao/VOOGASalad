@@ -6,6 +6,7 @@ import java.util.List;
 
 public class PhysicsSystem {
 
+
     public static final double defaultMass = 50;
 
     private int numBodies;
