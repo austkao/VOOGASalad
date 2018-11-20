@@ -10,7 +10,7 @@ class NetVectorCalculator {
         myVectors = vectors;
     }
 
-    PhysicsVector getNetForce() {
+    PhysicsVector getNetVector() {
         while(myVectors.size() > 1) {
             PhysicsVector vector1 = myVectors.get(0);
             PhysicsVector vector2 = myVectors.get(1);
@@ -18,7 +18,7 @@ class NetVectorCalculator {
             double newY = getY(vector1) + getY(vector2);
             double newMagnitude = Math.sqrt(Math.pow(newX, 2) + Math.pow(newY, 2));
             double newDirection = Math.atan(newX/newY);
-            myVectors.add(new Force(newMagnitude, newDirection));
+            myVectors.add(new PhysicsVector(newMagnitude, newDirection));
             myVectors.remove(vector1);
             myVectors.remove(vector2);
         }

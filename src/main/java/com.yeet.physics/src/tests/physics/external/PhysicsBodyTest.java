@@ -10,18 +10,18 @@ class PhysicsBodyTest {
 
     @Test
     void createPhysicsBody() {
-        Acceleration expectedAcc = new Acceleration(0,0);
-        Velocity expectedVel = new Velocity(0,0);
-        assertEquals(body.acceleration.magnitude, expectedAcc.magnitude);
-        assertEquals(body.velocity.magnitude, expectedVel.magnitude);
+        PhysicsVector expectedAcc = new PhysicsVector(0,0);
+        PhysicsVector expectedVel = new PhysicsVector(0,0);
+        assertEquals(expectedAcc.magnitude, body.acceleration.magnitude);
+        assertEquals(expectedVel.magnitude, body.velocity.magnitude);
     }
 
     @Test
     void applyForce() {
-        Acceleration expectedAcc = new Acceleration(20,0);
-        Velocity expectedVel = new Velocity(20,0);
-        body.applyForce(new Force(20, 0));
-        assertEquals(body.acceleration.magnitude, expectedAcc.magnitude);
-        assertEquals(body.velocity.magnitude, expectedVel.magnitude);
+        PhysicsVector expectedAcc = new PhysicsVector(0.4,0);
+        PhysicsVector expectedVel = new PhysicsVector(20,0);
+        body.applyForce(new PhysicsVector(20, 0));
+        assertEquals(expectedAcc.getMagnitude(), body.acceleration.getMagnitude());
+        assertEquals(expectedVel.getMagnitude(), body.velocity.magnitude);
     }
 }

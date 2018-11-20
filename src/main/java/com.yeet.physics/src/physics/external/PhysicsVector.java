@@ -1,6 +1,6 @@
 package physics.external;
 
-public abstract class PhysicsVector {
+class PhysicsVector {
     protected double magnitude;
     protected double direction; // IN RADIANS
 
