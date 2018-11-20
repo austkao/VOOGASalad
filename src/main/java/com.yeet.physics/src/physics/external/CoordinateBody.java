@@ -23,6 +23,8 @@ public abstract class CoordinateBody {
     OUTPUT: T or F depending on weather or not this body intersects with the one passed into the parameter
      */
     public boolean intersects(CoordinateBody c){
+
+
         return false; 
     }
 
