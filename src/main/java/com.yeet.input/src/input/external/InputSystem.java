@@ -3,10 +3,7 @@ package input.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import input.Internal.Parser;
-import messenger.external.ActionEvent;
-import messenger.external.EventBusFactory;
-import messenger.external.GameOverEvent;
-import messenger.external.KeyInputEvent;
+import messenger.external.*;
 
 import java.util.*;
 
@@ -49,11 +46,24 @@ public class InputSystem {
      My method for sending out information regarding inputs. I'll have to create
      a class that represents an attack input
      */
+    //TODO: Use reflection on this!
     public void postEvent(List<String> s){
         //TRUE if left, FALSE if right
         for(String action:s){
             System.out.println(action);
-            ActionEvent keyEvent = new ActionEvent(action, "attacks");
+            CombatActionEvent keyEvent;
+            if(action.equals("left")){
+                keyEvent = new MoveEvent(1, true);
+            }
+            else if(action.equals("right")){
+                keyEvent = new MoveEvent(1, false);
+            }
+            else if(!action.equals("jump")){
+                keyEvent = new AttackEvent(1);
+            }
+            else{
+                keyEvent = new JumpEvent(1);
+            }
             myMessageBus.post(keyEvent);
         }
 
@@ -70,6 +80,7 @@ public class InputSystem {
     /**
      / Listens for the start of a match. Tells the system to start listening for inpits
      */
+    @Subscribe
     public void startListening(){
         setUpTimer();
     }
@@ -77,6 +88,7 @@ public class InputSystem {
     /**
      / Listens for game over. Tells this system to stop listening for inputs
      */
+    @Subscribe
     public void stopListening(GameOverEvent gameOver){
         timer.cancel();
         timer.purge();

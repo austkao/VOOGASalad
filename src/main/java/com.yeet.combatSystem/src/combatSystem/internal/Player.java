@@ -1,5 +1,7 @@
 package combatSystem.internal;
 
+import combatSystem.external.PlayerState;
+
 import java.util.List;
 
 /*
