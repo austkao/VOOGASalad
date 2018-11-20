@@ -1,7 +1,5 @@
 package physics.external;
 
-import java.util.List;
-
 public class PhysicsBody {
 
     //private CoordinateBody body;
