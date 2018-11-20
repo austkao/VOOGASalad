@@ -22,10 +22,14 @@ public class PhysicsBody {
     }
 
     PhysicsVector getAcceleration(){
-        return acceleration;
+        return this.acceleration;
     }
 
     PhysicsVector getVelocity(){
-        return velocity;
+        return this.velocity;
+    }
+
+    double getMass() {
+        return this.mass;
     }
 }
