@@ -29,7 +29,7 @@ import renderer.external.RenderSystem;
  */
 
 public class XMLSaveBuilder {
-    private static final String RESOURCE_PATH = "/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
+    private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
 
     private Document saveDocument;
     private RenderSystem renderSys;

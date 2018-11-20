@@ -1,20 +1,16 @@
 package editor;
 
+import XML.XMLParser;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import renderer.external.RenderSystem;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollableItem;
 import renderer.external.Structures.ScrollablePane;
-import renderer.external.Structures.Tile;
 
 /**
  * @author ob29
@@ -79,9 +75,14 @@ public class MapEditor extends EditorSuper{
         chooseTile.setOnMouseClicked(e -> chooseTileImage());
 
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
-                30.0,50.0, 350.0, 200.0, 50.0);
+                30.0,50.0, 125.0, 200.0, 50.0);
         root.getChildren().add(saveFile);
         saveFile.setOnMouseClicked(e -> createSaveFile());
+
+        Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
+                30.0,50.0, 50.0, 200.0, 50.0);
+        root.getChildren().add(loadFile);
+        loadFile.setOnMouseClicked(e -> loadXMLFile());
 
         scrollablePane = new ScrollablePane();
         for(ScrollableItem b: scrollablePane.getItems()){
@@ -168,7 +169,14 @@ public class MapEditor extends EditorSuper{
             new XMLSaveBuilder(structure, level.createLevelMap());
         } catch (Exception ex) {
             System.out.println("Invalid save");
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
+    }
+
+    private void loadXMLFile() {
+        XMLParser parser = new XMLParser();
+        //HashMap<String, ArrayList<String>> data = parser.parseFileForElement("map");
+        //System.out.println(data.get("map").get(0));
+
     }
 }

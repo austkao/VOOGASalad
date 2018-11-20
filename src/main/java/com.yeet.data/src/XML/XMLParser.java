@@ -1,15 +1,19 @@
 package XML;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
+import renderer.external.RenderSystem;
 
 /**
  * This class parses an XML file for the information wanted by a user.
@@ -17,10 +21,31 @@ import java.util.TreeMap;
  * @author ak457
  */
 public class XMLParser {
+    private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
 
     private Document xmlDocument;
+    private RenderSystem renderSys;
 
-    public XMLParser(String fileName) {
+    public XMLParser() {
+        try {
+            renderSys = new RenderSystem();
+            FileChooser loadFileChooser = renderSys.makeFileChooser("xml");
+            loadFileChooser.setTitle("Save File As");
+            File defaultFile = new File(RESOURCE_PATH);
+            loadFileChooser.setInitialDirectory(defaultFile);
+            File file = loadFileChooser.showOpenDialog(new Stage());
+            if(file != null) {
+                //System.out.println(file.getPath());
+                initializeXMLDoc(file.getName());
+            } else {
+                throw new IOException("Cannot load file");
+            }
+        } catch (IOException e) {
+            System.out.println("An error has occurred.");
+        }
+    }
+
+    public void initializeXMLDoc(String fileName) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbf.newDocumentBuilder();
@@ -41,8 +66,9 @@ public class XMLParser {
                 throw new IOException("No VOOGASalad tag");
             }
         }
-        catch (ParserConfigurationException | SAXException | IOException e) {
-            System.out.println("An error has occurred.");
+        catch (ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
+            System.out.println("An error has occurred during initialization.");
+            e.printStackTrace();
         }
     }
 
