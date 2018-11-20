@@ -27,14 +27,14 @@ class PhysicsSystemTest {
     }
 
     @Test
-    void applyGravity() {
+    void updatePhysics() {
         PhysicsSystem testSystem = new PhysicsSystem(defaultGravityAcceleration, defaultGravityDirection);
         testSystem.addPhysicsBodies(10);
         double expectedAccMag = 9.8;
         double expectedVelMag = 9.8*0.125;
         double expectedDir = PI/2;
 
-        testSystem.applyGravity(testSystem.getBodies());
+        testSystem.updatePhysics();
         for (PhysicsBody b : testSystem.getBodies()) {
             assertEquals(expectedAccMag, b.getAcceleration().getMagnitude());
             assertEquals(expectedVelMag, b.getVelocity().getMagnitude());
