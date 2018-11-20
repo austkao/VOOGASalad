@@ -9,9 +9,10 @@ import javafx.scene.layout.Pane;
 import java.io.File;
 
 public class ScrollablePane extends Pane {
-
     //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
     private static final String DEFAULT_IMAGE_DIR = "/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    //private static final String DEFAULT_IMAGE_DIR = "/users/rr600/workspace/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
     private ObservableList<ScrollableItem> items;
     private ScrollPane scrollPane;
@@ -35,7 +36,6 @@ public class ScrollablePane extends Pane {
         items.add(new ScrollableItem(image,0,0));
         this.getChildren().add(items.get(items.size()-1).getButton());
         items.get(items.size()-1).setPos(0,125*items.size());
-        System.out.println(items.get(items.size()-1).getButton().getLayoutX());
     }
 
     public void removeItem(){

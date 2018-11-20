@@ -134,7 +134,6 @@ public class RenderSystem implements Renderer{
      *  @param contentList The content list, contains {@code ImageView} objects to display on the grid*/
     public ScrollPane makeGridScrollPane(List<ImageView> contentList){
         return new ScrollPane();
-
     }
 
     /** Creates a scrollable Pane that displays its contents in a list
@@ -147,7 +146,7 @@ public class RenderSystem implements Renderer{
      *  @param pane The target {@code Pane} to draw to
      *  @param level The {@code Level} to draw */
     public void drawStage(Pane pane, Level level){
-        pane.getChildren().add(level.getWindow());
+        pane.getChildren().add(level);
     }
 
     /** Creates an editable {@code TextField}
@@ -198,7 +197,7 @@ public class RenderSystem implements Renderer{
      *  @param w The width of the {@code Slider}
      *  @param font The font of the label text
      */
-    public HBox makeSlider(Consumer<Double> fieldSetter, Double x, Double y, Double w, Font font){
+    public HBox makeSlider(String text,Consumer<Double> fieldSetter, Double x, Double y, Double w){
         HBox sliderBox = new HBox();
         sliderBox.setAlignment(Pos.CENTER);
         sliderBox.setLayoutX(x);
@@ -208,15 +207,18 @@ public class RenderSystem implements Renderer{
         slider.setShowTickLabels(false);
         slider.setValue(SLIDER_DEFAULT);
         slider.setPrefSize(w, SLIDER_HEIGHT);
+        Label name = new Label(text);
+        name.setFont(myPlainFont);
+        name.setLabelFor(slider);
         Label sliderValue = new Label(String.valueOf(SLIDER_DEFAULT));
         sliderValue.setLabelFor(slider);
-        sliderValue.setFont(font);
+        sliderValue.setFont(myPlainFont);
         slider.setOnMouseReleased(event -> {
             //rounds slider value to 1 decimal place
             fieldSetter.accept(Math.round(slider.getValue() * 10.0) / 10.0);
             sliderValue.setText(String.valueOf(Math.round(slider.getValue() * 10.0) / 10.0));
         });
-        sliderBox.getChildren().addAll(slider,sliderValue);
+        sliderBox.getChildren().addAll(name,slider,sliderValue);
         return sliderBox;
     }
 

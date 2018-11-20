@@ -9,26 +9,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Level {
-
-    private int windowHeight;
-    private int windowWidth;
-
-
-    private static final int TILE_WIDTH = 50;
-    private static final int TILE_HEIGHT = 50;
+public class Level extends GridPane{
+    private static final int TILE_WIDTH = 25;
+    private static final int TILE_HEIGHT = 25;
 
     private Tile [][] grid;
-    private ImageView background;
-    private GridPane window;
     private int numCols;
     private int numRows;
     private String backgroundURL;
-
+    private int windowHeight;
+    private int windowWidth;
 
     /**
      * Constructs the level
@@ -37,30 +30,37 @@ public class Level {
      * @param backgroundURL = url for background image
      */
     public Level(int windowWidth, int windowHeight, String backgroundURL){
+        super();
+
         this.windowHeight = windowHeight;
         this.windowWidth = windowWidth;
 
-        window = new GridPane();
-        window.setGridLinesVisible(true);
-        window.setPrefWidth(windowWidth);
-        window.setPrefHeight(windowHeight);
+        setGridLinesVisible(true);
+
+        setMinWidth(windowWidth);
+        setMaxWidth(windowWidth);
+        setMinHeight(windowHeight);
+        setMaxHeight(windowHeight);
+
+
+        this.backgroundURL = backgroundURL;
+        resetGrid();
+
 
         numCols = windowWidth/TILE_WIDTH;
         numRows = windowHeight/TILE_HEIGHT;
 
+
         for (int i = 0; i < numCols; i++) {
             ColumnConstraints colConst = new ColumnConstraints();
             colConst.setPercentWidth(100.0 / numCols);
-            window.getColumnConstraints().add(colConst);
+            getColumnConstraints().add(colConst);
         }
         for (int i = 0; i < numRows; i++) {
             RowConstraints rowConst = new RowConstraints();
             rowConst.setPercentHeight(100.0 / numRows);
-            window.getRowConstraints().add(rowConst);
+            getRowConstraints().add(rowConst);
         }
-
-        this.backgroundURL = backgroundURL;
-        resetGrid();
     }
 
     /**
@@ -68,7 +68,7 @@ public class Level {
      */
     public void resetGrid(){
         grid = new Tile[windowHeight/TILE_HEIGHT][windowWidth/TILE_WIDTH];
-        window.getChildren().clear();
+        getChildren().clear();
         setBackground(backgroundURL);
     }
 
@@ -79,12 +79,15 @@ public class Level {
      * @param tileImage
      */
     public void processTile(int x, int y, Image tileImage){
+        if (y >= grid.length || x >= grid[0].length){
+            return;
+        }
         if (!isTile(x, y)){
             grid[y][x] = new Tile(tileImage, TILE_WIDTH, TILE_HEIGHT, x, y);
-            window.add(grid[y][x], x, y);
+            add(grid[y][x], x, y);
         }
         else{
-            window.getChildren().remove(grid[y][x]);
+            getChildren().remove(grid[y][x]);
             grid[y][x] = null;
         }
     }
@@ -97,11 +100,7 @@ public class Level {
         this.backgroundURL = backgroundURL;
         String formatted = String.format("-fx-background-image: url('%s');", backgroundURL);
         formatted = formatted + String.format("-fx-background-size: cover;");
-        window.setStyle(formatted);
-    }
-
-    public GridPane getWindow(){
-        return window;
+        setStyle(formatted);
     }
 
     public int getTileWidth(){

@@ -5,18 +5,13 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollableItem;
 import renderer.external.Structures.ScrollablePane;
-
-/**
- * @author ob29
- * @author rr202
- * @author ak457
- */
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,17 +19,20 @@ import java.net.URISyntaxException;
 import java.util.Random;
 import XML.XMLSaveBuilder;
 
+/**
+ * @author ob29
+ * @author rr202
+ * @author ak457
+ */
+
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_TILE = "acacia_log.png";
 
     private Image currentTileFile;
-
-    private Pane mapPane;
     private ScrollablePane scrollablePane;
     private Level level;
     private Group root;
-
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -44,33 +42,33 @@ public class MapEditor extends EditorSuper{
     public MapEditor(Group root,EditorManager em){
         super(root,em);
         this.root = root;
-        initializeMap(960, 600);
-        initializeScrollPane();
-
-        currentTileFile = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_TILE));
-
         try {
-            level = new Level((int)mapPane.getPrefWidth(), (int)mapPane.getPrefHeight(),
+            initializeLevel(800, 500,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        getRenderSystem().drawStage(mapPane, level);
+        initializeScrollPane();
 
-        mapPane.setOnMouseClicked(e -> clickProcessTile(e));
+        currentTileFile = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_TILE));
+
+
+        //getRenderSystem().drawStage(mapPane, level);
+
+        level.setOnMouseClicked(e -> clickProcessTile(e));
 
         Button addBG = getRenderSystem().makeStringButton("set Background", Color.BLACK,true,Color.WHITE,
-                30.0,50.0,200.0,200.0,50.0);
+                30.0,25.0,200.0,200.0,50.0);
         root.getChildren().add(addBG);
         addBG.setOnMouseClicked(e -> chooseBackground());
 
         Button resetGrid = getRenderSystem().makeStringButton("Reset Grid", Color.LAVENDER, true, Color.WHITE,
-                30.0,50.0, 275.0, 200.0, 50.0);
+                30.0,25.0, 275.0, 200.0, 50.0);
         root.getChildren().add(resetGrid);
         resetGrid.setOnMouseClicked(e -> level.resetGrid());
 
         Button chooseTile = getRenderSystem().makeStringButton("Choose Tile", Color.CRIMSON, true, Color.WHITE,
-                30.0,50.0, 350.0, 200.0, 50.0);
+                30.0,25.0, 350.0, 200.0, 50.0);
         root.getChildren().add(chooseTile);
         chooseTile.setOnMouseClicked(e -> chooseTileImage());
 
@@ -96,17 +94,15 @@ public class MapEditor extends EditorSuper{
     }
 
     /**
-     * initializes the mapPane object given dimensions and the root
+     * initializes the level object given dimensions and the root
      * @param width
      * @param height
      */
-    private void initializeMap(int width, int height){
-        mapPane = new Pane();
-        mapPane.setPrefWidth(width);
-        mapPane.setPrefHeight(height);
-        mapPane.setLayoutX(275);
-        mapPane.setLayoutY(100);
-        root.getChildren().add(mapPane);
+    private void initializeLevel(int width, int height, String background){
+        level = new Level(width, height, background);
+        level.setLayoutX(250);
+        level.setLayoutY(100);
+        root.getChildren().add(level);
     }
 
     /**
@@ -130,12 +126,18 @@ public class MapEditor extends EditorSuper{
 
     private void chooseTileImage(){
         File tileFile = chooseImage("Choose Tile Image");
-        Image image = new Image(tileFile.toURI().toString());
-        if (tileFile != null)
-            currentTileFile = image;
-        scrollablePane.addItem(currentTileFile);
-        int size = scrollablePane.getItems().size();
-        scrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
+        try{
+            Image image = new Image(tileFile.toURI().toString());
+            if (image != null)
+                currentTileFile = image;
+            scrollablePane.addItem(currentTileFile);
+            int size = scrollablePane.getItems().size();
+            scrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
+        }
+        catch (Exception e){
+            currentTileFile = currentTileFile;
+        }
+
     }
 
     /**
