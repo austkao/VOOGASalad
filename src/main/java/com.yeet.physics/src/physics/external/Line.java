@@ -6,10 +6,10 @@ import java.util.ArrayList;
 
 public class Line {
 
-    private Point first;
-    private Point second;
+    private Point2D.Double first;
+    private Point2D.Double second;
 
-    public Line(Point first, Point second){
+    public Line(Point2D.Double first, Point2D.Double second){
         this.first = first;
         this.second = second;
     }
@@ -38,11 +38,11 @@ public class Line {
         return bounds;
     }
 
-    public Point getFirst(){
+    public Point2D.Double getFirst(){
         return this.first;
     }
 
-    public Point getSecond(){
+    public Point2D.Double getSecond(){
         return this.second;
     }
 

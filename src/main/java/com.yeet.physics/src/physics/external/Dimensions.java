@@ -21,26 +21,30 @@ public class Dimensions {
         this.dims = dims;
     }
 
-    private double getSizeX(){
+    public double getSizeX(){
         if(dims.size() > 1) {
             return dims.get(0);
         }
         return 0.0;
     }
 
-    private double getSizeY(){
+    public double getSizeY(){
         if(dims.size() > 2) {
             return dims.get(1);
         }
         return 0.0;
     }
 
-    private double getSizeZ(){
+    public double getSizeZ(){
         if(dims.size() > 3) {
             return dims.get(2);
         }else{
             return 0.0;
         }
+    }
+
+    public List<Double> getDims(){
+        return this.dims;
     }
 
 }
