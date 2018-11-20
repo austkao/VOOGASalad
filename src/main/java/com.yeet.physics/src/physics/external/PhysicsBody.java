@@ -15,10 +15,17 @@ public class PhysicsBody {
         this.velocity = new PhysicsVector(0, 0);
     }
 
-    public void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
+    void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
         AccelerationCalculator ACalc = new AccelerationCalculator(force, acceleration, velocity, mass);
         this.acceleration = ACalc.updateAcceleration();
         this.velocity = ACalc.updateVelocity();
     }
 
+    PhysicsVector getAcceleration(){
+        return acceleration;
+    }
+
+    PhysicsVector getVelocity(){
+        return velocity;
+    }
 }
