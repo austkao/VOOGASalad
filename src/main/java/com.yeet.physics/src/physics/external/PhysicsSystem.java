@@ -19,7 +19,7 @@ public class PhysicsSystem {
     }
 
     void updatePhysics() {
-        applyGravity(bodies);
+        applyAcceleration(bodies, gravityAcceleration); // always apply gravity
     }
 
     void addPhysicsBodies(int num) {
@@ -30,10 +30,10 @@ public class PhysicsSystem {
         }
     }
 
-    void applyGravity(List<PhysicsBody> bodies){
+    private void applyAcceleration(List<PhysicsBody> bodies, double acceleration) {
         PhysicsVector gravity;
         for (PhysicsBody b : bodies) {
-            gravity = new PhysicsVector(b.getMass()*gravityAcceleration, gravityDirection);
+            gravity = new PhysicsVector(b.getMass()*acceleration, gravityDirection);
             b.applyForce(gravity);
         }
     }
