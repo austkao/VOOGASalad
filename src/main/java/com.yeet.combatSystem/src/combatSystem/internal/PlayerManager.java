@@ -1,5 +1,7 @@
 package combatSystem.internal;
 
+import messenger.external.CombatActionEvent;
+
 import java.util.HashMap;
 import java.util.Map;
 

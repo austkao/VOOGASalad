@@ -1,4 +1,4 @@
-package combatSystem.internal;
+package messenger.external;
 
 public class AttackEvent extends CombatActionEvent{
 
@@ -7,12 +7,12 @@ public class AttackEvent extends CombatActionEvent{
     }
 
     @Override
-    void onSuccess() {
+    public void onSuccess() {
         eventBus.post(new AttackSuccessfulEvent(initiatorID));
     }
 
     @Override
-    void onFailure() {
+    public void onFailure() {
 
     }
 }

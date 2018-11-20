@@ -1,8 +1,9 @@
-package physics.external;
+package tests.physics.external;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import physics.external.Line;
 
 import java.awt.*;
 
