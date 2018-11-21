@@ -2,10 +2,8 @@ package player.internal;
 
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -13,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 import player.internal.Elements.CharacterChooseDisplay;
 import player.internal.Elements.CharacterGrid;
 import player.internal.Elements.DragToken;
+import player.internal.Elements.MenuTopper;
 import renderer.external.Renderer;
 
 import java.io.File;
@@ -39,8 +38,10 @@ public class CharacterSelectScreen extends Screen {
      *  @param root The {@code Group} to instantiate the internal {@code Scene} using
      *  @param renderer The {@code Renderer} to use to generate graphics
      *  @param gameDirectory The directory where the game files are located
+     *  @param previousScene {@code SceneSwitch} lambda to go back to previous screen
+     *  @param nextScene {@code SceneSwitch} lambda to progress to next screen
      */
-    public CharacterSelectScreen(Group root, Renderer renderer, File gameDirectory) {
+    public CharacterSelectScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch previousScene, SceneSwitch nextScene) {
         super(root, renderer);
         super.setFill(Color.WHITE);
         myDirectory = gameDirectory;
@@ -51,15 +52,7 @@ public class CharacterSelectScreen extends Screen {
         bg.setFitWidth(1280);
         bg.setFitHeight(800);
         bg.setOpacity(0.52);
-        HBox menuBlock = new HBox(30.0);
-        menuBlock.setPrefSize(1280,75);
-        menuBlock.setAlignment(Pos.CENTER_LEFT);
-        Rectangle menuSpacer = new Rectangle(15,75,Color.TRANSPARENT);
-        Button backButton = super.getMyRenderer().makeImageButton(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png")),0.0,0.0,60.0,60.0);
-        backButton.setBackground(Background.EMPTY);
-        HBox menuTop = new HBox(5.0);
-        menuTop.setAlignment(Pos.CENTER);
-        //TODO: FINISH MENU TOPPER
+        HBox menuBlock = new MenuTopper(30.0,previousScene);
         myCharGrid = new CharacterGrid(myDirectory,CHAR_PER_ROW, super.getMyRenderer().makeText("",true,15,Color.WHITE,0.0,0.0), this::setCharacter);
         Rectangle spacer = new Rectangle(1280,10,Color.TRANSPARENT);
         HBox charBox = new HBox(10);
@@ -74,7 +67,6 @@ public class CharacterSelectScreen extends Screen {
         display3 = new CharacterChooseDisplay(Color.web("#FFF61B"),super.getMyRenderer().makeText("Player 3",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button3);
         display4 = new CharacterChooseDisplay(Color.web("#1FCB17"),super.getMyRenderer().makeText("Player 4",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button4);
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
-        menuBlock.getChildren().addAll(menuSpacer,backButton);
         holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
     }

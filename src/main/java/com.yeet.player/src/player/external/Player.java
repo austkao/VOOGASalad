@@ -67,7 +67,14 @@ public class Player {
             myStage.setScene(myCharacterSelectScreen);
 
         });
-        myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory);
+        myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
+            myStage.setScene(myMainMenuScreen);
+            myFightMusicPlayer.stop();
+            myBGMPlayer.play();
+        },()-> {
+            myStage.setScene(myCombatScreen);
+            myFightMusicPlayer.stop();
+        });
         myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
         myCombatScreen =  new CombatScreen(new Group(),myRenderer);
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
