@@ -6,7 +6,9 @@ import messenger.external.EventBusFactory;
 import messenger.external.PositionsUpdateEvent;
 import messenger.external.SuccessfulEvent;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -39,6 +41,7 @@ public class PhysicsSystem {
         PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
         passHandler.update();
         applyForces(gameObjects);
+        // update position
         for(PhysicsObject obj: gameObjects){
             //Convert to map
         }
@@ -59,6 +62,10 @@ public class PhysicsSystem {
             NetVectorCalculator calc = new NetVectorCalculator(b.getCurrentForces());
             b.applyForce(calc.getNetVector());
         }
+    }
+
+    private HashMap<Integer, Point2D> convertToMap(List<PhysicsObject> objects) {
+        return null;
     }
 
     List<PhysicsObject> getGameObjects() {
