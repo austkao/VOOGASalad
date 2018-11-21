@@ -5,6 +5,7 @@
 *.iws
 .idea/
 out/
+classes/
 local.properties
 
 # Generic Android ignores #

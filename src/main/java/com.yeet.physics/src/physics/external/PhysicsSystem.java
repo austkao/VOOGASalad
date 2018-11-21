@@ -1,5 +1,11 @@
 package physics.external;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import messenger.external.EventBusFactory;
+import messenger.external.PositionsUpdateEvent;
+import messenger.external.SuccessfulEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +15,20 @@ public class PhysicsSystem {
     public static final double defaultMass = 50;
     List<PhysicsObject> gameObjects;
 
+    private EventBus myMessageBus;
+
+    /*
+    private EventBus myMessageBus;
+    private String path = "/example_character_1/";
+    private MediaPlayer myPlayer;
+
+    public AudioSystem(){
+        myMessageBus = EventBusFactory.getEventBus();
+        myPlayer= new MediaPlayer();
+    }
+     */
     PhysicsSystem(List<PhysicsObject> objects) {
-        this.gameObjects = objects;
+        this.myMessageBus = EventBusFactory.getEventBus();
     }
 
     void update() {
@@ -21,6 +39,11 @@ public class PhysicsSystem {
         PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
         passHandler.update();
         applyForces(gameObjects);
+        for(PhysicsObject obj: gameObjects){
+            //Convert to map
+        }
+        PositionsUpdateEvent newPos = new PositionsUpdateEvent(); //Parameter is hashmap with integer as key and Point2D as value
+        myMessageBus.post(newPos);
     }
 
     public void addPhysicsBodies(int num) {
