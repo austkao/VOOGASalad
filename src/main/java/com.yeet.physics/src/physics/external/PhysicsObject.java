@@ -11,8 +11,11 @@ public abstract class PhysicsObject {
     boolean isPhysicsBody() {
         return false;
     }
-
+    
     public CoordinateBody getMyCoordinateBody() {
         return myCoordinateBody;
+    }
+    boolean isPhysicsAttack() {
+        return false;
     }
 }
