@@ -1,10 +1,14 @@
 package physics.external;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class PhysicsObject {
 
     double myMass;
+    List<PhysicsVector> currentForces = new ArrayList<>();
     CoordinateBody myCoordinateBody;
-    int myDirection; //+1: right, -1: left
+    double myDirection; //0: right, PI: left
     PhysicsVector myAcceleration;
     PhysicsVector myVelocity;
 
@@ -15,7 +19,7 @@ public abstract class PhysicsObject {
         this.myAcceleration = new PhysicsVector(0, 0);
         this.myVelocity = new PhysicsVector(0, 0);
         this.myCoordinateBody = new CoordinateBody(start, dims);
-        this.myDirection = 1; // start facing right
+        this.myDirection = 0; // start facing right
     }
 
     void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
@@ -24,7 +28,7 @@ public abstract class PhysicsObject {
         this.myVelocity = ACalc.updateVelocity();
     }
 
-    public double getMass() {
+    double getMass() {
         return myMass;
     }
 
@@ -36,7 +40,7 @@ public abstract class PhysicsObject {
         return this.myVelocity;
     }
 
-    public CoordinateBody getMyCoordinateBody() {
+    CoordinateBody getMyCoordinateBody() {
         return myCoordinateBody;
     }
     boolean isPhysicsAttack() {
@@ -51,11 +55,23 @@ public abstract class PhysicsObject {
         return false;
     }
 
-    void setDirection(int dir) {
+    void addCurrentForce(PhysicsVector force) {
+        currentForces.add(force);
+    }
+
+    List<PhysicsVector> getCurrentForces() {
+        return currentForces;
+    }
+
+    void clearCurrentForces() {
+        currentForces.clear();
+    }
+
+    void setDirection(double dir) {
         this.myDirection = dir;
     }
 
-    int getDirection() {
+    double getDirection() {
         return myDirection;
     }
 }
