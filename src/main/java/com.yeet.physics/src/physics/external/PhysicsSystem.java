@@ -23,7 +23,7 @@ public class PhysicsSystem {
         applyForces(gameObjects);
     }
 
-    void addPhysicsBodies(int num) {
+    public void addPhysicsBodies(int num) {
         int count = 0;
         while (count < num) {
             gameObjects.add(new PhysicsBody(defaultMass, new Coordinate(0,0), new Dimensions(0,0)));
