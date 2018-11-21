@@ -47,6 +47,10 @@ public abstract class PhysicsObject {
         return false;
     }
 
+    boolean isPhysicsGround(){
+        return false;
+    }
+
     void setDirection(int dir) {
         this.myDirection = dir;
     }

@@ -8,4 +8,9 @@ public class PhysicsGround extends PhysicsObject {
         super(mass, start, dims);
         this.myMass = Integer.MAX_VALUE;
     }
+
+    @Override
+    boolean isPhysicsGround(){
+        return true;
+    }
 }
