@@ -41,8 +41,8 @@ public class PhysicsSystem {
         collHandler.update();
         PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
         passHandler.update();
-        applyForces(gameObjects);
-        // update position
+        applyForces();
+        updatePositions();
         Map<Integer, Point2D> myMap;
         myMap = convertToMap(gameObjects);
         PositionsUpdateEvent newPos = new PositionsUpdateEvent(myMap); //Parameter is hashmap with integer as key and Point2D as value
@@ -57,14 +57,21 @@ public class PhysicsSystem {
         }
     }
 
-    private void applyForces(List<PhysicsObject> objects) {
-        for (PhysicsObject b : objects) {
+    private void applyForces() {
+        for (PhysicsObject b : gameObjects) {
             NetVectorCalculator calc = new NetVectorCalculator(b.getCurrentForces());
             b.applyForce(calc.getNetVector());
+            b.clearCurrentForces();
         }
+
     }
 
-    private Map<Integer, Point2D> convertToMap(List<PhysicsObject> objects) {
+    private void updatePositions() {
+        PositionCalculator calc = new PositionCalculator(gameObjects);
+        calc.updatePositions();
+    }
+
+    private Map<Integer, Point2D> convertToMap() {
         Map<Integer, Point2D> out = new HashMap<>();
         for(PhysicsObject obj: gameObjects){
             //Convert to map
