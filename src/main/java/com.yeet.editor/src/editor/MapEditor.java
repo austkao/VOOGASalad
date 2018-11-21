@@ -11,6 +11,7 @@ import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollableItem;
 import renderer.external.Structures.ScrollablePane;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.net.URISyntaxException;
@@ -56,27 +57,27 @@ public class MapEditor extends EditorSuper{
         level.setOnMouseClicked(e -> clickProcessTile(e));
 
         Button addBG = getRenderSystem().makeStringButton("set Background", Color.BLACK,true,Color.WHITE,
-                30.0,25.0,200.0,200.0,50.0);
+                30.0,25.0,225.0,200.0,50.0);
         root.getChildren().add(addBG);
         addBG.setOnMouseClicked(e -> chooseBackground());
 
         Button resetGrid = getRenderSystem().makeStringButton("Reset Grid", Color.LAVENDER, true, Color.WHITE,
-                30.0,25.0, 275.0, 200.0, 50.0);
+                30.0,25.0, 300.0, 200.0, 50.0);
         root.getChildren().add(resetGrid);
         resetGrid.setOnMouseClicked(e -> level.resetGrid());
 
         Button chooseTile = getRenderSystem().makeStringButton("Choose Tile", Color.CRIMSON, true, Color.WHITE,
-                30.0,25.0, 350.0, 200.0, 50.0);
+                30.0,25.0, 375.0, 200.0, 50.0);
         root.getChildren().add(chooseTile);
         chooseTile.setOnMouseClicked(e -> chooseTileImage());
 
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
-                30.0,50.0, 125.0, 200.0, 50.0);
+                30.0,25.0, 150.0, 200.0, 50.0);
         root.getChildren().add(saveFile);
         saveFile.setOnMouseClicked(e -> createSaveFile());
 
         Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
-                30.0,50.0, 50.0, 200.0, 50.0);
+                30.0,25.0, 75.0, 200.0, 50.0);
         root.getChildren().add(loadFile);
         loadFile.setOnMouseClicked(e -> loadXMLFile());
 
@@ -174,9 +175,19 @@ public class MapEditor extends EditorSuper{
     }
 
     private void loadXMLFile() {
-        XMLParser parser = new XMLParser();
-        //HashMap<String, ArrayList<String>> data = parser.parseFileForElement("map");
-        //System.out.println(data.get("map").get(0));
-
+        try {
+            XMLParser parser = new XMLParser();
+            HashMap<String, ArrayList<String>> data = parser.parseFileForElement("map");
+            ArrayList<String> xPos = data.get("x");
+            ArrayList<String> yPos = data.get("y");
+            if(xPos.size() != yPos.size()) {
+                throw new IOException("Incorrect information contained within XML");
+            }
+            for(int i = 0; i < xPos.size(); i++) {
+                level.processTile(Integer.parseInt(xPos.get(i)), Integer.parseInt(yPos.get(i)), currentTileFile);
+            }
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
     }
 }

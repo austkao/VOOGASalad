@@ -74,10 +74,16 @@ public class XMLParser {
         HashMap<String, ArrayList<String>> attributeMap = new HashMap<>();
         NodeList elemNodes = xmlDocument.getElementsByTagName(element);
         for(int i = 0; i < elemNodes.getLength(); i++) {
-            if(elemNodes.item(i) instanceof Attr) {
-                Attr attribute = (Attr) elemNodes.item(i);
+            Element elem = (Element) elemNodes.item(i);
+            System.out.println(elem.getTagName());
+            NamedNodeMap elemAttributes = elem.getAttributes();
+            for (int j = 0; j < elemAttributes.getLength(); j++) {
+                Node attributeNode = elemAttributes.item(j);
+                if(attributeNode instanceof Attr) {
+                Attr attribute = (Attr) attributeNode;
                 attributeMap.putIfAbsent(attribute.getName(), new ArrayList<>());
                 attributeMap.get(attribute.getName()).add(attribute.getValue());
+                }
             }
         }
         return attributeMap;
