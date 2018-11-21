@@ -99,6 +99,7 @@ public class CharacterChooseDisplay extends StackPane {
         icon.setFitWidth(33);
         icon.setFitHeight(33);
         myCurrentCharacterName = playerText;
+        myCurrentCharacterName.setText("None");
         myCurrentCharacterName.setStyle("-fx-font-size: 30");
         portraitInner.getChildren().addAll(portrait,myCharacterName);
         portraitHolder.getChildren().addAll(portraitInner,spacer);
