@@ -10,20 +10,20 @@ public class CollisionDetector {
     public CollisionDetector(List<PhysicsBody> bodies){
         this.bodies = bodies;
     }
-
-
+    
     public List<PhysicsBody> detectCollisions(List<PhysicsBody> bodies){
         List<PhysicsBody> colliders = new ArrayList<>();
 
         for(PhysicsBody bod: bodies){
             for(PhysicsBody bod2: bodies){
                 if(!bod.equals(bod2)){
-                    
+                    if(bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody())){
+                        colliders.add(bod2);
+                    }
                 }
             }
         }
-
-        return null;
+        return colliders;
     }
 
 }

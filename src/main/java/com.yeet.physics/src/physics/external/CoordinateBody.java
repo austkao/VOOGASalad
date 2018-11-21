@@ -52,10 +52,27 @@ public class CoordinateBody {
     OUTPUT: T or F depending on weather or not this body intersects with the one passed into the parameter
      */
     public boolean intersects(CoordinateBody c){
-
-
-
+        Square myBox = this.getHitBox();
+        Square theirBox = c.getHitBox();
+        if(theirBox.getMinX() < myBox.getMinX() && theirBox.getMaxX() > myBox.getMinX()){
+            return true;
+        }
+        if(theirBox.getMinX() < myBox.getMaxX() && theirBox.getMaxX() > myBox.getMaxX()){
+            return true;
+        }
+        if(theirBox.getMinY() < myBox.getMinY() && theirBox.getMaxY() > myBox.getMinY()){
+            return true;
+        }
+        if(theirBox.getMinY() < myBox.getMaxY() && theirBox.getMaxY() > myBox.getMaxY()){
+            return true;
+        }
+        if(myBox.getMinX() < theirBox.getMinX() && myBox.getMaxX() > theirBox.getMaxX()){
+            return true;
+        }
         return false; 
     }
 
+    public Square getHitBox() {
+        return this.hitBox;
+    }
 }

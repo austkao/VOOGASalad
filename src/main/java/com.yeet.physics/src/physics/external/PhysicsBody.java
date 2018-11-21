@@ -7,12 +7,14 @@ public class PhysicsBody {
     double mass;
     PhysicsVector acceleration;
     PhysicsVector velocity;
+    CoordinateBody myCoordinateBody;
 
-    PhysicsBody(double mass){
+    PhysicsBody(double mass, Coordinate start, Dimensions dims){
         this.mass = mass;
         //this.body = body;
         this.acceleration = new PhysicsVector(0, 0);
         this.velocity = new PhysicsVector(0, 0);
+        this.myCoordinateBody = new CoordinateBody(start, dims);
     }
 
     void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
@@ -31,5 +33,9 @@ public class PhysicsBody {
 
     double getMass() {
         return this.mass;
+    }
+
+    public CoordinateBody getMyCoordinateBody(){
+        return this.myCoordinateBody;
     }
 }
