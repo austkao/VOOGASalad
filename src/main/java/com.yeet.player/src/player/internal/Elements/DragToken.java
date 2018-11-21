@@ -1,4 +1,4 @@
-package renderer.external.Structures;
+package player.internal.Elements;
 
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;

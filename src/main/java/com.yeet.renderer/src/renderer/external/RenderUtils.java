@@ -1,4 +1,4 @@
-package renderer.internal;
+package renderer.external;
 
 import javafx.scene.paint.Color;
 

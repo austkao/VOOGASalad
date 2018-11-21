@@ -15,9 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.*;
 
-import java.io.File;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /** External API for Renderer system, focused on creating UI elements and other graphical
@@ -139,27 +137,4 @@ public interface Renderer{
      */
     Sprite makeSprite(Image image, Double offsetX, Double offsetY, Double width, Double height);
 
-    /** Creates a character display for choosing characters on the {@code CharacterSelectScreen}
-     *  @param color The {@code Color} representing the player
-     *  @param defaultText The default name of the player
-     *  @param button The token for choosing characters
-     */
-    CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText, DragToken button);
-
-    /** Creates a new {@code DragToken} using the specified parameters
-     * @param text The {@code Text} to use for the label
-     * @param color The {@code Color} of the token
-     * @param x The initial x position of the token
-     * @param y The initial y position of the token
-     * @param radius The size of the token
-     * @param tokenConsumer Accepts a token upon mouse drag release
-     */
-    DragToken makeDragToken(String text, Color color, int fontSize, double x, double y, double radius, Consumer<DragToken> tokenConsumer);
-
-    /** Creates a new {@code CharacterGrid} using the specified parameters
-     * @param directory The game directory
-     * @param charactersPerRow Number of thumbnails to show per row
-     * @param biConsumer Lambda that will use the name of the character chosen
-     */
-    CharacterGrid makeCharacterGrid(File directory, int charactersPerRow, BiConsumer<String, String> biConsumer);
 }

@@ -1,4 +1,4 @@
-package renderer.external.Structures;
+package player.internal.Elements;
 
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -8,10 +8,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import static renderer.internal.RenderUtils.toRGBCode;
+import static renderer.external.RenderUtils.toRGBCode;
 
 /** Custom extension of {@code StackPane} that is used to display what character the player has chosen, as well as toggle
  *  whether the selected player should be a human, computer, or none.
@@ -28,8 +27,9 @@ public class CharacterChooseDisplay extends StackPane {
     private DragToken myButton;
     private State myState;
     private Color myColor;
-    private String myText;
+    private String myDefaultPlayerName;
     private Text myCharacterName;
+    private Text myCurrentCharacterName;
 
 
     private StackPane bottom;
@@ -44,22 +44,22 @@ public class CharacterChooseDisplay extends StackPane {
     private final Image human = new Image(this.getClass().getClassLoader().getResourceAsStream("human_icon.png"));
     private final Image cpu = new Image(this.getClass().getClassLoader().getResourceAsStream("cpu_icon.png"));
 
-    private Text text;
+
 
     /** Creates a new {@code CharacterChooseDisplay} using the specified parameters
      *  @param color The {@code Color} the player will be represented by
-     *  @param defaultText The default name of the player
-     *  @param font The {@code Font} to display the name in
+     *  @param playerText The {@code Text} with the default name of the player
+     *  @param characterText The {@code Text} with the default character name
      *  @param button The token for choosing characters
      */
-    public CharacterChooseDisplay(Color color, String defaultText, Font font, DragToken button){
+    public CharacterChooseDisplay(Color color, Text playerText, Text characterText, DragToken button){
         super();
         myButton = button;
         myButton.setDisable(true);
         myButton.setOpacity(0);
         myState = State.NONE;
         myColor = color;
-        myText = defaultText;
+        myDefaultPlayerName = playerText.getText();
         super.setAlignment(Pos.BOTTOM_RIGHT);
         super.setPrefSize(305.0,332.0);
         super.setMaxSize(305.0,332.0);
@@ -68,8 +68,7 @@ public class CharacterChooseDisplay extends StackPane {
         VBox portraitHolder = new VBox();
         StackPane portraitInner = new StackPane();
         portraitInner.setAlignment(Pos.BOTTOM_CENTER);
-        myCharacterName = new Text("");
-        myCharacterName.setFont(font);
+        myCharacterName = characterText;
         myCharacterName.setStyle("-fx-fill: white; -fx-stroke: black; -fx-stroke-width: 3px; -fx-font-size: 60");
         portrait = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("empty.png")));
         portrait.setPreserveRatio(true);
@@ -99,16 +98,15 @@ public class CharacterChooseDisplay extends StackPane {
         icon = new ImageView(none);
         icon.setFitWidth(33);
         icon.setFitHeight(33);
-        text = new Text("None");
-        text.setFont(font);
-        text.setStyle("-fx-font-size: 30");
+        myCurrentCharacterName = playerText;
+        myCurrentCharacterName.setStyle("-fx-font-size: 30");
         portraitInner.getChildren().addAll(portrait,myCharacterName);
         portraitHolder.getChildren().addAll(portraitInner,spacer);
         super.getChildren().addAll(portraitHolder,bottom);
         bottom.getChildren().addAll(colorblock);
         colorblock.getChildren().addAll(namepiece);
         namepiece.getChildren().addAll(nameBox);
-        nameBox.getChildren().addAll(iconHolder, text);
+        nameBox.getChildren().addAll(iconHolder, myCurrentCharacterName);
         iconHolder.getChildren().addAll(icon);
         iconHolder.setOnMousePressed(event -> nextState());
     }
@@ -121,7 +119,7 @@ public class CharacterChooseDisplay extends StackPane {
                 super.setStyle(String.format(FORMAT_RECT,"100 0 0 0","100 0 0 0",toRGBCode(Color.web("#1F1C1F"))));
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35",toRGBCode(myColor)));
                 icon.setImage(human);
-                text.setText(myText);
+                myCurrentCharacterName.setText(myDefaultPlayerName);
                 portrait.setOpacity(1);
                 myButton.resetColor();
                 myButton.setOpacity(1);
@@ -132,7 +130,7 @@ public class CharacterChooseDisplay extends StackPane {
                 super.setStyle(String.format(FORMAT_RECT, "0 0 0 0", "0 0 0 0","rgba(255,255,255,0.64)"));
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35",toRGBCode(Color.web("#5B585C"))));
                 icon.setImage(cpu);
-                text.setText("CPU");
+                myCurrentCharacterName.setText("CPU");
                 myButton.setColor(Color.web("#848484"));
                 break;
             case CPU:
@@ -140,7 +138,7 @@ public class CharacterChooseDisplay extends StackPane {
                 super.setStyle(String.format(FORMAT_RECT,"100 0 0 0","100 0 0 0","transparent"));
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35","transparent"));
                 icon.setImage(none);
-                text.setText("None");
+                myCurrentCharacterName.setText("None");
                 portrait.setOpacity(0);
                 myButton.setOpacity(0);
                 myButton.setDisable(true);

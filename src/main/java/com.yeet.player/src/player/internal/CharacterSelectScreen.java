@@ -10,10 +10,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import player.internal.Elements.CharacterChooseDisplay;
+import player.internal.Elements.CharacterGrid;
+import player.internal.Elements.DragToken;
 import renderer.external.Renderer;
-import renderer.external.Structures.CharacterChooseDisplay;
-import renderer.external.Structures.CharacterGrid;
-import renderer.external.Structures.DragToken;
 
 import java.io.File;
 
@@ -60,19 +60,19 @@ public class CharacterSelectScreen extends Screen {
         HBox menuTop = new HBox(5.0);
         menuTop.setAlignment(Pos.CENTER);
         //TODO: FINISH MENU TOPPER
-        myCharGrid = super.getMyRenderer().makeCharacterGrid(myDirectory,CHAR_PER_ROW,this::setCharacter);
+        myCharGrid = new CharacterGrid(myDirectory,CHAR_PER_ROW, super.getMyRenderer().makeText("",true,15,Color.WHITE,0.0,0.0), this::setCharacter);
         Rectangle spacer = new Rectangle(1280,10,Color.TRANSPARENT);
         HBox charBox = new HBox(10);
         charBox.setMaxHeight(332.0);
         charBox.setAlignment(Pos.CENTER);
-        DragToken button1 = super.getMyRenderer().makeDragToken("P1",Color.web("#FD1B1B"), 40,130,548,40, this::getCharacter);
-        DragToken button2 = super.getMyRenderer().makeDragToken("P2",Color.web("#4C7FFF"),40,439,548,40, this::getCharacter);
-        DragToken button3 = super.getMyRenderer().makeDragToken("P3",Color.web("#FFF61B"),40,752,545,40, this::getCharacter);
-        DragToken button4 = super.getMyRenderer().makeDragToken("P4",Color.web("#1FCB17"),40,1079,545,40, this::getCharacter);
-        display1 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#FD1B1B"),"Player 1", button1);
-        display2 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#4C7FFF"),"Player 2", button2);
-        display3 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#FFF61B"),"Player 3", button3);
-        display4 = super.getMyRenderer().makeCharacterChooseDisplay(Color.web("#1FCB17"),"Player 4", button4);
+        DragToken button1 = new DragToken(super.getMyRenderer().makeText("P1",true,40,Color.WHITE,0.0,0.0),Color.web("#FD1B1B"),130,548,40, this::getCharacter);
+        DragToken button2 = new DragToken(super.getMyRenderer().makeText("P2",true,40,Color.WHITE,0.0,0.0),Color.web("#4C7FFF"),439,548,40, this::getCharacter);
+        DragToken button3 = new DragToken(super.getMyRenderer().makeText("P3",true,40,Color.WHITE,0.0,0.0),Color.web("#FFF61B"),752,548,40, this::getCharacter);
+        DragToken button4 = new DragToken(super.getMyRenderer().makeText("P4",true,40,Color.WHITE,0.0,0.0),Color.web("#1FCB17"),1079,548,40, this::getCharacter);
+        display1 = new CharacterChooseDisplay(Color.web("#FD1B1B"),super.getMyRenderer().makeText("Player 1",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button1);
+        display2 = new CharacterChooseDisplay(Color.web("#4C7FFF"),super.getMyRenderer().makeText("Player 2",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button2);
+        display3 = new CharacterChooseDisplay(Color.web("#FFF61B"),super.getMyRenderer().makeText("Player 3",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button3);
+        display4 = new CharacterChooseDisplay(Color.web("#1FCB17"),super.getMyRenderer().makeText("Player 4",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button4);
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
         menuBlock.getChildren().addAll(menuSpacer,backButton);
         holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);

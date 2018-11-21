@@ -1,4 +1,4 @@
-package renderer.external.Structures;
+package player.internal.Elements;
 
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;

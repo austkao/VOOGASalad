@@ -16,12 +16,10 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.*;
 
-import java.io.File;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static renderer.internal.RenderUtils.toRGBCode;
+import static renderer.external.RenderUtils.toRGBCode;
 
 /** Provides a high-level tool for the rapid creation of standardized and stylized core UI elements and graphics
  *  @author bpx
@@ -305,37 +303,6 @@ public class RenderSystem implements Renderer{
         Sprite sprite = new Sprite(image, width, height);
         sprite.setViewport(offsetX,offsetY);
         return sprite;
-    }
-
-    /** Creates a character display for choosing characters on the {@code CharacterSelectScreen}
-     *  @param color The {@code Color} representing the player
-     *  @param defaultText The default name of the player
-     *  @param button The token for choosing characters
-     */
-    public CharacterChooseDisplay makeCharacterChooseDisplay(Color color, String defaultText, DragToken button){
-        return new CharacterChooseDisplay(color,defaultText,myEmphasisFont,button);
-    }
-
-    /** Creates a draggable token that does activates a {@code BiConsumer} upon being released
-     * @param text The {@code Text} to use for the label
-     * @param color The {@code Color} of the token
-     * @param x The initial x position of the token
-     * @param y The initial y position of the token
-     * @param radius The size of the token
-     * @param tokenConsumer Accepts a token upon mouse drag release
-     */
-    public DragToken makeDragToken(String text, Color color, int fontSize, double x, double y, double radius, Consumer<DragToken> tokenConsumer) {
-        return new DragToken(makeText(text,true,fontSize,Color.WHITE,0.0,0.0),color,x,y,radius, tokenConsumer);
-    }
-
-    /** Creates a new {@code CharacterGrid} using the specified parameters
-     * @param directory The game directory
-     * @param charactersPerRow Number of thumbnails to show per row
-     * @param biConsumer Lambda that will use the name of the character chosen
-     */
-    public CharacterGrid makeCharacterGrid(File directory, int charactersPerRow, BiConsumer<String, String> biConsumer){
-        Text text = makeText("",true,15,Color.WHITE,0.0,0.0);
-        return new CharacterGrid(directory,charactersPerRow, text, biConsumer);
     }
 
 }
