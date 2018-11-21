@@ -33,14 +33,8 @@ public class XMLSaveBuilder implements Saver {
     private Document saveDocument;
     private RenderSystem renderSys;
 
-    public XMLSaveBuilder(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
+    public XMLSaveBuilder(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data, File file) {
         try {
-            renderSys = new RenderSystem();
-            FileChooser fileChooser = renderSys.makeFileChooser("xml");
-            fileChooser.setTitle("Save File As");
-            File defaultFile = new File(RESOURCE_PATH);
-            fileChooser.setInitialDirectory(defaultFile);
-            File file = fileChooser.showSaveDialog(new Stage());
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbf.newDocumentBuilder();
             saveDocument = dBuilder.newDocument();

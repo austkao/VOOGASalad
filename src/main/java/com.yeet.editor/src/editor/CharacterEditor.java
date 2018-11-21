@@ -120,7 +120,7 @@ public class CharacterEditor extends EditorSuper{
         structure.put("character", characterAttributes);
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         try {
-            new XMLSaveBuilder(structure, data);
+            generateSave(structure, data);
         } catch (Exception ex) {
             System.out.println("Invalid save");
             //ex.printStackTrace();
@@ -129,11 +129,11 @@ public class CharacterEditor extends EditorSuper{
 
     private void loadXMLFile() {
         try {
-            XMLParser parser = new XMLParser();
-            HashMap<String, ArrayList<String>> data = parser.parseFileForElement("character");
-            ArrayList<String> health = data.get("health");
-            ArrayList<String> attack = data.get("attack");
-            ArrayList<String> defense = data.get("defense");
+            //XMLParser parser = new XMLParser();
+            //HashMap<String, ArrayList<String>> data = parser.parseFileForElement("character");
+            //ArrayList<String> health = data.get("health");
+            //ArrayList<String> attack = data.get("attack");
+            //ArrayList<String> defense = data.get("defense");
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
