@@ -8,15 +8,15 @@ public class Dimensions {
 
     private List<Double> dims;
 
-    public Dimensions(double x, double y){
+    public Dimensions(double width, double height){
         dims = new ArrayList<>();
-        this.dims.add(x);
-        this.dims.add(y);
+        this.dims.add(width);
+        this.dims.add(height);
     }
 
-    public Dimensions(double x, double y, double z){
-        this(x, y);
-        this.dims.add(z);
+    public Dimensions(double width, double height, double depth){
+        this(width, height);
+        this.dims.add(depth);
     }
 
     public Dimensions(List<Double> dims){

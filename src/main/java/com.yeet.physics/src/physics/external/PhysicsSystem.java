@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public class PhysicsSystem {
-    
+
     public static final double defaultMass = 50;
     List<PhysicsBody> bodies = new ArrayList<>();
     private double gravityAcceleration;
@@ -23,7 +23,7 @@ public class PhysicsSystem {
     void addPhysicsBodies(int num) {
         int count = 0;
         while (count < num) {
-            bodies.add(new PhysicsBody(defaultMass));
+            bodies.add(new PhysicsBody(defaultMass, new Coordinate(0,0), new Dimensions(0,0)));
             count ++;
         }
     }

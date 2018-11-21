@@ -23,6 +23,7 @@ public class Collision extends Interaction {
         if (this.colliders.size() >= 2) {
             return this.colliders.get(1);
         }
+        return null;
     }
 
     public List<PhysicsBody> getColliders(){

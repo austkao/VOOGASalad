@@ -1,6 +1,6 @@
 package physics.external;
 
-public class PhysicsBody {
+public class PhysicsBody extends PhysicsObject {
 
     //private CoordinateBody body;
 
@@ -10,11 +10,17 @@ public class PhysicsBody {
     CoordinateBody myCoordinateBody;
 
     PhysicsBody(double mass, Coordinate start, Dimensions dims){
+        super(start, dims);
         this.mass = mass;
         //this.body = body;
         this.acceleration = new PhysicsVector(0, 0);
         this.velocity = new PhysicsVector(0, 0);
         this.myCoordinateBody = new CoordinateBody(start, dims);
+    }
+
+    @Override
+    boolean isPhysicsBody(){
+        return true;
     }
 
     void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
