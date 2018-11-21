@@ -1,4 +1,4 @@
-package XML;
+package xml;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -6,7 +6,6 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.print.DocFlavor;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,7 +22,7 @@ import java.util.HashMap;
 import renderer.external.RenderSystem;
 
 /**
- * Example of how to create a new XML data file from a game being saved through the game editor.
+ * Example of how to create a new xml data file from a game being saved through the game editor.
  * May act as a superclass
  * @author ak457
  */

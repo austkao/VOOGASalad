@@ -228,7 +228,7 @@ public class RenderSystem implements Renderer{
     public FileChooser makeFileChooser(String filetype){
         FileChooser.ExtensionFilter extensionFilter;
         if(filetype.equalsIgnoreCase("xml")){
-            extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+            extensionFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
         }
         else if(filetype.equalsIgnoreCase("audio")){
             extensionFilter = new FileChooser.ExtensionFilter("Audio files (*.mp3, *.wav, *.aac, *.aiff)", "*.mp3","*.wav","*.aac","*.aiff");

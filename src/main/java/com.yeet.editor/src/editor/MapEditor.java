@@ -1,12 +1,10 @@
 package editor;
 
-import XML.XMLParser;
+import xml.XMLParser;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import renderer.external.Structures.Level;
@@ -16,8 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.net.URISyntaxException;
-import java.util.Random;
-import XML.XMLSaveBuilder;
+
+import xml.XMLSaveBuilder;
 
 /**
  * @author ob29

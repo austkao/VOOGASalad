@@ -1,4 +1,4 @@
-package XML;
+package xml;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -11,13 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
 import renderer.external.RenderSystem;
 
 /**
- * This class parses an XML file for the information wanted by a user.
- * There is a validation check for a VOOGASalad tag in the top-level nodes of the XML file.
+ * This class parses an xml file for the information wanted by a user.
+ * There is a validation check for a VOOGASalad tag in the top-level nodes of the xml file.
  * @author ak457
  */
 public class XMLParser {
@@ -35,8 +33,7 @@ public class XMLParser {
             loadFileChooser.setInitialDirectory(defaultFile);
             File file = loadFileChooser.showOpenDialog(new Stage());
             if(file != null) {
-                //System.out.println(file.getPath());
-                initializeXMLDoc(file.getName());
+                initializeXMLDoc(file);
             } else {
                 throw new IOException("Cannot load file");
             }
@@ -45,11 +42,11 @@ public class XMLParser {
         }
     }
 
-    public void initializeXMLDoc(String fileName) {
+    public void initializeXMLDoc(File file) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbf.newDocumentBuilder();
-            Document doc = dBuilder.parse(this.getClass().getClassLoader().getResourceAsStream(fileName));
+            Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
             xmlDocument = doc;
             NodeList docNodes = xmlDocument.getChildNodes();
@@ -59,6 +56,7 @@ public class XMLParser {
                     Element elem = (Element) docNodes.item(i);
                     if(elem.getTagName().equals("VOOGASalad")) {
                         verified = true;
+                        System.out.println("success");
                     }
                 }
             }
