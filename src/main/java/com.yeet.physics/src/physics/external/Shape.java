@@ -4,10 +4,10 @@ import java.util.List;
 
 public abstract class Shape {
 
-    private List<Line> shapeLines;
+    private List<Line> path;
 
     public Shape(List<Line> shapeLines){
-        this.shapeLines = shapeLines;
+        this.path = shapeLines;
     }
 
 }
