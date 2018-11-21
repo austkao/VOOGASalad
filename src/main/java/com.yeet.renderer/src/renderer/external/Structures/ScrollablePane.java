@@ -9,19 +9,15 @@ import javafx.scene.layout.Pane;
 import java.io.File;
 
 public class ScrollablePane extends Pane {
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    private static final String DEFAULT_IMAGE_DIR = "/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/users/rr600/workspace/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
     private ObservableList<ScrollableItem> items;
     private ScrollPane scrollPane;
 
 
-    public ScrollablePane(){
+    public ScrollablePane(File dir){
         items = FXCollections.observableArrayList();
         scrollPane = new ScrollPane();
-        loadFiles();
+        loadFiles(dir);
         scrollPane.setPrefSize(150, 400);
         scrollPane.setLayoutX(0);
         scrollPane.setLayoutY(0);
@@ -42,9 +38,7 @@ public class ScrollablePane extends Pane {
 
     }
 
-    public void loadFiles(){
-        File dir = new File(DEFAULT_IMAGE_DIR);
-        System.out.println(dir.getAbsolutePath());
+    public void loadFiles(File dir){
         for(File imgFile : dir.listFiles()) {
             if(imgFile.toString().endsWith(".png")){
                 addItem(new Image(imgFile.toURI().toString()));

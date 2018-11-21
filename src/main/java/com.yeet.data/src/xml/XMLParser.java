@@ -18,7 +18,7 @@ import renderer.external.RenderSystem;
  * There is a validation check for a VOOGASalad tag in the top-level nodes of the xml file.
  * @author ak457
  */
-public class XMLParser {
+public class XMLParser implements Parser {
     private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
 
     private Document xmlDocument;

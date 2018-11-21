@@ -27,7 +27,7 @@ import renderer.external.RenderSystem;
  * @author ak457
  */
 
-public class XMLSaveBuilder {
+public class XMLSaveBuilder implements Saver {
     private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
 
     private Document saveDocument;
@@ -82,7 +82,7 @@ public class XMLSaveBuilder {
         }
     }
 
-    private void generateFile(String filePath) {
+    public void generateFile(String filePath) {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
