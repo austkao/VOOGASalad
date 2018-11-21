@@ -5,28 +5,28 @@ import java.util.List;
 
 public class Collision extends Interaction {
 
-    private List<PhysicsBody> colliders;
+    private List<PhysicsObject> colliders;
 
-    public Collision(List<PhysicsBody> colliders){
+    public Collision(List<PhysicsObject> colliders){
         super(colliders);
         this.colliders = colliders;
     }
 
-    public PhysicsBody getCollider1(){
+    public PhysicsObject getCollider1(){
         if(this.colliders.size()>= 1){
             return this.colliders.get(0);
         }
         return null;
     }
 
-    public PhysicsBody getCollider2() {
+    public PhysicsObject getCollider2() {
         if (this.colliders.size() >= 2) {
             return this.colliders.get(1);
         }
         return null;
     }
 
-    public List<PhysicsBody> getColliders(){
+    public List<PhysicsObject> getColliders(){
         return this.colliders;
     }
 }

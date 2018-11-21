@@ -5,9 +5,9 @@ import java.util.List;
 public class CollisionHandler {
 
 
-    List<PhysicsBody> bodies;
+    List<PhysicsObject> bodies;
 
-    public CollisionHandler(List<PhysicsBody> bodies){
+    public CollisionHandler(List<PhysicsObject> bodies){
         this.bodies = bodies;
     }
 
