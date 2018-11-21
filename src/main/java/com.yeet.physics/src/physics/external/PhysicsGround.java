@@ -4,8 +4,8 @@ public class PhysicsGround extends PhysicsObject {
 
     private CoordinateBody myCoordinateBody;
 
-    PhysicsGround(Coordinate start, Dimensions dims) {
-        super(start, dims);
-        this.myCoordinateBody = new CoordinateBody(start, dims);
+    PhysicsGround(double mass, Coordinate start, Dimensions dims) {
+        super(mass, start, dims);
+        this.myMass = Integer.MAX_VALUE;
     }
 }

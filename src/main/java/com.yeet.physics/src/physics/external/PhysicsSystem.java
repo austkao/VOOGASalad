@@ -7,7 +7,7 @@ import java.util.List;
 public class PhysicsSystem {
 
     public static final double defaultMass = 50;
-    List<PhysicsBody> bodies = new ArrayList<>();
+    List<PhysicsObject> bodies = new ArrayList<>();
     private double gravityAcceleration;
     private double gravityDirection;
 
@@ -16,7 +16,10 @@ public class PhysicsSystem {
         this.gravityDirection = gravityDir;
     }
 
-    void updatePhysics() {
+    void update() {
+        CollisionDetector detector = new CollisionDetector(bodies);
+        List<Collision> collisions = new ArrayList<>(detector.detectCollisions(bodies));
+        CollisionHandler handler = new CollisionHandler(collisions);
         applyAcceleration(bodies, gravityAcceleration); // always apply gravity
     }
 
@@ -28,15 +31,15 @@ public class PhysicsSystem {
         }
     }
 
-    private void applyAcceleration(List<PhysicsBody> bodies, double acceleration) {
+    private void applyAcceleration(List<PhysicsObject> bodies, double acceleration) {
         PhysicsVector gravity;
-        for (PhysicsBody b : bodies) {
+        for (PhysicsObject b : bodies) {
             gravity = new PhysicsVector(b.getMass()*acceleration, gravityDirection);
             b.applyForce(gravity);
         }
     }
 
-    List<PhysicsBody> getBodies() {
+    List<PhysicsObject> getBodies() {
         return this.bodies;
     }
 }

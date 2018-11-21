@@ -2,8 +2,6 @@ package physics.external;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static java.lang.Math.PI;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +32,7 @@ class PhysicsSystemTest {
         double expectedVelMag = 9.8*0.125;
         double expectedDir = PI/2;
 
-        testSystem.updatePhysics();
+        testSystem.update();
         for (PhysicsBody b : testSystem.getBodies()) {
             assertEquals(expectedAccMag, b.getAcceleration().getMagnitude());
             assertEquals(expectedVelMag, b.getVelocity().getMagnitude());

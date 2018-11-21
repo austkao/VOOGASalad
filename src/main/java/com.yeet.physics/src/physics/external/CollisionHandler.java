@@ -7,8 +7,13 @@ public class CollisionHandler {
 
     List<PhysicsObject> bodies;
 
-    public CollisionHandler(List<PhysicsObject> bodies){
-        this.bodies = bodies;
+    public CollisionHandler(List<Collision> collisions){
+        for (Collision c : collisions) {
+            // body+attack
+            // body+ground
+            // body+body (useless)
+            // ground+attack (useless)
+        }
     }
 
 

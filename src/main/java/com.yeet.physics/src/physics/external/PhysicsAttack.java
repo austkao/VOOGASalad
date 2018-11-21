@@ -5,21 +5,13 @@ public class PhysicsAttack extends PhysicsObject {
     private CoordinateBody myCoordinateBody;
     private int myDirection;
 
-    PhysicsAttack(Coordinate start, Dimensions dims) {
-        super(start, dims);
-        this.myCoordinateBody = new CoordinateBody(start, dims);
+    PhysicsAttack(double mass, Coordinate start, Dimensions dims) {
+        super(mass, start, dims);
+        this.myMass = 0;
     }
 
     @Override
     boolean isPhysicsAttack() {
         return true;
-    }
-
-    void setDirection(int dir) {
-        this.myDirection = dir;
-    }
-
-    int getDirection() {
-        return myDirection;
     }
 }
