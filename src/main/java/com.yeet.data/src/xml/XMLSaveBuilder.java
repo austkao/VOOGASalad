@@ -27,20 +27,14 @@ import renderer.external.RenderSystem;
  * @author ak457
  */
 
-public class XMLSaveBuilder {
+public class XMLSaveBuilder implements Saver {
     private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
 
     private Document saveDocument;
     private RenderSystem renderSys;
 
-    public XMLSaveBuilder(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
+    public XMLSaveBuilder(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data, File file) {
         try {
-            renderSys = new RenderSystem();
-            FileChooser fileChooser = renderSys.makeFileChooser("xml");
-            fileChooser.setTitle("Save File As");
-            File defaultFile = new File(RESOURCE_PATH);
-            fileChooser.setInitialDirectory(defaultFile);
-            File file = fileChooser.showSaveDialog(new Stage());
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbf.newDocumentBuilder();
             saveDocument = dBuilder.newDocument();
@@ -82,7 +76,7 @@ public class XMLSaveBuilder {
         }
     }
 
-    private void generateFile(String filePath) {
+    public void generateFile(String filePath) {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();

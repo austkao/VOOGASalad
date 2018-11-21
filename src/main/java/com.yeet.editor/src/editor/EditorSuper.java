@@ -6,7 +6,16 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import renderer.external.RenderSystem;
+import xml.XMLParser;
+import xml.XMLSaveBuilder;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Editor super class
@@ -14,6 +23,7 @@ import renderer.external.RenderSystem;
  */
 
 public class EditorSuper extends Scene{
+    private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
 
     private Group root;
     private Scene myScene;
@@ -53,4 +63,39 @@ public class EditorSuper extends Scene{
         return rs;
     }
 
+    public HashMap<String, ArrayList<String>> loadXMLFile(String tag) {
+        try {
+            FileChooser loadFileChooser = rs.makeFileChooser("xml");
+            loadFileChooser.setTitle("Save File As");
+            File defaultFile = new File(RESOURCE_PATH);
+            loadFileChooser.setInitialDirectory(defaultFile);
+            File file = loadFileChooser.showOpenDialog(new Stage());
+            if(file != null) {
+                XMLParser parser = new XMLParser(file);
+                return parser.parseFileForElement(tag);
+            } else {
+                throw new IOException("Cannot load file");
+            }
+        } catch (IOException e) {
+            System.out.println("An error has occurred.");
+            return new HashMap<>();
+        }
+    }
+
+    public void generateSave(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
+        try {
+            FileChooser fileChooser = rs.makeFileChooser("xml");
+            fileChooser.setTitle("Save File As");
+            File defaultFile = new File(RESOURCE_PATH);
+            fileChooser.setInitialDirectory(defaultFile);
+            File file = fileChooser.showSaveDialog(new Stage());
+            if(file != null) {
+                new XMLSaveBuilder(structure, data, file);
+            } else {
+                throw new IOException("Invalid save location");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred during the save process");
+        }
+    }
 }

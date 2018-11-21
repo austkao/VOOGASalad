@@ -18,31 +18,12 @@ import renderer.external.RenderSystem;
  * There is a validation check for a VOOGASalad tag in the top-level nodes of the xml file.
  * @author ak457
  */
-public class XMLParser {
-    private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
+public class XMLParser implements Parser {
 
     private Document xmlDocument;
     private RenderSystem renderSys;
 
-    public XMLParser() {
-        try {
-            renderSys = new RenderSystem();
-            FileChooser loadFileChooser = renderSys.makeFileChooser("xml");
-            loadFileChooser.setTitle("Save File As");
-            File defaultFile = new File(RESOURCE_PATH);
-            loadFileChooser.setInitialDirectory(defaultFile);
-            File file = loadFileChooser.showOpenDialog(new Stage());
-            if(file != null) {
-                initializeXMLDoc(file);
-            } else {
-                throw new IOException("Cannot load file");
-            }
-        } catch (IOException e) {
-            System.out.println("An error has occurred.");
-        }
-    }
-
-    public void initializeXMLDoc(File file) {
+    public XMLParser(File file) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbf.newDocumentBuilder();
@@ -66,7 +47,6 @@ public class XMLParser {
         }
         catch (ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
             System.out.println("An error has occurred during initialization.");
-            e.printStackTrace();
         }
     }
 

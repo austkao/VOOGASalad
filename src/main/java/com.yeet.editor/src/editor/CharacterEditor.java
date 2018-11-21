@@ -12,8 +12,13 @@ import javafx.stage.FileChooser;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollablePane;
+import xml.XMLParser;
+import xml.XMLSaveBuilder;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 /**
@@ -27,7 +32,9 @@ public class CharacterEditor extends EditorSuper{
     private Group root;
     private String backgroundURL;
     private VBox mySliders;
-
+    private HBox healthSlider;
+    private HBox attackSlider;
+    private HBox defenseSlider;
 
 
 
@@ -52,11 +59,11 @@ public class CharacterEditor extends EditorSuper{
 
     private void makeSliders(){
         mySliders = new VBox(10);
-        HBox slider1 = getRenderSystem().makeSlider("health",consumer,0.0,0.0,200.0);
-        HBox slider2 = getRenderSystem().makeSlider("attack",consumer,0.0,0.0,200.0);
-        HBox slider3 = getRenderSystem().makeSlider("defense",consumer,0.0,0.0,200.0);
+        healthSlider = getRenderSystem().makeSlider("health",consumer,0.0,0.0,200.0);
+        attackSlider = getRenderSystem().makeSlider("attack",consumer,0.0,0.0,200.0);
+        defenseSlider = getRenderSystem().makeSlider("defense",consumer,0.0,0.0,200.0);
 
-        mySliders.getChildren().addAll(slider1,slider2,slider3);
+        mySliders.getChildren().addAll(healthSlider,attackSlider,defenseSlider);
         mySliders.setLayoutX(800.0);
         mySliders.setLayoutY(200.0);
         root.getChildren().add(mySliders);
@@ -104,7 +111,33 @@ public class CharacterEditor extends EditorSuper{
         return "CharacterEditor";
     }
 
+    private void createSaveFile() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        ArrayList<String> characterAttributes = new ArrayList<>();
+        characterAttributes.add("health");
+        characterAttributes.add("attack");
+        characterAttributes.add("defense");
+        structure.put("character", characterAttributes);
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        try {
+            generateSave(structure, data);
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+            //ex.printStackTrace();
+        }
+    }
 
+    private void loadXMLFile() {
+        try {
+            //XMLParser parser = new XMLParser();
+            //HashMap<String, ArrayList<String>> data = parser.parseFileForElement("character");
+            //ArrayList<String> health = data.get("health");
+            //ArrayList<String> attack = data.get("attack");
+            //ArrayList<String> defense = data.get("defense");
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
 
 
 

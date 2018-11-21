@@ -27,6 +27,10 @@ import xml.XMLSaveBuilder;
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_TILE = "acacia_log.png";
+    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    private static final String DEFAULT_IMAGE_DIR = "/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    //private static final String DEFAULT_IMAGE_DIR = "/users/rr600/workspace/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
     private Image currentTileFile;
     private ScrollablePane scrollablePane;
@@ -79,9 +83,9 @@ public class MapEditor extends EditorSuper{
         Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 75.0, 200.0, 50.0);
         root.getChildren().add(loadFile);
-        loadFile.setOnMouseClicked(e -> loadXMLFile());
+        loadFile.setOnMouseClicked(e -> loadMapFile());
 
-        scrollablePane = new ScrollablePane();
+        scrollablePane = new ScrollablePane(new File(DEFAULT_IMAGE_DIR));
         for(ScrollableItem b: scrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
         }
@@ -167,17 +171,16 @@ public class MapEditor extends EditorSuper{
         mapAttributes.add("y");
         structure.put("map", mapAttributes);
         try {
-            new XMLSaveBuilder(structure, level.createLevelMap());
+            generateSave(structure, level.createLevelMap());
         } catch (Exception ex) {
             System.out.println("Invalid save");
             //ex.printStackTrace();
         }
     }
 
-    private void loadXMLFile() {
+    private void loadMapFile() {
         try {
-            XMLParser parser = new XMLParser();
-            HashMap<String, ArrayList<String>> data = parser.parseFileForElement("map");
+            HashMap<String, ArrayList<String>> data = loadXMLFile("map");
             ArrayList<String> xPos = data.get("x");
             ArrayList<String> yPos = data.get("y");
             if(xPos.size() != yPos.size()) {

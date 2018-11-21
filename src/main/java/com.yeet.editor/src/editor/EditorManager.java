@@ -3,6 +3,7 @@ package editor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import renderer.external.RenderSystem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,10 @@ public class EditorManager {
 
     public void setEditorHomeScene(){
         myStage.setScene(myScene);
+    }
+
+    public void loadEditorHomeScene() {
+        setEditorHomeScene();
     }
 
     public void goHome(){
