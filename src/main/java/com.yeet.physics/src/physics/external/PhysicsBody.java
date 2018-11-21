@@ -4,20 +4,20 @@ public class PhysicsBody extends PhysicsObject {
 
     //private CoordinateBody body;
 
-    double mass;
-    int direction; //+1: right, -1: left
-    PhysicsVector acceleration;
-    PhysicsVector velocity;
+    double myMass;
+    int myDirection; //+1: right, -1: left
+    PhysicsVector myAcceleration;
+    PhysicsVector myVelocity;
     CoordinateBody myCoordinateBody;
 
     PhysicsBody(double mass, Coordinate start, Dimensions dims){
         super(start, dims);
-        this.mass = mass;
+        this.myMass = mass;
         //this.body = body;
-        this.acceleration = new PhysicsVector(0, 0);
-        this.velocity = new PhysicsVector(0, 0);
+        this.myAcceleration = new PhysicsVector(0, 0);
+        this.myVelocity = new PhysicsVector(0, 0);
         this.myCoordinateBody = new CoordinateBody(start, dims);
-        this.direction = 1; // start facing right
+        this.myDirection = 1; // start facing right
     }
 
     @Override
@@ -26,24 +26,32 @@ public class PhysicsBody extends PhysicsObject {
     }
 
     void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
-        AccelerationCalculator ACalc = new AccelerationCalculator(force, acceleration, velocity, mass);
-        this.acceleration = ACalc.updateAcceleration();
-        this.velocity = ACalc.updateVelocity();
+        AccelerationCalculator ACalc = new AccelerationCalculator(force, myAcceleration, myVelocity, myMass);
+        this.myAcceleration = ACalc.updateAcceleration();
+        this.myVelocity = ACalc.updateVelocity();
     }
 
     PhysicsVector getAcceleration(){
-        return this.acceleration;
+        return this.myAcceleration;
     }
 
     PhysicsVector getVelocity(){
-        return this.velocity;
+        return this.myVelocity;
     }
 
     double getMass() {
-        return this.mass;
+        return this.myMass;
     }
 
     public CoordinateBody getMyCoordinateBody(){
         return this.myCoordinateBody;
+    }
+
+    void setDirection(int dir) {
+        this.myDirection = dir;
+    }
+
+    int getDirection() {
+        return myDirection;
     }
 }

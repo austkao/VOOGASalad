@@ -16,10 +16,10 @@ class PhysicsBodyTest {
 
         PhysicsVector expectedAcc = new PhysicsVector(0,0);
         PhysicsVector expectedVel = new PhysicsVector(0,0);
-        assertEquals(expectedAcc.getMagnitude(), body1.acceleration.getMagnitude());
-        assertEquals(expectedAcc.getDirection(), body1.acceleration.getDirection());
-        assertEquals(expectedVel.getMagnitude(), body1.velocity.getMagnitude());
-        assertEquals(expectedVel.getDirection(), body1.velocity.getDirection());
+        assertEquals(expectedAcc.getMagnitude(), body1.myAcceleration.getMagnitude());
+        assertEquals(expectedAcc.getDirection(), body1.myAcceleration.getDirection());
+        assertEquals(expectedVel.getMagnitude(), body1.myVelocity.getMagnitude());
+        assertEquals(expectedVel.getDirection(), body1.myVelocity.getDirection());
     }
 
     @Test
@@ -30,10 +30,10 @@ class PhysicsBodyTest {
         PhysicsVector expectedVel = new PhysicsVector(.05,0);
 
         body2.applyForce(new PhysicsVector(20, 0));
-        assertEquals(expectedAcc.getMagnitude(), body2.acceleration.getMagnitude());
-        assertEquals(expectedAcc.getDirection(), body2.acceleration.getDirection());
-        assertEquals(expectedVel.getMagnitude(), body2.velocity.getMagnitude());
-        assertEquals(expectedVel.getDirection(), body2.velocity.getDirection());
+        assertEquals(expectedAcc.getMagnitude(), body2.myAcceleration.getMagnitude());
+        assertEquals(expectedAcc.getDirection(), body2.myAcceleration.getDirection());
+        assertEquals(expectedVel.getMagnitude(), body2.myVelocity.getMagnitude());
+        assertEquals(expectedVel.getDirection(), body2.myVelocity.getDirection());
     }
 
     @Test
@@ -52,10 +52,10 @@ class PhysicsBodyTest {
         PhysicsVector resultVec = calc.getNetVector();
         body3.applyForce(resultVec);
 
-        assertEquals(expectedAcc.getMagnitude(), body3.acceleration.getMagnitude(), 0.000001);
-        assertEquals(expectedAcc.getDirection(), body3.acceleration.getDirection(), 0.000001);
-        assertEquals(expectedVel2.getMagnitude(), body3.velocity.getMagnitude(), 0.000001);
-        assertEquals(expectedVel2.getDirection(), body3.velocity.getDirection(), 0.000001);
+        assertEquals(expectedAcc.getMagnitude(), body3.myAcceleration.getMagnitude(), 0.000001);
+        assertEquals(expectedAcc.getDirection(), body3.myAcceleration.getDirection(), 0.000001);
+        assertEquals(expectedVel2.getMagnitude(), body3.myVelocity.getMagnitude(), 0.000001);
+        assertEquals(expectedVel2.getDirection(), body3.myVelocity.getDirection(), 0.000001);
 
     }
 }
