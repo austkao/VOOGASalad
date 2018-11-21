@@ -11,19 +11,22 @@ public class CollisionDetector {
         this.bodies = bodies;
     }
 
-    public List<PhysicsBody> detectCollisions(List<PhysicsBody> bodies){
-        List<PhysicsBody> colliders = new ArrayList<>();
-
+    public List<Collision> detectCollisions(List<PhysicsBody> bodies){
+        List<Collision> collisions = new ArrayList<Collision>();
         for(PhysicsBody bod: bodies){
             for(PhysicsBody bod2: bodies){
                 if(!bod.equals(bod2)){
                     if(bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody())){
+                        List<PhysicsBody> colliders = new ArrayList<>();
+                        colliders.add(bod);
                         colliders.add(bod2);
+                        Collision col = new Collision(colliders);
+                        collisions.add(col);
                     }
                 }
             }
         }
-        return colliders;
+        return collisions;
     }
 
 }
