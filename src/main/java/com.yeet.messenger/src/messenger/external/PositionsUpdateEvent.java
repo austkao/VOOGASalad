@@ -1,18 +1,19 @@
 package messenger.external;
 
-import javafx.geometry.Point2D;
+import java.awt.geom.Point2D;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PositionsUpdateEvent extends Event {
 
-    private HashMap<Integer, Point2D> map;
+    private Map<Integer, Point2D> map;
 
-    public PositionsUpdateEvent(HashMap<Integer, Point2D> map){
+    public PositionsUpdateEvent(Map<Integer, Point2D> map){
         this.map = map;
     }
 
-    public HashMap<Integer, Point2D> getPositions(){
+    public Map<Integer, Point2D> getPositions(){
         return this.map;
     }
 

@@ -48,6 +48,7 @@ public class CoordinateBody {
     }
 
     public void update(Coordinate newPos){
+        this.pos = newPos;
         this.path = new ArrayList<Line>();
 
         Point2D.Double top0 = new Point2D.Double(newPos.getX(), newPos.getY());
@@ -71,6 +72,10 @@ public class CoordinateBody {
         this.path.add(right);
         this.path.add(left);
         this.hitBox = new Square(this.path);
+    }
+
+    public Coordinate getPos(){
+        return this.pos;
     }
 
     /*
