@@ -1,18 +1,16 @@
 package physics.external;
 
-public abstract class PhysicsObject {
+public class PhysicsAttack extends PhysicsObject {
 
     private CoordinateBody myCoordinateBody;
 
-    PhysicsObject(Coordinate start, Dimensions dims) {
+    PhysicsAttack(Coordinate start, Dimensions dims) {
+        super(start, dims);
         this.myCoordinateBody = new CoordinateBody(start, dims);
     }
 
-    boolean isPhysicsBody() {
-        return false;
-    }
-
+    @Override
     boolean isPhysicsAttack() {
-        return false;
+        return true;
     }
 }
