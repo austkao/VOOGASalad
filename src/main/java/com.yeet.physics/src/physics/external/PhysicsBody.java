@@ -5,6 +5,7 @@ public class PhysicsBody extends PhysicsObject {
     //private CoordinateBody body;
 
     double mass;
+    int direction; //+1: right, -1: left
     PhysicsVector acceleration;
     PhysicsVector velocity;
     CoordinateBody myCoordinateBody;
@@ -16,6 +17,7 @@ public class PhysicsBody extends PhysicsObject {
         this.acceleration = new PhysicsVector(0, 0);
         this.velocity = new PhysicsVector(0, 0);
         this.myCoordinateBody = new CoordinateBody(start, dims);
+        this.direction = 1; // start facing right
     }
 
     @Override
