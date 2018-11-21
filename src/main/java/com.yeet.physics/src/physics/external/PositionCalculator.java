@@ -12,7 +12,11 @@ public class PositionCalculator {
 
     void updatePositions() {
         for (PhysicsObject o : myObjects) {
-
+            double XVelocity = o.getVelocity().getMagnitude() * Math.cos(o.getVelocity().getDirection());
+            double YVelocity = o.getVelocity().getMagnitude() * Math.sin(o.getVelocity().getDirection());
+            //Coordinate newCoordinate = new Coordinate(o.getMyCoordinateBody().getHitBox() + ,0);
+//            o.getVelocity();
+//            o.getMyCoordinateBody().update();
         }
     }
 }
