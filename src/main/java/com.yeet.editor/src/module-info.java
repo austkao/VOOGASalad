@@ -4,4 +4,7 @@ module com.yeet.editor {
     requires com.yeet.input;
     requires com.yeet.messenger;
     requires com.yeet.renderer;
+    requires com.yeet.data;
+    requires javafx.graphics;
+    requires javafx.controls;
 }
