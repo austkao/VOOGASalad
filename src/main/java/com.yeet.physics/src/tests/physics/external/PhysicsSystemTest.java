@@ -17,10 +17,10 @@ class PhysicsSystemTest {
         double expected = 0;
 
         for (int i = 0; i < 10; i++){
-            assertEquals(expected, testSystem.getBodies().get(i).getAcceleration().getMagnitude());
-            assertEquals(expected, testSystem.getBodies().get(i).getAcceleration().getDirection());
-            assertEquals(expected, testSystem.getBodies().get(i).getVelocity().getMagnitude());
-            assertEquals(expected, testSystem.getBodies().get(i).getVelocity().getDirection());
+            assertEquals(expected, testSystem.getGameObjects().get(i).getAcceleration().getMagnitude());
+            assertEquals(expected, testSystem.getGameObjects().get(i).getAcceleration().getDirection());
+            assertEquals(expected, testSystem.getGameObjects().get(i).getVelocity().getMagnitude());
+            assertEquals(expected, testSystem.getGameObjects().get(i).getVelocity().getDirection());
         }
     }
 
@@ -33,7 +33,7 @@ class PhysicsSystemTest {
         double expectedDir = PI/2;
 
         testSystem.update();
-        for (PhysicsBody b : testSystem.getBodies()) {
+        for (PhysicsObject b : testSystem.getGameObjects()) {
             assertEquals(expectedAccMag, b.getAcceleration().getMagnitude());
             assertEquals(expectedVelMag, b.getVelocity().getMagnitude());
             assertEquals(expectedDir, b.getAcceleration().getDirection());
