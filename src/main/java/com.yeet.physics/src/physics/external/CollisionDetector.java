@@ -10,7 +10,7 @@ public class CollisionDetector {
     public CollisionDetector(List<PhysicsBody> bodies){
         this.bodies = bodies;
     }
-    
+
     public List<PhysicsBody> detectCollisions(List<PhysicsBody> bodies){
         List<PhysicsBody> colliders = new ArrayList<>();
 
