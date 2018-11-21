@@ -5,19 +5,19 @@ import java.util.List;
 
 public class CollisionDetector {
 
-    private List<PhysicsBody> bodies;
+    private List<PhysicsObject> bodies;
 
-    public CollisionDetector(List<PhysicsBody> bodies){
+    public CollisionDetector(List<PhysicsObject> bodies){
         this.bodies = bodies;
     }
 
-    public List<Collision> detectCollisions(List<PhysicsBody> bodies){
+    public List<Collision> detectCollisions(List<PhysicsObject> bodies){
         List<Collision> collisions = new ArrayList<Collision>();
-        for(PhysicsBody bod: bodies){
-            for(PhysicsBody bod2: bodies){
+        for(PhysicsObject bod: bodies){
+            for(PhysicsObject bod2: bodies){
                 if(!bod.equals(bod2)){
                     if(bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody())){
-                        List<PhysicsBody> colliders = new ArrayList<>();
+                        List<PhysicsObject> colliders = new ArrayList<>();
                         colliders.add(bod);
                         colliders.add(bod2);
                         Collision col = new Collision(colliders);
