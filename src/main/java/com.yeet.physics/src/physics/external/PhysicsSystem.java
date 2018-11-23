@@ -16,7 +16,7 @@ import java.util.Map;
 public class PhysicsSystem {
 
     public static final double defaultMass = 50;
-    List<PhysicsObject> gameObjects;
+    List<PhysicsObject> gameObjects = new ArrayList<>();
 
     private EventBus myMessageBus;
 
@@ -30,7 +30,7 @@ public class PhysicsSystem {
         myPlayer= new MediaPlayer();
     }
      */
-    PhysicsSystem(List<PhysicsObject> objects) {
+    PhysicsSystem() {
         this.myMessageBus = EventBusFactory.getEventBus();
     }
 
@@ -42,9 +42,9 @@ public class PhysicsSystem {
         PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
         passHandler.update();
         applyForces();
-        updatePositions();
+        //updatePositions();
         Map<Integer, Point2D> myMap;
-        myMap = convertToMap(gameObjects);
+        myMap = convertToMap();
         PositionsUpdateEvent newPos = new PositionsUpdateEvent(myMap); //Parameter is hashmap with integer as key and Point2D as value
         myMessageBus.post(newPos);
     }
@@ -52,12 +52,12 @@ public class PhysicsSystem {
     public void addPhysicsBodies(int num) {
         int count = 0;
         while (count < num) {
-            gameObjects.add(new PhysicsBody(defaultMass, new Coordinate(0,0), new Dimensions(0,0)));
+            gameObjects.add(new PhysicsBody(defaultMass, new Coordinate(0,0), new Dimensions(1,1)));
             count ++;
         }
     }
 
-    private void applyForces() {
+    public void applyForces() {
         for (PhysicsObject b : gameObjects) {
             NetVectorCalculator calc = new NetVectorCalculator(b.getCurrentForces());
             b.applyForce(calc.getNetVector());
@@ -66,7 +66,7 @@ public class PhysicsSystem {
 
     }
 
-    private void updatePositions() {
+    public void updatePositions() {
         PositionCalculator calc = new PositionCalculator(gameObjects);
         calc.updatePositions();
     }

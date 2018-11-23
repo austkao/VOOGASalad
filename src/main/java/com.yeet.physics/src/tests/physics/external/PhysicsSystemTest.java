@@ -12,7 +12,7 @@ class PhysicsSystemTest {
 
     @Test
     void createPhysicsBodies() {
-        PhysicsSystem testSystem = new PhysicsSystem(defaultGravityAcceleration, defaultGravityDirection);
+        PhysicsSystem testSystem = new PhysicsSystem();
         testSystem.addPhysicsBodies(10);
         double expected = 0;
 
@@ -26,7 +26,7 @@ class PhysicsSystemTest {
 
     @Test
     void updatePhysics() {
-        PhysicsSystem testSystem = new PhysicsSystem(defaultGravityAcceleration, defaultGravityDirection);
+        PhysicsSystem testSystem = new PhysicsSystem();
         testSystem.addPhysicsBodies(10);
         double expectedAccMag = 9.8;
         double expectedVelMag = 9.8*0.125;
