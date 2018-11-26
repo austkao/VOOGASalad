@@ -1,4 +1,4 @@
-package physics.external;
+package tests.physics.external;
 
 import org.junit.jupiter.api.Test;
 
