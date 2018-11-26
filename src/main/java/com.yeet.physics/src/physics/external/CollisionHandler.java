@@ -10,11 +10,11 @@ public class CollisionHandler {
 
     private List<Collision> myCollisions;
 
-    CollisionHandler(List<Collision> collisions){
+    public CollisionHandler(List<Collision> collisions){
         this.myCollisions = collisions;
     }
 
-    void update() {
+    public void update() {
         for (Collision c : myCollisions) {
             PhysicsObject one, two;
             one = c.getCollider1();

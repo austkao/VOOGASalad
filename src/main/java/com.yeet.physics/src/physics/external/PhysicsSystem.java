@@ -15,9 +15,8 @@ import java.util.Map;
 
 public class PhysicsSystem {
 
-    public static final double defaultMass = 50;
-    List<PhysicsObject> gameObjects;
-
+    private static final double defaultMass = 50;
+    private List<PhysicsObject> gameObjects;
     private EventBus myMessageBus;
 
     /*
@@ -30,11 +29,12 @@ public class PhysicsSystem {
         myPlayer= new MediaPlayer();
     }
      */
-    PhysicsSystem(List<PhysicsObject> objects) {
+    public PhysicsSystem(List<PhysicsObject> objects) {
         this.myMessageBus = EventBusFactory.getEventBus();
+        gameObjects = objects;
     }
 
-    void update() {
+    public void update() {
         CollisionDetector detector = new CollisionDetector(gameObjects);
         List<Collision> collisions = new ArrayList<>(detector.detectCollisions(gameObjects));
         CollisionHandler collHandler = new CollisionHandler(collisions);
@@ -71,12 +71,12 @@ public class PhysicsSystem {
         calc.updatePositions();
     }
 
-    private Map<Integer, Point2D> convertToMap() {
+    private Map<Integer, Point2D> convertToMap(List<PhysicsObject> objectList) {
         Map<Integer, Point2D> out = new HashMap<>();
-        for(PhysicsObject obj: gameObjects){
+        for(PhysicsObject obj: objectList){
             //Convert to map
             Point2D.Double point = new Point2D.Double(obj.getMyCoordinateBody().getPos().getX(), obj.getMyCoordinateBody().getPos().getY());
-            out.put(gameObjects.indexOf(obj), point);
+            out.put(objectList.indexOf(obj), point);
         }
         return out;
     }

@@ -1,6 +1,8 @@
-package physics.external;
+package physics.external.tests;
 
 import org.junit.jupiter.api.Test;
+import physics.external.NetVectorCalculator;
+import physics.external.PhysicsVector;
 
 import java.util.ArrayList;
 import java.util.List;

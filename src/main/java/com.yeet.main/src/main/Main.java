@@ -24,6 +24,7 @@ public class Main extends Application {
     private Font myEmphasisFont;
     private Font myPlainFont;
     private EditorManager em;
+    private Player myPlayer;
 
     public static void main(String[] args){
         launch(args);
@@ -44,15 +45,16 @@ public class Main extends Application {
         myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
         myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         RenderSystem renderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
-        Player player = new Player(primaryStage,renderSystem);
+        myPlayer = new Player(primaryStage,renderSystem);
         myConsole = new Console();
         //register event listeners
-        EventBusFactory.getEventBus().register(player);
+        EventBusFactory.getEventBus().register(myPlayer);
         EventBusFactory.getEventBus().register(myConsole);
         //program start
-        player.doSomething();
-        root.getChildren().add(renderSystem.makeStringButton("Hello World", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0));
-
+        myPlayer.doSomething();
+        Button playButton = renderSystem.makeStringButton("Hello World", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0);
+        root.getChildren().add(playButton);
+        //playButton.setOnMouseClicked(event -> processClick(event));
         em = new EditorManager(primaryStage,homeScene);
         Button editorButton = renderSystem.makeStringButton("Editor", Color.BLACK,true, Color.WHITE, 30.0, 800.0, 500.0, 350.0, 50.0);
         editorButton.setOnMouseClicked(event -> processClick(event));

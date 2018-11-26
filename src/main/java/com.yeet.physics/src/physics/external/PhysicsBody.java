@@ -2,12 +2,12 @@ package physics.external;
 
 public class PhysicsBody extends PhysicsObject {
 
-    PhysicsBody(double mass, Coordinate start, Dimensions dims){
+    public PhysicsBody(double mass, Coordinate start, Dimensions dims){
         super(mass, start, dims);
     }
 
     @Override
-    boolean isPhysicsBody(){
+    public boolean isPhysicsBody(){
         return true;
     }
 

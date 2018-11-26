@@ -11,11 +11,11 @@ public class PassiveForceHandler {
 
     private List<PhysicsObject> myObjects;
 
-    PassiveForceHandler(List<PhysicsObject> objects) {
+    public PassiveForceHandler(List<PhysicsObject> objects) {
         this.myObjects = objects;
     }
 
-    void update() {
+    public void update() {
         for (PhysicsObject o : myObjects) {
             if (o.isPhysicsBody() || o.isPhysicsAttack()) {
                 o.addCurrentForce(new PhysicsVector(o.getMass() * defaultGravityAcceleration, defaultGravityDirection)); // always add gravity
