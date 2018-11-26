@@ -42,7 +42,7 @@ public class PhysicsSystem {
         PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
         passHandler.update();
         applyForces();
-        //updatePositions();
+        updatePositions();
         Map<Integer, Point2D> myMap;
         myMap = convertToMap();
         PositionsUpdateEvent newPos = new PositionsUpdateEvent(myMap); //Parameter is hashmap with integer as key and Point2D as value

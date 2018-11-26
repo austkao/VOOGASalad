@@ -21,6 +21,7 @@ public class CoordinateBody {
     private Coordinate pos;
 
     public CoordinateBody(Coordinate start, Dimensions dims){
+        this.dims = dims;
         this.pos = start;
         this.path = new ArrayList<Line>();
 
@@ -101,6 +102,10 @@ public class CoordinateBody {
             return true;
         }
         return false; 
+    }
+
+    public void setDims(Dimensions dims){
+        this.dims = dims; 
     }
 
     public Square getHitBox() {
