@@ -1,4 +1,4 @@
-package physics.tests;
+package physics.external.tests;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +10,7 @@ class PhysicsSystemTest {
     public static final double defaultGravityAcceleration = 9.8;
     public static final double defaultGravityDirection = PI/2;
     /**
-     * Commented out tests so
+     * Commented out this tests so that main loop can run for demo.
      */
 /*
     @Test

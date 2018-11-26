@@ -2,15 +2,15 @@ package physics.external;
 
 import java.util.List;
 
-class NetVectorCalculator {
+public class NetVectorCalculator {
 
     private List<PhysicsVector> myVectors;
 
-    NetVectorCalculator(List<PhysicsVector> vectors) {
+    public NetVectorCalculator(List<PhysicsVector> vectors) {
         myVectors = vectors;
     }
 
-    PhysicsVector getNetVector() {
+    public PhysicsVector getNetVector() {
         while(myVectors.size() > 1) {
             PhysicsVector vector1 = myVectors.get(0);
             PhysicsVector vector2 = myVectors.get(1);

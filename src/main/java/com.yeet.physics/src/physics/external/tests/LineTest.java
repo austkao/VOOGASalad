@@ -1,11 +1,10 @@
-package tests.physics.external;
+package physics.external.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import physics.external.Line;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class LineTest {
