@@ -1,42 +1,87 @@
 package physics.external;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import messenger.external.EventBusFactory;
+import messenger.external.PositionsUpdateEvent;
+import messenger.external.SuccessfulEvent;
+
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class PhysicsSystem {
 
     public static final double defaultMass = 50;
-    List<PhysicsBody> bodies = new ArrayList<>();
-    private double gravityAcceleration;
-    private double gravityDirection;
+    List<PhysicsObject> gameObjects;
 
-    PhysicsSystem(double gravityAcc, double gravityDir) {
-        this.gravityAcceleration = gravityAcc;
-        this.gravityDirection = gravityDir;
+    private EventBus myMessageBus;
+
+    /*
+    private EventBus myMessageBus;
+    private String path = "/example_character_1/";
+    private MediaPlayer myPlayer;
+
+    public AudioSystem(){
+        myMessageBus = EventBusFactory.getEventBus();
+        myPlayer= new MediaPlayer();
+    }
+     */
+    PhysicsSystem(List<PhysicsObject> objects) {
+        this.myMessageBus = EventBusFactory.getEventBus();
     }
 
-    void updatePhysics() {
-        applyAcceleration(bodies, gravityAcceleration); // always apply gravity
+    void update() {
+        CollisionDetector detector = new CollisionDetector(gameObjects);
+        List<Collision> collisions = new ArrayList<>(detector.detectCollisions(gameObjects));
+        CollisionHandler collHandler = new CollisionHandler(collisions);
+        collHandler.update();
+        PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
+        passHandler.update();
+        applyForces();
+        updatePositions();
+        Map<Integer, Point2D> myMap;
+        myMap = convertToMap(gameObjects);
+        PositionsUpdateEvent newPos = new PositionsUpdateEvent(myMap); //Parameter is hashmap with integer as key and Point2D as value
+        myMessageBus.post(newPos);
     }
 
-    void addPhysicsBodies(int num) {
+    public void addPhysicsBodies(int num) {
         int count = 0;
         while (count < num) {
-            bodies.add(new PhysicsBody(defaultMass, new Coordinate(0,0), new Dimensions(0,0)));
+            gameObjects.add(new PhysicsBody(defaultMass, new Coordinate(0,0), new Dimensions(0,0)));
             count ++;
         }
     }
 
-    private void applyAcceleration(List<PhysicsBody> bodies, double acceleration) {
-        PhysicsVector gravity;
-        for (PhysicsBody b : bodies) {
-            gravity = new PhysicsVector(b.getMass()*acceleration, gravityDirection);
-            b.applyForce(gravity);
+    private void applyForces() {
+        for (PhysicsObject b : gameObjects) {
+            NetVectorCalculator calc = new NetVectorCalculator(b.getCurrentForces());
+            b.applyForce(calc.getNetVector());
+            b.clearCurrentForces();
         }
+
     }
 
-    List<PhysicsBody> getBodies() {
-        return this.bodies;
+    private void updatePositions() {
+        PositionCalculator calc = new PositionCalculator(gameObjects);
+        calc.updatePositions();
+    }
+
+    private Map<Integer, Point2D> convertToMap() {
+        Map<Integer, Point2D> out = new HashMap<>();
+        for(PhysicsObject obj: gameObjects){
+            //Convert to map
+            Point2D.Double point = new Point2D.Double(obj.getMyCoordinateBody().getPos().getX(), obj.getMyCoordinateBody().getPos().getY());
+            out.put(gameObjects.indexOf(obj), point);
+        }
+        return out;
+    }
+
+    List<PhysicsObject> getGameObjects() {
+        return this.gameObjects;
     }
 }

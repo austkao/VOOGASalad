@@ -3,4 +3,5 @@ module com.yeet.physics {
     requires org.junit.jupiter.api;
     requires com.yeet.messenger;
     requires java.desktop;
+    requires com.google.common;
 }

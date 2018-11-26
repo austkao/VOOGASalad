@@ -2,10 +2,13 @@ package physics.external;
 
 public class PhysicsGround extends PhysicsObject {
 
-    private CoordinateBody myCoordinateBody;
+    PhysicsGround(double mass, Coordinate start, Dimensions dims) {
+        super(mass, start, dims);
+        this.myMass = Integer.MAX_VALUE;
+    }
 
-    PhysicsGround(Coordinate start, Dimensions dims) {
-        super(start, dims);
-        this.myCoordinateBody = new CoordinateBody(start, dims);
+    @Override
+    boolean isPhysicsGround(){
+        return true;
     }
 }
