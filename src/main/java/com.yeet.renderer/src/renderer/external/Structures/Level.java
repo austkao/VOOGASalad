@@ -29,14 +29,6 @@ public class Level extends GridPane{
     ImageView background;
     Pane window;
 
-
-    /**
-     * Constructs the level
-     * @param windowWidth = width of window of pane
-     * @param windowHeight = height of window of pane
-     * @param backgroundURL = url for background image
-     */
-
     public Level(Image bk){
         grid = new Tile[WINDOW_HEIGHT/TILE_HEIGHT][WINDOW_WIDTH/TILE_WIDTH];
         background = new ImageView();
@@ -47,7 +39,12 @@ public class Level extends GridPane{
         window.getChildren().add(background);
 
     }
-
+    /**
+     * Constructs the level
+     * @param windowWidth = width of window of pane
+     * @param windowHeight = height of window of pane
+     * @param backgroundURL = url for background image
+     */
     public Level(int windowWidth, int windowHeight, String backgroundURL){
         super();
 
