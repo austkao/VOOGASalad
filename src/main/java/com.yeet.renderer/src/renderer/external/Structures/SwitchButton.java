@@ -8,7 +8,7 @@ import javafx.scene.text.Font;
 
 import java.util.List;
 
-import static renderer.internal.RenderUtils.toRGBCode;
+import static renderer.external.RenderUtils.toRGBCode;
 
 /**
  * Creates array of {@code Button} objects of which only one can be active at a time, similarly to radio buttons

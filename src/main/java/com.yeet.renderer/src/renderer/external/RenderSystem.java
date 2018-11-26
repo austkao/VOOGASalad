@@ -20,7 +20,7 @@ import renderer.external.Structures.*;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static renderer.internal.RenderUtils.toRGBCode;
+import static renderer.external.RenderUtils.toRGBCode;
 
 /** Provides a high-level tool for the rapid creation of standardized and stylized core UI elements and graphics
  *  @author bpx
@@ -120,11 +120,14 @@ public class RenderSystem implements Renderer{
     public Text makeText(String text, Boolean emphasis, Integer fontsize, Color color, Double x, Double y){
         Text newtext = new Text(text);
         if(emphasis){
-            newtext.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;",myEmphasisFont.getName(),fontsize,toRGBCode(color)));
+            newtext.setFont(myEmphasisFont);
+            newtext.setStyle(String.format("-fx-font-size: %s; -fx-text-fill: %s;",fontsize,toRGBCode(color)));
         }
         else{
-            newtext.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;",myPlainFont.getName(),fontsize,toRGBCode(color)));
+            newtext.setFont(myPlainFont);
+            newtext.setStyle(String.format("-fx-font-size: %s; -fx-text-fill: %s;",fontsize,toRGBCode(color)));
         }
+        newtext.setFill(color);
         newtext.setX(x);
         newtext.setY(y);
         return newtext;
@@ -143,10 +146,11 @@ public class RenderSystem implements Renderer{
     }
 
     /** Draws a {@code Level} to the specified target
-     *  @param pane The target {@code Pane} to draw to
-     *  @param level The {@code Level} to draw */
-    public void drawStage(Pane pane, Level level){
-        pane.getChildren().add(level);
+     *  @param root The target {@code Group} to draw to
+     *  @param image The {@code Level} to draw */
+    public void drawStage(Group root, Image image){
+        Level level = new Level(image);
+        root.getChildren().add(level.getWindow());
     }
 
     /** Creates an editable {@code TextField}
@@ -315,4 +319,5 @@ public class RenderSystem implements Renderer{
         sprite.setViewport(offsetX,offsetY);
         return sprite;
     }
+
 }

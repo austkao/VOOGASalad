@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
-import static renderer.internal.RenderUtils.toRGBCode;
+import static renderer.external.RenderUtils.toRGBCode;
 
 /**
  * Creates a carousel of {@code String} elements that can be progressed or regressed through arrow controls
