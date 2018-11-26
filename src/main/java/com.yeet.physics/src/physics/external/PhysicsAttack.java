@@ -2,8 +2,8 @@ package physics.external;
 
 public class PhysicsAttack extends PhysicsObject {
 
-    PhysicsAttack(double mass, Coordinate start, Dimensions dims) {
-        super(mass, start, dims);
+    PhysicsAttack(int id, double mass, Coordinate start, Dimensions dims) {
+        super(id, mass, start, dims);
     }
 
     @Override

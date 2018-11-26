@@ -37,6 +37,8 @@ public class PhysicsSystem {
     void update() {
         CollisionDetector detector = new CollisionDetector(gameObjects);
         List<Collision> collisions = new ArrayList<>(detector.detectCollisions(gameObjects));
+        MovementHandler movHandler = new MovementHandler(gameObjects);
+        movHandler.update(); //How does this work with subscribe?
         CollisionHandler collHandler = new CollisionHandler(collisions);
         collHandler.update();
         PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
@@ -52,7 +54,7 @@ public class PhysicsSystem {
     public void addPhysicsBodies(int num) {
         int count = 0;
         while (count < num) {
-            gameObjects.add(new PhysicsBody(defaultMass, new Coordinate(0,0), new Dimensions(1,1)));
+            gameObjects.add(new PhysicsBody(count, defaultMass, new Coordinate(0,0), new Dimensions(1,1)));
             count ++;
         }
     }

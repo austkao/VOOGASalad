@@ -105,7 +105,7 @@ public class CoordinateBody {
     }
 
     public void setDims(Dimensions dims){
-        this.dims = dims; 
+        this.dims = dims;
     }
 
     public Square getHitBox() {

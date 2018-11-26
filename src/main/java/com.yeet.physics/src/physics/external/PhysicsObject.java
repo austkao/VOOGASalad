@@ -11,8 +11,9 @@ public abstract class PhysicsObject {
     double myDirection; //0: right, PI: left
     PhysicsVector myAcceleration;
     PhysicsVector myVelocity;
+    int id;
 
-    PhysicsObject(double mass, Coordinate start, Dimensions dims) {
+    PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
         this.myMass = mass;
         this.myCoordinateBody = new CoordinateBody(start, dims);
         this.myMass = mass;
@@ -20,6 +21,7 @@ public abstract class PhysicsObject {
         this.myVelocity = new PhysicsVector(0, 0);
         this.myCoordinateBody = new CoordinateBody(start, dims);
         this.myDirection = 0; // start facing right
+        this.id = id;
     }
 
     void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
@@ -74,4 +76,6 @@ public abstract class PhysicsObject {
     double getDirection() {
         return myDirection;
     }
+
+    int getId(){return this.id;}
 }
