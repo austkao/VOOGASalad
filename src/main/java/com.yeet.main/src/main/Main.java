@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -92,6 +93,8 @@ public class Main extends Application {
         root.getChildren().add(playButton);
         //program start
         myPlayer.doSomething();
+        em = new EditorManager(primaryStage,homeScene);
+        newButton.setOnMouseClicked(event -> em.setEditorHomeScene());
     }
 
     /** Create a {@code DirectoryChooser} and set the active game directory if it is valid*/
