@@ -1,6 +1,8 @@
 package combatSystem.internal;
 
-import combatSystem.external.PlayerState;
+import messenger.external.CombatActionEvent;
+import messenger.external.PlayerState;
+
 
 import java.util.List;
 
