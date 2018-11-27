@@ -47,7 +47,7 @@ public class PhysicsSystem {
         applyForces();
         updatePositions();
         Map<Integer, Point2D> myMap;
-        myMap = convertToMap(gameObjects);
+        myMap = convertToMap();
         PositionsUpdateEvent newPos = new PositionsUpdateEvent(myMap); //Parameter is hashmap with integer as key and Point2D as value
         myMessageBus.post(newPos);
     }
@@ -74,12 +74,12 @@ public class PhysicsSystem {
         calc.updatePositions();
     }
 
-    private Map<Integer, Point2D> convertToMap(List<PhysicsObject> objectList) {
+    private Map<Integer, Point2D> convertToMap() {
         Map<Integer, Point2D> out = new HashMap<>();
-        for(PhysicsObject obj: objectList){
+        for(PhysicsObject obj: gameObjects){
             //Convert to map
             Point2D.Double point = new Point2D.Double(obj.getMyCoordinateBody().getPos().getX(), obj.getMyCoordinateBody().getPos().getY());
-            out.put(objectList.indexOf(obj), point);
+            out.put(gameObjects.indexOf(obj), point);
         }
         return out;
     }
