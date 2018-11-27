@@ -42,7 +42,7 @@ public class CharacterGrid extends VBox {
         myCharacterConsumer = characterConsumer;
         int charcount = 0;
         ArrayList<File> files  = new ArrayList<>();
-        for(File f : new File(directory.getPath()+"\\characters").listFiles()){
+        for(File f : new File(directory.getPath()+"//characters").listFiles()){
             if(!f.getName().contains(".")){
                 charcount++;
                 files.add(f);

@@ -14,7 +14,7 @@ public abstract class PhysicsObject {
 
     int id;
 
-    PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
+    public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
         this.myMass = mass;
         this.myCoordinateBody = new CoordinateBody(start, dims);
         this.myMass = mass;

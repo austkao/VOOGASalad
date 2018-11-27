@@ -17,7 +17,7 @@ public class PhysicsSystem {
 
 
     public static final double defaultMass = 50;
-    private List<PhysicsObject> gameObjects = new ArrayList<>();
+    List<PhysicsObject> gameObjects = new ArrayList<>();
     private EventBus myMessageBus;
 
     /*
