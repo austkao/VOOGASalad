@@ -1,14 +1,15 @@
 package player.internal;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Group;
+import renderer.external.Renderer;
 
 /** Displays a stage and visualizes character combat animation
  *  @author bpx
  */
-public class CombatScreen extends Scene {
+public class CombatScreen extends Screen {
 
-    public CombatScreen(Parent root) {
-        super(root);
+    public CombatScreen(Group root, Renderer renderer) {
+        super(root, renderer);
+
     }
 }

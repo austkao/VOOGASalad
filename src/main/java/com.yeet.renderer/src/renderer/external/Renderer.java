@@ -1,7 +1,8 @@
 package renderer.external;
 
 import javafx.scene.Group;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -64,9 +65,9 @@ public interface Renderer{
     ScrollPane makeListScrollPane(List<ScrollableItem> dataList);
 
     /** Draws a {@code Level} to the specified target
-     *  @param pane The target {@code Pane} to draw to
-     *  @param level The {@code Level} to draw */
-    void drawStage(Pane pane, Level level);
+     *  @param root The target {@code Pane} to draw to
+     *  @param image The {@code Level} to draw */
+    void drawStage(Group root, Image image);
 
     /** Creates an editable {@code TextField}
      *  @param text The default text to display in the {@code TextField}
@@ -82,7 +83,6 @@ public interface Renderer{
      *  @param x The x position of the {@code Slider}
      *  @param y The y position of the {@code Slider}
      *  @param w The width of the {@code Slider}
-     *  @param font The font of the label text
      */
     HBox makeSlider(String text,Consumer<Double> fieldSetter, Double x, Double y, Double w);
 
