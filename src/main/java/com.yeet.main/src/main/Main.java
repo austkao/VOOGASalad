@@ -118,6 +118,11 @@ public class Main extends Application {
         int numGames = resources.listFiles(filter).length;
         File defaultFile = new File(resources.getPath() + "/game" + numGames);
         defaultFile.mkdir();
+        File stages = new File(defaultFile.getPath() + "/stages");
+        File characters = new File(defaultFile.getPath() + "/characters");
+        stages.mkdir();
+        characters.mkdir();
+
         EditorManager emNew = new EditorManager(myStage,homeScene,defaultFile);
         emNew.setGameDirectory(defaultFile);
         emNew.setEditorHomeScene();
