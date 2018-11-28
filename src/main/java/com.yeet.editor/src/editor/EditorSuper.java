@@ -25,13 +25,9 @@ import java.util.HashMap;
  */
 
 public class EditorSuper extends Scene{
-<<<<<<< HEAD
-    //private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
-    private static final String RESOURCE_PATH = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
-=======
+
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
->>>>>>> DataProcessor
     private Group root;
     private Scene myScene;
     private EditorManager em;

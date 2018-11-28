@@ -49,7 +49,7 @@ public class CharacterEditor extends EditorSuper{
         Button addBG = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
                 30.0,50.0,200.0,200.0,50.0);
         root.getChildren().add(addBG);
-        addBG.setOnMouseClicked(e -> chooseBackground());
+        //addBG.setOnMouseClicked(e -> chooseBackground());
         consumer = new Consumer() {
             @Override
             public void accept(Object o) {
