@@ -1,4 +1,5 @@
 module com.yeet.player {
+    requires java.desktop;
     requires javafx.base;
     requires javafx.graphics;
     requires javafx.controls;
