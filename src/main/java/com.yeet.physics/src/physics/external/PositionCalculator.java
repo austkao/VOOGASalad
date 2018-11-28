@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PositionCalculator {
 
-    public static final double timeOfFrame = 0.125;
+    public static final double timeOfFrame = 0.016666666;
     private List<PhysicsObject> myObjects;
 
     PositionCalculator(List<PhysicsObject> objects) {
