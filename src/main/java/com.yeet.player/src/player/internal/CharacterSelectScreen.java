@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -24,7 +25,12 @@ public class CharacterSelectScreen extends Screen {
 
     public static final int CHAR_PER_ROW = 8;
     public static final int BUTTON_SIZE = 40;
+
     private File myDirectory;
+
+    private SceneSwitch nextScene;
+
+    private boolean isReady;
 
     private CharacterGrid myCharGrid;
 
@@ -45,6 +51,7 @@ public class CharacterSelectScreen extends Screen {
         super(root, renderer);
         super.setFill(Color.WHITE);
         myDirectory = gameDirectory;
+        this.nextScene = nextScene;
         VBox holder = new VBox(0.0);
         holder.setPrefSize(1280,800);
         holder.setAlignment(Pos.BOTTOM_CENTER);
@@ -69,6 +76,16 @@ public class CharacterSelectScreen extends Screen {
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
         holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
+        this.setOnKeyPressed(event -> handleInput(event.getCode()));
+    }
+
+    /** Handles key input to the scene
+     *  @param code The {@code KeyCode} to process
+     */
+    private void handleInput(KeyCode code) {
+        if((code.equals(KeyCode.ENTER) || code.equals(KeyCode.SPACE)) && isReady){
+            nextScene.switchScene();
+        }
     }
 
     /** Sets a specific player's character based on name
@@ -100,6 +117,29 @@ public class CharacterSelectScreen extends Screen {
      */
     private void getCharacter(DragToken token){
         myCharGrid.getCharacter(token);
+        isReady = checkPlayerCount();
     }
 
+    /** Checks if there are enough players to start a match */
+    private boolean checkPlayerCount(){
+        return(getPlayerCount()>1);
+    }
+
+    /** Returns current number of active players, including humans and computers */
+    private int getPlayerCount(){
+        int count = 0;
+        if(display1.getState()!= CharacterChooseDisplay.State.NONE && display1.getCharacterName().length()>0){
+            count++;
+        }
+        if(display2.getState()!= CharacterChooseDisplay.State.NONE && display2.getCharacterName().length()>0){
+            count++;
+        }
+        if(display3.getState()!= CharacterChooseDisplay.State.NONE && display3.getCharacterName().length()>0){
+            count++;
+        }
+        if(display4.getState()!= CharacterChooseDisplay.State.NONE && display4.getCharacterName().length()>0){
+            count++;
+        }
+        return count;
+    }
 }
