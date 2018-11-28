@@ -16,6 +16,7 @@ import player.internal.Elements.MenuTopper;
 import renderer.external.Renderer;
 
 import java.io.File;
+import java.util.HashMap;
 
 /** Dynamic layout for the display of all available characters, allows users to select their
  *  character for a fight
@@ -40,6 +41,8 @@ public class CharacterSelectScreen extends Screen {
     private CharacterChooseDisplay display3;
     private CharacterChooseDisplay display4;
 
+    private HashMap<Integer, String> myCharacterMap;
+
 
     /** Creates a new {@code CharacterSelectScreen} with the specified parameters
      *  @param root The {@code Group} to instantiate the internal {@code Scene} using
@@ -55,6 +58,10 @@ public class CharacterSelectScreen extends Screen {
         myReadyBar = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("ready_bar.png")));
         myReadyBar.setLayoutY(420.0);
         myReadyBar.setOnMousePressed(event -> nextScene.switchScene());
+        myCharacterMap = new HashMap<>();
+        for(int i=0;i<4;i++){
+            myCharacterMap.put(i,"");
+        }
         this.nextScene = nextScene;
         VBox holder = new VBox(0.0);
         holder.setPrefSize(1280,800);
@@ -100,18 +107,22 @@ public class CharacterSelectScreen extends Screen {
         if(player.equalsIgnoreCase("P1")){
             display1.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
             display1.setCharacterName(charName);
+            myCharacterMap.put(0,charName);
         }
         else if(player.equalsIgnoreCase("P2")){
             display2.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
             display2.setCharacterName(charName);
+            myCharacterMap.put(1,charName);
         }
         else if(player.equalsIgnoreCase("P3")){
             display3.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
             display3.setCharacterName(charName);
+            myCharacterMap.put(2,charName);
         }
         else if(player.equalsIgnoreCase("P4")){
             display4.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
             display4.setCharacterName(charName);
+            myCharacterMap.put(3,charName);
         }
     }
 
@@ -154,5 +165,9 @@ public class CharacterSelectScreen extends Screen {
             count++;
         }
         return count;
+    }
+
+    public HashMap<Integer, String> getCharacters() {
+        return myCharacterMap;
     }
 }

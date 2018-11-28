@@ -66,5 +66,6 @@ public class StageSelectScreen extends Screen {
         stageContainer.getChildren().addAll(stagePreview,stageGrid);
         mainContainer.getChildren().addAll(topBar,stageContainer);
         super.getMyRoot().getChildren().addAll(mainContainer);
+        super.setOnMousePressed(event -> nextScene.switchScene());
     }
 }

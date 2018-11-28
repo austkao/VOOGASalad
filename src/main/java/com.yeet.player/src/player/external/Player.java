@@ -79,10 +79,12 @@ public class Player {
         myStageSelectScreen = new StageSelectScreen(new Group(),myRenderer,()-> {
             myStage.setScene(myCharacterSelectScreen);
         },()-> {
-            myStage.setScene(myCombatScreen);
             myFightMusicPlayer.stop();
+            myStage.setScene(myLoadingScreen);
+            myCombatScreen.setCharacters(myCharacterSelectScreen.getCharacters());
+            myStage.setScene(myCombatScreen);
         });
-        myCombatScreen =  new CombatScreen(new Group(),myRenderer);
+        myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,"example_stage_1");
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
         //finished loading
         System.out.println("finished loading!");
