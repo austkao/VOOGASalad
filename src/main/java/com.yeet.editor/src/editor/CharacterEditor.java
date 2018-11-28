@@ -12,6 +12,8 @@ import javafx.stage.FileChooser;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollablePane;
+import renderer.external.Structures.SliderBox;
+import renderer.external.Structures.TextBox;
 import xml.XMLParser;
 import xml.XMLSaveBuilder;
 
@@ -19,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -32,9 +35,10 @@ public class CharacterEditor extends EditorSuper{
     private Group root;
     private String backgroundURL;
     private VBox mySliders;
-    private HBox healthSlider;
-    private HBox attackSlider;
-    private HBox defenseSlider;
+    private SliderBox healthSlider;
+    private SliderBox attackSlider;
+    private SliderBox defenseSlider;
+    private Consumer consumer;
 
 
 
@@ -47,15 +51,23 @@ public class CharacterEditor extends EditorSuper{
                 30.0,50.0,200.0,200.0,50.0);
         root.getChildren().add(addBG);
         addBG.setOnMouseClicked(e -> chooseBackground());
+        consumer = new Consumer() {
+            @Override
+            public void accept(Object o) {
+                o = o;
+            }
+        };
         makeSliders();
+        Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
+                30.0,25.0, 150.0, 200.0, 50.0);
+        root.getChildren().add(saveFile);
+        saveFile.setOnMouseClicked(e -> createSaveFile());
 
+        Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
+                30.0,25.0, 75.0, 200.0, 50.0);
+        root.getChildren().add(loadFile);
+        loadFile.setOnMouseClicked(e ->loadCharacterData());
     }
-    Consumer consumer = new Consumer() {
-        @Override
-        public void accept(Object o) {
-            o = o;
-        }
-    };
 
     private void makeSliders(){
         mySliders = new VBox(10);
@@ -119,6 +131,12 @@ public class CharacterEditor extends EditorSuper{
         characterAttributes.add("defense");
         structure.put("character", characterAttributes);
         HashMap<String, ArrayList<String>> data = new HashMap<>();
+        ArrayList<String> healthList = new ArrayList<>(List.of(Double.toString(healthSlider.getValue())));
+        ArrayList<String> attackList = new ArrayList<>(List.of(Double.toString(attackSlider.getValue())));
+        ArrayList<String> defenseList = new ArrayList<>(List.of(Double.toString(defenseSlider.getValue())));
+        data.put("health", healthList);
+        data.put("attack", attackList);
+        data.put("defense", defenseList);
         try {
             generateSave(structure, data);
         } catch (Exception ex) {
@@ -127,18 +145,17 @@ public class CharacterEditor extends EditorSuper{
         }
     }
 
-    private void loadXMLFile() {
+    private void loadCharacterData() {
         try {
-            //XMLParser parser = new XMLParser();
-            //HashMap<String, ArrayList<String>> data = parser.parseFileForElement("character");
-            //ArrayList<String> health = data.get("health");
-            //ArrayList<String> attack = data.get("attack");
-            //ArrayList<String> defense = data.get("defense");
+            HashMap<String, ArrayList<String>> data = loadXMLFile("character");
+            ArrayList<String> health = data.get("health");
+            ArrayList<String> attack = data.get("attack");
+            ArrayList<String> defense = data.get("defense");
+            healthSlider.setNewValue(Double.parseDouble(health.get(0)));
+            attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
+            defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
     }
-
-
-
 }
