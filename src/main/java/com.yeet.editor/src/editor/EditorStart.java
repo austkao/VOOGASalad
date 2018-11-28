@@ -35,6 +35,8 @@ public class EditorStart extends Scene {
         Button back = renderSystem.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0);
         back.setOnMouseClicked(e -> em.goHome());
         root.getChildren().add(back);
+
+
         arrangeButtons();
     }
 
