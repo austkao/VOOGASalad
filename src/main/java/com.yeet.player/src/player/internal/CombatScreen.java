@@ -4,7 +4,9 @@ import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import messenger.external.PositionsUpdateEvent;
+import physics.external.combatSystem.CombatSystem;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
 import xml.XMLParser;
@@ -12,6 +14,7 @@ import xml.XMLParser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 /** Displays a stage and visualizes character combat animation
  *  @author bpx
@@ -22,11 +25,13 @@ public class CombatScreen extends Screen {
 
     private File myGameDirectory;
 
+    private CombatSystem myCombatSystem;
+
     private HashMap<String, ArrayList<String>> myStageMap;
     private HashMap<Integer, Sprite> mySpriteMap;
     private ArrayList<ImageView> myTiles;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName, Consumer<KeyCode> keyConsumer) {
         super(root, renderer);
         myParser = new XMLParser(new File(gameDirectory.getPath()+"\\stages\\"+stageName+"\\maps\\map1.xml"));
         myGameDirectory =  gameDirectory;
@@ -46,6 +51,7 @@ public class CombatScreen extends Screen {
             myTiles.add(tile);
             super.getMyRoot().getChildren().add(tile);
         }
+        super.setOnKeyPressed(event -> keyConsumer.accept(event.getCode()));
     }
 
     public void setCharacters(HashMap<Integer, String> characterNames){
@@ -59,6 +65,7 @@ public class CombatScreen extends Screen {
                 //super.getMyRoot().getChildren().add(new ImageView(new Image()))
             }
         }
+        myCombatSystem = new CombatSystem(characterNames.keySet().size());
     }
 
     @Subscribe

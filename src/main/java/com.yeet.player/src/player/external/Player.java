@@ -7,6 +7,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import messenger.external.EventBusFactory;
+import messenger.external.KeyInputEvent;
 import messenger.external.TestSuccesfulEvent;
 import player.internal.*;
 import renderer.external.Renderer;
@@ -84,7 +85,7 @@ public class Player {
             myCombatScreen.setCharacters(myCharacterSelectScreen.getCharacters());
             myStage.setScene(myCombatScreen);
         });
-        myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,"example_stage_1");
+        myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,"example_stage_1",(key)->myMessageBus.post(new KeyInputEvent(key)));
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
         //finished loading
         System.out.println("finished loading!");
