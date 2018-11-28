@@ -31,6 +31,8 @@ public class MapEditor extends EditorSuper{
     private ScrollablePane myScrollablePane;
     private Level level;
     private Group root;
+    private MapSettingEditor myMapSettings;
+    private EditorManager myEM;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -40,45 +42,41 @@ public class MapEditor extends EditorSuper{
     public MapEditor(Group root,EditorManager em){
         super(root,em);
         this.root = root;
+        myEM = em;
         try {
             initializeLevel(800, 500, 250, 100,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        myMapSettings = new MapSettingEditor(new Group(), em, this);
         initializeScrollPane();
-
         currentTileFile = myScrollablePane.getItems().get(0).getImage();
-
-
         //getRenderSystem().drawStage(mapPane, level);
-
         level.setOnMouseClicked(e -> clickProcessTile(e));
-
         Button addBG = getRenderSystem().makeStringButton("set Background", Color.BLACK,true,Color.WHITE,
                 30.0,25.0,225.0,200.0,50.0);
-        root.getChildren().add(addBG);
         addBG.setOnMouseClicked(e -> chooseBackground());
 
         Button resetGrid = getRenderSystem().makeStringButton("Reset Grid", Color.LAVENDER, true, Color.WHITE,
                 30.0,25.0, 300.0, 200.0, 50.0);
-        root.getChildren().add(resetGrid);
         resetGrid.setOnMouseClicked(e -> level.resetGrid());
 
         Button chooseTile = getRenderSystem().makeStringButton("Choose Tile", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 375.0, 200.0, 50.0);
-        root.getChildren().add(chooseTile);
         chooseTile.setOnMouseClicked(e -> chooseTileImage());
 
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
-        root.getChildren().add(saveFile);
         saveFile.setOnMouseClicked(e -> createSaveFile());
 
         Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 75.0, 200.0, 50.0);
-        root.getChildren().add(loadFile);
         loadFile.setOnMouseClicked(e -> loadMapFile());
+        Button editSettingsButton = getRenderSystem().makeStringButton("Edit Map Settings", Color.CRIMSON, true, Color.WHITE,
+                30.0,800.0, 75.0, 200.0, 50.0);
+        editSettingsButton.setOnMouseClicked(e -> goToSettings());
+        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, editSettingsButton);
     }
 
     private void initializeScrollPane(){
@@ -195,5 +193,9 @@ public class MapEditor extends EditorSuper{
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
+    }
+
+    private void goToSettings() {
+        myEM.changeScene(myMapSettings);
     }
 }

@@ -50,7 +50,6 @@ public class CharacterEditor extends EditorSuper{
 
         Button addBG = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
                 30.0,25.0,250.0,200.0,50.0);
-        root.getChildren().add(addBG);
         addBG.setOnMouseClicked(e -> choosePortrait());
         consumer = new Consumer() {
             @Override
@@ -61,23 +60,20 @@ public class CharacterEditor extends EditorSuper{
         makeSliders();
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
-        root.getChildren().add(saveFile);
         saveFile.setOnMouseClicked(e -> createSaveFile());
 
         Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 75.0, 200.0, 50.0);
-        root.getChildren().add(loadFile);
         loadFile.setOnMouseClicked(e ->loadCharacterData());
 
         Button getSpriteSheet = getRenderSystem().makeStringButton("Import Sprite Sheet", Color.FORESTGREEN, true,
                 Color.WHITE, 20.0, 600.0, 25.0, 200.0, 50.0);
-        root.getChildren().add(getSpriteSheet);
         getSpriteSheet.setOnMouseClicked(e -> chooseSpriteSheet());
 
         Button setAnimation = getRenderSystem().makeStringButton("Set Sprite Animation", Color.ORCHID, true,
                 Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
-        root.getChildren().add(setAnimation);
-        setAnimation.setOnMouseClicked(e -> makeSprite());
+        //setAnimation.setOnMouseClicked(e -> makeSprite());
+        root.getChildren().addAll(addBG, saveFile, loadFile, getSpriteSheet, setAnimation);
     }
 
 
