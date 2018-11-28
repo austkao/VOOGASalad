@@ -95,7 +95,6 @@ public class Main extends Application {
             em.setEditorHomeScene();
             em.setGameDirectory(myDirectory);
         });
-        myDirectory = new File("/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame");
         root.getChildren().add(editButton);
         Button loadButton = myRenderSystem.makeStringButton("Load Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,440.4,307.21,94.6);
         loadButton.setOnMousePressed(e -> setDirectory());
