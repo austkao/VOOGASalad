@@ -12,12 +12,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Math.PI;
+
 
 public class PhysicsSystem {
 
 
     public static final double defaultMass = 50;
+    public static final double defaultStrength = 20;
+    public static final double defaultJumpHeight = 20;
+    public static final double defaultMovementSpeed = 20;
+
+
+
     List<PhysicsObject> gameObjects = new ArrayList<>();
+    List<PlayerCharacteristics> playerCharacteristics = new ArrayList<>();
     private EventBus myMessageBus;
 
     /*
@@ -53,10 +62,11 @@ public class PhysicsSystem {
     }
 
     public void addPhysicsBodies(int num) {
-        int count = 0;
-        while (count < num) {
-            gameObjects.add(new PhysicsBody(count, defaultMass, new Coordinate(0,0), new Dimensions(1,1)));
-            count ++;
+        int id = gameObjects.size();
+        while (id < num) {
+            gameObjects.add(new PhysicsBody(id, defaultMass, new Coordinate(0,0), new Dimensions(1,1)));
+            playerCharacteristics.add(new PlayerCharacteristics(id, defaultStrength, defaultJumpHeight, defaultMovementSpeed));
+            id ++;
         }
     }
 
@@ -84,7 +94,18 @@ public class PhysicsSystem {
         return out;
     }
 
-    List<PhysicsObject> getGameObjects() {
+    public List<PhysicsObject> getGameObjects() {
         return this.gameObjects;
+    }
+
+    public void jump(int id) {
+        PhysicsObject currentBody = gameObjects.get(id);
+        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
+    }
+
+    public void move(int id, double direction) {
+        PhysicsObject currentBody = gameObjects.get(id);
+        currentBody.setDirection(direction);
+        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultMovementSpeed, direction));
     }
 }
