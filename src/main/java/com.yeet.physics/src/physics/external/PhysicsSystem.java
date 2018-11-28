@@ -103,7 +103,7 @@ public class PhysicsSystem {
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
     }
 
-    public void move(int id, int direction) {
+    public void move(int id, double direction) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.setDirection(direction);
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultMovementSpeed, direction));
