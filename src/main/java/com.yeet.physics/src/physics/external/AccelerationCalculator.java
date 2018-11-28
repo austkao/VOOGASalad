@@ -9,7 +9,7 @@ public class AccelerationCalculator {
     private List<PhysicsVector> myAccelerations = new ArrayList<>();
     private List<PhysicsVector> myVelocities = new ArrayList<>();
     private double myMass;
-    public static final double timeOfFrame = 0.125; // Assume each frame is 1/8 of a sec
+    public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
 
     public AccelerationCalculator(PhysicsVector f, PhysicsVector a, PhysicsVector v, double mass) {
         this.newForce = f;

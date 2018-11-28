@@ -1,6 +1,8 @@
 package physics.external.tests;
 
 import org.junit.jupiter.api.Test;
+import physics.external.PhysicsObject;
+import physics.external.PhysicsSystem;
 
 import static java.lang.Math.PI;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +14,6 @@ class PhysicsSystemTest {
     /**
      * Commented out this tests so that main loop can run for demo.
      */
-/*
     @Test
     void createPhysicsBodies() {
         PhysicsSystem testSystem = new PhysicsSystem();
@@ -32,16 +33,15 @@ class PhysicsSystemTest {
         PhysicsSystem testSystem = new PhysicsSystem();
         testSystem.addPhysicsBodies(10);
         double expectedAccMag = 9.8;
-        double expectedVelMag = 9.8*0.125;
+        double expectedVelMag = 9.8*0.0166666;
         double expectedDir = PI/2;
 
         testSystem.update();
         for (PhysicsObject b : testSystem.getGameObjects()) {
-            assertEquals(expectedAccMag, b.getAcceleration().getMagnitude());
-            assertEquals(expectedVelMag, b.getVelocity().getMagnitude());
-            assertEquals(expectedDir, b.getAcceleration().getDirection());
-            assertEquals(expectedDir, b.getVelocity().getDirection());
+            assertEquals(expectedAccMag, b.getAcceleration().getMagnitude(), .001);
+            assertEquals(expectedVelMag, b.getVelocity().getMagnitude(), .001);
+            assertEquals(expectedDir, b.getAcceleration().getDirection(), .001);
+            assertEquals(expectedDir, b.getVelocity().getDirection(), .001);
         }
     }
-    */
 }

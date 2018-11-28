@@ -20,8 +20,8 @@ public class CombatSystem {
         playerManager = new PlayerManager(numOfPlayers);
         physicsSystem = new PhysicsSystem();
         physicsSystem.addPhysicsBodies(numOfPlayers);
-        XMLParser parser = new XMLParser();
-        HashMap<String, ArrayList<String>> map = parser.parseFileForElement("character");
+//        XMLParser parser = new XMLParser();
+//        HashMap<String, ArrayList<String>> map = parser.parseFileForElement("character");
         
 
     }
