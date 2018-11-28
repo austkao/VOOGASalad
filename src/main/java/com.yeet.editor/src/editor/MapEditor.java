@@ -27,12 +27,12 @@ import xml.XMLSaveBuilder;
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_TILE = "acacia_log.png";
-    private static final String DEFAULT_IMAGE_DIR = "/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    //private static final String DEFAULT_IMAGE_DIR = "/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
     //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
     //private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
     //private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/project4/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
     //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/users/rr600/workspace/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    private static final String DEFAULT_IMAGE_DIR = "/users/rr600/workspace/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
     private Image currentTileFile;
     private ScrollablePane scrollablePane;
@@ -48,7 +48,7 @@ public class MapEditor extends EditorSuper{
         super(root,em);
         this.root = root;
         try {
-            initializeLevel(800, 500,
+            initializeLevel(800, 500, 250, 100,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -103,10 +103,10 @@ public class MapEditor extends EditorSuper{
      * @param width
      * @param height
      */
-    private void initializeLevel(int width, int height, String background){
+    private void initializeLevel(int width, int height, int x, int y, String background){
         level = new Level(width, height, background);
-        level.setLayoutX(250);
-        level.setLayoutY(100);
+        level.setLayoutX(x);
+        level.setLayoutY(y);
         root.getChildren().add(level);
     }
 
