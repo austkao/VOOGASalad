@@ -1,6 +1,6 @@
 package editor;
 
-import xml.XMLParser;
+import renderer.external.Structures.Tile;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -12,15 +12,11 @@ import renderer.external.Structures.ScrollableItem;
 import renderer.external.Structures.ScrollablePane;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.net.URISyntaxException;
-
-import xml.XMLSaveBuilder;
 
 /**
  * @author ob29
@@ -34,9 +30,10 @@ public class MapEditor extends EditorSuper{
     private static final String DEFAULT_IMAGE_DIR = "/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
     private Image currentTileFile;
-    private ScrollablePane scrollablePane;
+    private ScrollablePane myScrollablePane;
     private Level level;
     private Group root;
+    private HashMap<Tile,String> imageviewMap;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -54,7 +51,7 @@ public class MapEditor extends EditorSuper{
         }
         initializeScrollPane();
 
-        currentTileFile = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_TILE));
+        currentTileFile = myScrollablePane.getItems().get(0).getImage();
 
 
         //getRenderSystem().drawStage(mapPane, level);
@@ -85,17 +82,16 @@ public class MapEditor extends EditorSuper{
                 30.0,25.0, 75.0, 200.0, 50.0);
         root.getChildren().add(loadFile);
         loadFile.setOnMouseClicked(e -> loadMapFile());
-        Path filePath = Paths.get(System.getProperty("user.dir"));
-        File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
-        scrollablePane = new ScrollablePane(paneFile);
-        for(ScrollableItem b: scrollablePane.getItems()){
-            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
-        }
-        root.getChildren().add(scrollablePane.getScrollPane());
     }
 
     private void initializeScrollPane(){
-
+        Path filePath = Paths.get(System.getProperty("user.dir"));
+        File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
+        myScrollablePane = new ScrollablePane(paneFile);
+        for(ScrollableItem b: myScrollablePane.getItems()){
+            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
+        }
+        root.getChildren().add(myScrollablePane.getScrollPane());
     }
 
     /**
@@ -135,9 +131,9 @@ public class MapEditor extends EditorSuper{
             Image image = new Image(tileFile.toURI().toString());
             if (image != null)
                 currentTileFile = image;
-            scrollablePane.addItem(currentTileFile);
-            int size = scrollablePane.getItems().size();
-            scrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
+            myScrollablePane.addItem(currentTileFile);
+            int size = myScrollablePane.getItems().size();
+            myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
         }
         catch (Exception e){
             currentTileFile = currentTileFile;
@@ -171,9 +167,19 @@ public class MapEditor extends EditorSuper{
         ArrayList<String> mapAttributes = new ArrayList<>();
         mapAttributes.add("x");
         mapAttributes.add("y");
+        mapAttributes.add("image");
         structure.put("map", mapAttributes);
+        HashMap<String, String> imageMap = myScrollablePane.getCurrentImages();
+        HashMap<String, ArrayList<String>> levelMap = level.createLevelMap();
+        ArrayList<String> temp = new ArrayList<>();
+        for(String s : levelMap.get("image")) {
+            System.out.println(s);
+            temp.add(imageMap.get(s));
+        }
+        levelMap.get("image").clear();
+        levelMap.get("image").addAll(temp);
         try {
-            generateSave(structure, level.createLevelMap());
+            generateSave(structure, levelMap);
         } catch (Exception ex) {
             System.out.println("Invalid save");
             //ex.printStackTrace();

@@ -140,11 +140,14 @@ public class Level extends GridPane{
         HashMap<String, ArrayList<String>> levelMap = new HashMap<>();
         levelMap.put("x", new ArrayList<>());
         levelMap.put("y", new ArrayList<>());
+        levelMap.put("image", new ArrayList<>());
         for(int i = 0; i < numCols; i++) {
             for(int j = 0; j < numRows; j++) {
                 if(isTile(i,j)) {
                     levelMap.get("x").add(Integer.toString(i));
                     levelMap.get("y").add(Integer.toString(j));
+                    levelMap.get("image").add(grid[j][i].getImage().toString());
+                    System.out.println(grid[j][i].getImage().toString());
                 }
             }
         }

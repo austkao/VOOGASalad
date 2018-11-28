@@ -17,8 +17,8 @@ public class GameplayEditor extends EditorSuper{
 
         super(root,em);
         RenderSystem myRenderSystem = getRenderSystem();
-//        Text t = myRenderSystem.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
-//        root.getChildren().add(t);
+        Text t = myRenderSystem.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
+        root.getChildren().add(t);
     }
 
 
