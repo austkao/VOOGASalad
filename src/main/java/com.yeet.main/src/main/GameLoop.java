@@ -26,7 +26,7 @@ public class GameLoop {
 
 
     public GameLoop(){
-        physicsEngine = new PhysicsSystem(new ArrayList<>());
+        physicsEngine = new PhysicsSystem();
         //renderEngine= new RenderSystem(Font);
     }
 
