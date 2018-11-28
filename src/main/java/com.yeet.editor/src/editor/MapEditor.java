@@ -1,6 +1,5 @@
 package editor;
 
-import renderer.external.Structures.Tile;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -42,7 +41,7 @@ public class MapEditor extends EditorSuper{
         super(root,em);
         this.root = root;
         try {
-            initializeLevel(800, 500,
+            initializeLevel(800, 500, 250, 100,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -97,10 +96,10 @@ public class MapEditor extends EditorSuper{
      * @param width
      * @param height
      */
-    private void initializeLevel(int width, int height, String background){
+    private void initializeLevel(int width, int height, int x, int y, String background){
         level = new Level(width, height, background);
-        level.setLayoutX(250);
-        level.setLayoutY(100);
+        level.setLayoutX(x);
+        level.setLayoutY(y);
         root.getChildren().add(level);
     }
 

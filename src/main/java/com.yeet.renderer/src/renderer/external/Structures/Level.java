@@ -147,7 +147,6 @@ public class Level extends GridPane{
                     levelMap.get("x").add(Integer.toString(i));
                     levelMap.get("y").add(Integer.toString(j));
                     levelMap.get("image").add(grid[j][i].getImage().toString());
-                    System.out.println(grid[j][i].getImage().toString());
                 }
             }
         }

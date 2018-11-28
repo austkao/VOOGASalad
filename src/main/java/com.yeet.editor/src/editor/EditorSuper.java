@@ -25,6 +25,7 @@ import java.util.HashMap;
  */
 
 public abstract class EditorSuper extends Scene{
+
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
     private Group root;
@@ -89,8 +90,7 @@ public abstract class EditorSuper extends Scene{
         try {
             FileChooser fileChooser = rs.makeFileChooser("xml");
             fileChooser.setTitle("Save File As");
-            Path filePath = Paths.get(System.getProperty("user.dir"));
-            File defaultFile = new File(filePath+RESOURCE_PATH);
+            File defaultFile = em.getGameDirectory();
             fileChooser.setInitialDirectory(defaultFile);
             File file = fileChooser.showSaveDialog(new Stage());
             if(file != null) {
