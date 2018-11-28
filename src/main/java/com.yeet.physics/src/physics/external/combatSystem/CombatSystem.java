@@ -4,6 +4,10 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.*;
 import physics.external.PhysicsSystem;
+import xml.XMLParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CombatSystem {
 
@@ -16,6 +20,10 @@ public class CombatSystem {
         playerManager = new PlayerManager(numOfPlayers);
         physicsSystem = new PhysicsSystem();
         physicsSystem.addPhysicsBodies(numOfPlayers);
+        XMLParser parser = new XMLParser();
+        HashMap<String, ArrayList<String>> map = parser.parseFileForElement("character");
+        
+
     }
 
     @Subscribe
