@@ -13,6 +13,8 @@ import renderer.external.Structures.ScrollablePane;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,12 +27,7 @@ import java.util.HashMap;
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_TILE = "acacia_log.png";
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/project4/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    private static final String DEFAULT_IMAGE_DIR = "\\Users\\surface\\IdeaProjects\\voogasalad_yeet\\src\\main\\java\\com.yeet.main\\resources\\examplegame\\stages\\example_stage_1\\tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/users/rr600/workspace/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    private static final String DEFAULT_IMAGE_DIR = "/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
     private Image currentTileFile;
     private ScrollablePane scrollablePane;
@@ -84,8 +81,9 @@ public class MapEditor extends EditorSuper{
                 30.0,25.0, 75.0, 200.0, 50.0);
         root.getChildren().add(loadFile);
         loadFile.setOnMouseClicked(e -> loadMapFile());
-
-        scrollablePane = new ScrollablePane(new File(DEFAULT_IMAGE_DIR));
+        Path filePath = Paths.get(System.getProperty("user.dir"));
+        File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
+        scrollablePane = new ScrollablePane(paneFile);
         for(ScrollableItem b: scrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
         }

@@ -14,6 +14,8 @@ import xml.XMLSaveBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,8 +24,8 @@ import java.util.HashMap;
  * @author ob29
  */
 
-public class EditorSuper extends Scene{
-    private static final String RESOURCE_PATH = "C:/Users/nitsu/IdeaProjects/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources";
+public abstract class EditorSuper extends Scene{
+    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
     private Group root;
     private Scene myScene;
@@ -67,7 +69,8 @@ public class EditorSuper extends Scene{
         try {
             FileChooser loadFileChooser = rs.makeFileChooser("xml");
             loadFileChooser.setTitle("Save File As");
-            File defaultFile = new File(RESOURCE_PATH);
+            Path filePath = Paths.get(System.getProperty("user.dir"));
+            File defaultFile = new File(filePath+RESOURCE_PATH);
             loadFileChooser.setInitialDirectory(defaultFile);
             File file = loadFileChooser.showOpenDialog(new Stage());
             if(file != null) {
@@ -86,7 +89,8 @@ public class EditorSuper extends Scene{
         try {
             FileChooser fileChooser = rs.makeFileChooser("xml");
             fileChooser.setTitle("Save File As");
-            File defaultFile = new File(RESOURCE_PATH);
+            Path filePath = Paths.get(System.getProperty("user.dir"));
+            File defaultFile = new File(filePath+RESOURCE_PATH);
             fileChooser.setInitialDirectory(defaultFile);
             File file = fileChooser.showSaveDialog(new Stage());
             if(file != null) {

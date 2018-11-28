@@ -17,6 +17,9 @@ public class SliderBox extends HBox {
     public static final double SLIDER_HEIGHT = 50.0;
 
     private double myValue;
+    private Slider mySlider;
+    private Label mySliderLabel;
+    private Consumer myFieldSetter;
 
     /** Default constructor */
     public SliderBox(String text, Font font, Consumer<Double> fieldSetter, Double x, Double y, Double w){
@@ -24,28 +27,32 @@ public class SliderBox extends HBox {
         this.setAlignment(Pos.CENTER);
         this.setLayoutX(x);
         this.setLayoutY(y);
-        Slider slider =  new Slider();
-        slider.setShowTickMarks(false);
-        slider.setShowTickLabels(false);
-        slider.setValue(SLIDER_DEFAULT);
-        slider.setPrefSize(w, SLIDER_HEIGHT);
+        myFieldSetter = fieldSetter;
+        mySlider =  new Slider();
+        mySlider.setShowTickMarks(false);
+        mySlider.setShowTickLabels(false);
+        mySlider.setValue(SLIDER_DEFAULT);
+        myValue = SLIDER_DEFAULT;
+        mySlider.setPrefSize(w, SLIDER_HEIGHT);
         Label name = new Label(text);
         name.setFont(font);
-        name.setLabelFor(slider);
-        Label sliderValue = new Label(String.valueOf(SLIDER_DEFAULT));
-        sliderValue.setLabelFor(slider);
-        sliderValue.setFont(font);
-        slider.setOnMouseReleased(event -> {
-            //rounds slider value to 1 decimal place
-            fieldSetter.accept(Math.round(slider.getValue() * 10.0) / 10.0);
-            sliderValue.setText(String.valueOf(Math.round(slider.getValue() * 10.0) / 10.0));
-            myValue = Math.round(slider.getValue() * 10.0) / 10.0;
-        });
-        this.getChildren().addAll(name,slider,sliderValue);
+        name.setLabelFor(mySlider);
+        mySliderLabel = new Label(String.valueOf(SLIDER_DEFAULT));
+        mySliderLabel.setLabelFor(mySlider);
+        mySliderLabel.setFont(font);
+        mySlider.setOnMouseReleased(event -> setNewValue(mySlider.getValue()));
+        this.getChildren().addAll(name,mySlider,mySliderLabel);
     }
 
     /** Returns the current value of the slider */
     public double getValue(){
         return myValue;
+    }
+
+    public void setNewValue(double value) {
+        //rounds mySlider value to 1 decimal place
+        myFieldSetter.accept(Math.round(value * 10.0) / 10.0);
+        mySliderLabel.setText(String.valueOf(Math.round(value * 10.0) / 10.0));
+        myValue = Math.round(value * 10.0) / 10.0;
     }
 }
