@@ -5,9 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -70,21 +67,22 @@ public interface Renderer{
     void drawStage(Group root, Image image);
 
     /** Creates an editable {@code TextField}
-     *  @param text The default text to display in the {@code TextField}
+     * @param text The default text to display in the {@code TextField}
      *  @param x The x position of the {@code TextField}
-     *  @param y The y position of the {@code TextField}
-     *  @param w The width of the {@code TextField}
-     *  @param h The height of the {@code TextField}
+     * @param y The y position of the {@code TextField}
+     * @param w The width of the {@code TextField}
+     * @param h The height of the {@code TextField}
      */
-    VBox makeTextField(Consumer<String> fieldSetter, String text, Double x, Double y, Double w, Double h, Font font);
+    TextBox makeTextField(Consumer<String> fieldSetter, String text, Double x, Double y, Double w, Double h, Font font);
 
     /** Creates a {@code Slider} that modifies a field
-     *  @param fieldSetter The lambda that will modify the necessary parameter using the {@code Slider} value
-     *  @param x The x position of the {@code Slider}
-     *  @param y The y position of the {@code Slider}
-     *  @param w The width of the {@code Slider}
+     * @param text The label text for the slider
+     * @param fieldSetter The lambda that will modify the necessary parameter using the {@code Slider} value
+     * @param x The x position of the {@code Slider}
+     * @param y The y position of the {@code Slider}
+     * @param w The width of the {@code Slider}
      */
-    HBox makeSlider(String text,Consumer<Double> fieldSetter, Double x, Double y, Double w);
+    SliderBox makeSlider(String text, Consumer<Double> fieldSetter, Double x, Double y, Double w);
 
     /** Creates a {@code FileChooser} for a specific file type
      *  @param filetype The file type to be accepted, can be "image","audio",or "xml", or "all"
