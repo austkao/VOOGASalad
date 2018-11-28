@@ -24,7 +24,7 @@ import java.util.HashMap;
  * @author ob29
  */
 
-public class EditorSuper extends Scene{
+public abstract class EditorSuper extends Scene{
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
     private Group root;
