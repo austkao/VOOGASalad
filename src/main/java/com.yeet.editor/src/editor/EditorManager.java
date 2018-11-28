@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +22,7 @@ public class EditorManager {
     private Group root;
     private Stage myStage;
     private Scene homeScene;
+    private File gameDirectory;
 
     public EditorManager(Stage stage, Scene scene){
         myStage = stage;
@@ -35,9 +37,18 @@ public class EditorManager {
         myStage.setScene(myScene);
     }
 
-    public void loadEditorHomeScene() {
-        setEditorHomeScene();
+    public void setGameDirectory(File gameDirectory){
+        this.gameDirectory = gameDirectory;
+
     }
+
+    public File getGameDirectory(){
+        return gameDirectory;
+    }
+
+//    public void loadEditorHomeScene() {
+//        setEditorHomeScene();
+//    }
 
     public void goHome(){
         myStage.setScene(homeScene);

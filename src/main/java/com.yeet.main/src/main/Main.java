@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import messenger.external.EventBusFactory;
@@ -19,12 +20,16 @@ import player.external.Player;
 import renderer.external.RenderSystem;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main extends Application {
     public static final String DEFAULT_EMPHASIS_FONT = "AlegreyaSansSC-Black.ttf";
     public static final int DEFAULT_EMPHASIS_FONTSIZE = 50;
     public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
     public static final int DEFAULT_PLAIN_FONTSIZE = 25;
+    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
+
 
     private Stage myStage;
     private Stage myPopup;
@@ -42,6 +47,7 @@ public class Main extends Application {
 
     private ImageView mySplashDisplay;
     private Button playButton;
+    private Button editButton;
 
 
     public static void main(String[] args){
@@ -79,7 +85,12 @@ public class Main extends Application {
         root.getChildren().add(mySplashDisplay);
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
         root.getChildren().add(newButton);
-        Button editButton = myRenderSystem.makeStringButton("Edit Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,311.68,307.21,94.6);
+        editButton = myRenderSystem.makeStringButton("Edit Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,311.68,307.21,94.6);
+        editButton.setDisable(true);
+        editButton.setOnMouseClicked(event -> {
+            em.setEditorHomeScene();
+            em.setGameDirectory(myDirectory);
+        });
         root.getChildren().add(editButton);
         Button loadButton = myRenderSystem.makeStringButton("Load Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,440.4,307.21,94.6);
         loadButton.setOnMousePressed(e -> setDirectory());
@@ -93,8 +104,25 @@ public class Main extends Application {
         //program start
         myPlayer.doSomething();
         em = new EditorManager(primaryStage,homeScene);
-        newButton.setOnMouseClicked(event -> em.setEditorHomeScene());
+        newButton.setOnMouseClicked(event -> makeGameDirectory());
+
     }
+
+    private void makeGameDirectory(){
+        FileChooser fileChooser = myRenderSystem.makeFileChooser("all");
+        fileChooser.setTitle("Save File As");
+        Path filePath = Paths.get(System.getProperty("user.dir"));
+        File defaultFile = new File(filePath+RESOURCE_PATH);
+        fileChooser.setInitialDirectory(defaultFile);
+        File file = fileChooser.showSaveDialog(new Stage());
+        file.mkdir();
+        em.setGameDirectory(file);
+        em.setEditorHomeScene();
+    }
+
+
+
+
 
     /** Create a {@code DirectoryChooser} and set the active game directory if it is valid*/
     private void setDirectory(){
@@ -106,6 +134,7 @@ public class Main extends Application {
                 myDirectory = directory;
                 myPlayer.setDirectory(directory);
                 playButton.setDisable(false);
+                editButton.setDisable(false);
             }
             else{
                 playButton.setDisable(true);

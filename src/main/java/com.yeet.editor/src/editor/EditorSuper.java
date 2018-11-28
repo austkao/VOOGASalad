@@ -90,8 +90,8 @@ public class EditorSuper extends Scene{
         try {
             FileChooser fileChooser = rs.makeFileChooser("xml");
             fileChooser.setTitle("Save File As");
-            Path filePath = Paths.get(System.getProperty("user.dir"));
-            File defaultFile = new File(filePath+RESOURCE_PATH);
+            Path userPath = Paths.get(System.getProperty("user.dir"));
+            File defaultFile = em.getGameDirectory();
             fileChooser.setInitialDirectory(defaultFile);
             File file = fileChooser.showSaveDialog(new Stage());
             if(file != null) {
