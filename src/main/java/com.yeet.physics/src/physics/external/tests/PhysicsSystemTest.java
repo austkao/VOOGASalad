@@ -37,7 +37,7 @@ class PhysicsSystemTest {
         double expectedDir = PI/2;
 
         testSystem.update();
-        for (PhysicsObject b : testSystem.getGameObjects()) {
+        for (PhysicsObject b : testSystem.getGameObjects().values()) {
             assertEquals(expectedAccMag, b.getAcceleration().getMagnitude(), .001);
             assertEquals(expectedVelMag, b.getVelocity().getMagnitude(), .001);
             assertEquals(expectedDir, b.getAcceleration().getDirection(), .001);
