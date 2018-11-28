@@ -16,10 +16,10 @@ public class ScrollablePane extends Pane {
     private ScrollPane scrollPane;
 
 
-    public ScrollablePane(){
+    public ScrollablePane(File dir){
         items = FXCollections.observableArrayList();
         scrollPane = new ScrollPane();
-        loadFiles();
+        loadFiles(dir);
         scrollPane.setPrefSize(150, 400);
         scrollPane.setLayoutX(0);
         scrollPane.setLayoutY(0);
@@ -40,9 +40,7 @@ public class ScrollablePane extends Pane {
 
     }
 
-    public void loadFiles(){
-        File dir = new File(DEFAULT_IMAGE_DIR);
-        System.out.println(dir.getAbsolutePath());
+    public void loadFiles(File dir){
         for(File imgFile : dir.listFiles()) {
             if(imgFile.toString().endsWith(".png")){
                 addItem(new Image(imgFile.toURI().toString()));

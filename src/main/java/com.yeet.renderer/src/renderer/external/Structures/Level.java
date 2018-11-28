@@ -5,23 +5,40 @@
 package renderer.external.Structures;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Level extends GridPane{
-
-    private int windowHeight;
-    private int windowWidth;
-
-
     private static final int TILE_WIDTH = 25;
     private static final int TILE_HEIGHT = 25;
 
     private Tile [][] grid;
+    private int numCols;
+    private int numRows;
     private String backgroundURL;
+    private int windowHeight;
+    private int windowWidth;
 
+    private static final int WINDOW_HEIGHT = 400;
+    private static final int WINDOW_WIDTH = 400;
+    ImageView background;
+    Pane window;
 
+    public Level(Image bk){
+        grid = new Tile[WINDOW_HEIGHT/TILE_HEIGHT][WINDOW_WIDTH/TILE_WIDTH];
+        background = new ImageView();
+        setBackground(bk);
+        window = new Pane();
+        window.setPrefWidth(WINDOW_WIDTH);
+        window.setPrefHeight(WINDOW_HEIGHT);
+        window.getChildren().add(background);
+
+    }
     /**
      * Constructs the level
      * @param windowWidth = width of window of pane
@@ -46,8 +63,8 @@ public class Level extends GridPane{
         resetGrid();
 
 
-        int numCols = windowWidth/TILE_WIDTH;
-        int numRows = windowHeight/TILE_HEIGHT;
+        numCols = windowWidth/TILE_WIDTH;
+        numRows = windowHeight/TILE_HEIGHT;
 
 
         for (int i = 0; i < numCols; i++) {
@@ -118,4 +135,28 @@ public class Level extends GridPane{
     public boolean isTile(int x, int y){
         return grid[y][x] != null;
     }
+
+    public HashMap<String, ArrayList<String>> createLevelMap() {
+        HashMap<String, ArrayList<String>> levelMap = new HashMap<>();
+        levelMap.put("x", new ArrayList<>());
+        levelMap.put("y", new ArrayList<>());
+        for(int i = 0; i < numCols; i++) {
+            for(int j = 0; j < numRows; j++) {
+                if(isTile(i,j)) {
+                    levelMap.get("x").add(Integer.toString(i));
+                    levelMap.get("y").add(Integer.toString(j));
+                }
+            }
+        }
+        return levelMap;
+    }
+    public void setBackground(Image bk){
+        background.setImage(bk);
+
+    }
+
+    public Pane getWindow(){
+        return window;
+    }
+
 }
