@@ -9,5 +9,6 @@ module com.yeet.player {
     requires com.yeet.physics;
     requires com.yeet.renderer;
     requires com.google.common;
+    requires com.yeet.data;
     exports player.external;
 }
