@@ -26,14 +26,12 @@ import java.net.URISyntaxException;
 
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
-    private static final String DEFAULT_TILE = "acacia_log.png";
     private static final String DEFAULT_IMAGE_DIR = "/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
     private Image currentTileFile;
     private ScrollablePane myScrollablePane;
     private Level level;
     private Group root;
-    private HashMap<Tile,String> imageviewMap;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -136,9 +134,8 @@ public class MapEditor extends EditorSuper{
             myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
         }
         catch (Exception e){
-            currentTileFile = currentTileFile;
+            System.out.println("Invalid image");
         }
-
     }
 
     /**
@@ -182,7 +179,6 @@ public class MapEditor extends EditorSuper{
             generateSave(structure, levelMap);
         } catch (Exception ex) {
             System.out.println("Invalid save");
-            //ex.printStackTrace();
         }
     }
 

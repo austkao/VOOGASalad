@@ -48,11 +48,9 @@ public class ScrollablePane extends Pane {
                 Image itemImage = new Image(imgFile.toURI().toString());
                 addItem(itemImage);
                 currentImages.put(itemImage.toString(), imgFile.getName());
-                System.out.println(itemImage.toString());
             }
         }
     }
-
 
     public ObservableList<ScrollableItem> getItems() {
         return items;
