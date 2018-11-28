@@ -9,6 +9,8 @@ import xml.XMLParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static java.lang.Math.PI;
+
 public class CombatSystem {
 
     EventBus eventBus;
@@ -22,8 +24,6 @@ public class CombatSystem {
         physicsSystem.addPhysicsBodies(numOfPlayers);
 //        XMLParser parser = new XMLParser();
 //        HashMap<String, ArrayList<String>> map = parser.parseFileForElement("character");
-        
-
     }
 
     @Subscribe
@@ -39,12 +39,20 @@ public class CombatSystem {
 
     @Subscribe
     public void onMoveSuccessfulEvent(MoveSuccessfulEvent event){
+        boolean direction = event.getDirection();
+        // move left
+        if(direction){
+            physicsSystem.move(event.getInitiatorID(), PI);
+        }
+        else{
+            physicsSystem.move(event.getInitiatorID(), 0);
+        }
 
     }
 
     @Subscribe
     public void onJumpSuccessfulEvent(JumpSuccessfulEvent event){
-
+        physicsSystem.jump(event.getInitiatorID());
     }
 
 }
