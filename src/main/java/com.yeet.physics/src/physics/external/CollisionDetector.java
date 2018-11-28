@@ -2,19 +2,20 @@ package physics.external;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CollisionDetector {
 
-    private List<PhysicsObject> bodies;
+    private Map<Integer, PhysicsObject> bodies;
 
-    public CollisionDetector(List<PhysicsObject> bodies){
+    public CollisionDetector(Map<Integer, PhysicsObject> bodies){
         this.bodies = bodies;
     }
 
-    public List<Collision> detectCollisions(List<PhysicsObject> bodies){
+    public List<Collision> detectCollisions(Map<Integer, PhysicsObject> bodies){
         List<Collision> collisions = new ArrayList<Collision>();
-        for(PhysicsObject bod: bodies){
-            for(PhysicsObject bod2: bodies){
+        for(PhysicsObject bod: bodies.values()){
+            for(PhysicsObject bod2: bodies.values()){
                 if(!bod.equals(bod2)){
                     if(bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody())){
                         List<PhysicsObject> colliders = new ArrayList<>();

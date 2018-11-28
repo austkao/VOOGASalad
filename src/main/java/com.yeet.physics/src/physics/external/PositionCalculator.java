@@ -1,18 +1,18 @@
 package physics.external;
 
-import java.util.List;
+import java.util.Map;
 
 public class PositionCalculator {
 
     public static final double timeOfFrame = 0.016666666;
-    private List<PhysicsObject> myObjects;
+    private Map<Integer, PhysicsObject> myObjects;
 
-    PositionCalculator(List<PhysicsObject> objects) {
+    PositionCalculator(Map<Integer, PhysicsObject> objects) {
         this.myObjects = objects;
     }
 
     void updatePositions() {
-        for (PhysicsObject o : myObjects) {
+        for (PhysicsObject o : myObjects.values()) {
             Coordinate currentPosition = o.getMyCoordinateBody().getPos();
             double XVelocity = o.getVelocity().getMagnitude() * Math.cos(o.getVelocity().getDirection());
             double YVelocity = o.getVelocity().getMagnitude() * Math.sin(o.getVelocity().getDirection());
