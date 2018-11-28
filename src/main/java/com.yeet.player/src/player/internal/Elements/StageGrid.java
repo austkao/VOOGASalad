@@ -31,6 +31,9 @@ public class StageGrid extends TilePane {
             this.getChildren().add(imageView);
             imageView.setFitWidth(d);
             imageView.setFitHeight(d);
+            int finalI = i;
+            imageView.setOnMouseEntered(event -> biConsumer.accept(files.get(finalI).getName(), imageView));
+            imageView.setOnMousePressed(event -> consumer.accept(files.get(finalI).getName()));
         }
 
         this.setMaxWidth(gridWidth);
