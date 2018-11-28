@@ -1,13 +1,18 @@
 package editor;
 
+import javafx.animation.Animation;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import renderer.external.Structures.SliderBox;
+import renderer.external.Structures.Sprite;
+import renderer.external.Structures.SpriteAnimation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -70,7 +75,29 @@ public class CharacterEditor extends EditorSuper{
                 Color.WHITE, 20.0, 600.0, 25.0, 200.0, 50.0);
         root.getChildren().add(getSpriteSheet);
         getSpriteSheet.setOnMouseClicked(e -> chooseSpriteSheet());
+
+        Button setAnimation = getRenderSystem().makeStringButton("Set Sprite Animation", Color.ORCHID, true,
+                Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
+        root.getChildren().add(setAnimation);
+        setAnimation.setOnMouseClicked(e -> makeSprite());
     }
+
+
+    private void makeSprite(){
+        Sprite mySprite = getRenderSystem().makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.5);
+        SpriteAnimation myAnimation = getRenderSystem().makeSpriteAnimation(mySprite, Duration.seconds(2.0), 22,
+                11, 0.0, 0.0, 111.818181, 56.0);
+        root.getChildren().add(mySprite);
+        mySprite.setLayoutX(650);
+        mySprite.setLayoutY(175);
+        mySprite.setScaleX(2);
+        mySprite.setScaleY(2);
+        myAnimation.setCycleCount(Animation.INDEFINITE);
+        myAnimation.play();
+
+
+    }
+
 
     private void makeSliders(){
         mySliders = new VBox(10);
