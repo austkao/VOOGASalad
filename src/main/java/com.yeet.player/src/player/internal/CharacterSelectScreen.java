@@ -31,6 +31,7 @@ public class CharacterSelectScreen extends Screen {
     private SceneSwitch nextScene;
 
     private boolean isReady;
+    private ImageView myReadyBar;
 
     private CharacterGrid myCharGrid;
 
@@ -51,6 +52,9 @@ public class CharacterSelectScreen extends Screen {
         super(root, renderer);
         super.setFill(Color.WHITE);
         myDirectory = gameDirectory;
+        myReadyBar = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("ready_bar.png")));
+        myReadyBar.setLayoutY(420.0);
+        myReadyBar.setOnMousePressed(event -> nextScene.switchScene());
         this.nextScene = nextScene;
         VBox holder = new VBox(0.0);
         holder.setPrefSize(1280,800);
@@ -112,12 +116,21 @@ public class CharacterSelectScreen extends Screen {
     }
 
 
-    /** Uses the {@code CharacterGrid} to identify the target of the {@code DragToken}
+    /** Uses the {@code CharacterGrid} to identify the target of the {@code DragToken} and also checks if ready to fight
      *  @param token The {@code DragToken} to use
      */
     private void getCharacter(DragToken token){
         myCharGrid.getCharacter(token);
+        // ready checking
         isReady = checkPlayerCount();
+        if(isReady){
+            if(!super.getMyRoot().getChildren().contains(myReadyBar)){
+                super.getMyRoot().getChildren().add(myReadyBar);
+            }
+        }
+        else{
+            super.getMyRoot().getChildren().remove(myReadyBar);
+        }
     }
 
     /** Checks if there are enough players to start a match */

@@ -33,6 +33,7 @@ public class Player {
     private MainMenuScreen myMainMenuScreen;
     private CharacterSelectScreen myCharacterSelectScreen;
     private MatchRulesScreen myMatchRulesScreen;
+    private StageSelectScreen myStageSelectScreen;
     private CombatScreen myCombatScreen;
     private CombatResultsScreen myCombatResultsScreen;
 
@@ -72,10 +73,15 @@ public class Player {
             myFightMusicPlayer.stop();
             myBGMPlayer.play();
         },()-> {
+            myStage.setScene(myStageSelectScreen);
+        });
+        myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
+        myStageSelectScreen = new StageSelectScreen(new Group(),myRenderer,()-> {
+            myStage.setScene(myCharacterSelectScreen);
+        },()-> {
             myStage.setScene(myCombatScreen);
             myFightMusicPlayer.stop();
         });
-        myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
         myCombatScreen =  new CombatScreen(new Group(),myRenderer);
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
         //finished loading

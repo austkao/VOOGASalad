@@ -1,6 +1,5 @@
 package editor;
 
-import xml.XMLParser;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -10,13 +9,12 @@ import javafx.stage.FileChooser;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollableItem;
 import renderer.external.Structures.ScrollablePane;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.net.URISyntaxException;
-
-import xml.XMLSaveBuilder;
 
 /**
  * @author ob29
@@ -29,7 +27,8 @@ public class MapEditor extends EditorSuper{
     private static final String DEFAULT_TILE = "acacia_log.png";
     //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
     //private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/project4/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    //private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/project4/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    private static final String DEFAULT_IMAGE_DIR = "\\Users\\surface\\IdeaProjects\\voogasalad_yeet\\src\\main\\java\\com.yeet.main\\resources\\examplegame\\stages\\example_stage_1\\tiles";
     //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
     //private static final String DEFAULT_IMAGE_DIR = "/users/rr600/workspace/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
