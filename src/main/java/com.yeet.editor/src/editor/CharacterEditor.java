@@ -33,7 +33,6 @@ public class CharacterEditor extends EditorSuper{
 
     private Pane mapPane;
     private Group root;
-    private String backgroundURL;
     private VBox mySliders;
     private SliderBox healthSlider;
     private SliderBox attackSlider;
@@ -46,8 +45,8 @@ public class CharacterEditor extends EditorSuper{
         super(root,em);
         this.root = root;
         initializeMap(400, 400);
-        this.setBackground(DEFAULT_BACKGROUND_IMAGE);
-        Button addBG = getRenderSystem().makeStringButton("set Background", Color.BLACK,true,Color.WHITE,
+        this.setPortrait(DEFAULT_BACKGROUND_IMAGE);
+        Button addBG = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
                 30.0,50.0,200.0,200.0,50.0);
         root.getChildren().add(addBG);
         addBG.setOnMouseClicked(e -> chooseBackground());
@@ -95,15 +94,14 @@ public class CharacterEditor extends EditorSuper{
     /**
      * User selects background, and it is applied to level.
      */
-    private void chooseBackground(){
-        File backgroundFile = chooseImage("Choose Background File");
-        if (backgroundFile != null)
-            this.setBackground(backgroundFile.toURI().toString());
+    private void choosePortrait(){
+        File portrait = chooseImage("Choose Background File");
+        if (portrait != null)
+            this.setPortrait(portrait.toURI().toString());
     }
 
-    public void setBackground(String backgroundURL){
-        this.backgroundURL = backgroundURL;
-        String formatted = String.format("-fx-background-image: url('%s');", backgroundURL);
+    public void setPortrait(String portraitURL){
+        String formatted = String.format("-fx-background-image: url('%s');", portraitURL);
         formatted = formatted + String.format("-fx-background-size: cover;");
         mapPane.setStyle(formatted);
     }
