@@ -24,10 +24,11 @@ public class EditorManager {
     private Scene homeScene;
     private File gameDirectory;
 
-    public EditorManager(Stage stage, Scene scene){
+    public EditorManager(Stage stage, Scene scene, File directory){
         myStage = stage;
         homeScene = scene;
         root = new Group();
+        gameDirectory = directory;
         myEditors = makeEditors();
         myEditorHomes = makeEditorHomes();
         myScene = new EditorStart(root,this, myEditors,myEditorHomes);
@@ -43,7 +44,12 @@ public class EditorManager {
     }
 
     public File getGameDirectory(){
-        return gameDirectory;
+      return gameDirectory;
+    }
+
+    public String getGameDirectoryString(){
+
+       return gameDirectory.toString();
     }
 
 //    public void loadEditorHomeScene() {

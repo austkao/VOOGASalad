@@ -20,6 +20,7 @@ import player.external.Player;
 import renderer.external.RenderSystem;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -49,6 +50,8 @@ public class Main extends Application {
     private Button playButton;
     private Button editButton;
 
+    private Scene homeScene;
+
 
     public static void main(String[] args){
         launch(args);
@@ -66,6 +69,7 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(event -> System.exit(-1));
         Group root = new Group();
         Scene homeScene = new Scene(root);
+        this.homeScene = homeScene;
         primaryStage.setScene(homeScene);
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
@@ -91,6 +95,7 @@ public class Main extends Application {
             em.setEditorHomeScene();
             em.setGameDirectory(myDirectory);
         });
+        myDirectory = new File("/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame");
         root.getChildren().add(editButton);
         Button loadButton = myRenderSystem.makeStringButton("Load Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,440.4,307.21,94.6);
         loadButton.setOnMousePressed(e -> setDirectory());
@@ -103,22 +108,28 @@ public class Main extends Application {
         root.getChildren().add(playButton);
         //program start
         myPlayer.doSomething();
-        em = new EditorManager(primaryStage,homeScene);
+        em = new EditorManager(primaryStage,homeScene,myDirectory);
         newButton.setOnMouseClicked(event -> makeGameDirectory());
 
     }
 
     private void makeGameDirectory(){
-        FileChooser fileChooser = myRenderSystem.makeFileChooser("all");
-        fileChooser.setTitle("Save File As");
-        Path filePath = Paths.get(System.getProperty("user.dir"));
-        File defaultFile = new File(filePath+RESOURCE_PATH);
-        fileChooser.setInitialDirectory(defaultFile);
-        File file = fileChooser.showSaveDialog(new Stage());
-        file.mkdir();
-        em.setGameDirectory(file);
-        em.setEditorHomeScene();
+        Path userPath = Paths.get(System.getProperty("user.dir"));
+        File resources = new File(userPath+RESOURCE_PATH);
+        int numGames = resources.listFiles(filter).length;
+        File defaultFile = new File(resources.getPath() + "/game" + numGames);
+        defaultFile.mkdir();
+        EditorManager emNew = new EditorManager(myStage,homeScene,defaultFile);
+        emNew.setGameDirectory(defaultFile);
+        emNew.setEditorHomeScene();
     }
+
+    FilenameFilter filter = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            return name.startsWith("game");
+        }
+    };
 
 
 
