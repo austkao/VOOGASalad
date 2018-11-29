@@ -60,7 +60,9 @@ public class StageSelectScreen extends Screen {
         stageContainer.setPrefSize(1280.0,745.0);
         stageContainer.setAlignment(Pos.CENTER);
         VBox stagePreview = new VBox();
+        stagePreview.setMinSize(415.0,360.0);
         stagePreview.setPrefSize(415.0,360.0);
+        stagePreview.setMaxSize(415.0,360.0);
         stagePreview.setAlignment(Pos.CENTER);
         myStagePreview = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("random_stage.png")));
         myStagePreview.setFitWidth(415.0);

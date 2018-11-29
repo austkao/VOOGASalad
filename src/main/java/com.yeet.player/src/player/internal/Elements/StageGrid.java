@@ -3,12 +3,15 @@ package player.internal.Elements;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
+import static renderer.external.RenderUtils.centerCrop;
 
 public class StageGrid extends TilePane {
 
@@ -38,18 +41,36 @@ public class StageGrid extends TilePane {
         double w = gridWidth/(float)columnCount;
         double h = gridHeight/(float)rowCount;
         for(int i = 0; i < stageCount; i++) {
+            StackPane imageHolder = new StackPane();
+            imageHolder.setMinSize(w-SPACING,h-SPACING);
+            imageHolder.setPrefSize(w-SPACING,h-SPACING);
+            imageHolder.setMaxSize(w-SPACING,h-SPACING);
+            imageHolder.setAlignment(Pos.CENTER);
             ImageView imageView = new ImageView(new Image(String.format("%s/%s",files.get(i).toURI(),"thumb.png")));
+            if(imageView.getImage().isError()){
+                imageView.setImage(new Image(String.format("%s/%s",files.get(i).toURI(),"thumb.jpg")));
+            }
+            centerCrop(imageView);
             imageView.setFitWidth(w-SPACING);
-            imageView.setFitHeight(h-SPACING);
-            this.getChildren().add(imageView);
+            imageView.setFitHeight((w-SPACING));
+            imageHolder.getChildren().addAll(imageView);
+            this.getChildren().add(imageHolder);
             int finalI = i;
-            imageView.setOnMouseEntered(event -> biConsumer.accept(files.get(finalI).getName(), imageView));
+            imageView.setOnMouseEntered(event -> {
+                biConsumer.accept(files.get(finalI).getName(), imageView);
+                imageView.setScaleX(1.1);
+                imageView.setScaleY(1.1);
+            });
+            imageView.setOnMouseExited(event -> {
+                imageView.setScaleX(1.0);
+                imageView.setScaleY(1.0);
+            });
             imageView.setOnMousePressed(event -> consumer.accept(files.get(finalI).getName()));
         }
         this.setMinSize(gridWidth,gridHeight);
         this.setPrefSize(gridWidth,gridHeight);
         this.setMaxSize(gridWidth,gridHeight);
-        this.setAlignment(Pos.CENTER_LEFT);
+        this.setAlignment(Pos.CENTER);
     }
 
 }
