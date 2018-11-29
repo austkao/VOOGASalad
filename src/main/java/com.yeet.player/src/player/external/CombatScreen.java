@@ -1,15 +1,19 @@
-package player.internal;
+package player.external;
 
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import messenger.external.PositionsUpdateEvent;
+import player.internal.Screen;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
 import xml.XMLParser;
 
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +28,14 @@ public class CombatScreen extends Screen {
 
     private File myGameDirectory;
 
+    private String myStageName;
+
+    private MediaPlayer myBGMPlayer;
+
+
+
+    private HashMap<Integer, Point2D> myCharacterMap;
+    private HashMap<String,ArrayList<String>> myMusicMap;
     private HashMap<String, ArrayList<String>> myStageMap;
     private HashMap<String, ArrayList<String>> mySpawnMap;
     private HashMap<Integer, Sprite> mySpriteMap;
@@ -33,6 +45,9 @@ public class CombatScreen extends Screen {
         super(root, renderer);
         myParser = new XMLParser(new File(gameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myGameDirectory =  gameDirectory;
+        myStageName = stageName;
+        myCharacterMap = new HashMap<>();
+        myMusicMap = myParser.parseFileForElement("music");
         myStageMap = myParser.parseFileForElement("map");
         mySpawnMap =  myParser.parseFileForElement("position");
         mySpriteMap = new HashMap<>();
@@ -62,15 +77,23 @@ public class CombatScreen extends Screen {
                 sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0);
                 sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0);
                 mySpriteMap.put(i,sprite);
+                myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("x").get(i))*40.0,Integer.parseInt(mySpawnMap.get("y").get(i))*40.0));
                 super.getMyRoot().getChildren().add(sprite);
                 //super.getMyRoot().getChildren().add(new ImageView(new Image()))
             }
         }
+        myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"\\data\\bgm\\"+myMusicMap.get("file").get(0)).toURI().toString()));
+        myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        myBGMPlayer.play();
+    }
+
+    public HashMap<Integer, Point2D> getCharacterMap(){
+        return (HashMap<Integer, Point2D>) myCharacterMap.clone();
     }
 
     @Subscribe
-    private void update(PositionsUpdateEvent event){
-        for(Integer i : event.getPositions().keySet()){
+    public void update(PositionsUpdateEvent event){
+        for(int i=0;i<mySpriteMap.keySet().size();i++){
             mySpriteMap.get(i).setLayoutX(event.getPositions().get(i).getX());
             mySpriteMap.get(i).setLayoutY(event.getPositions().get(i).getY());
         }

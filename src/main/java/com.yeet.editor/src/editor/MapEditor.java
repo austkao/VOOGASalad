@@ -3,7 +3,6 @@ package editor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
@@ -20,7 +19,6 @@ import renderer.external.Structures.TextBox;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;

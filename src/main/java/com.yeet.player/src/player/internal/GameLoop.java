@@ -1,9 +1,8 @@
-package main;
+package player.internal;
 
 import physics.external.PhysicsSystem;
 import renderer.external.RenderSystem;
 
-import java.util.ArrayList;
 
 public class GameLoop {
     private PhysicsSystem physicsEngine;
@@ -24,8 +23,9 @@ public class GameLoop {
     //If you're worried about visual hitches more than perfect timing, set this to 1.
     final int MAX_UPDATES_BEFORE_RENDER = 5;
 
-    public GameLoop(){
-        physicsEngine = new PhysicsSystem();
+
+    public GameLoop(PhysicsSystem physicsEngine){
+        this.physicsEngine = physicsEngine;
         //renderEngine= new RenderSystem(Font);
     }
     /**

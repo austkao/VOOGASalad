@@ -30,6 +30,9 @@ public class StageSelectScreen extends Screen {
     public StageSelectScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, SceneSwitch nextScene) {
         super(root, renderer);
         this.nextScene = nextScene;
+        ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("stage_select_bg.jpg")));
+        background.setFitWidth(1280);
+        background.setFitHeight(800);
         VBox mainContainer = new VBox();
         mainContainer.setPrefSize(1280.0,800.0);
         mainContainer.setAlignment(Pos.CENTER);
@@ -57,7 +60,9 @@ public class StageSelectScreen extends Screen {
         stageContainer.setPrefSize(1280.0,745.0);
         stageContainer.setAlignment(Pos.CENTER);
         VBox stagePreview = new VBox();
+        stagePreview.setMinSize(415.0,360.0);
         stagePreview.setPrefSize(415.0,360.0);
+        stagePreview.setMaxSize(415.0,360.0);
         stagePreview.setAlignment(Pos.CENTER);
         myStagePreview = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("random_stage.png")));
         myStagePreview.setFitWidth(415.0);
@@ -68,10 +73,9 @@ public class StageSelectScreen extends Screen {
         stageNameHolder.setMaxSize(415.0,100.0);
         stageNameHolder.setAlignment(Pos.CENTER);
         stageNameHolder.setStyle("-fx-background-color: black");
-        myStageName = this.getMyRenderer().makeText("Random",true,60, Color.WHITE,0.0,0.0);
+        myStageName = this.getMyRenderer().makeText("Random",true,50, Color.WHITE,0.0,0.0);
         VBox stageGridHolder = new VBox();
         stageGridHolder.setPrefSize(835.0,600.0);
-        //stageGridHolder.setStyle("-fx-background-color: black");
         StageGrid stageGrid = new StageGrid(gameDirectory,(s,imageView)->setPreview(s,imageView),(s -> chooseStage(s)));
         topBar.getChildren().addAll(topBarSpacer,buttonHolder);
         stageNameHolder.getChildren().addAll(myStageName);
@@ -79,7 +83,7 @@ public class StageSelectScreen extends Screen {
         stageGridHolder.getChildren().addAll(stageGrid);
         stageContainer.getChildren().addAll(stagePreview,stageGridHolder);
         mainContainer.getChildren().addAll(topBar,stageContainer);
-        super.getMyRoot().getChildren().addAll(mainContainer);
+        super.getMyRoot().getChildren().addAll(background,mainContainer);
     }
 
     private void chooseStage(String s) {
