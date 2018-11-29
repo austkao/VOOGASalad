@@ -25,6 +25,7 @@ public class CombatScreen extends Screen {
     private File myGameDirectory;
 
     private HashMap<String, ArrayList<String>> myStageMap;
+    private HashMap<String, ArrayList<String>> mySpawnMap;
     private HashMap<Integer, Sprite> mySpriteMap;
     private ArrayList<ImageView> myTiles;
 
@@ -33,6 +34,7 @@ public class CombatScreen extends Screen {
         myParser = new XMLParser(new File(gameDirectory.getPath()+"\\stages\\"+stageName+"\\maps\\map1.xml"));
         myGameDirectory =  gameDirectory;
         myStageMap = myParser.parseFileForElement("map");
+        mySpawnMap =  myParser.parseFileForElement("position");
         mySpriteMap = new HashMap<>();
         myTiles = new ArrayList<>();
         ImageView background = new ImageView(new Image(gameDirectory.toURI()+"/stages/"+stageName+"/background.png"));
@@ -40,7 +42,7 @@ public class CombatScreen extends Screen {
         background.setFitHeight(800.0);
         super.getMyRoot().getChildren().addAll(background);
         for(int i=0; i<myStageMap.get("x").size();i++){
-            ImageView tile = new ImageView(new Image(gameDirectory.toURI()+"/stages/"+stageName+"/tiles/acacia_log.png"));
+            ImageView tile = new ImageView(new Image(gameDirectory.toURI()+"/stages/"+stageName+"/tiles/"+myStageMap.get("image").get(i)));
             tile.setFitHeight(40.0);
             tile.setFitWidth(40.0);
             tile.setLayoutX(Integer.parseInt(myStageMap.get("x").get(i))*40.0);
@@ -57,6 +59,8 @@ public class CombatScreen extends Screen {
                 XMLParser propertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"\\characters\\"+characterNames.get(i)+"\\sprites\\spriteproperties.xml"));
                 HashMap<String,ArrayList<String>> spriteProperties = propertiesParser.parseFileForElement("sprite");
                 Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(i)+"/sprites/spritesheet.png"),Double.parseDouble(((spriteProperties.get("width").get(0)))),Double.parseDouble(spriteProperties.get("height").get(0)));
+                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("x").get(i))*40.0);
+                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("y").get(i))*40.0);
                 mySpriteMap.put(i,sprite);
                 super.getMyRoot().getChildren().add(sprite);
                 //super.getMyRoot().getChildren().add(new ImageView(new Image()))
