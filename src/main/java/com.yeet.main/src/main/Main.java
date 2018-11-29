@@ -118,9 +118,15 @@ public class Main extends Application {
         File stages = new File(defaultFile.getPath()+"/stages");
         File characters = new File(defaultFile.getPath()+"/characters");
         File data = new File(defaultFile.getPath()+"/data");
+        File background = new File(data.getPath()+"/background");
+        File bgm = new File(data.getPath()+"/bgm");
+        File tiles = new File(data.getPath()+"/tiles");
         stages.mkdir();
         characters.mkdir();
         data.mkdir();
+        background.mkdir();
+        bgm.mkdir();
+        tiles.mkdir();
         initializeGameEditor(defaultFile);
     }
 
@@ -213,12 +219,12 @@ public class Main extends Application {
         edit.setScene(new Scene(new Group(games)));
         if(isEditButton) {
             games.setOnMouseClicked(e -> {
-                initializeGameEditor(new File(gameDirectory.getPath()+ "\\"+games.getSelectionModel().getSelectedItem()));
+                initializeGameEditor(new File(gameDirectory.getPath()+ "/"+games.getSelectionModel().getSelectedItem()));
                 edit.close();
             });
         } else {
             games.setOnMouseClicked(e -> {
-                setDirectory(new File(gameDirectory.getPath()+ "\\"+games.getSelectionModel().getSelectedItem()));
+                setDirectory(new File(gameDirectory.getPath()+ "/"+games.getSelectionModel().getSelectedItem()));
                 edit.close();
             });
         }

@@ -16,28 +16,33 @@ public class ScrollablePane extends Pane {
     private HashMap<String, String> currentImages;
 
 
-    public ScrollablePane(File dir){
-        currentImages = new HashMap<>();
-        items = FXCollections.observableArrayList();
-        scrollPane = new ScrollPane();
-        System.out.println(dir);
-        System.out.println(dir.isDirectory());
+
+    public ScrollablePane(File dir,double x, double y){
+        this(x,y);
         loadFiles(dir);
+
+    }
+
+    public ScrollablePane(double x, double y){
+        scrollPane = new ScrollPane();
         scrollPane.setPrefSize(150, 400);
         scrollPane.setLayoutX(0);
         scrollPane.setLayoutY(0);
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(this);
-        scrollPane.setLayoutX(50);
-        scrollPane.setLayoutY(400);
+        scrollPane.setLayoutX(x);
+        scrollPane.setLayoutY(y);
         scrollPane.setScaleY(.8);
+        currentImages = new HashMap<>();
+        items = FXCollections.observableArrayList();
     }
 
-    public void addItem(Image image){
+    public ScrollableItem addItem(Image image){
         ScrollableItem si= new ScrollableItem(image,0,0);
         items.add(si);
         this.getChildren().add(items.get(items.size()-1).getButton());
         items.get(items.size()-1).setPos(0,125*items.size());
+        return si;
     }
 
     public void removeItem(){
