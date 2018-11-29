@@ -35,6 +35,7 @@ public class CombatScreen extends Screen {
 
 
     private HashMap<Integer, Point2D> myCharacterMap;
+    private HashMap<String,ArrayList<String>> myMusicMap;
     private HashMap<String, ArrayList<String>> myStageMap;
     private HashMap<String, ArrayList<String>> mySpawnMap;
     private HashMap<Integer, Sprite> mySpriteMap;
@@ -46,6 +47,7 @@ public class CombatScreen extends Screen {
         myGameDirectory =  gameDirectory;
         myStageName = stageName;
         myCharacterMap = new HashMap<>();
+        myMusicMap = myParser.parseFileForElement("music");
         myStageMap = myParser.parseFileForElement("map");
         mySpawnMap =  myParser.parseFileForElement("position");
         mySpriteMap = new HashMap<>();
@@ -80,7 +82,7 @@ public class CombatScreen extends Screen {
                 //super.getMyRoot().getChildren().add(new ImageView(new Image()))
             }
         }
-        myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"\\stages\\"+myStageName+"\\bgm").listFiles()[0].toURI().toString()));
+        myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"\\data\\bgm\\"+myMusicMap.get("file").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         myBGMPlayer.play();
     }
