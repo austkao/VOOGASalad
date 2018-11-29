@@ -1,7 +1,9 @@
 package physics.external;
 
 import com.google.common.eventbus.EventBus;
+import messenger.external.AttackIntersectEvent;
 import messenger.external.EventBusFactory;
+import messenger.external.GroundIntersectEvent;
 import messenger.external.PositionsUpdateEvent;
 
 import java.awt.geom.Point2D;
@@ -20,6 +22,7 @@ public class PhysicsSystem {
     public static final double defaultStrength = 20;
     public static final double defaultJumpHeight = 20;
     public static final double defaultMovementSpeed = 20;
+    public static final double defaultAttackSpace = 10;
 
 
 
@@ -29,17 +32,6 @@ public class PhysicsSystem {
     Map<Integer, PhysicsObject> gameObjects = new HashMap<>();
 
     private EventBus myMessageBus;
-
-    /*
-    private EventBus myMessageBus;
-    private String path = "/example_character_1/";
-    private MediaPlayer myPlayer;
-
-    public AudioSystem(){
-        myMessageBus = EventBusFactory.getEventBus();
-        myPlayer= new MediaPlayer();
-    }
-     */
 
     public PhysicsSystem() {
         this.myMessageBus = EventBusFactory.getEventBus();
@@ -52,19 +44,29 @@ public class PhysicsSystem {
         //movHandler.update(); //How does this work with subscribe?
         CollisionHandler collHandler = new CollisionHandler(collisions);
         collHandler.update();
+        List<Integer> groundCollisions = collHandler.getGroundCollisions();
+        List<List<Integer>> attackCollisions = collHandler.getAttackCollisions();
         PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
         passHandler.update();
         applyForces();
         updatePositions();
-        Map<Integer, Point2D> myMap;
         PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
         myMessageBus.post(newPos);
+        GroundIntersectEvent groundedPlayers = new GroundIntersectEvent(groundCollisions);
+        if (groundedPlayers != null) {
+            myMessageBus.post(groundCollisions);
+        }
+        AttackIntersectEvent attackPlayers = new AttackIntersectEvent(attackCollisions);
+        if (attackPlayers != null) {
+            myMessageBus.post(attackCollisions);
+        }
+
     }
 
     public void addPhysicsBodies(int num) {
         int id = gameObjects.size();
         while (id < num) {
-            gameObjects.put(id, new PhysicsBody(id, defaultMass, new Coordinate(0,0), new Dimensions(1,1)));
+            gameObjects.put(id, new PhysicsBody(id, defaultMass, new Coordinate(0,0), new Dimensions(10,20)));
             playerCharacteristics.add(new PlayerCharacteristics(id, defaultStrength, defaultJumpHeight, defaultMovementSpeed));
             id ++;
         }
@@ -116,5 +118,18 @@ public class PhysicsSystem {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.setDirection(direction);
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultMovementSpeed, direction));
+    }
+
+    public void attack(int id) {
+        int direction;
+        if (gameObjects.get(id).getDirection() == 0) {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
+        Coordinate playerLocation = gameObjects.get(id).getMyCoordinateBody().getPos();
+        Coordinate attackLocation = new Coordinate(playerLocation.getX() + direction * defaultAttackSpace,playerLocation.getY() + defaultAttackSpace);
+        PhysicsAttack attack = new PhysicsAttack(id,gameObjects.get(id).getMass(), attackLocation,new Dimensions(20, 10));
+        gameObjects.put(id, attack);
     }
 }
