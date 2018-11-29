@@ -89,7 +89,7 @@ public class MapEditor extends EditorSuper{
     private void initializeScrollPane(){
         Path filePath = Paths.get(System.getProperty("user.dir"));
         File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
-        myScrollablePane = new ScrollablePane(paneFile);
+        myScrollablePane = new ScrollablePane(paneFile,400.0,50.0);
         for(ScrollableItem b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
         }

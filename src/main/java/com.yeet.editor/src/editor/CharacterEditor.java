@@ -217,7 +217,7 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void initializeScrollPane(){
-        animationList = new ScrollablePane();
+        animationList = new ScrollablePane(50.0,300.0);
         root.getChildren().add(animationList.getScrollPane());
     }
 
