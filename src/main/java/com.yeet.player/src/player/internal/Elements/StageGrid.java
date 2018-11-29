@@ -5,9 +5,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
+import xml.XMLParser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -19,6 +21,10 @@ public class StageGrid extends TilePane {
     public static final int gridHeight = 720;
     public static final double RATIO = 3.0/2.0;
     public static final double SPACING = 5.0;
+
+    private XMLParser myParser;
+
+    private HashMap<String,ArrayList<String>> myBackgroundMap;
 
     public StageGrid(File directory, BiConsumer<String, ImageView> biConsumer, Consumer<String> consumer){
         super();
@@ -46,10 +52,15 @@ public class StageGrid extends TilePane {
             imageHolder.setPrefSize(w-SPACING,h-SPACING);
             imageHolder.setMaxSize(w-SPACING,h-SPACING);
             imageHolder.setAlignment(Pos.CENTER);
-            ImageView imageView = new ImageView(new Image(String.format("%s/%s",files.get(i).toURI(),"thumb.png")));
+            /*ImageView imageView = new ImageView(new Image(String.format("%s/%s",files.get(i).toURI(),"thumb.png")));
             if(imageView.getImage().isError()){
                 imageView.setImage(new Image(String.format("%s/%s",files.get(i).toURI(),"thumb.jpg")));
-            }
+            }*/
+            System.out.println(String.format("%s\\%s",files.get(i).getPath(),"stageproperties.xml"));
+            myParser = new XMLParser(new File(String.format("%s\\%s",files.get(i).getPath(),"stageproperties.xml")));
+            myBackgroundMap = myParser.parseFileForElement("background");
+            ImageView imageView = new ImageView(new Image(directory.toURI()+"data/background/"+myBackgroundMap.get("bgFile").get(0)));
+
             centerCrop(imageView);
             imageView.setFitWidth(w-SPACING);
             imageView.setFitHeight((w-SPACING));

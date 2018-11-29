@@ -48,7 +48,7 @@ public class AudioSystem {
 
     @Subscribe
     public void playGameMusic(GameStartEvent event){
-        //String newPath = path + "stages/example_stage_1/bgm/BGM.mp3";
+        //String newPath = path + "stages/Andromedon/bgm/BGM.mp3";
         String path = "/example_character_1/attacks/BGM.mp3";
         myPlayer.playLongAudio(path);
     }
