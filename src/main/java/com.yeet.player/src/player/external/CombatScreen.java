@@ -43,7 +43,7 @@ public class CombatScreen extends Screen {
 
     public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName, Consumer<KeyCode> keyConsumer) {
         super(root, renderer);
-        myParser = new XMLParser(new File(gameDirectory.getPath()+"\\stages\\"+stageName+"\\stageproperties.xml"));
+        myParser = new XMLParser(new File(gameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myGameDirectory =  gameDirectory;
         myStageName = stageName;
         myCharacterMap = new HashMap<>();
@@ -71,11 +71,11 @@ public class CombatScreen extends Screen {
     public void setCharacters(HashMap<Integer, String> characterNames){
         for(int i=0;i<characterNames.keySet().size();i++){
             if(!characterNames.get(i).equals("")){
-                XMLParser propertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"\\characters\\"+characterNames.get(i)+"\\sprites\\spriteproperties.xml"));
+                XMLParser propertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(i)+"/sprites/spriteproperties.xml"));
                 HashMap<String,ArrayList<String>> spriteProperties = propertiesParser.parseFileForElement("sprite");
                 Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(i)+"/sprites/spritesheet.png"),Double.parseDouble(((spriteProperties.get("width").get(0)))),Double.parseDouble(spriteProperties.get("height").get(0)));
-                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("x").get(i))*40.0);
-                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("y").get(i))*40.0);
+                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0);
+                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0);
                 mySpriteMap.put(i,sprite);
                 myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("x").get(i))*40.0,Integer.parseInt(mySpawnMap.get("y").get(i))*40.0));
                 super.getMyRoot().getChildren().add(sprite);

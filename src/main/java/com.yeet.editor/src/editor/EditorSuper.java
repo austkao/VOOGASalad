@@ -58,10 +58,6 @@ public abstract class EditorSuper extends Scene{
         root.getChildren().add(save);
     }
 
-    public RenderSystem getRenderSystem(){
-        return myRS;
-    }
-
     public HashMap<String, ArrayList<String>> loadXMLFile(String tag) {
         try {
             FileChooser loadFileChooser = myRS.makeFileChooser("xml");

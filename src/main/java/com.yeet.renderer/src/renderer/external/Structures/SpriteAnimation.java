@@ -54,4 +54,8 @@ public class SpriteAnimation extends Transition {
             lastIndex = index;
         }
     }
+
+    public int getCount(){
+        return count;
+    }
 }
