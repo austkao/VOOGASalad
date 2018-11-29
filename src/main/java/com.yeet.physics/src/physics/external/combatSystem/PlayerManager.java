@@ -24,6 +24,12 @@ public class PlayerManager {
         return playerMap.get(id);
     }
 
+    public void setToInitialStateByID(int id){
+        if(id >= INITIAL_ID + numOfPlayers)
+            throw new RuntimeException(String.format("ID %d does not exist", id));
+        playerMap.get(id).setToInitialState();
+    }
+
     public void changePlayerStateByIDOnEvent(int id, CombatActionEvent event){
         if(!checkIDValid(id)){
             throw new RuntimeException(String.format("ID %d does not exist", id));

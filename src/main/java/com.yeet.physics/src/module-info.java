@@ -6,3 +6,4 @@ module com.yeet.physics {
     requires java.desktop;
     requires com.google.common;
 }
+
