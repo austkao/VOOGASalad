@@ -89,7 +89,7 @@ public class MapEditor extends EditorSuper{
     private void initializeScrollPane(){
         Path filePath = Paths.get(System.getProperty("user.dir"));
         File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
-        myScrollablePane = new ScrollablePane(paneFile,50.0,400);
+        myScrollablePane = new ScrollablePane(paneFile);
         for(ScrollableItem b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
         }
@@ -163,18 +163,18 @@ public class MapEditor extends EditorSuper{
         return "MapEditor";
     }
 
-    private void snapShot(Pane pane) {
-        WritableImage image = pane.snapshot(new SnapshotParameters(), null);
-
-        // TODO: probably use a file chooser here
-        File file = new File("chart.png");
-
-        try {
-            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-        } catch (IOException e) {
-            // TODO: handle exception here
-        }
-    }
+//    private void snapShot(Pane pane) {
+//        WritableImage image = pane.snapshot(new SnapshotParameters(), null);
+//
+//        // TODO: probably use a file chooser here
+//        File file = new File("chart.png");
+//
+//        try {
+//            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+//        } catch (IOException e) {
+//            // TODO: handle exception here
+//        }
+//    }
 
 
     private void createSaveFile() {
