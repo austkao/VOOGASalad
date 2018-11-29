@@ -1,7 +1,11 @@
 package renderer.external;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.*;
 
+import java.io.File;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -261,5 +266,9 @@ public class RenderSystem implements Renderer{
         sprite.setViewport(offsetX,offsetY);
         return sprite;
     }
-
+    public ListView<String> makeDirectoryFileList(File directory) {
+        ListView<String> fileList = new ListView<>();
+        ObservableList<String> fileItems = FXCollections.observableArrayList();
+        return null;
+    }
 }
