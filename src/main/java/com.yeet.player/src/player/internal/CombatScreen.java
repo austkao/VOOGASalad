@@ -5,6 +5,8 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import messenger.external.PositionsUpdateEvent;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
@@ -24,6 +26,10 @@ public class CombatScreen extends Screen {
 
     private File myGameDirectory;
 
+    private String myStageName;
+
+    private MediaPlayer myBGMPlayer;
+
     private HashMap<String, ArrayList<String>> myStageMap;
     private HashMap<String, ArrayList<String>> mySpawnMap;
     private HashMap<Integer, Sprite> mySpriteMap;
@@ -33,6 +39,7 @@ public class CombatScreen extends Screen {
         super(root, renderer);
         myParser = new XMLParser(new File(gameDirectory.getPath()+"\\stages\\"+stageName+"\\maps\\map1.xml"));
         myGameDirectory =  gameDirectory;
+        myStageName = stageName;
         myStageMap = myParser.parseFileForElement("map");
         mySpawnMap =  myParser.parseFileForElement("position");
         mySpriteMap = new HashMap<>();
@@ -66,6 +73,9 @@ public class CombatScreen extends Screen {
                 //super.getMyRoot().getChildren().add(new ImageView(new Image()))
             }
         }
+        myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"\\stages\\"+myStageName+"\\bgm").listFiles()[0].toURI().toString()));
+        myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        myBGMPlayer.play();
     }
 
     @Subscribe

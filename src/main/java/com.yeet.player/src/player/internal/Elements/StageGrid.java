@@ -15,9 +15,13 @@ public class StageGrid extends TilePane {
     public static final int gridWidth = 835;
     public static final int gridHeight = 720;
     public static final double RATIO = 3.0/2.0;
+    public static final double SPACING = 5.0;
 
     public StageGrid(File directory, BiConsumer<String, ImageView> biConsumer, Consumer<String> consumer){
         super();
+        this.setHgap(SPACING);
+        this.setVgap(SPACING);
+        this.setStyle("-fx-background-color: black");
         int stageCount = 0;
         ArrayList<File> files  = new ArrayList<>();
         for(File f : new File(directory.getPath()+"//stages").listFiles()){
@@ -35,9 +39,9 @@ public class StageGrid extends TilePane {
         double h = gridHeight/(float)rowCount;
         for(int i = 0; i < stageCount; i++) {
             ImageView imageView = new ImageView(new Image(String.format("%s/%s",files.get(i).toURI(),"thumb.png")));
+            imageView.setFitWidth(w-SPACING);
+            imageView.setFitHeight(h-SPACING);
             this.getChildren().add(imageView);
-            imageView.setFitWidth(w);
-            imageView.setFitHeight(h);
             int finalI = i;
             imageView.setOnMouseEntered(event -> biConsumer.accept(files.get(finalI).getName(), imageView));
             imageView.setOnMousePressed(event -> consumer.accept(files.get(finalI).getName()));
