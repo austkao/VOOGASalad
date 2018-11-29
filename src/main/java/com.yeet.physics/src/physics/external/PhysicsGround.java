@@ -4,7 +4,6 @@ public class PhysicsGround extends PhysicsObject {
 
     PhysicsGround(int id, double mass, Coordinate start, Dimensions dims) {
         super(id, mass, start, dims);
-        this.myMass = Integer.MAX_VALUE;
     }
 
     @Override

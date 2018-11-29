@@ -86,22 +86,25 @@ public class CoordinateBody {
     public boolean intersects(CoordinateBody c){
         Square myBox = this.getHitBox();
         Square theirBox = c.getHitBox();
-        if(theirBox.getMinX() < myBox.getMinX() && theirBox.getMaxX() > myBox.getMinX()){
-            return true;
+        boolean above = false;
+        boolean below = false;
+        boolean left = false;
+        boolean right = false;
+
+
+        if(theirBox.getMinX() > myBox.getMaxX()){
+            right = true;
         }
-        if(theirBox.getMinX() < myBox.getMaxX() && theirBox.getMaxX() > myBox.getMaxX()){
-            return true;
+        if(theirBox.getMaxX() < myBox.getMinX()){
+            left = true;
         }
-        if(theirBox.getMinY() < myBox.getMinY() && theirBox.getMaxY() > myBox.getMinY()){
-            return true;
+        if(theirBox.getMaxY() < myBox.getMinY()){
+            below = true;
         }
-        if(theirBox.getMinY() < myBox.getMaxY() && theirBox.getMaxY() > myBox.getMaxY()){
-            return true;
+        if(theirBox.getMinY() > myBox.getMaxY()){
+            above = true;
         }
-        if(myBox.getMinX() < theirBox.getMinX() && myBox.getMaxX() > theirBox.getMaxX()){
-            return true;
-        }
-        return false; 
+        return (! (above || below || left || right));
     }
 
     public void setDims(Dimensions dims){
