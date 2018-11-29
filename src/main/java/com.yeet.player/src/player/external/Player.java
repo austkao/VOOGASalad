@@ -94,14 +94,14 @@ public class Player {
         },()-> {
             myFightMusicPlayer.stop();
             myStage.setScene(myLoadingScreen);
+            myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,myStageSelectScreen.getStage(),(key)->myMessageBus.post(new KeyInputEvent(key)));
             myCombatScreen.setCharacters(myCharacterSelectScreen.getCharacters());
-            myCombatSystem = new CombatSystem(myCombatScreen.getCharacterMap(),myPhysicsSystem);
+            myCombatSystem = new CombatSystem(myCombatScreen.getCharacterMap(),myCombatScreen.getTileMap(),myPhysicsSystem);
             myMessageBus.register(myCombatSystem);
             myMessageBus.register(myCombatScreen);
             myStage.setScene(myCombatScreen);
             myGameLoop.startLoop();
         });
-        myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,"example_stage_1",(key)->myMessageBus.post(new KeyInputEvent(key)));
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
         //finished loading
         System.out.println("finished loading!");

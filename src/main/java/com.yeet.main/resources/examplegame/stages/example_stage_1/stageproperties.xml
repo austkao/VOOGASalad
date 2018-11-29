@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VOOGASalad author="yeet">
     <music mFile="BGM.mp3"/>
-    <background bgFile="fd.jpg"/>
+    <background bgFile="bg_lazarus.png"/>
     <position id="0" xPos="0" yPos="0"/>
     <position id="1" xPos="1" yPos="0"/>
     <position id="2" xPos="2" yPos="0"/>
