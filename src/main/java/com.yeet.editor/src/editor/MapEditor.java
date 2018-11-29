@@ -3,6 +3,8 @@ package editor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
@@ -95,11 +97,14 @@ public class MapEditor extends EditorSuper{
                 30.0,25.0, 75.0, 200.0, 50.0);
         loadFile.setOnMouseClicked(e -> loadMapFile());
         Font myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
-        myBGM = myRS.makeTextField(consumer, myBGMFileName, 250.0, 650.0, 500.0, 30.0, myPlainFont);
+        Label musicLabel = new Label("Background Music");
+        musicLabel.setLayoutX(250);
+        musicLabel.setLayoutY(650);
+        myBGM = myRS.makeTextField(consumer, myBGMFileName, 350.0, 660.0, 400.0, 30.0, myPlainFont);
         Button myBGMButton = myRS.makeStringButton("Set Background Music", Color.BLACK,true,Color.WHITE,
                 20.0,800.0,650.0,300.0,50.0);
         myBGMButton.setOnMouseClicked(e -> chooseBGM());
-        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, myBGM, myBGMButton);
+        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, myBGM, myBGMButton, musicLabel);
     }
 
     private void initializeScrollPane(){

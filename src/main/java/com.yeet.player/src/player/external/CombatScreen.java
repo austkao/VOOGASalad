@@ -77,12 +77,12 @@ public class CombatScreen extends Screen {
                 sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0);
                 sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0);
                 mySpriteMap.put(i,sprite);
-                myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("x").get(i))*40.0,Integer.parseInt(mySpawnMap.get("y").get(i))*40.0));
+                myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0,Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0));
                 super.getMyRoot().getChildren().add(sprite);
                 //super.getMyRoot().getChildren().add(new ImageView(new Image()))
             }
         }
-        myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"\\data\\bgm\\"+myMusicMap.get("file").get(0)).toURI().toString()));
+        myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         myBGMPlayer.play();
     }
