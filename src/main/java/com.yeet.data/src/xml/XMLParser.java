@@ -1,9 +1,9 @@
 package xml;
 
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+import renderer.external.RenderSystem;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import renderer.external.RenderSystem;
 
 /**
  * This class parses an xml file for the information wanted by a user.

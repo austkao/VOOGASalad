@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,21 @@ public class Level extends GridPane{
     private int windowHeight;
     private int windowWidth;
 
+    private static final int WINDOW_HEIGHT = 400;
+    private static final int WINDOW_WIDTH = 400;
+    ImageView background;
+    Pane window;
+
+    public Level(Image bk){
+        grid = new Tile[WINDOW_HEIGHT/TILE_HEIGHT][WINDOW_WIDTH/TILE_WIDTH];
+        background = new ImageView();
+        setBackground(bk);
+        window = new Pane();
+        window.setPrefWidth(WINDOW_WIDTH);
+        window.setPrefHeight(WINDOW_HEIGHT);
+        window.getChildren().add(background);
+
+    }
     /**
      * Constructs the level
      * @param windowWidth = width of window of pane
@@ -124,15 +140,25 @@ public class Level extends GridPane{
         HashMap<String, ArrayList<String>> levelMap = new HashMap<>();
         levelMap.put("x", new ArrayList<>());
         levelMap.put("y", new ArrayList<>());
+        levelMap.put("image", new ArrayList<>());
         for(int i = 0; i < numCols; i++) {
             for(int j = 0; j < numRows; j++) {
                 if(isTile(i,j)) {
                     levelMap.get("x").add(Integer.toString(i));
                     levelMap.get("y").add(Integer.toString(j));
+                    levelMap.get("image").add(grid[j][i].getImage().toString());
                 }
             }
         }
         return levelMap;
+    }
+    public void setBackground(Image bk){
+        background.setImage(bk);
+
+    }
+
+    public Pane getWindow(){
+        return window;
     }
 
 }

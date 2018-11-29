@@ -13,16 +13,17 @@ public class InputSystem {
     private EventBus myMessageBus;
     private Parser myParser;
     private Queue<KeyInputEvent> commandHolder;
+    private Map<String, ArrayList<String>> inputKeys;
     private Timer timer;
     private File GameDir;
 
 
     public InputSystem(File GameDirectory){
         myMessageBus = EventBusFactory.getEventBus();
-        myParser = new Parser();
         commandHolder = new LinkedList<>();
         timer = new Timer();
         GameDir = GameDirectory;
+        myParser = new Parser(GameDir);
         setUpTimer();
 
     }
@@ -44,6 +45,7 @@ public class InputSystem {
                 //Set the amount of time between each execution (in milliseconds)
                 1000);
     }
+
 
     /**
      My method for sending out information regarding inputs. I'll have to create
@@ -68,6 +70,10 @@ public class InputSystem {
                 keyEvent = new JumpEvent(1);
             }
             myMessageBus.post(keyEvent);
+
+            //TESTING: Also post an action event
+            ActionEvent ae = new ActionEvent(action, "Attack");
+            myMessageBus.post(ae);
         }
 
     }
@@ -77,16 +83,17 @@ public class InputSystem {
      */
     @Subscribe
     public void getKey(KeyInputEvent inputEvent){
+        System.out.println(inputEvent.getName());
         commandHolder.add(inputEvent);
     }
 
-    /**
-     / Listens for the start of a match. Tells the system to start listening for inpits
-     */
-    @Subscribe
-    public void startListening(){
-        setUpTimer();
-    }
+    ///**
+    // / Listens for the start of a match. Tells the system to start listening for inpits
+    // */
+    //@Subscribe
+    //public void startListening(){
+    //    setUpTimer();
+    //}
 
     /**
      / Listens for game over. Tells this system to stop listening for inputs

@@ -1,14 +1,14 @@
 package player.internal;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Group;
+import renderer.external.Renderer;
 
 /** Displays the winner of the combat as well as other related statistics and information
  *  @author bpx
  */
-public class CombatResultsScreen extends Scene {
+public class CombatResultsScreen extends Screen {
 
-    public CombatResultsScreen(Parent root) {
-        super(root);
+    public CombatResultsScreen(Group root, Renderer renderer) {
+        super(root, renderer);
     }
 }
