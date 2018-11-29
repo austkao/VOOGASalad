@@ -6,15 +6,12 @@ import java.util.*;
 
 public class TimeHandler {
 
-    private Map<String, String> testCombos;
+    private Map<String, ArrayList<String>> testCombos;
 
     private static final double COMBO_THRESHOLD = 250;
 
-    public TimeHandler(){
-        testCombos = new HashMap<>();
-        testCombos.put("S", "SMASH");
-        //testCombos.put("A", "SHORYUKEN");
-        //testCombos.put("AB", "KAMI");
+    public TimeHandler(Map<String, ArrayList<String>> combos){
+        testCombos = combos;
     }
 
 
@@ -31,7 +28,7 @@ public class TimeHandler {
         List output = new ArrayList<>();
         for(String combo:testCombos.keySet()){
             if(stringEvents.toLowerCase().contains(combo.toLowerCase())){
-                output.add(testCombos.get(combo));
+                output.add(testCombos.get(combo).get(0));
                 stringEvents = stringEvents.replace(combo, "");
             }
             }

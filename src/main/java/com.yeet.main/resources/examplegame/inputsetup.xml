@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VOOGASalad author="yeet">
-    <input jab = "A" down = "S" up = "W" right = "D" smash = "AB" shoryuken = "SHORYUKEN"></input>
+    <input A = "JAB" S = "DOWN" W = "UP" D = "RIGHT" B = "SPECIAL"></input>
+
+    <combo AB = "SMASH" ABC = "SHORYUKEN"></combo>
 </VOOGASalad>
