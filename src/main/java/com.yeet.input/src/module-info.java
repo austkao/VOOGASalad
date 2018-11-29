@@ -6,4 +6,5 @@ module com.yeet.input {
     requires javafx.graphics;
     requires java.sql;
     requires com.yeet.audio;
+    requires com.yeet.data;
 }

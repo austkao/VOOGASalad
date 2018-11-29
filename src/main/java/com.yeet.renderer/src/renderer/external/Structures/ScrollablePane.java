@@ -7,14 +7,17 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class ScrollablePane extends Pane {
 
     private ObservableList<ScrollableItem> items;
     private ScrollPane scrollPane;
+    private HashMap<String, String> currentImages;
 
 
     public ScrollablePane(File dir){
+        currentImages = new HashMap<>();
         items = FXCollections.observableArrayList();
         scrollPane = new ScrollPane();
         loadFiles(dir);
@@ -29,7 +32,8 @@ public class ScrollablePane extends Pane {
     }
 
     public void addItem(Image image){
-        items.add(new ScrollableItem(image,0,0));
+        ScrollableItem si= new ScrollableItem(image,0,0);
+        items.add(si);
         this.getChildren().add(items.get(items.size()-1).getButton());
         items.get(items.size()-1).setPos(0,125*items.size());
     }
@@ -41,11 +45,12 @@ public class ScrollablePane extends Pane {
     public void loadFiles(File dir){
         for(File imgFile : dir.listFiles()) {
             if(imgFile.toString().endsWith(".png")){
-                addItem(new Image(imgFile.toURI().toString()));
+                Image itemImage = new Image(imgFile.toURI().toString());
+                addItem(itemImage);
+                currentImages.put(itemImage.toString(), imgFile.getName());
             }
         }
     }
-
 
     public ObservableList<ScrollableItem> getItems() {
         return items;
@@ -53,5 +58,9 @@ public class ScrollablePane extends Pane {
 
     public ScrollPane getScrollPane(){
         return scrollPane;
+    }
+
+    public HashMap getCurrentImages() {
+        return currentImages;
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding ="utf-8"?>
-<sprite name="Example Game" author="yeet">
-    <file>shieldbreaker_more_spacing_test_transparent.png</file>
-</sprite>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<VOOGASalad author="yeet">
+    <sprite width="112.0" height="56.0" />
+</VOOGASalad>

@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -15,6 +16,7 @@ import player.internal.Elements.MenuTopper;
 import renderer.external.Renderer;
 
 import java.io.File;
+import java.util.HashMap;
 
 /** Dynamic layout for the display of all available characters, allows users to select their
  *  character for a fight
@@ -24,7 +26,13 @@ public class CharacterSelectScreen extends Screen {
 
     public static final int CHAR_PER_ROW = 8;
     public static final int BUTTON_SIZE = 40;
+
     private File myDirectory;
+
+    private SceneSwitch nextScene;
+
+    private boolean isReady;
+    private ImageView myReadyBar;
 
     private CharacterGrid myCharGrid;
 
@@ -32,6 +40,8 @@ public class CharacterSelectScreen extends Screen {
     private CharacterChooseDisplay display2;
     private CharacterChooseDisplay display3;
     private CharacterChooseDisplay display4;
+
+    private HashMap<Integer, String> myCharacterMap;
 
 
     /** Creates a new {@code CharacterSelectScreen} with the specified parameters
@@ -45,6 +55,14 @@ public class CharacterSelectScreen extends Screen {
         super(root, renderer);
         super.setFill(Color.WHITE);
         myDirectory = gameDirectory;
+        myReadyBar = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("ready_bar.png")));
+        myReadyBar.setLayoutY(420.0);
+        myReadyBar.setOnMousePressed(event -> nextScene.switchScene());
+        myCharacterMap = new HashMap<>();
+        for(int i=0;i<4;i++){
+            myCharacterMap.put(i,"");
+        }
+        this.nextScene = nextScene;
         VBox holder = new VBox(0.0);
         holder.setPrefSize(1280,800);
         holder.setAlignment(Pos.BOTTOM_CENTER);
@@ -69,6 +87,16 @@ public class CharacterSelectScreen extends Screen {
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
         holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
+        this.setOnKeyPressed(event -> handleInput(event.getCode()));
+    }
+
+    /** Handles key input to the scene
+     *  @param code The {@code KeyCode} to process
+     */
+    private void handleInput(KeyCode code) {
+        if((code.equals(KeyCode.ENTER) || code.equals(KeyCode.SPACE)) && isReady){
+            nextScene.switchScene();
+        }
     }
 
     /** Sets a specific player's character based on name
@@ -79,27 +107,67 @@ public class CharacterSelectScreen extends Screen {
         if(player.equalsIgnoreCase("P1")){
             display1.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
             display1.setCharacterName(charName);
+            myCharacterMap.put(0,charName);
         }
         else if(player.equalsIgnoreCase("P2")){
             display2.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
             display2.setCharacterName(charName);
+            myCharacterMap.put(1,charName);
         }
         else if(player.equalsIgnoreCase("P3")){
             display3.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
             display3.setCharacterName(charName);
+            myCharacterMap.put(2,charName);
         }
         else if(player.equalsIgnoreCase("P4")){
             display4.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
             display4.setCharacterName(charName);
+            myCharacterMap.put(3,charName);
         }
     }
 
 
-    /** Uses the {@code CharacterGrid} to identify the target of the {@code DragToken}
+    /** Uses the {@code CharacterGrid} to identify the target of the {@code DragToken} and also checks if ready to fight
      *  @param token The {@code DragToken} to use
      */
     private void getCharacter(DragToken token){
         myCharGrid.getCharacter(token);
+        // ready checking
+        isReady = checkPlayerCount();
+        if(isReady){
+            if(!super.getMyRoot().getChildren().contains(myReadyBar)){
+                super.getMyRoot().getChildren().add(myReadyBar);
+            }
+        }
+        else{
+            super.getMyRoot().getChildren().remove(myReadyBar);
+        }
     }
 
+    /** Checks if there are enough players to start a match */
+    private boolean checkPlayerCount(){
+        return(getPlayerCount()>1);
+    }
+
+    /** Returns current number of active players, including humans and computers */
+    public int getPlayerCount(){
+        int count = 0;
+        if(display1.getState()!= CharacterChooseDisplay.State.NONE && display1.getCharacterName().length()>0){
+            count++;
+        }
+        if(display2.getState()!= CharacterChooseDisplay.State.NONE && display2.getCharacterName().length()>0){
+            count++;
+        }
+        if(display3.getState()!= CharacterChooseDisplay.State.NONE && display3.getCharacterName().length()>0){
+            count++;
+        }
+        if(display4.getState()!= CharacterChooseDisplay.State.NONE && display4.getCharacterName().length()>0){
+            count++;
+        }
+        return count;
+    }
+
+    public HashMap<Integer, String> getCharacters() {
+        return myCharacterMap;
+    }
 }
