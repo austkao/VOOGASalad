@@ -12,8 +12,11 @@ import messenger.external.GameStartEvent;
 import messenger.external.KeyInputEvent;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class InputTester extends Application {
+    private static final String GAME_DIR_STRING = "/src/main/java/com.yeet.main/resources/defaultgame";
 
     EventBus myMessageBus;
     public InputTester(){
@@ -55,8 +58,8 @@ public class InputTester extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        String gameDir = "/Users/josesanmartin/Desktop/CompSci308/VoogaSalad/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame";
-        File GameDir = new File(gameDir);
+        Path gameDirPath = Paths.get(System.getProperty("user.dir"), GAME_DIR_STRING);
+        File GameDir = new File(gameDirPath.toString());
         InputSystem IS = new InputSystem(GameDir);
         InputTester IT = new InputTester();
         AudioSystem AS = new AudioSystem(GameDir);

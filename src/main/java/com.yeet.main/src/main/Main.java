@@ -31,6 +31,7 @@ public class Main extends Application {
     public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
     public static final int DEFAULT_PLAIN_FONTSIZE = 25;
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
+    private static final String DEFAULT_GAME_DIRECTORY = "/src/main/java/com.yeet.main/resources/defaultgame";
 
 
     private Stage myStage;
@@ -60,6 +61,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        myDirectory = new File(System.getProperty("user.dir")+DEFAULT_GAME_DIRECTORY);
         //create window
         myStage = primaryStage;
         primaryStage.setWidth(1280);
@@ -138,9 +140,8 @@ public class Main extends Application {
     };
 
     private void initializeGameEditor(File gameFile) {
-        EditorManager emNew = new EditorManager(myStage,homeScene,gameFile);
-        emNew.setGameDirectory(gameFile);
-        emNew.setEditorHomeScene();
+        em.setGameDirectory(gameFile);
+        em.setEditorHomeScene();
     }
 
 
