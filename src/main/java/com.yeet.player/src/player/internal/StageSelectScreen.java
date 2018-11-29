@@ -10,7 +10,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import player.internal.Elements.StageGrid;
 import renderer.external.Renderer;
+
+import java.io.File;
 
 /** Creates a dynamic display for all stages available to the user, allows the user to choose
  *  a stage to do battle on
@@ -18,8 +21,15 @@ import renderer.external.Renderer;
  */
 public class StageSelectScreen extends Screen {
 
-    public StageSelectScreen(Group root, Renderer renderer, SceneSwitch prevScene, SceneSwitch nextScene) {
+    private ImageView myStagePreview;
+    private Text myStageName;
+
+    private SceneSwitch nextScene;
+    private String mySelectedStage;
+
+    public StageSelectScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, SceneSwitch nextScene) {
         super(root, renderer);
+        this.nextScene = nextScene;
         VBox mainContainer = new VBox();
         mainContainer.setPrefSize(1280.0,800.0);
         mainContainer.setAlignment(Pos.CENTER);
@@ -49,23 +59,36 @@ public class StageSelectScreen extends Screen {
         VBox stagePreview = new VBox();
         stagePreview.setPrefSize(415.0,360.0);
         stagePreview.setAlignment(Pos.CENTER);
-        ImageView thumbnailPreview = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("random_stage.png")));
-        thumbnailPreview.setFitWidth(415.0);
-        thumbnailPreview.setFitHeight(260.0);
+        myStagePreview = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("random_stage.png")));
+        myStagePreview.setFitWidth(415.0);
+        myStagePreview.setFitHeight(260.0);
         StackPane stageNameHolder = new StackPane();
+        stageNameHolder.setMinSize(415.0,100.0);
         stageNameHolder.setPrefSize(415.0,100.0);
+        stageNameHolder.setMaxSize(415.0,100.0);
         stageNameHolder.setAlignment(Pos.CENTER);
         stageNameHolder.setStyle("-fx-background-color: black");
-        Text stageName = this.getMyRenderer().makeText("Random",true,60, Color.WHITE,0.0,0.0);
-        VBox stageGrid = new VBox();
-        stageGrid.setPrefSize(835.0,600.0);
-        stageGrid.setStyle("-fx-background-color: black");
+        myStageName = this.getMyRenderer().makeText("Random",true,60, Color.WHITE,0.0,0.0);
+        VBox stageGridHolder = new VBox();
+        stageGridHolder.setPrefSize(835.0,600.0);
+        //stageGridHolder.setStyle("-fx-background-color: black");
+        StageGrid stageGrid = new StageGrid(gameDirectory,(s,imageView)->setPreview(s,imageView),(s -> chooseStage(s)));
         topBar.getChildren().addAll(topBarSpacer,buttonHolder);
-        stageNameHolder.getChildren().addAll(stageName);
-        stagePreview.getChildren().addAll(thumbnailPreview,stageNameHolder);
-        stageContainer.getChildren().addAll(stagePreview,stageGrid);
+        stageNameHolder.getChildren().addAll(myStageName);
+        stagePreview.getChildren().addAll(myStagePreview,stageNameHolder);
+        stageGridHolder.getChildren().addAll(stageGrid);
+        stageContainer.getChildren().addAll(stagePreview,stageGridHolder);
         mainContainer.getChildren().addAll(topBar,stageContainer);
         super.getMyRoot().getChildren().addAll(mainContainer);
-        super.setOnMousePressed(event -> nextScene.switchScene());
+    }
+
+    private void chooseStage(String s) {
+        mySelectedStage = s;
+        nextScene.switchScene();
+    }
+
+    private void setPreview(String s, ImageView imageView) {
+        myStagePreview.setImage(imageView.getImage());
+        myStageName.setText(s);
     }
 }

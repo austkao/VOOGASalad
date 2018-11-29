@@ -150,7 +150,7 @@ public class CharacterSelectScreen extends Screen {
     }
 
     /** Returns current number of active players, including humans and computers */
-    private int getPlayerCount(){
+    public int getPlayerCount(){
         int count = 0;
         if(display1.getState()!= CharacterChooseDisplay.State.NONE && display1.getCharacterName().length()>0){
             count++;
