@@ -285,7 +285,7 @@ public class RenderSystem implements Renderer{
         for(int i = 0; i < directoryArray.length; i++) {
             if(directoryArray[i].isDirectory() && wantDirectory) {
                 fileItems.add(directoryArray[i].getName());
-            } else if(directoryArray[i].isFile()) {
+            } else if(directoryArray[i].isFile() && !wantDirectory) {
                 fileItems.add(directoryArray[i].getName());
             }
         }
