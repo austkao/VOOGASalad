@@ -18,11 +18,11 @@ public abstract class Screen extends Scene {
         myRenderer = renderer;
     }
 
-    Group getMyRoot(){
+    public Group getMyRoot(){
         return myRoot;
     }
 
-    Renderer getMyRenderer(){
+    public Renderer getMyRenderer(){
         return myRenderer;
     }
 

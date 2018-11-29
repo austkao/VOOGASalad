@@ -3,10 +3,7 @@ package audio.external;
 import audio.Internal.Player;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import messenger.external.ActionEvent;
-import messenger.external.EventBusFactory;
-import messenger.external.GameOverEvent;
-import messenger.external.SuccessfulEvent;
+import messenger.external.*;
 
 import java.io.File;
 
@@ -50,7 +47,7 @@ public class AudioSystem {
 
     @Subscribe
     public void playGameMusic(GameStartEvent event){
-        String newPath = path + "stages/example_stage_1/bgm/BGM.mp3"
+        String newPath = path + "stages/example_stage_1/bgm/BGM.mp3";
     }
 
     /**

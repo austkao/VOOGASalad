@@ -4,9 +4,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.*;
 import physics.external.PhysicsSystem;
-import xml.XMLParser;
 
-import java.util.ArrayList;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,13 +17,13 @@ public class CombatSystem {
     PlayerManager playerManager;
     PhysicsSystem physicsSystem;
 
-    public CombatSystem(int numOfPlayers){
+    public CombatSystem(HashMap<Integer, Point2D> playerMap, PhysicsSystem physicsSystem){
         eventBus = EventBusFactory.getEventBus();
-        playerManager = new PlayerManager(numOfPlayers);
-        physicsSystem = new PhysicsSystem();
+        playerManager = new PlayerManager(playerMap.keySet().size());
+        this.physicsSystem = physicsSystem;
 //        physicsSystem.addPhysicsBodies(numOfPlayers);
-        for(int i = 0; i < numOfPlayers; i++){
-            physicsSystem.addPhysicsObject(0, PhysicsSystem.defaultMass, 0, 0, 50, 50);
+        for(int i = 0; i < playerMap.keySet().size(); i++){
+            physicsSystem.addPhysicsObject(0, PhysicsSystem.defaultMass, playerMap.get(i).getX(), playerMap.get(i).getY(), 50, 50);
         }
 
 //        XMLParser parser = new XMLParser();
