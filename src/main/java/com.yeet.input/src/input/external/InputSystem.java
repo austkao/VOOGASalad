@@ -72,8 +72,8 @@ public class InputSystem {
             myMessageBus.post(keyEvent);
 
             //TESTING: Also post an action event
-            ActionEvent ae = new ActionEvent(action, "Attack");
-            myMessageBus.post(ae);
+            //ActionEvent ae = new ActionEvent(action, "Attack");
+            //myMessageBus.post(ae);
         }
 
     }
