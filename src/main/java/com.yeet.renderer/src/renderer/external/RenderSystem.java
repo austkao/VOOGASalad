@@ -161,6 +161,10 @@ public class RenderSystem implements Renderer{
     public TextBox makeTextField(Consumer<String> fieldSetter, String text, Double x, Double y, Double w, Double h, Font font){
         return new TextBox(fieldSetter,text,x,y,w,h,font);
     }
+    //Default textfield with default plain font
+    public TextBox makeTextField(Consumer<String> fieldSetter, String text, Double x, Double y, Double w, Double h){
+        return new TextBox(fieldSetter,text,x,y,w,h,myPlainFont);
+    }
 
     /** Creates a {@code Slider} that modifies a field
      * @param text The label text for the slider
@@ -209,10 +213,10 @@ public class RenderSystem implements Renderer{
      */
     public SwitchButton makeSwitchButtons(List<String> options, boolean emphasis, Color bgColor, Color textColor, Double spacing, Double x, Double y, Double w, Double h){
         if(emphasis){
-            return new SwitchButton(options,spacing,x,y,w,h,bgColor,textColor,myEmphasisFont);
+            return new SwitchButton(options,x,y,w,h,spacing,bgColor,textColor,myEmphasisFont);
         }
         else{
-            return new SwitchButton(options,spacing,x,y,w,h,bgColor,textColor,myPlainFont);
+            return new SwitchButton(options, x,y,w,h,spacing, bgColor,textColor,myPlainFont);
         }
     }
 

@@ -37,13 +37,7 @@ public class Sprite extends ImageView {
      *  @param height The height of the Viewport
      */
     public void setViewport(Double offsetX, Double offsetY, Double width, Double height){
-        if(offsetX>0 && offsetY>0 && width>0 && height>0){
-            myViewport = new Rectangle2D(offsetX,offsetY,width,height);
-        }
-        else{
-            System.out.println("Negative values not allowed for width and height! Setting to default values.");
-            myViewport = new Rectangle2D(0,0, mySpriteSheet.getWidth(), mySpriteSheet.getHeight());
-        }
+        myViewport = new Rectangle2D(offsetX,offsetY,width,height);
         this.setViewport(myViewport);
     }
 
@@ -52,13 +46,8 @@ public class Sprite extends ImageView {
      *  @param offsetY the Y offset of the Viewport
      */
     public void setViewport(Double offsetX, Double offsetY){
-        if(offsetX>0 && offsetY>0){
-            myViewport = new Rectangle2D(offsetX,offsetY,this.getViewport().getWidth(),this.getViewport().getHeight());
-        }
-        else{
-            System.out.println("Negative values not allowed for width and height! Setting to default values.");
-            myViewport = new Rectangle2D(0,0, this.getViewport().getWidth(), this.getViewport().getHeight());
-        }
+        myViewport = new Rectangle2D(offsetX,offsetY,this.getViewport().getWidth(),this.getViewport().getHeight());
         this.setViewport(myViewport);
     }
 }
+
