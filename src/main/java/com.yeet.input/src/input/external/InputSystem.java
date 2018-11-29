@@ -18,7 +18,7 @@ public class InputSystem {
     private File GameDir;
 
 
-    public InputSystem(File GameDirectory){
+    public InputSystem(File GameDirectory) throws Exception {
         myMessageBus = EventBusFactory.getEventBus();
         commandHolder = new LinkedList<>();
         timer = new Timer();
@@ -28,14 +28,18 @@ public class InputSystem {
 
     }
 
-    private void setUpTimer(){
+    private void setUpTimer() throws Exception{
         //Set the schedule function and rate
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 //Called each time when 1000 milliseconds (1 second) (the period parameter)
                 if(commandHolder.size() >0){
-                    postEvent(myParser.parse(commandHolder));
+                    try {
+                        postEvent(myParser.parse(commandHolder));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     commandHolder.clear();
                 }
             }
@@ -72,8 +76,8 @@ public class InputSystem {
             myMessageBus.post(keyEvent);
 
             //TESTING: Also post an action event
-            //ActionEvent ae = new ActionEvent(action, "Attack");
-            //myMessageBus.post(ae);
+            ActionEvent ae = new ActionEvent(action, "Attack");
+            myMessageBus.post(ae);
         }
 
     }

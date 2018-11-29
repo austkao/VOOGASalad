@@ -28,7 +28,7 @@ public class Parser {
      * @return
      *
      */
-    public List<String> parse(Queue<KeyInputEvent> q){
+    public List<String> parse(Queue<KeyInputEvent> q) throws Exception {
         var output = timer.comboHandler(q);
         List<String> parsed = new ArrayList<>();
         for(String o :output){
@@ -36,7 +36,13 @@ public class Parser {
                 parsed.add(o);
             }
             else{
-                parsed.add(attackMapping.get(o).get(0)); //Get the first elemtent of the value (an arraylist)
+                try{
+                    parsed.add(attackMapping.get(o).get(0)); //Get the first elemtent of the value (an arraylist)
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                    throw new Exception();
+                }
             }
         }
         return parsed;
