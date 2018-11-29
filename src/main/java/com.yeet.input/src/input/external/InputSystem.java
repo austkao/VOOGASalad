@@ -18,14 +18,17 @@ public class InputSystem {
     private File GameDir;
 
 
-    public InputSystem(File GameDirectory) throws Exception {
-        myMessageBus = EventBusFactory.getEventBus();
-        commandHolder = new LinkedList<>();
-        timer = new Timer();
-        GameDir = GameDirectory;
-        myParser = new Parser(GameDir);
-        setUpTimer();
-
+    public InputSystem(File GameDirectory) {
+        try {
+            myMessageBus = EventBusFactory.getEventBus();
+            commandHolder = new LinkedList<>();
+            timer = new Timer();
+            GameDir = GameDirectory;
+            myParser = new Parser(GameDir);
+            setUpTimer();
+        } catch (Exception e) {
+            System.out.println("An error has occurred in the input system");
+        }
     }
 
     private void setUpTimer() throws Exception{
