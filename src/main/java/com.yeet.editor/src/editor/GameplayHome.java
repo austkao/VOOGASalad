@@ -2,9 +2,9 @@ package editor;
 
 import javafx.scene.Group;
 
-public class GamePlayHome extends EditorHome{
+public class GameplayHome extends EditorHome{
 
-    public GamePlayHome(Group root, EditorManager em){
+    public GameplayHome(Group root, EditorManager em){
         super(root,em);
         setEditor();
     }

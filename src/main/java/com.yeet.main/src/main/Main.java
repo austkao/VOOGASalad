@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -14,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import messenger.external.Event;
 import messenger.external.EventBusFactory;
 import player.external.Player;
 import renderer.external.RenderSystem;
@@ -89,14 +91,10 @@ public class Main extends Application {
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
         root.getChildren().add(newButton);
         editButton = myRenderSystem.makeStringButton("Edit Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,311.68,307.21,94.6);
-        editButton.setDisable(true);
-        editButton.setOnMouseClicked(event -> {
-            em.setEditorHomeScene();
-            em.setGameDirectory(myDirectory);
-        });
+        editButton.setOnMouseClicked(event -> openGameList(true));
         root.getChildren().add(editButton);
         Button loadButton = myRenderSystem.makeStringButton("Load Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,440.4,307.21,94.6);
-        loadButton.setOnMousePressed(e -> setDirectory());
+        loadButton.setOnMousePressed(e -> openGameList(false));
         root.getChildren().add(loadButton);
         playButton = myRenderSystem.makeStringButton("Play",Color.RED,true,Color.WHITE,60.0,901.0,578.0,288.0,123.0);
         playButton.setDisable(true);
@@ -117,9 +115,13 @@ public class Main extends Application {
         int numGames = resources.listFiles(filter).length;
         File defaultFile = new File(resources.getPath() + "/game" + numGames);
         defaultFile.mkdir();
-        EditorManager emNew = new EditorManager(myStage,homeScene,defaultFile);
-        emNew.setGameDirectory(defaultFile);
-        emNew.setEditorHomeScene();
+        File stages = new File(defaultFile.getPath()+"/stages");
+        File characters = new File(defaultFile.getPath()+"/characters");
+        File data = new File(defaultFile.getPath()+"/data");
+        stages.mkdir();
+        characters.mkdir();
+        data.mkdir();
+        initializeGameEditor(defaultFile);
     }
 
     FilenameFilter filter = new FilenameFilter() {
@@ -129,28 +131,35 @@ public class Main extends Application {
         }
     };
 
-
+    private void initializeGameEditor(File gameFile) {
+        EditorManager emNew = new EditorManager(myStage,homeScene,gameFile);
+        emNew.setGameDirectory(gameFile);
+        emNew.setEditorHomeScene();
+    }
 
 
 
     /** Create a {@code DirectoryChooser} and set the active game directory if it is valid*/
-    private void setDirectory(){
-        File directory = myDirectoryChooser.showDialog(myStage);
-        if(directory!=null && checkDirectory(directory)){
-            Image splash = new Image(String.format("%s%s",directory.toURI(),"splash.png"));
-            if(!splash.isError()){
-                mySplashDisplay.setImage(splash);
-                myDirectory = directory;
-                myPlayer.setDirectory(directory);
-                playButton.setDisable(false);
-                editButton.setDisable(false);
+    private void setDirectory(File directory){
+        System.out.println(directory.getPath());
+        try {
+            if(directory!=null && checkDirectory(directory)){
+                Image splash = new Image(String.format("%s%s",directory.toURI(),"splash.png"));
+                if(!splash.isError()){
+                    mySplashDisplay.setImage(splash);
+                    myDirectory = directory;
+                    myPlayer.setDirectory(directory);
+                    playButton.setDisable(false);
+                    editButton.setDisable(false);
+                }
+                else{
+                    playButton.setDisable(true);
+                    myPopup.show();
+                }
             }
-            else{
-                playButton.setDisable(true);
-                myPopup.show();
-            }
+        } catch (Exception e) {
+            System.out.println("Game directory is invalid");
         }
-
     }
 
     /** Returns true if the {@code File} is a valid game directory
@@ -194,5 +203,25 @@ public class Main extends Application {
         display.setLayoutX(80);
         display.setLayoutY(76);
         return display;
+    }
+
+    private void openGameList(boolean isEditButton){
+        Path userPath = Paths.get(System.getProperty("user.dir"));
+        File gameDirectory = new File(userPath+RESOURCE_PATH);
+        ListView<String> games = myRenderSystem.makeDirectoryFileList(gameDirectory, true);
+        Stage edit = new Stage();
+        edit.setScene(new Scene(new Group(games)));
+        if(isEditButton) {
+            games.setOnMouseClicked(e -> {
+                initializeGameEditor(new File(gameDirectory.getPath()+ "\\"+games.getSelectionModel().getSelectedItem()));
+                edit.close();
+            });
+        } else {
+            games.setOnMouseClicked(e -> {
+                setDirectory(new File(gameDirectory.getPath()+ "\\"+games.getSelectionModel().getSelectedItem()));
+                edit.close();
+            });
+        }
+        edit.show();
     }
 }

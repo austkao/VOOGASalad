@@ -8,7 +8,8 @@
     <map image="acacia_door_bottom.png" x="17" y="10"/>
     <map image="acacia_door_top.png" x="19" y="14"/>
     <map image="acacia_door_top.png" x="23" y="4"/>
-    <background file="/examplegame/stages/example_stage_1/background/background.png"/>
+    <background file="background.png"/>
+    <music file="BGM.mp3"></music>
     <position id="0" x="0" y="0"></position>
     <position id="1" x="1" y="0"></position>
     <position id="2" x="2" y="0"></position>

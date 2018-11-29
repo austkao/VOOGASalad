@@ -5,9 +5,9 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.SliderBox;
@@ -22,13 +22,18 @@ import java.util.function.Consumer;
 
 /**
  * @author ob29
+ * @author rr202
  */
 
 public class CharacterEditor extends EditorSuper{
-    private static final String DEFAULT_BACKGROUND_IMAGE = "lucinaglasses.png";
+    private static final String DEFAULT_PORTRAIT = "lucinaglasses.png";
 
     private ImageView portrait;
     private ImageView spriteSheet;
+
+    private Sprite currentSprite;
+    private SpriteAnimation currentAnimation;
+    private currentFrame frame;
 
 
     private Group root;
@@ -38,26 +43,61 @@ public class CharacterEditor extends EditorSuper{
     private SliderBox defenseSlider;
     private Consumer consumer;
 
+    private Text frameText;
+
+    class currentFrame{
+        int currentFrame;
+        int totalFrames;
+
+
+        currentFrame(){
+            currentFrame = -1;
+            totalFrames = -1;
+        }
+        void advance(int add){
+            currentFrame = (currentFrame + add)%totalFrames;
+        }
+        public String toString(){
+            if (currentFrame == -1 || totalFrames == -1){
+                return "unintialized";
+            }
+            if (currentFrame == 0){
+                return "Frame "+totalFrames+"/"+totalFrames;
+            }
+            return "Frame "+currentFrame+"/"+totalFrames;
+        }
+
+
+    }
 
 
     public CharacterEditor(Group root, EditorManager em){
         super(root,em);
         this.root = root;
         portrait = initializeImageView(200, 300, 275, 25);
-        spriteSheet = initializeImageView(600, 400, 25, 350);
+        //spriteSheet = initializeImageView(600, 400, 25, 350);
+        spriteSheet = new ImageView();
+        spriteSheet.setLayoutX(25.0);
+        spriteSheet.setLayoutY(350.0);
 
-        this.setImageView(portrait, DEFAULT_BACKGROUND_IMAGE);
+        this.setImageView(portrait, DEFAULT_PORTRAIT);
 
-        Button addBG = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
-                30.0,25.0,250.0,200.0,50.0);
-        addBG.setOnMouseClicked(e -> choosePortrait());
+
         consumer = new Consumer() {
             @Override
             public void accept(Object o) {
                 o = o;
             }
         };
+        frame = new currentFrame();
         makeSliders();
+        makeButtons();
+    }
+
+    private void makeButtons(){
+        Button addBG = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
+                30.0,25.0,250.0,200.0,50.0);
+        addBG.setOnMouseClicked(e -> choosePortrait());
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
@@ -72,23 +112,70 @@ public class CharacterEditor extends EditorSuper{
 
         Button setAnimation = getRenderSystem().makeStringButton("Set Sprite Animation", Color.ORCHID, true,
                 Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
-        //setAnimation.setOnMouseClicked(e -> makeSprite());
-        root.getChildren().addAll(addBG, saveFile, loadFile, getSpriteSheet, setAnimation);
+        setAnimation.setOnMouseClicked(e -> makeSprite());
+
+        Button playAnimation = getRenderSystem().makeStringButton("Play Animation", Color.DARKVIOLET, true,
+                Color.WHITE, 20.0, 500.0, 175.0, 200.0, 50.0);
+        playAnimation.setOnMouseClicked(e -> playAnimation());
+
+        Button stepForward = getRenderSystem().makeStringButton("Forward", Color.DARKGREEN, true,
+                Color.WHITE, 20.0, 830.0, 175.0, 95.0, 50.0);
+        stepForward.setOnMouseClicked(e -> stepForwardAnimation());
+
+        Button stepBackward = getRenderSystem().makeStringButton("Backward", Color.DARKGREEN, true,
+                Color.WHITE, 20.0, 725.0, 175.0, 95.0, 50.0);
+        stepBackward.setOnMouseClicked(e -> stepBackAnimation());
+
+        frameText = getRenderSystem().makeText(frame.toString(), true, 30,
+                Color.AQUA, 500.0, 250.0);
+
+        root.getChildren().addAll(saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation, stepForward,
+                stepBackward, frameText);
+    }
+
+    private void playAnimation(){
+        currentAnimation.setRate(Math.abs(currentAnimation.getRate()));
+        if (currentAnimation.getStatus().equals(Animation.Status.RUNNING)){
+            currentAnimation.stop();
+            //currentAnimation.jumpTo(new Duration(0));
+        }
+        else{
+            currentAnimation.play();
+        }
+    }
+
+    private void stepAnimation(int adjust){
+        currentAnimation.playFrom(currentAnimation.getCurrentTime().add(new Duration(adjust / 11.0 * 1000)));
+        currentAnimation.pause();
+
+    }
+
+    private void stepForwardAnimation(){
+        currentAnimation.setRate(Math.abs(currentAnimation.getRate()));
+        stepAnimation(1);
+        frame.advance(1);
+        frameText.setText(frame.toString());
+    }
+
+    private void stepBackAnimation(){
+        if (currentAnimation.getCurrentTime().equals(Duration.ZERO)){
+            return;
+        }
+        currentAnimation.setRate(-1*Math.abs(currentAnimation.getRate()));
+        stepAnimation(-1);
+        frame.advance(-1);
+        frameText.setText(frame.toString());
     }
 
 
     private void makeSprite(){
-        Sprite mySprite = getRenderSystem().makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.5);
-        SpriteAnimation myAnimation = getRenderSystem().makeSpriteAnimation(mySprite, Duration.seconds(2.0), 22,
+        SpriteAnimation myAnimation = getRenderSystem().makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 22,
                 11, 0.0, 0.0, 111.818181, 56.0);
-        root.getChildren().add(mySprite);
-        mySprite.setLayoutX(650);
-        mySprite.setLayoutY(175);
-        mySprite.setScaleX(2);
-        mySprite.setScaleY(2);
-        myAnimation.setCycleCount(Animation.INDEFINITE);
-        myAnimation.play();
+        currentAnimation = myAnimation;
+        currentAnimation.setCycleCount(Animation.INDEFINITE);
 
+        frame.currentFrame = 1;
+        frame.totalFrames = 22;
 
     }
 
@@ -127,6 +214,15 @@ public class CharacterEditor extends EditorSuper{
             if (sprites !=  null){
                 setImageView(spriteSheet,sprites.toURI().toString());
             }
+        Sprite mySprite = getRenderSystem().makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
+        //Sprite mySprite = new Sprite(spriteSheet.getImage(), 110.0, 55.0);
+
+            root.getChildren().add(mySprite);
+        mySprite.setLayoutX(700);
+        mySprite.setLayoutY(500);
+        mySprite.setScaleX(5);
+        mySprite.setScaleY(5);
+        currentSprite = mySprite;
     }
     /**
      * User selects background, and it is applied to level.

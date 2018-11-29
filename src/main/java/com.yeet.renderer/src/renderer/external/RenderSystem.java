@@ -1,9 +1,11 @@
 package renderer.external;
 
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.*;
 
+import java.io.File;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -24,6 +27,7 @@ import static renderer.external.RenderUtils.toRGBCode;
  *  @author bpx
  *  @author ob29
  *  @author rr202
+ *  @author ak457
  */
 public class RenderSystem implements Renderer{
 
@@ -158,6 +162,10 @@ public class RenderSystem implements Renderer{
     public TextBox makeTextField(Consumer<String> fieldSetter, String text, Double x, Double y, Double w, Double h, Font font){
         return new TextBox(fieldSetter,text,x,y,w,h,font);
     }
+    //Default textfield with default plain font
+    public TextBox makeTextField(Consumer<String> fieldSetter, String text, Double x, Double y, Double w, Double h){
+        return new TextBox(fieldSetter,text,x,y,w,h,myPlainFont);
+    }
 
     /** Creates a {@code Slider} that modifies a field
      * @param text The label text for the slider
@@ -206,10 +214,10 @@ public class RenderSystem implements Renderer{
      */
     public SwitchButton makeSwitchButtons(List<String> options, boolean emphasis, Color bgColor, Color textColor, Double spacing, Double x, Double y, Double w, Double h){
         if(emphasis){
-            return new SwitchButton(options,spacing,x,y,w,h,bgColor,textColor,myEmphasisFont);
+            return new SwitchButton(options,x,y,w,h,spacing,bgColor,textColor,myEmphasisFont);
         }
         else{
-            return new SwitchButton(options,spacing,x,y,w,h,bgColor,textColor,myPlainFont);
+            return new SwitchButton(options, x,y,w,h,spacing, bgColor,textColor,myPlainFont);
         }
     }
 
@@ -264,4 +272,24 @@ public class RenderSystem implements Renderer{
         return sprite;
     }
 
+    /**
+     * Creates a ListView of all the directories or files under the given directory
+     * @param directory The parent directory to extract directories and files from
+     * @param wantDirectory Set to true if directories are desire, false if files are desired
+     * @return The ListView that contains all of the directories or files under the directory parameter
+     */
+    public ListView<String> makeDirectoryFileList(File directory, boolean wantDirectory) {
+        ListView<String> fileList = new ListView<>();
+        ObservableList<String> fileItems = FXCollections.observableArrayList();
+        File[] directoryArray = directory.listFiles();
+        for(int i = 0; i < directoryArray.length; i++) {
+            if(directoryArray[i].isDirectory() && wantDirectory) {
+                fileItems.add(directoryArray[i].getName());
+            } else if(directoryArray[i].isFile() && !wantDirectory) {
+                fileItems.add(directoryArray[i].getName());
+            }
+        }
+        fileList.setItems(fileItems);
+        return fileList;
+    }
 }

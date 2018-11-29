@@ -59,7 +59,7 @@ public class Player {
     public void start(){
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
-        myInputSystem = new InputSystem();
+        myInputSystem = new InputSystem(myDirectory);
         myMessageBus.register(myInputSystem);
         myPhysicsSystem = new PhysicsSystem();
         myMessageBus.register(myPhysicsSystem);

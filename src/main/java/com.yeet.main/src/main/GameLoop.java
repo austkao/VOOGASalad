@@ -24,12 +24,10 @@ public class GameLoop {
     //If you're worried about visual hitches more than perfect timing, set this to 1.
     final int MAX_UPDATES_BEFORE_RENDER = 5;
 
-
     public GameLoop(){
         physicsEngine = new PhysicsSystem();
         //renderEngine= new RenderSystem(Font);
     }
-
     /**
      * Begin running the main game loop. Updates physics system
      */
