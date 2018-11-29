@@ -138,9 +138,10 @@ public interface Renderer{
      */
     Sprite makeSprite(Image image, Double offsetX, Double offsetY, Double width, Double height);
     /**
-     * Creates a ListView of all the directories under the given directory
-     * @param directory The parent directory to extract directory files from
-     * @return The ListView that contains all of the directory files under the directory parameter
+     * Creates a ListView of all the directories or files under the given directory
+     * @param directory The parent directory to extract directories and files from
+     * @param wantDirectory Set to true if directories are desire, false if files are desired
+     * @return The ListView that contains all of the directories or files under the directory parameter
      */
-    ListView<String> makeDirectoryFileList(File directory);
+    ListView<String> makeDirectoryFileList(File directory, boolean wantDirectory);
 }

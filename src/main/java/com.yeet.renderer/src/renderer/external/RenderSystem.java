@@ -273,16 +273,19 @@ public class RenderSystem implements Renderer{
     }
 
     /**
-     * Creates a ListView of all the directories under the given directory
-     * @param directory The parent directory to extract directory files from
-     * @return The ListView that contains all of the directory files under the directory parameter
+     * Creates a ListView of all the directories or files under the given directory
+     * @param directory The parent directory to extract directories and files from
+     * @param wantDirectory Set to true if directories are desire, false if files are desired
+     * @return The ListView that contains all of the directories or files under the directory parameter
      */
-    public ListView<String> makeDirectoryFileList(File directory) {
+    public ListView<String> makeDirectoryFileList(File directory, boolean wantDirectory) {
         ListView<String> fileList = new ListView<>();
         ObservableList<String> fileItems = FXCollections.observableArrayList();
         File[] directoryArray = directory.listFiles();
         for(int i = 0; i < directoryArray.length; i++) {
-            if(directoryArray[i].isDirectory()) {
+            if(directoryArray[i].isDirectory() && wantDirectory) {
+                fileItems.add(directoryArray[i].getName());
+            } else if(directoryArray[i].isFile()) {
                 fileItems.add(directoryArray[i].getName());
             }
         }

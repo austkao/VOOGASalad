@@ -2,6 +2,7 @@ package editor;
 
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -13,8 +14,12 @@ import renderer.external.Structures.TextBox;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Feels extraneous?
+ */
 public class MapSettingEditor extends EditorSuper{
     private static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
     private static final int DEFAULT_PLAIN_FONTSIZE = 25;

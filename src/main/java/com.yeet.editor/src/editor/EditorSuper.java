@@ -26,17 +26,16 @@ public abstract class EditorSuper extends Scene{
 
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
-    private Group root;
-    private Scene myScene;
-    private EditorManager em;
-    private RenderSystem rs;
+    protected Group root;
+    protected EditorManager myEM;
+    protected RenderSystem myRS;
 
     public EditorSuper(Group root, EditorManager em){
         super(root);
         this.root = root;
-        this.em = em;
-        rs = new RenderSystem();
-        Text t = rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
+        myEM = em;
+        myRS = new RenderSystem();
+        Text t = myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
         root.getChildren().add(t);
     }
 
@@ -44,8 +43,8 @@ public abstract class EditorSuper extends Scene{
      * Creates back button to the editor landing page
      */
     public void createBack(Scene scene){
-        Button back = rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,1000.0,0.0,150.0,50.0);
-        back.setOnMouseClicked(e -> em.changeScene(scene));
+        Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,1000.0,0.0,150.0,50.0);
+        back.setOnMouseClicked(e -> myEM.changeScene(scene));
         root.getChildren().add(back);
     }
 
@@ -53,19 +52,19 @@ public abstract class EditorSuper extends Scene{
      * Creates save button to the editor landing page
      */
     public void createSave(){
-        Button save = rs.makeStringButton("Save", Color.BLACK,true,Color.WHITE,30.0,800.0,0.0,150.0,50.0);
+        Button save = myRS.makeStringButton("Save", Color.BLACK,true,Color.WHITE,30.0,800.0,0.0,150.0,50.0);
         //TODO figure out save functionality
         //save.setOnMouseClicked(e -> em.setEditorHomeScene());
         root.getChildren().add(save);
     }
 
     public RenderSystem getRenderSystem(){
-        return rs;
+        return myRS;
     }
 
     public HashMap<String, ArrayList<String>> loadXMLFile(String tag) {
         try {
-            FileChooser loadFileChooser = rs.makeFileChooser("xml");
+            FileChooser loadFileChooser = myRS.makeFileChooser("xml");
             loadFileChooser.setTitle("Save File As");
             Path filePath = Paths.get(System.getProperty("user.dir"));
             File defaultFile = new File(filePath+RESOURCE_PATH);
@@ -85,9 +84,9 @@ public abstract class EditorSuper extends Scene{
 
     public void generateSave(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
         try {
-            FileChooser fileChooser = rs.makeFileChooser("xml");
+            FileChooser fileChooser = myRS.makeFileChooser("xml");
             fileChooser.setTitle("Save File As");
-            File defaultFile = em.getGameDirectory();
+            File defaultFile = myEM.getGameDirectory();
             fileChooser.setInitialDirectory(defaultFile);
             File file = fileChooser.showSaveDialog(new Stage());
             if(file != null) {

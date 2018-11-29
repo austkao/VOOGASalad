@@ -91,10 +91,10 @@ public class Main extends Application {
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
         root.getChildren().add(newButton);
         editButton = myRenderSystem.makeStringButton("Edit Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,311.68,307.21,94.6);
-        editButton.setOnMouseClicked(event -> openGameList(0));
+        editButton.setOnMouseClicked(event -> openGameList(true));
         root.getChildren().add(editButton);
         Button loadButton = myRenderSystem.makeStringButton("Load Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,440.4,307.21,94.6);
-        loadButton.setOnMousePressed(e -> openGameList(1));
+        loadButton.setOnMousePressed(e -> openGameList(false));
         root.getChildren().add(loadButton);
         playButton = myRenderSystem.makeStringButton("Play",Color.RED,true,Color.WHITE,60.0,901.0,578.0,288.0,123.0);
         playButton.setDisable(true);
@@ -199,18 +199,18 @@ public class Main extends Application {
         return display;
     }
 
-    private void openGameList(int function){
+    private void openGameList(boolean isEditButton){
         Path userPath = Paths.get(System.getProperty("user.dir"));
         File gameDirectory = new File(userPath+RESOURCE_PATH);
-        ListView<String> games = myRenderSystem.makeDirectoryFileList(gameDirectory);
+        ListView<String> games = myRenderSystem.makeDirectoryFileList(gameDirectory, true);
         Stage edit = new Stage();
         edit.setScene(new Scene(new Group(games)));
-        if(function == 0) {
+        if(isEditButton) {
             games.setOnMouseClicked(e -> {
                 initializeGameEditor(new File(gameDirectory.getPath()+ "\\"+games.getSelectionModel().getSelectedItem()));
                 edit.close();
             });
-        } else if(function==1) {
+        } else {
             games.setOnMouseClicked(e -> {
                 setDirectory(new File(gameDirectory.getPath()+ "\\"+games.getSelectionModel().getSelectedItem()));
                 edit.close();
