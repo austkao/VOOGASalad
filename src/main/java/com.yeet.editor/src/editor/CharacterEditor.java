@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -64,6 +65,10 @@ public class CharacterEditor extends EditorSuper{
             }
         };
         makeSliders();
+        makeButtons();
+    }
+
+    private void makeButtons(){
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
@@ -78,15 +83,18 @@ public class CharacterEditor extends EditorSuper{
 
         Button setAnimation = getRenderSystem().makeStringButton("Set Sprite Animation", Color.ORCHID, true,
                 Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
-        root.getChildren().add(setAnimation);
         setAnimation.setOnMouseClicked(e -> makeSprite());
 
         Button playAnimation = getRenderSystem().makeStringButton("Play Animation", Color.DARKVIOLET, true,
                 Color.WHITE, 20.0, 500.0, 175.0, 200.0, 50.0);
-        root.getChildren().add(playAnimation);
         playAnimation.setOnMouseClicked(e -> playAnimation());
-    }
 
+        Button stepAnimation = getRenderSystem().makeStringButton("Step", Color.DARKGREEN, true,
+                Color.WHITE, 20.0, 725.0, 175.0, 200.0, 50.0);
+        stepAnimation.setOnMouseClicked(e -> stepAnimation());
+
+        root.getChildren().addAll(saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation, stepAnimation);
+    }
 
     private void playAnimation(){
         if (currentAnimation.getStatus().equals(Animation.Status.RUNNING)){
@@ -98,12 +106,15 @@ public class CharacterEditor extends EditorSuper{
         }
     }
 
+    private void stepAnimation(){
+        currentAnimation.jumpTo(new Duration(1/11.0).add(currentAnimation.getCurrentTime()));
+    }
 
     private void makeSprite(){
         SpriteAnimation myAnimation = getRenderSystem().makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 22,
                 11, 0.0, 0.0, 111.818181, 56.0);
-        myAnimation.setCycleCount(Animation.INDEFINITE);
         currentAnimation = myAnimation;
+        currentAnimation.setCycleCount(Animation.INDEFINITE);
     }
 
 
