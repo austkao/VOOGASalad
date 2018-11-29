@@ -27,6 +27,7 @@ import static renderer.external.RenderUtils.toRGBCode;
  *  @author bpx
  *  @author ob29
  *  @author rr202
+ *  @author ak457
  */
 public class RenderSystem implements Renderer{
 
@@ -270,6 +271,12 @@ public class RenderSystem implements Renderer{
         sprite.setViewport(offsetX,offsetY);
         return sprite;
     }
+
+    /**
+     * Creates a ListView of all the directories under the given directory
+     * @param directory The parent directory to extract directory files from
+     * @return The ListView that contains all of the directory files under the directory parameter
+     */
     public ListView<String> makeDirectoryFileList(File directory) {
         ListView<String> fileList = new ListView<>();
         ObservableList<String> fileItems = FXCollections.observableArrayList();

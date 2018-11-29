@@ -70,7 +70,7 @@ public class EditorManager {
     }
     private List<EditorHome> makeEditorHomes(){
         List<EditorHome> editors = new ArrayList<EditorHome>();
-        Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this), new gameplayhome(new Group(), this));
+        Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this), new GameplayHome(new Group(), this));
         return editors;
     }
 
