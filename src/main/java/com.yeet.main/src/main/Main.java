@@ -218,7 +218,7 @@ public class Main extends Application {
             });
         } else {
             games.setOnMouseClicked(e -> {
-                setDirectory(new File(gameDirectory.getPath()+ "\\"+games.getSelectionModel().getSelectedItem()));
+                setDirectory(new File(gameDirectory.getPath()+ "/"+games.getSelectionModel().getSelectedItem()));
                 edit.close();
             });
         }

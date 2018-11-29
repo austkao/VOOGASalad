@@ -44,19 +44,28 @@ public class Player {
     }
 
     /*  */
-    public void landOnGround(){
-
+    public void setToInitialState(){
+        this.playerState = PlayerState.INITIAL;
     }
 
     /* add who is being attacked by this player */
     public void addAttackingTargets(Player target){
         isAttackingTargets.add(target);
+        this.playerState = PlayerState.ATTACKING;
         target.setBeingAttackedBy(this);
+        target.playerState = PlayerState.BEING_ATTACKED;
+        target.freeTargets();
     }
 
     /* set who is attacking this player */
     private void setBeingAttackedBy(Player attacker){
         this.beingAttackedBy = attacker;
+    }
+
+    private void freeTargets(){
+        for(Player p: isAttackingTargets){
+            p.setToInitialState();
+        }
     }
 
     @Override

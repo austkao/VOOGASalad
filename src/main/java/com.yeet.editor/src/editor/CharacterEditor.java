@@ -10,14 +10,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import renderer.external.Structures.SliderBox;
-import renderer.external.Structures.Sprite;
-import renderer.external.Structures.SpriteAnimation;
+import renderer.external.Structures.*;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -43,13 +44,17 @@ public class CharacterEditor extends EditorSuper{
     private SliderBox defenseSlider;
     private Consumer consumer;
 
+    private ScrollablePane animationList;
+    private Map<ScrollableItem, SpriteAnimation> scrollToAnimation;
+
     private Text frameText;
+
+
+    private boolean first = false;
 
     class currentFrame{
         int currentFrame;
         int totalFrames;
-
-
         currentFrame(){
             currentFrame = -1;
             totalFrames = -1;
@@ -80,6 +85,9 @@ public class CharacterEditor extends EditorSuper{
         spriteSheet.setLayoutX(25.0);
         spriteSheet.setLayoutY(350.0);
 
+        scrollToAnimation = new HashMap<>();
+        initializeScrollPane();
+
         this.setImageView(portrait, DEFAULT_PORTRAIT);
 
 
@@ -95,9 +103,9 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void makeButtons(){
-        Button addBG = myRS.makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
+        Button addPortrait = myRS.makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
                 30.0,25.0,250.0,200.0,50.0);
-        addBG.setOnMouseClicked(e -> choosePortrait());
+        addPortrait.setOnMouseClicked(e -> choosePortrait());
         Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
@@ -112,7 +120,7 @@ public class CharacterEditor extends EditorSuper{
 
         Button setAnimation = myRS.makeStringButton("Set Sprite Animation", Color.ORCHID, true,
                 Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
-        setAnimation.setOnMouseClicked(e -> makeSprite());
+        setAnimation.setOnMouseClicked(e -> makeSpriteAnimation());
 
         Button playAnimation = myRS.makeStringButton("Play Animation", Color.DARKVIOLET, true,
                 Color.WHITE, 20.0, 500.0, 175.0, 200.0, 50.0);
@@ -130,14 +138,28 @@ public class CharacterEditor extends EditorSuper{
                 Color.AQUA, 500.0, 250.0);
 
         root.getChildren().addAll(saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation, stepForward,
-                stepBackward, frameText);
+                stepBackward, frameText, addPortrait);
+    }
+
+    private void makeSliders(){
+        mySliders = new VBox(10);
+        healthSlider = myRS.makeSlider("health",consumer,0.0,0.0,200.0);
+        attackSlider = myRS.makeSlider("attack",consumer,0.0,0.0,200.0);
+        defenseSlider = myRS.makeSlider("defense",consumer,0.0,0.0,200.0);
+
+        mySliders.getChildren().addAll(healthSlider,attackSlider,defenseSlider);
+        mySliders.setLayoutX(900.0);
+        mySliders.setLayoutY(200.0);
+        root.getChildren().add(mySliders);
     }
 
     private void playAnimation(){
         currentAnimation.setRate(Math.abs(currentAnimation.getRate()));
         if (currentAnimation.getStatus().equals(Animation.Status.RUNNING)){
+            currentAnimation.jumpTo(new Duration(0));
             currentAnimation.stop();
-            //currentAnimation.jumpTo(new Duration(0));
+            frame.currentFrame = 1;
+            frameText.setText(frame.toString());
         }
         else{
             currentAnimation.play();
@@ -145,7 +167,8 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void stepAnimation(int adjust){
-        currentAnimation.playFrom(currentAnimation.getCurrentTime().add(new Duration(adjust / 11.0 * 1000)));
+        currentAnimation.playFrom(currentAnimation.getCurrentTime().add(
+                new Duration(currentAnimation.getCycleDuration().toMillis()*adjust / currentAnimation.getCount())));
         currentAnimation.pause();
 
     }
@@ -166,31 +189,41 @@ public class CharacterEditor extends EditorSuper{
         frame.advance(-1);
         frameText.setText(frame.toString());
     }
+    
+    private void makeSpriteAnimation(){
+        File image = chooseImage("Choose thumbnail for animation");
+        if (image == null){
+            return;
+        }
+        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
 
-
-    private void makeSprite(){
-        SpriteAnimation myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 22,
-                11, 0.0, 0.0, 111.818181, 56.0);
-        currentAnimation = myAnimation;
-        currentAnimation.setCycleCount(Animation.INDEFINITE);
-
-        frame.currentFrame = 1;
-        frame.totalFrames = 22;
-
+        //SpriteAnimation myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 22,
+        //        11, 0.0, 0.0, 111.818181, 56.0);
+        SpriteAnimation myAnimation;
+        if (!first){
+            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 11,
+                    11, 6.0, 640.0, 61.0, 60.0);
+            first = true;
+        }
+        else{
+            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(3.0), 8,
+                    8, 6.0, 89.0, 61.0, 60.0);
+        }
+        myAnimation.setCycleCount(Animation.INDEFINITE);
+        scrollToAnimation.put(animPic, myAnimation);
+        animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
     }
 
-
-    private void makeSliders(){
-        mySliders = new VBox(10);
-        healthSlider = myRS.makeSlider("health",consumer,0.0,0.0,200.0);
-        attackSlider = myRS.makeSlider("attack",consumer,0.0,0.0,200.0);
-        defenseSlider = myRS.makeSlider("defense",consumer,0.0,0.0,200.0);
-
-        mySliders.getChildren().addAll(healthSlider,attackSlider,defenseSlider);
-        mySliders.setLayoutX(900.0);
-        mySliders.setLayoutY(200.0);
-        root.getChildren().add(mySliders);
-
+    private void initializeScrollPane(){
+        animationList = new ScrollablePane(50.0,300.0);
+        root.getChildren().add(animationList.getScrollPane());
+    }
+    
+    private void selectAnimationFromScroll(ScrollableItem b){
+        currentAnimation.stop();
+        currentAnimation = scrollToAnimation.get(b);
+        frame.currentFrame = 1;
+        frame.totalFrames = currentAnimation.getCount();
     }
 
     private ImageView initializeImageView(int width, int height, int x, int y){
@@ -211,13 +244,12 @@ public class CharacterEditor extends EditorSuper{
 
     private void chooseSpriteSheet(){
         File sprites = chooseImage("Choose Sprite Sheet");
-            if (sprites !=  null){
-                setImageView(spriteSheet,sprites.toURI().toString());
-            }
-        Sprite mySprite = myRS.makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
-        //Sprite mySprite = new Sprite(spriteSheet.getImage(), 110.0, 55.0);
-
-            root.getChildren().add(mySprite);
+        if (sprites !=  null){
+            setImageView(spriteSheet,sprites.toURI().toString());
+        }
+        //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
+        Sprite mySprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
+        root.getChildren().add(mySprite);
         mySprite.setLayoutX(700);
         mySprite.setLayoutY(500);
         mySprite.setScaleX(5);

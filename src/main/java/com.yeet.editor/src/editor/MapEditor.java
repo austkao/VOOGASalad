@@ -5,7 +5,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
@@ -76,7 +78,7 @@ public class MapEditor extends EditorSuper{
         //getRenderSystem().drawStage(mapPane, level);
         level.setOnMouseClicked(e -> clickProcessTile(e));
         Button addBG = myRS.makeStringButton("Set Background", Color.BLACK,true,Color.WHITE,
-                30.0,1000.0,700.0,200.0,50.0);
+                20.0,800.0,700.0,200.0,50.0);
         addBG.setOnMouseClicked(e -> chooseBackground());
 
         Button resetGrid = myRS.makeStringButton("Reset Grid", Color.LAVENDER, true, Color.WHITE,
@@ -95,9 +97,9 @@ public class MapEditor extends EditorSuper{
                 30.0,25.0, 75.0, 200.0, 50.0);
         loadFile.setOnMouseClicked(e -> loadMapFile());
         Font myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
-        myBGM = myRS.makeTextField(consumer, myBGMFileName, 100.0, 100.0, 800.0, 50.0, myPlainFont);
+        myBGM = myRS.makeTextField(consumer, myBGMFileName, 250.0, 650.0, 500.0, 30.0, myPlainFont);
         Button myBGMButton = myRS.makeStringButton("Set Background Music", Color.BLACK,true,Color.WHITE,
-                30.0,950.0,100.0,200.0,50.0);
+                20.0,800.0,650.0,300.0,50.0);
         myBGMButton.setOnMouseClicked(e -> chooseBGM());
         root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, myBGM, myBGMButton);
     }
@@ -105,7 +107,7 @@ public class MapEditor extends EditorSuper{
     private void initializeScrollPane(){
         Path filePath = Paths.get(System.getProperty("user.dir"));
         File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
-        myScrollablePane = new ScrollablePane(paneFile);
+        myScrollablePane = new ScrollablePane(paneFile,50,400.0);
         for(ScrollableItem b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
         }
@@ -196,6 +198,19 @@ public class MapEditor extends EditorSuper{
     public String toString(){
         return "MapEditor";
     }
+
+//    private void snapShot(Pane pane) {
+//        WritableImage image = pane.snapshot(new SnapshotParameters(), null);
+//
+//        // TODO: probably use a file chooser here
+//        File file = new File("chart.png");
+//
+//        try {
+//            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+//        } catch (IOException e) {
+//            // TODO: handle exception here
+//        }
+//    }
 
 
     private void createSaveFile() {

@@ -5,4 +5,6 @@ module com.yeet.physics {
     requires com.yeet.messenger;
     requires java.desktop;
     requires com.google.common;
+    requires com.yeet.data;
 }
+
