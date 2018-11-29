@@ -30,7 +30,9 @@ public class AudioSystem {
     @Subscribe
     public void playAction(ActionEvent event) {
         //String newPath = path + event.getType()+"/"+event.getName()+".mp3";
-        String newPath = path + "/characters/Lucina1/sounds/" + event.getName() +".mp3";
+        //String newPath = path + "/characters/Lucina1/sounds/" + event.getName() +".mp3";
+        String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
+
         System.out.println(newPath);
         myPlayer.playMedia(newPath);
     }
