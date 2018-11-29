@@ -40,8 +40,17 @@ public class AudioSystem {
     /**
      / Listens for the combat system to play the sound
      */
+    @Subscribe
     public void playAction(SuccessfulEvent event){
+        String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
 
+        System.out.println(newPath);
+        myPlayer.playMedia(newPath);
+    }
+
+    @Subscribe
+    public void playGameMusic(GameStartEvent event){
+        String newPath = path + "stages/example_stage_1/bgm/BGM.mp3"
     }
 
     /**
