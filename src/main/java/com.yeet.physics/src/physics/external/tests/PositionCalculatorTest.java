@@ -16,7 +16,7 @@ class PositionCalculatorTest {
         double YExpected = -10;
 
         PhysicsSystem system = new PhysicsSystem();
-        system.addPhysicsBodies(1);
+        //system.addPhysicsBodies(1);
         system.gameObjects.get(0).currentForces.add(new PhysicsVector(10, PI/2));
 
         system.applyForces();

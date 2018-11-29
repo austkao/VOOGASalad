@@ -173,4 +173,8 @@ public class CharacterChooseDisplay extends StackPane {
         }
     }
 
+    public String getCharacterName(){
+        return myCharacterName.getText();
+    }
+
 }

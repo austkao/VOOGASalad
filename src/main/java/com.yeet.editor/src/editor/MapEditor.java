@@ -9,13 +9,15 @@ import javafx.stage.FileChooser;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollableItem;
 import renderer.external.Structures.ScrollablePane;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.net.URISyntaxException;
 
 /**
  * @author ob29

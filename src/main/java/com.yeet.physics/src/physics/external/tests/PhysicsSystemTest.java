@@ -17,7 +17,7 @@ class PhysicsSystemTest {
     @Test
     void createPhysicsBodies() {
         PhysicsSystem testSystem = new PhysicsSystem();
-        testSystem.addPhysicsBodies(10);
+        //testSystem.addPhysicsBodies(10);
         double expected = 0;
 
         for (int i = 0; i < 10; i++){
@@ -31,13 +31,13 @@ class PhysicsSystemTest {
     @Test
     void updatePhysics() {
         PhysicsSystem testSystem = new PhysicsSystem();
-        testSystem.addPhysicsBodies(10);
+        //testSystem.addPhysicsBodies(10);
         double expectedAccMag = 9.8;
         double expectedVelMag = 9.8*0.0166666;
         double expectedDir = PI/2;
 
         testSystem.update();
-        for (PhysicsObject b : testSystem.getGameObjects()) {
+        for (PhysicsObject b : testSystem.getGameObjects().values()) {
             assertEquals(expectedAccMag, b.getAcceleration().getMagnitude(), .001);
             assertEquals(expectedVelMag, b.getVelocity().getMagnitude(), .001);
             assertEquals(expectedDir, b.getAcceleration().getDirection(), .001);
