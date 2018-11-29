@@ -26,12 +26,12 @@ public class AudioSystem {
      */
     @Subscribe
     public void playAction(ActionEvent event) {
-        //String newPath = path + event.getType()+"/"+event.getName()+".mp3";
         //String newPath = path + "/characters/Lucina1/sounds/" + event.getName() +".mp3";
-        String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
+        //String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
+        String newPath = "/example_character_1/attacks/JAB.mp3";
 
         System.out.println(newPath);
-        myPlayer.playMedia(newPath);
+        myPlayer.playClip(newPath);
     }
 
     /**
@@ -39,16 +39,19 @@ public class AudioSystem {
      */
     @Subscribe
     public void playAction(SuccessfulEvent event){
-        String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
+        //String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
+        String newPath = "/example_character_1/attacks/JAB.mp3";
 
         System.out.println(newPath);
-        myPlayer.playMedia(newPath);
+        myPlayer.playClip(newPath);
     }
 
-    //@Subscribe
-    //public void playGameMusic(GameStartEvent event){
-    //    String newPath = path + "stages/example_stage_1/bgm/BGM.mp3";
-    //}
+    @Subscribe
+    public void playGameMusic(GameStartEvent event){
+        //String newPath = path + "stages/example_stage_1/bgm/BGM.mp3";
+        String path = "/example_character_1/attacks/BGM.mp3";
+        myPlayer.playLongAudio(path);
+    }
 
     /**
      / This is the subscription to the ActionEvents that are posted by the inputsystem.
