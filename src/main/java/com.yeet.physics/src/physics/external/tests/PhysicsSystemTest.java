@@ -17,7 +17,7 @@ class PhysicsSystemTest {
     @Test
     void createPhysicsBodies() {
         PhysicsSystem testSystem = new PhysicsSystem();
-        testSystem.addPhysicsBodies(10);
+        //testSystem.addPhysicsBodies(10);
         double expected = 0;
 
         for (int i = 0; i < 10; i++){
@@ -31,7 +31,7 @@ class PhysicsSystemTest {
     @Test
     void updatePhysics() {
         PhysicsSystem testSystem = new PhysicsSystem();
-        testSystem.addPhysicsBodies(10);
+        //testSystem.addPhysicsBodies(10);
         double expectedAccMag = 9.8;
         double expectedVelMag = 9.8*0.0166666;
         double expectedDir = PI/2;

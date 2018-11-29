@@ -15,7 +15,7 @@ public class CombatSystem {
         eventBus = EventBusFactory.getEventBus();
         playerManager = new PlayerManager(numOfPlayers);
         physicsSystem = new PhysicsSystem();
-        physicsSystem.addPhysicsBodies(numOfPlayers);
+        //physicsSystem.addPhysicsBodies(numOfPlayers);
     }
 
     @Subscribe

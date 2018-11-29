@@ -12,7 +12,7 @@ class PassiveForceHandlerTest {
     @Test
     void update() {
         PhysicsSystem system = new PhysicsSystem();
-        system.addPhysicsBodies(1);
+        //system.addPhysicsBodies(1);
 
         PassiveForceHandler handler = new PassiveForceHandler(system.gameObjects);
         handler.update();

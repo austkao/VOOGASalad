@@ -24,6 +24,10 @@ public class PhysicsSystem {
     public static final double defaultMovementSpeed = 20;
     public static final double defaultAttackSpace = 10;
 
+    private int playerId;
+    private int groundId;
+    private int attackId;
+
 
 
     //List<PhysicsObject> gameObjects = new ArrayList<>();
@@ -35,6 +39,9 @@ public class PhysicsSystem {
 
     public PhysicsSystem() {
         this.myMessageBus = EventBusFactory.getEventBus();
+        this.playerId = 0;
+        this.groundId = 100;
+        this.attackId = 1000;
     }
 
     public void update() {
@@ -63,13 +70,20 @@ public class PhysicsSystem {
 
     }
 
-    public void addPhysicsBodies(int num) {
-        int id = gameObjects.size();
-        while (id < num) {
-            gameObjects.put(id, new PhysicsBody(id, defaultMass, new Coordinate(0,0), new Dimensions(10,20)));
-            playerCharacteristics.add(new PlayerCharacteristics(id, defaultStrength, defaultJumpHeight, defaultMovementSpeed));
-            id ++;
+    public void addPhysicsObject(int type, double mass, double XCoordinate, double YCoordinate, double XDimension, double YDimension) { // type 0: player, type 1: attack, type 2: ground
+        int id;
+        if (type == 0) {
+            id = playerId;
+            playerId++;
+        } else if (type == 1) {
+            id = groundId;
+            groundId++;
+        } else {
+            id = attackId;
+            attackId++;
         }
+        gameObjects.put(id, new PhysicsBody(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
+        playerCharacteristics.add(new PlayerCharacteristics(id, defaultStrength, defaultJumpHeight, defaultMovementSpeed));
     }
 
     public void applyForces() {
