@@ -20,8 +20,8 @@ public class PhysicsSystem {
 
     public static final double defaultMass = 50;
     public static final double defaultStrength = 20;
-    public static final double defaultJumpHeight = 20;
-    public static final double defaultMovementSpeed = 20;
+    public static final double defaultJumpHeight = 50;
+    public static final double defaultMovementSpeed = 50;
     public static final double defaultAttackSpace = 10;
 
     private int playerId;
@@ -40,8 +40,8 @@ public class PhysicsSystem {
     public PhysicsSystem() {
         this.myMessageBus = EventBusFactory.getEventBus();
         this.playerId = 0;
-        this.groundId = 100;
-        this.attackId = 1000;
+        this.attackId = 100;
+        this.groundId = 1000;
     }
 
     public void update() {
@@ -74,15 +74,17 @@ public class PhysicsSystem {
         int id;
         if (type == 0) {
             id = playerId;
+            gameObjects.put(id, new PhysicsBody(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
             playerId++;
         } else if (type == 1) {
-            id = groundId;
-            groundId++;
-        } else {
             id = attackId;
+            gameObjects.put(id, new PhysicsAttack(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
             attackId++;
+        } else {
+            id = groundId;
+            gameObjects.put(id, new PhysicsGround(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
+            groundId++;
         }
-        gameObjects.put(id, new PhysicsBody(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
         playerCharacteristics.add(new PlayerCharacteristics(id, defaultStrength, defaultJumpHeight, defaultMovementSpeed));
     }
 

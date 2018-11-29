@@ -22,7 +22,10 @@ public class NetVectorCalculator {
             myVectors.remove(vector1);
             myVectors.remove(vector2);
         }
-        return myVectors.get(0);
+        if (myVectors.size() > 0) {
+            return myVectors.get(0);
+        }
+        return new PhysicsVector(0,0);
     }
 
     private double getX(PhysicsVector v) {
