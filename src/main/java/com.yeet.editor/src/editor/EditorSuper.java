@@ -4,14 +4,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import xml.XMLParser;
 import xml.XMLSaveBuilder;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -40,7 +38,6 @@ public abstract class EditorSuper extends Scene{
         rs = new RenderSystem();
         Text t = rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
         root.getChildren().add(t);
-
     }
 
     /**
