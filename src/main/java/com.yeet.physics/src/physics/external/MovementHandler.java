@@ -8,6 +8,8 @@ import messenger.external.MoveSuccessfulEvent;
 
 import java.util.List;
 
+import static java.lang.Math.PI;
+
 public class MovementHandler extends InputHandler {
 
     private EventBus msgBus;
@@ -19,19 +21,20 @@ public class MovementHandler extends InputHandler {
         this.gameElements = gameElements;
     }
 
-    @Subscribe
-    public void update(MoveSuccessfulEvent mv) {
-        for(PhysicsObject b: this.gameElements){
-            if(mv.getInitiatorID() == b.getId()){
-                PhysicsVector moveForce;
-                if(mv.getDirection()){//If the force isGoingLeft
-                    //TODO: HOW TO TAKE INTO ACCOUNT DIFFERENT SPEEDS BETWEEN CHARACTERS
-                    moveForce = new PhysicsVector(3, -1);
-                }else{
-                    moveForce = new PhysicsVector(3,1);
-                }
-                b.addCurrentForce(moveForce);
-            }
-        }
-    }
+//    @Subscribe
+//    public void update(MoveSuccessfulEvent mv) {
+//        for(PhysicsObject b: this.gameElements){
+//            if(mv.getInitiatorID() == b.getId()){
+//                PhysicsVector moveForce;
+//                if (mv.getDirection() ==  PI / 2) { //jump
+//                    moveForce = new PhysicsVector();
+//                } else { // move left/right
+//                    moveForce = new PhysicsVector();
+//                }
+//
+//
+//                b.addCurrentForce(moveForce);
+//            }
+//        }
+//    }
 }

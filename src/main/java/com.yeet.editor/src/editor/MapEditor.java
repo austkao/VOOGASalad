@@ -1,6 +1,5 @@
 package editor;
 
-import xml.XMLParser;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -10,13 +9,14 @@ import javafx.stage.FileChooser;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollableItem;
 import renderer.external.Structures.ScrollablePane;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.net.URISyntaxException;
-
-import xml.XMLSaveBuilder;
 
 /**
  * @author ob29
@@ -26,17 +26,14 @@ import xml.XMLSaveBuilder;
 
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
-    private static final String DEFAULT_TILE = "acacia_log.png";
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    private static final String DEFAULT_IMAGE_DIR = "/Users/scottmcconnell/Desktop/Duke/Junior/CS308/project4/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
-    //private static final String DEFAULT_IMAGE_DIR = "/users/rr600/workspace/voogasalad_yeet/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    private static final String DEFAULT_IMAGE_DIR = "/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
 
     private Image currentTileFile;
-    private ScrollablePane scrollablePane;
+    private ScrollablePane myScrollablePane;
     private Level level;
     private Group root;
+    private MapSettingEditor myMapSettings;
+    private EditorManager myEM;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -46,55 +43,51 @@ public class MapEditor extends EditorSuper{
     public MapEditor(Group root,EditorManager em){
         super(root,em);
         this.root = root;
+        myEM = em;
         try {
-            initializeLevel(800, 500,
+            initializeLevel(800, 500, 250, 100,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        myMapSettings = new MapSettingEditor(new Group(), em, this);
         initializeScrollPane();
-
-        currentTileFile = new Image(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_TILE));
-
-
+        currentTileFile = myScrollablePane.getItems().get(0).getImage();
         //getRenderSystem().drawStage(mapPane, level);
-
         level.setOnMouseClicked(e -> clickProcessTile(e));
-
         Button addBG = getRenderSystem().makeStringButton("set Background", Color.BLACK,true,Color.WHITE,
                 30.0,25.0,225.0,200.0,50.0);
-        root.getChildren().add(addBG);
         addBG.setOnMouseClicked(e -> chooseBackground());
 
         Button resetGrid = getRenderSystem().makeStringButton("Reset Grid", Color.LAVENDER, true, Color.WHITE,
                 30.0,25.0, 300.0, 200.0, 50.0);
-        root.getChildren().add(resetGrid);
         resetGrid.setOnMouseClicked(e -> level.resetGrid());
 
         Button chooseTile = getRenderSystem().makeStringButton("Choose Tile", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 375.0, 200.0, 50.0);
-        root.getChildren().add(chooseTile);
         chooseTile.setOnMouseClicked(e -> chooseTileImage());
 
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
-        root.getChildren().add(saveFile);
         saveFile.setOnMouseClicked(e -> createSaveFile());
 
         Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 75.0, 200.0, 50.0);
-        root.getChildren().add(loadFile);
         loadFile.setOnMouseClicked(e -> loadMapFile());
-
-        scrollablePane = new ScrollablePane(new File(DEFAULT_IMAGE_DIR));
-        for(ScrollableItem b: scrollablePane.getItems()){
-            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
-        }
-        root.getChildren().add(scrollablePane.getScrollPane());
+        Button editSettingsButton = getRenderSystem().makeStringButton("Edit Map Settings", Color.CRIMSON, true, Color.WHITE,
+                30.0,800.0, 75.0, 200.0, 50.0);
+        editSettingsButton.setOnMouseClicked(e -> goToSettings());
+        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, editSettingsButton);
     }
 
     private void initializeScrollPane(){
-
+        Path filePath = Paths.get(System.getProperty("user.dir"));
+        File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
+        myScrollablePane = new ScrollablePane(paneFile);
+        for(ScrollableItem b: myScrollablePane.getItems()){
+            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
+        }
+        root.getChildren().add(myScrollablePane.getScrollPane());
     }
 
     /**
@@ -102,10 +95,10 @@ public class MapEditor extends EditorSuper{
      * @param width
      * @param height
      */
-    private void initializeLevel(int width, int height, String background){
+    private void initializeLevel(int width, int height, int x, int y, String background){
         level = new Level(width, height, background);
-        level.setLayoutX(250);
-        level.setLayoutY(100);
+        level.setLayoutX(x);
+        level.setLayoutY(y);
         root.getChildren().add(level);
     }
 
@@ -134,14 +127,13 @@ public class MapEditor extends EditorSuper{
             Image image = new Image(tileFile.toURI().toString());
             if (image != null)
                 currentTileFile = image;
-            scrollablePane.addItem(currentTileFile);
-            int size = scrollablePane.getItems().size();
-            scrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
+            myScrollablePane.addItem(currentTileFile);
+            int size = myScrollablePane.getItems().size();
+            myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
         }
         catch (Exception e){
-            currentTileFile = currentTileFile;
+            System.out.println("Invalid image");
         }
-
     }
 
     /**
@@ -170,12 +162,21 @@ public class MapEditor extends EditorSuper{
         ArrayList<String> mapAttributes = new ArrayList<>();
         mapAttributes.add("x");
         mapAttributes.add("y");
+        mapAttributes.add("image");
         structure.put("map", mapAttributes);
+        HashMap<String, String> imageMap = myScrollablePane.getCurrentImages();
+        HashMap<String, ArrayList<String>> levelMap = level.createLevelMap();
+        ArrayList<String> temp = new ArrayList<>();
+        for(String s : levelMap.get("image")) {
+            System.out.println(s);
+            temp.add(imageMap.get(s));
+        }
+        levelMap.get("image").clear();
+        levelMap.get("image").addAll(temp);
         try {
-            generateSave(structure, level.createLevelMap());
+            generateSave(structure, levelMap);
         } catch (Exception ex) {
             System.out.println("Invalid save");
-            //ex.printStackTrace();
         }
     }
 
@@ -193,5 +194,9 @@ public class MapEditor extends EditorSuper{
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
+    }
+
+    private void goToSettings() {
+        myEM.changeScene(myMapSettings);
     }
 }
