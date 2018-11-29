@@ -17,10 +17,13 @@ public class ScrollablePane extends Pane {
 
 
     public ScrollablePane(File dir){
-        currentImages = new HashMap<>();
-        items = FXCollections.observableArrayList();
-        scrollPane = new ScrollPane();
+        this();
         loadFiles(dir);
+
+    }
+
+    public ScrollablePane(){
+        scrollPane = new ScrollPane();
         scrollPane.setPrefSize(150, 400);
         scrollPane.setLayoutX(0);
         scrollPane.setLayoutY(0);
@@ -29,13 +32,16 @@ public class ScrollablePane extends Pane {
         scrollPane.setLayoutX(50);
         scrollPane.setLayoutY(400);
         scrollPane.setScaleY(.8);
+        currentImages = new HashMap<>();
+        items = FXCollections.observableArrayList();
     }
 
-    public void addItem(Image image){
+    public ScrollableItem addItem(Image image){
         ScrollableItem si= new ScrollableItem(image,0,0);
         items.add(si);
         this.getChildren().add(items.get(items.size()-1).getButton());
         items.get(items.size()-1).setPos(0,125*items.size());
+        return si;
     }
 
     public void removeItem(){
