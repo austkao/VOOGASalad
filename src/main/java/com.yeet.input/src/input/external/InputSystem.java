@@ -5,6 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import input.Internal.Parser;
 import messenger.external.*;
 
+import java.io.File;
 import java.util.*;
 
 public class InputSystem {
@@ -13,14 +14,16 @@ public class InputSystem {
     private Parser myParser;
     private Queue<KeyInputEvent> commandHolder;
     private Timer timer;
+    private File GameDir;
 
 
-    public InputSystem(){
+    public InputSystem(File GameDirectory){
         myMessageBus = EventBusFactory.getEventBus();
         myParser = new Parser();
         commandHolder = new LinkedList<>();
         timer = new Timer();
-        //setUpTimer();
+        GameDir = GameDirectory;
+        setUpTimer();
 
     }
 

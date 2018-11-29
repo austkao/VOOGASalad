@@ -10,4 +10,3 @@ module com.yeet.renderer {
     //requires org.junit.jupiter.api;
 
 }
-

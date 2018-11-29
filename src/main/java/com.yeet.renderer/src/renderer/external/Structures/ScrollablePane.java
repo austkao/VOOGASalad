@@ -17,6 +17,8 @@ public class ScrollablePane extends Pane {
     public ScrollablePane(File dir){
         items = FXCollections.observableArrayList();
         scrollPane = new ScrollPane();
+        System.out.println(dir);
+        System.out.println(dir.isDirectory());
         loadFiles(dir);
         scrollPane.setPrefSize(150, 400);
         scrollPane.setLayoutX(0);

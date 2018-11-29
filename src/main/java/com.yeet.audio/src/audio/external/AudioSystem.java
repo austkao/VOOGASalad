@@ -8,13 +8,18 @@ import messenger.external.EventBusFactory;
 import messenger.external.GameOverEvent;
 import messenger.external.SuccessfulEvent;
 
+import java.io.File;
+
 public class AudioSystem {
 
     private EventBus myMessageBus;
-    private String path = "/example_character_1/";
+    private String path;
     private MediaPlayer myPlayer;
+    private File GameDir;
 
-    public AudioSystem(){
+    public AudioSystem(File GameDirectory){
+        GameDir = GameDirectory;
+        setRootPath();
         myMessageBus = EventBusFactory.getEventBus();
         myPlayer= new MediaPlayer();
     }
@@ -24,7 +29,8 @@ public class AudioSystem {
      */
     @Subscribe
     public void playAction(ActionEvent event){
-        String newPath = path + event.getType()+"/"+event.getName()+".mp3";
+        //String newPath = path + event.getType()+"/"+event.getName()+".mp3";
+        String newPath = path + "examplegame/characters/example_character_1/sounds/" + event.getName() +".mp3";
         System.out.println(newPath);
         myPlayer.playMedia(newPath);
     }
@@ -41,5 +47,9 @@ public class AudioSystem {
      */
     public void gameOver(GameOverEvent gameOver){
 
+    }
+
+    private void setRootPath(){
+        path = GameDir.getPath();
     }
 }
