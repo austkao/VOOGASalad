@@ -95,38 +95,38 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void makeButtons(){
-        Button addBG = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
+        Button addBG = myRS.makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
                 30.0,25.0,250.0,200.0,50.0);
         addBG.setOnMouseClicked(e -> choosePortrait());
-        Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
+        Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
 
-        Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
+        Button loadFile = myRS.makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 75.0, 200.0, 50.0);
         loadFile.setOnMouseClicked(e ->loadCharacterData());
 
-        Button getSpriteSheet = getRenderSystem().makeStringButton("Import Sprite Sheet", Color.FORESTGREEN, true,
+        Button getSpriteSheet = myRS.makeStringButton("Import Sprite Sheet", Color.FORESTGREEN, true,
                 Color.WHITE, 20.0, 600.0, 25.0, 200.0, 50.0);
         getSpriteSheet.setOnMouseClicked(e -> chooseSpriteSheet());
 
-        Button setAnimation = getRenderSystem().makeStringButton("Set Sprite Animation", Color.ORCHID, true,
+        Button setAnimation = myRS.makeStringButton("Set Sprite Animation", Color.ORCHID, true,
                 Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
         setAnimation.setOnMouseClicked(e -> makeSprite());
 
-        Button playAnimation = getRenderSystem().makeStringButton("Play Animation", Color.DARKVIOLET, true,
+        Button playAnimation = myRS.makeStringButton("Play Animation", Color.DARKVIOLET, true,
                 Color.WHITE, 20.0, 500.0, 175.0, 200.0, 50.0);
         playAnimation.setOnMouseClicked(e -> playAnimation());
 
-        Button stepForward = getRenderSystem().makeStringButton("Forward", Color.DARKGREEN, true,
+        Button stepForward = myRS.makeStringButton("Forward", Color.DARKGREEN, true,
                 Color.WHITE, 20.0, 830.0, 175.0, 95.0, 50.0);
         stepForward.setOnMouseClicked(e -> stepForwardAnimation());
 
-        Button stepBackward = getRenderSystem().makeStringButton("Backward", Color.DARKGREEN, true,
+        Button stepBackward = myRS.makeStringButton("Backward", Color.DARKGREEN, true,
                 Color.WHITE, 20.0, 725.0, 175.0, 95.0, 50.0);
         stepBackward.setOnMouseClicked(e -> stepBackAnimation());
 
-        frameText = getRenderSystem().makeText(frame.toString(), true, 30,
+        frameText = myRS.makeText(frame.toString(), true, 30,
                 Color.AQUA, 500.0, 250.0);
 
         root.getChildren().addAll(saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation, stepForward,
@@ -169,7 +169,7 @@ public class CharacterEditor extends EditorSuper{
 
 
     private void makeSprite(){
-        SpriteAnimation myAnimation = getRenderSystem().makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 22,
+        SpriteAnimation myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 22,
                 11, 0.0, 0.0, 111.818181, 56.0);
         currentAnimation = myAnimation;
         currentAnimation.setCycleCount(Animation.INDEFINITE);
@@ -182,9 +182,9 @@ public class CharacterEditor extends EditorSuper{
 
     private void makeSliders(){
         mySliders = new VBox(10);
-        healthSlider = getRenderSystem().makeSlider("health",consumer,0.0,0.0,200.0);
-        attackSlider = getRenderSystem().makeSlider("attack",consumer,0.0,0.0,200.0);
-        defenseSlider = getRenderSystem().makeSlider("defense",consumer,0.0,0.0,200.0);
+        healthSlider = myRS.makeSlider("health",consumer,0.0,0.0,200.0);
+        attackSlider = myRS.makeSlider("attack",consumer,0.0,0.0,200.0);
+        defenseSlider = myRS.makeSlider("defense",consumer,0.0,0.0,200.0);
 
         mySliders.getChildren().addAll(healthSlider,attackSlider,defenseSlider);
         mySliders.setLayoutX(900.0);
@@ -214,7 +214,7 @@ public class CharacterEditor extends EditorSuper{
             if (sprites !=  null){
                 setImageView(spriteSheet,sprites.toURI().toString());
             }
-        Sprite mySprite = getRenderSystem().makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
+        Sprite mySprite = myRS.makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
         //Sprite mySprite = new Sprite(spriteSheet.getImage(), 110.0, 55.0);
 
             root.getChildren().add(mySprite);
@@ -240,7 +240,7 @@ public class CharacterEditor extends EditorSuper{
      * @returns file chosen
      */
     private File chooseImage(String message){
-        FileChooser fileChooser = getRenderSystem().makeFileChooser("image");
+        FileChooser fileChooser = myRS.makeFileChooser("image");
         fileChooser.setTitle(message);
         return fileChooser.showOpenDialog(getWindow());
     }

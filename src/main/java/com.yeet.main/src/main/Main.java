@@ -213,7 +213,7 @@ public class Main extends Application {
         edit.setScene(new Scene(new Group(games)));
         if(isEditButton) {
             games.setOnMouseClicked(e -> {
-                initializeGameEditor(new File(gameDirectory.getPath()+ "\\"+games.getSelectionModel().getSelectedItem()));
+                initializeGameEditor(new File(gameDirectory.getPath()+ "/"+games.getSelectionModel().getSelectedItem()));
                 edit.close();
             });
         } else {

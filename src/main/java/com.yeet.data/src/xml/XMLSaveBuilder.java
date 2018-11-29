@@ -55,14 +55,15 @@ public class XMLSaveBuilder implements Saver {
     }
 
     private void createElementList(Element root, HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
-        int maxSize = 0;
-        for(String s : data.keySet()) {
-            if(data.get(s).size() > maxSize) {
-                maxSize = data.get(s).size();
+        for(String elementTag : structure.keySet()) {
+            ArrayList<String> attributeList = structure.get(elementTag);
+            int size = 0;
+            for(String s : attributeList) {
+                if(data.get(s).size() > size) {
+                    size = data.get(s).size();
+                }
             }
-        }
-        for(int i = 0; i < maxSize; i++) {
-            for(String elementTag : structure.keySet()) {
+            for(int i = 0; i < size; i++) {
                 Element tag = saveDocument.createElement(elementTag);
                 root.appendChild(tag);
                 for(String attributeTag : structure.get(elementTag)) {
