@@ -96,7 +96,7 @@ public class Player {
             myStage.setScene(myLoadingScreen);
             myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,myStageSelectScreen.getStage(),(key)->myMessageBus.post(new KeyInputEvent(key)));
             myCombatScreen.setCharacters(myCharacterSelectScreen.getCharacters());
-            myCombatSystem = new CombatSystem(myCombatScreen.getCharacterMap(),myPhysicsSystem);
+            myCombatSystem = new CombatSystem(myCombatScreen.getCharacterMap(),myCombatScreen.getTileMap(),myPhysicsSystem);
             myMessageBus.register(myCombatSystem);
             myMessageBus.register(myCombatScreen);
             myStage.setScene(myCombatScreen);

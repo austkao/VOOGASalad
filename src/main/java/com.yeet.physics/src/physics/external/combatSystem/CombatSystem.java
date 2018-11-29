@@ -6,6 +6,7 @@ import messenger.external.*;
 import physics.external.PhysicsSystem;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,13 +18,17 @@ public class CombatSystem {
     PlayerManager playerManager;
     PhysicsSystem physicsSystem;
 
-    public CombatSystem(HashMap<Integer, Point2D> playerMap, PhysicsSystem physicsSystem){
+    public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem){
         eventBus = EventBusFactory.getEventBus();
         playerManager = new PlayerManager(playerMap.keySet().size());
         this.physicsSystem = physicsSystem;
-//        physicsSystem.addPhysicsBodies(numOfPlayers);
+        // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
             physicsSystem.addPhysicsObject(0, PhysicsSystem.defaultMass, playerMap.get(i).getX(), playerMap.get(i).getY(), 50, 50);
+        }
+        // register tiles to physics engine
+        for(int i=0;i < tileMap.keySet().size(); i++){
+            physicsSystem.addPhysicsObject(1,PhysicsSystem.defaultMass, tileMap.get(i).getMinX(),tileMap.get(i).getMinY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
         }
 
 //        XMLParser parser = new XMLParser();

@@ -14,6 +14,7 @@ import renderer.external.Structures.Sprite;
 import xml.XMLParser;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class CombatScreen extends Screen {
 
 
     private HashMap<Integer, Point2D> myCharacterMap;
+    private HashMap<Integer, Rectangle2D> myTileMap;
     private HashMap<String, ArrayList<String>> myBackgroundMap;
     private HashMap<String,ArrayList<String>> myMusicMap;
     private HashMap<String, ArrayList<String>> myStageMap;
@@ -48,6 +50,7 @@ public class CombatScreen extends Screen {
         myGameDirectory =  gameDirectory;
         myStageName = stageName;
         myCharacterMap = new HashMap<>();
+        myTileMap = new HashMap<>();
         myBackgroundMap = myParser.parseFileForElement("background");
         myMusicMap = myParser.parseFileForElement("music");
         myStageMap = myParser.parseFileForElement("map");
@@ -66,6 +69,7 @@ public class CombatScreen extends Screen {
             tile.setLayoutX(Integer.parseInt(myStageMap.get("x").get(i))*40.0);
             tile.setLayoutY(Integer.parseInt(myStageMap.get("y").get(i))*40.0);
             myTiles.add(tile);
+            myTileMap.put(i,new Rectangle2D.Double(Integer.parseInt(myStageMap.get("x").get(i))*40.0,Integer.parseInt(myStageMap.get("y").get(i))*40.0, 40.0, 40.0));
             super.getMyRoot().getChildren().add(tile);
         }
         super.setOnKeyPressed(event -> keyConsumer.accept(event.getCode()));
@@ -92,6 +96,10 @@ public class CombatScreen extends Screen {
 
     public HashMap<Integer, Point2D> getCharacterMap(){
         return (HashMap<Integer, Point2D>) myCharacterMap.clone();
+    }
+
+    public HashMap<Integer, Rectangle2D> getTileMap() {
+        return myTileMap;
     }
 
     @Subscribe
