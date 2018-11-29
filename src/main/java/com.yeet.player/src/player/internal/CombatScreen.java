@@ -56,11 +56,11 @@ public class CombatScreen extends Screen {
     public void setCharacters(HashMap<Integer, String> characterNames){
         for(int i=0;i<characterNames.keySet().size();i++){
             if(!characterNames.get(i).equals("")){
-                XMLParser propertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"\\characters\\"+characterNames.get(i)+"\\sprites\\spriteproperties.xml"));
+                XMLParser propertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(i)+"/sprites/spriteproperties.xml"));
                 HashMap<String,ArrayList<String>> spriteProperties = propertiesParser.parseFileForElement("sprite");
                 Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(i)+"/sprites/spritesheet.png"),Double.parseDouble(((spriteProperties.get("width").get(0)))),Double.parseDouble(spriteProperties.get("height").get(0)));
-                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("x").get(i))*40.0);
-                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("y").get(i))*40.0);
+                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0);
+                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0);
                 mySpriteMap.put(i,sprite);
                 super.getMyRoot().getChildren().add(sprite);
                 //super.getMyRoot().getChildren().add(new ImageView(new Image()))
