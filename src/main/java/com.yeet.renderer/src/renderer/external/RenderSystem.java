@@ -1,5 +1,7 @@
 package renderer.external;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;

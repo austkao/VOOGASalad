@@ -1,18 +1,9 @@
-<<<<<<< HEAD
-package renderer.external.Structures;
-import javafx.scene.image.Image;
-//import org.junit.Test;
-
-
-
-=======
 //package renderer.external.Structures;
 //import javafx.scene.image.Image;
 //import org.junit.Test;
 //
 //
 //
->>>>>>> cdb5df6448b6b36c970625c6f51c48aea1767635
 //public class LevelTest {
 //    // do not change this test
 //    private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";

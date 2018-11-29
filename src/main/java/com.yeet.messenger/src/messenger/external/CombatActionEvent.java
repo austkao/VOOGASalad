@@ -1,8 +1,6 @@
 package messenger.external;
 
 import com.google.common.eventbus.EventBus;
-import messenger.external.Event;
-import messenger.external.EventBusFactory;
 
 /*
     Represent specific combat action such as jump, attack or move a player can do in the game
