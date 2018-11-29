@@ -55,9 +55,9 @@ public class StageGrid extends TilePane {
             imageView.setFitHeight((w-SPACING));
             imageHolder.getChildren().addAll(imageView);
             this.getChildren().add(imageHolder);
-            int finalI = i;
+            int index = i;
             imageView.setOnMouseEntered(event -> {
-                biConsumer.accept(files.get(finalI).getName(), imageView);
+                biConsumer.accept(files.get(index).getName(), imageView);
                 imageView.setScaleX(1.1);
                 imageView.setScaleY(1.1);
             });
@@ -65,7 +65,7 @@ public class StageGrid extends TilePane {
                 imageView.setScaleX(1.0);
                 imageView.setScaleY(1.0);
             });
-            imageView.setOnMousePressed(event -> consumer.accept(files.get(finalI).getName()));
+            imageView.setOnMousePressed(event -> consumer.accept(files.get(index).getName()));
         }
         this.setMinSize(gridWidth,gridHeight);
         this.setPrefSize(gridWidth,gridHeight);

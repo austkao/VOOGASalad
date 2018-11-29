@@ -35,6 +35,7 @@ public class CombatScreen extends Screen {
 
 
     private HashMap<Integer, Point2D> myCharacterMap;
+    private HashMap<String, ArrayList<String>> myBackgroundMap;
     private HashMap<String,ArrayList<String>> myMusicMap;
     private HashMap<String, ArrayList<String>> myStageMap;
     private HashMap<String, ArrayList<String>> mySpawnMap;
@@ -43,16 +44,19 @@ public class CombatScreen extends Screen {
 
     public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName, Consumer<KeyCode> keyConsumer) {
         super(root, renderer);
+        System.out.println(stageName);
         myParser = new XMLParser(new File(gameDirectory.getPath()+"\\stages\\"+stageName+"\\stageproperties.xml"));
         myGameDirectory =  gameDirectory;
         myStageName = stageName;
         myCharacterMap = new HashMap<>();
+        myBackgroundMap = myParser.parseFileForElement("background");
         myMusicMap = myParser.parseFileForElement("music");
         myStageMap = myParser.parseFileForElement("map");
         mySpawnMap =  myParser.parseFileForElement("position");
         mySpriteMap = new HashMap<>();
         myTiles = new ArrayList<>();
-        ImageView background = new ImageView(new Image(gameDirectory.toURI()+"/data/background/background.png"));
+        System.out.println(gameDirectory.toURI()+"/data/background/"+myBackgroundMap.get("file").get(0));
+        ImageView background = new ImageView(new Image(gameDirectory.toURI()+"data/background/"+myBackgroundMap.get("file").get(0)));
         background.setFitWidth(1280.0);
         background.setFitHeight(800.0);
         super.getMyRoot().getChildren().addAll(background);
