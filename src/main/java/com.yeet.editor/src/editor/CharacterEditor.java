@@ -222,8 +222,8 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void selectAnimationFromScroll(ScrollableItem b){
-        currentAnimation = scrollToAnimation.get(b);
         currentAnimation.stop();
+        currentAnimation = scrollToAnimation.get(b);
         frame.currentFrame = 1;
         frame.totalFrames = currentAnimation.getCount();
     }
