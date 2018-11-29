@@ -20,7 +20,6 @@ import java.util.HashMap;
 public class XMLParser implements Parser {
 
     private Document xmlDocument;
-    private RenderSystem renderSys;
 
     public XMLParser(File file) {
         try {
