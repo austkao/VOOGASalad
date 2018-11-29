@@ -11,6 +11,8 @@ import renderer.external.RenderSystem;
 import renderer.external.Structures.TextBox;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 public class MapSettingEditor extends EditorSuper{
@@ -57,9 +59,13 @@ public class MapSettingEditor extends EditorSuper{
     }
 
     public void setBackgroundMusic() {
-        FileChooser myBGMDirectory = myRenderSystem.makeFileChooser("all");
-        myBGMDirectory.setInitialDirectory(myEM.getGameDirectory());
-        File bgmFile = myBGMDirectory.showOpenDialog(new Stage());
-        myBGM.setText(bgmFile.getName());
+        try {
+            FileChooser myBGMDirectory = myRenderSystem.makeFileChooser("all");
+            myBGMDirectory.setInitialDirectory(myEM.getGameDirectory());
+            File bgmFile = myBGMDirectory.showOpenDialog(new Stage());
+            myBGM.setText(bgmFile.getName());
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+        }
     }
 }

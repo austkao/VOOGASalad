@@ -269,6 +269,13 @@ public class RenderSystem implements Renderer{
     public ListView<String> makeDirectoryFileList(File directory) {
         ListView<String> fileList = new ListView<>();
         ObservableList<String> fileItems = FXCollections.observableArrayList();
-        return null;
+        File[] directoryArray = directory.listFiles();
+        for(int i = 0; i < directoryArray.length; i++) {
+            if(directoryArray[i].isDirectory()) {
+                fileItems.add(directoryArray[i].getName());
+            }
+        }
+        fileList.setItems(fileItems);
+        return fileList;
     }
 }
