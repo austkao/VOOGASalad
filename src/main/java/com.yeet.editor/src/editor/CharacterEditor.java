@@ -103,9 +103,9 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void makeButtons(){
-        Button addBG = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
+        Button addPortrait = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
                 30.0,25.0,250.0,200.0,50.0);
-        addBG.setOnMouseClicked(e -> choosePortrait());
+        addPortrait.setOnMouseClicked(e -> choosePortrait());
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
@@ -138,7 +138,7 @@ public class CharacterEditor extends EditorSuper{
                 Color.AQUA, 500.0, 250.0);
 
         root.getChildren().addAll(saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation, stepForward,
-                stepBackward, frameText);
+                stepBackward, frameText, addPortrait);
     }
 
     private void makeSliders(){
