@@ -116,6 +116,7 @@ There is one utility module, which is the Data module. Other modules will requir
         * ```public class CombatSystem```
     * Not Exported
         * ```public class Player```
+        * ```public class PlayerManager```
         
 * Module: Data Processor
     * Exported
