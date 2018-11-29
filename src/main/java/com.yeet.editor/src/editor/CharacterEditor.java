@@ -1,24 +1,20 @@
 package editor;
 
+import javafx.animation.Animation;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
-import renderer.external.RenderSystem;
-import renderer.external.Structures.Level;
-import renderer.external.Structures.ScrollablePane;
+import javafx.util.Duration;
 import renderer.external.Structures.SliderBox;
-import renderer.external.Structures.TextBox;
-import xml.XMLParser;
-import xml.XMLSaveBuilder;
+import renderer.external.Structures.Sprite;
+import renderer.external.Structures.SpriteAnimation;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +27,10 @@ import java.util.function.Consumer;
 public class CharacterEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "lucinaglasses.png";
 
-    private Pane mapPane;
+    private ImageView portrait;
+    private ImageView spriteSheet;
+
+
     private Group root;
     private VBox mySliders;
     private SliderBox healthSlider;
@@ -44,11 +43,14 @@ public class CharacterEditor extends EditorSuper{
     public CharacterEditor(Group root, EditorManager em){
         super(root,em);
         this.root = root;
-        initializeMap(400, 400);
-        this.setPortrait(DEFAULT_BACKGROUND_IMAGE);
+        portrait = initializeImageView(200, 300, 275, 25);
+        spriteSheet = initializeImageView(600, 400, 25, 350);
+
+        this.setImageView(portrait, DEFAULT_BACKGROUND_IMAGE);
+
         Button addBG = getRenderSystem().makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
-                30.0,50.0,200.0,200.0,50.0);
-        root.getChildren().add(addBG);
+                30.0,25.0,250.0,200.0,50.0);
+        addBG.setOnMouseClicked(e -> choosePortrait());
         consumer = new Consumer() {
             @Override
             public void accept(Object o) {
@@ -58,14 +60,38 @@ public class CharacterEditor extends EditorSuper{
         makeSliders();
         Button saveFile = getRenderSystem().makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
-        root.getChildren().add(saveFile);
         saveFile.setOnMouseClicked(e -> createSaveFile());
 
         Button loadFile = getRenderSystem().makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 75.0, 200.0, 50.0);
-        root.getChildren().add(loadFile);
         loadFile.setOnMouseClicked(e ->loadCharacterData());
+
+        Button getSpriteSheet = getRenderSystem().makeStringButton("Import Sprite Sheet", Color.FORESTGREEN, true,
+                Color.WHITE, 20.0, 600.0, 25.0, 200.0, 50.0);
+        getSpriteSheet.setOnMouseClicked(e -> chooseSpriteSheet());
+
+        Button setAnimation = getRenderSystem().makeStringButton("Set Sprite Animation", Color.ORCHID, true,
+                Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
+        //setAnimation.setOnMouseClicked(e -> makeSprite());
+        root.getChildren().addAll(addBG, saveFile, loadFile, getSpriteSheet, setAnimation);
     }
+
+
+    private void makeSprite(){
+        Sprite mySprite = getRenderSystem().makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.5);
+        SpriteAnimation myAnimation = getRenderSystem().makeSpriteAnimation(mySprite, Duration.seconds(2.0), 22,
+                11, 0.0, 0.0, 111.818181, 56.0);
+        root.getChildren().add(mySprite);
+        mySprite.setLayoutX(650);
+        mySprite.setLayoutY(175);
+        mySprite.setScaleX(2);
+        mySprite.setScaleY(2);
+        myAnimation.setCycleCount(Animation.INDEFINITE);
+        myAnimation.play();
+
+
+    }
+
 
     private void makeSliders(){
         mySliders = new VBox(10);
@@ -74,36 +100,44 @@ public class CharacterEditor extends EditorSuper{
         defenseSlider = getRenderSystem().makeSlider("defense",consumer,0.0,0.0,200.0);
 
         mySliders.getChildren().addAll(healthSlider,attackSlider,defenseSlider);
-        mySliders.setLayoutX(800.0);
+        mySliders.setLayoutX(900.0);
         mySliders.setLayoutY(200.0);
         root.getChildren().add(mySliders);
 
     }
 
-
-    private void initializeMap(int width, int height){
-        mapPane = new Pane();
-        mapPane.setPrefWidth(width);
-        mapPane.setPrefHeight(height);
-        mapPane.setLayoutX(275);
-        mapPane.setLayoutY(100);
-        root.getChildren().add(mapPane);
+    private ImageView initializeImageView(int width, int height, int x, int y){
+        ImageView picture = new ImageView();
+        picture.setFitWidth(width);
+        picture.setFitHeight(height);
+        picture.setLayoutX(x);
+        picture.setLayoutY(y);
+        root.getChildren().add(picture);
+        return picture;
     }
 
+
+
+    private void setImageView(ImageView img, String portraitURL){
+        img.setImage(new Image(portraitURL));
+    }
+
+    private void chooseSpriteSheet(){
+        File sprites = chooseImage("Choose Sprite Sheet");
+            if (sprites !=  null){
+                setImageView(spriteSheet,sprites.toURI().toString());
+            }
+    }
     /**
      * User selects background, and it is applied to level.
      */
     private void choosePortrait(){
-        File portrait = chooseImage("Choose Background File");
-        if (portrait != null)
-            this.setPortrait(portrait.toURI().toString());
+        File portraitFile = chooseImage("Choose Portrait File");
+        if (portraitFile != null)
+            setImageView(portrait, portraitFile.toURI().toString());
     }
 
-    public void setPortrait(String portraitURL){
-        String formatted = String.format("-fx-background-image: url('%s');", portraitURL);
-        formatted = formatted + String.format("-fx-background-size: cover;");
-        mapPane.setStyle(formatted);
-    }
+
 
     /**
      * general method for choosing an image

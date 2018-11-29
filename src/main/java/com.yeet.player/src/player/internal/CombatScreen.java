@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import messenger.external.PositionsUpdateEvent;
-import physics.external.combatSystem.CombatSystem;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
 import xml.XMLParser;
@@ -24,8 +23,6 @@ public class CombatScreen extends Screen {
     private XMLParser myParser;
 
     private File myGameDirectory;
-
-    private CombatSystem myCombatSystem;
 
     private HashMap<String, ArrayList<String>> myStageMap;
     private HashMap<Integer, Sprite> mySpriteMap;
@@ -65,7 +62,6 @@ public class CombatScreen extends Screen {
                 //super.getMyRoot().getChildren().add(new ImageView(new Image()))
             }
         }
-        myCombatSystem = new CombatSystem(characterNames.keySet().size());
     }
 
     @Subscribe

@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import javafx.scene.control.Button;
@@ -24,6 +25,7 @@ public class EditorStart extends Scene {
     private List<EditorSuper> editors;
     private List<EditorHome> editorHomes;
     private RenderSystem renderSystem;
+    private Text myDirectoryName;
 
     public EditorStart(Group root, EditorManager em, List<EditorSuper> editors, List<EditorHome> editorHomes){
         super(root);
@@ -35,6 +37,9 @@ public class EditorStart extends Scene {
         Button back = renderSystem.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0);
         back.setOnMouseClicked(e -> em.goHome());
         root.getChildren().add(back);
+
+
+
         arrangeButtons();
     }
 

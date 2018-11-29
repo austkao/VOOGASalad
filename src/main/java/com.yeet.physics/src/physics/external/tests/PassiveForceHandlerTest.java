@@ -19,7 +19,7 @@ class PassiveForceHandlerTest {
         system.applyForces();
 
         double expectedAcceleration = 9.8;
-        double expectedVelocity = expectedAcceleration * 0.125;
+        double expectedVelocity = expectedAcceleration * 0.016666666;
         assertEquals(expectedAcceleration, system.gameObjects.get(0).getAcceleration().getMagnitude());
         assertEquals(expectedVelocity, system.gameObjects.get(0).getVelocity().getMagnitude());
     }
