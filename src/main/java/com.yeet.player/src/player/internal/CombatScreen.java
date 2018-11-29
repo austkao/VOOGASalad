@@ -31,7 +31,7 @@ public class CombatScreen extends Screen {
 
     public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName, Consumer<KeyCode> keyConsumer) {
         super(root, renderer);
-        myParser = new XMLParser(new File(gameDirectory.getPath()+"\\stages\\"+stageName+"\\stageproperties.xml"));
+        myParser = new XMLParser(new File(gameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myGameDirectory =  gameDirectory;
         myStageMap = myParser.parseFileForElement("map");
         mySpawnMap =  myParser.parseFileForElement("position");

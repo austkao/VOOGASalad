@@ -16,7 +16,7 @@ public class ScrollablePane extends Pane {
     private HashMap<String, String> currentImages;
 
 
-    public ScrollablePane(File dir){
+    public ScrollablePane(File dir, double x, double y){
         currentImages = new HashMap<>();
         items = FXCollections.observableArrayList();
         scrollPane = new ScrollPane();
@@ -28,8 +28,8 @@ public class ScrollablePane extends Pane {
         scrollPane.setLayoutY(0);
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(this);
-        scrollPane.setLayoutX(50);
-        scrollPane.setLayoutY(400);
+        scrollPane.setLayoutX(x);
+        scrollPane.setLayoutY(y);
         scrollPane.setScaleY(.8);
     }
 

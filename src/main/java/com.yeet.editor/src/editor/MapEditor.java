@@ -1,10 +1,13 @@
 package editor;
 
 import javafx.scene.Group;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import renderer.external.Structures.Level;
@@ -86,7 +89,7 @@ public class MapEditor extends EditorSuper{
     private void initializeScrollPane(){
         Path filePath = Paths.get(System.getProperty("user.dir"));
         File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
-        myScrollablePane = new ScrollablePane(paneFile);
+        myScrollablePane = new ScrollablePane(paneFile,50.0,400);
         for(ScrollableItem b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
         }
@@ -158,6 +161,19 @@ public class MapEditor extends EditorSuper{
 
     public String toString(){
         return "MapEditor";
+    }
+
+    private void snapShot(Pane pane) {
+        WritableImage image = pane.snapshot(new SnapshotParameters(), null);
+
+        // TODO: probably use a file chooser here
+        File file = new File("chart.png");
+
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        } catch (IOException e) {
+            // TODO: handle exception here
+        }
     }
 
 
