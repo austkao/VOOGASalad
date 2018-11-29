@@ -42,7 +42,7 @@ public class CombatScreen extends Screen {
 
     public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName, Consumer<KeyCode> keyConsumer) {
         super(root, renderer);
-        myParser = new XMLParser(new File(gameDirectory.getPath()+"\\stages\\"+stageName+"\\maps\\map1.xml"));
+        myParser = new XMLParser(new File(gameDirectory.getPath()+"\\stages\\"+stageName+"\\stageproperties.xml"));
         myGameDirectory =  gameDirectory;
         myStageName = stageName;
         myCharacterMap = new HashMap<>();
@@ -50,12 +50,12 @@ public class CombatScreen extends Screen {
         mySpawnMap =  myParser.parseFileForElement("position");
         mySpriteMap = new HashMap<>();
         myTiles = new ArrayList<>();
-        ImageView background = new ImageView(new Image(gameDirectory.toURI()+"/stages/"+stageName+"/background.png"));
+        ImageView background = new ImageView(new Image(gameDirectory.toURI()+"/data/background/background.png"));
         background.setFitWidth(1280.0);
         background.setFitHeight(800.0);
         super.getMyRoot().getChildren().addAll(background);
         for(int i=0; i<myStageMap.get("x").size();i++){
-            ImageView tile = new ImageView(new Image(gameDirectory.toURI()+"/stages/"+stageName+"/tiles/"+myStageMap.get("image").get(i)));
+            ImageView tile = new ImageView(new Image(gameDirectory.toURI()+"/data/tiles/"+myStageMap.get("image").get(i)));
             tile.setFitHeight(40.0);
             tile.setFitWidth(40.0);
             tile.setLayoutX(Integer.parseInt(myStageMap.get("x").get(i))*40.0);

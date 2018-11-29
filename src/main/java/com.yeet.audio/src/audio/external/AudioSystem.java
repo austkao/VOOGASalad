@@ -45,10 +45,10 @@ public class AudioSystem {
         myPlayer.playMedia(newPath);
     }
 
-    @Subscribe
-    public void playGameMusic(GameStartEvent event){
-        String newPath = path + "stages/example_stage_1/bgm/BGM.mp3";
-    }
+    //@Subscribe
+    //public void playGameMusic(GameStartEvent event){
+    //    String newPath = path + "stages/example_stage_1/bgm/BGM.mp3";
+    //}
 
     /**
      / This is the subscription to the ActionEvents that are posted by the inputsystem.

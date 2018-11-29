@@ -18,44 +18,50 @@ public class TextBox extends VBox {
     public static final double VBOX_SPACING = 5.0;
 
     private String myText;
+    private TextField myTextField;
 
     public TextBox(Consumer<String> fieldSetter, String text, Double x, Double y, Double w, Double h, Font font){
         super(VBOX_SPACING);
         this.setAlignment(Pos.CENTER_RIGHT);
-        TextField textField = new TextField(text);
-        textField.setUserData(text);
+        myTextField = new TextField(text);
+        myTextField.setUserData(text);
         this.setLayoutX(x);
         this.setLayoutY(y);
-        textField.setPrefSize(w,h);
-        textField.setFont(font);
+        myTextField.setPrefSize(w,h);
+        myTextField.setFont(font);
         Label textLabel = new Label("");
         textLabel.setFont(font);
         textLabel.setTextFill(Color.RED);
-        textField.setOnKeyPressed(event -> {
+        myTextField.setOnKeyPressed(event -> {
             if(event.getCode()== KeyCode.ENTER){
                 // field reverts to previous value if consumer fails
                 try{
-                    fieldSetter.accept(textField.getText());
-                    textField.setUserData(textField.getText());
-                    myText = textField.getText();
+                    fieldSetter.accept(myTextField.getText());
+                    myTextField.setUserData(myTextField.getText());
+                    myText = myTextField.getText();
                     textLabel.setText("");
                 }
                 catch(Exception e){
-                    textField.setText((String)textField.getUserData());
+                    myTextField.setText((String)myTextField.getUserData());
                     textLabel.setText("Invalid input.");
                 }
 
             }
             else if(event.getCode()==KeyCode.ESCAPE){
-                textField.setText((String)textField.getUserData());
+                myTextField.setText((String)myTextField.getUserData());
             }
         });
-        this.getChildren().addAll(textField,textLabel);
+        this.getChildren().addAll(myTextField,textLabel);
     }
 
     /** Returns the current stored value of the {@code TextField}*/
     public String getText(){
         return myText;
+    }
+
+    public void setText(String value) {
+        myText = value;
+        myTextField.setText(value);
     }
 
 }

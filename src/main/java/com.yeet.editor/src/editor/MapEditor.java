@@ -26,8 +26,8 @@ import java.util.HashMap;
 
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
-    private static final String DEFAULT_TILE = "acacia_log.png";
-    private static final String DEFAULT_IMAGE_DIR = "/src/main/java/com.yeet.main/resources/examplegame/stages/example_stage_1/tiles";
+    private static final String DEFAULT_IMAGE_DIR = "/src/main/java/com.yeet.main/resources/examplegame/data/tiles";
+    private static final String DEFAULT_BACKGROUND_DIR = "/src/main/java/com.yeet.main/resources/examplegame/data/background";
 
     private Image currentTileFile;
     private ScrollablePane myScrollablePane;
@@ -56,8 +56,8 @@ public class MapEditor extends EditorSuper{
         currentTileFile = myScrollablePane.getItems().get(0).getImage();
         //getRenderSystem().drawStage(mapPane, level);
         level.setOnMouseClicked(e -> clickProcessTile(e));
-        Button addBG = getRenderSystem().makeStringButton("set Background", Color.BLACK,true,Color.WHITE,
-                30.0,25.0,225.0,200.0,50.0);
+        Button addBG = getRenderSystem().makeStringButton("Set Background", Color.BLACK,true,Color.WHITE,
+                30.0,1000.0,700.0,200.0,50.0);
         addBG.setOnMouseClicked(e -> chooseBackground());
 
         Button resetGrid = getRenderSystem().makeStringButton("Reset Grid", Color.LAVENDER, true, Color.WHITE,
@@ -76,7 +76,7 @@ public class MapEditor extends EditorSuper{
                 30.0,25.0, 75.0, 200.0, 50.0);
         loadFile.setOnMouseClicked(e -> loadMapFile());
         Button editSettingsButton = getRenderSystem().makeStringButton("Edit Map Settings", Color.CRIMSON, true, Color.WHITE,
-                30.0,800.0, 75.0, 200.0, 50.0);
+                30.0,1000.0, 600.0, 200.0, 50.0);
         editSettingsButton.setOnMouseClicked(e -> goToSettings());
         root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, editSettingsButton);
     }
@@ -117,7 +117,8 @@ public class MapEditor extends EditorSuper{
      * User selects background, and it is applied to level.
      */
     private void chooseBackground(){
-        File backgroundFile = chooseImage("Choose Background File");
+        //ListView<String> backgroundList = myRe
+                File backgroundFile = chooseImage("Choose Background File");
         if (backgroundFile != null)
             level.setBackground(backgroundFile.toURI().toString());
     }

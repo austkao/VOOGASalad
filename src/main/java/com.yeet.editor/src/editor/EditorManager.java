@@ -3,7 +3,6 @@ package editor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import renderer.external.RenderSystem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class EditorManager {
     }
     private List<EditorHome> makeEditorHomes(){
         List<EditorHome> editors = new ArrayList<EditorHome>();
-        Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this), new GamePlayHome(new Group(), this));
+        Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this), new GameplayHome(new Group(), this));
         return editors;
     }
 

@@ -3,6 +3,7 @@ package player.internal;
 import physics.external.PhysicsSystem;
 import renderer.external.RenderSystem;
 
+
 public class GameLoop {
     private PhysicsSystem physicsEngine;
     private RenderSystem renderEngine;
@@ -27,7 +28,6 @@ public class GameLoop {
         this.physicsEngine = physicsEngine;
         //renderEngine= new RenderSystem(Font);
     }
-
     /**
      * Begin running the main game loop. Updates physics system
      */
