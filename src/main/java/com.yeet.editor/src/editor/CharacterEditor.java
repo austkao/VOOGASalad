@@ -30,6 +30,9 @@ public class CharacterEditor extends EditorSuper{
     private ImageView portrait;
     private ImageView spriteSheet;
 
+    private Sprite currentSprite;
+    private SpriteAnimation currentAnimation;
+
 
     private Group root;
     private VBox mySliders;
@@ -44,7 +47,10 @@ public class CharacterEditor extends EditorSuper{
         super(root,em);
         this.root = root;
         portrait = initializeImageView(200, 300, 275, 25);
-        spriteSheet = initializeImageView(600, 400, 25, 350);
+        //spriteSheet = initializeImageView(600, 400, 25, 350);
+        spriteSheet = new ImageView();
+        spriteSheet.setLayoutX(25.0);
+        spriteSheet.setLayoutY(350.0);
 
         this.setImageView(portrait, DEFAULT_BACKGROUND_IMAGE);
 
@@ -80,22 +86,30 @@ public class CharacterEditor extends EditorSuper{
                 Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
         root.getChildren().add(setAnimation);
         setAnimation.setOnMouseClicked(e -> makeSprite());
+
+        Button playAnimation = getRenderSystem().makeStringButton("Play Animation", Color.DARKVIOLET, true,
+                Color.WHITE, 20.0, 500.0, 175.0, 200.0, 50.0);
+        root.getChildren().add(playAnimation);
+        playAnimation.setOnMouseClicked(e -> playAnimation());
+    }
+
+
+    private void playAnimation(){
+        if (currentAnimation.getStatus().equals(Animation.Status.RUNNING)){
+            currentAnimation.stop();
+            //currentAnimation.jumpTo(new Duration(0));
+        }
+        else{
+            currentAnimation.play();
+        }
     }
 
 
     private void makeSprite(){
-        Sprite mySprite = getRenderSystem().makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.5);
-        SpriteAnimation myAnimation = getRenderSystem().makeSpriteAnimation(mySprite, Duration.seconds(2.0), 22,
+        SpriteAnimation myAnimation = getRenderSystem().makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 22,
                 11, 0.0, 0.0, 111.818181, 56.0);
-        root.getChildren().add(mySprite);
-        mySprite.setLayoutX(650);
-        mySprite.setLayoutY(175);
-        mySprite.setScaleX(2);
-        mySprite.setScaleY(2);
         myAnimation.setCycleCount(Animation.INDEFINITE);
-        myAnimation.play();
-
-
+        currentAnimation = myAnimation;
     }
 
 
@@ -133,6 +147,15 @@ public class CharacterEditor extends EditorSuper{
             if (sprites !=  null){
                 setImageView(spriteSheet,sprites.toURI().toString());
             }
+        //Sprite mySprite = getRenderSystem().makeSprite(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
+        Sprite mySprite = new Sprite(spriteSheet.getImage(), 110.0, 55.0);
+
+            root.getChildren().add(mySprite);
+        mySprite.setLayoutX(700);
+        mySprite.setLayoutY(500);
+        mySprite.setScaleX(5);
+        mySprite.setScaleY(5);
+        currentSprite = mySprite;
     }
     /**
      * User selects background, and it is applied to level.
