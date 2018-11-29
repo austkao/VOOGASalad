@@ -90,7 +90,6 @@ public class Main extends Application {
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
         root.getChildren().add(newButton);
         editButton = myRenderSystem.makeStringButton("Edit Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,311.68,307.21,94.6);
-        editButton.setDisable(true);
         editButton.setOnMouseClicked(event -> {
             em.setEditorHomeScene();
             em.setGameDirectory(myDirectory);
@@ -141,6 +140,7 @@ public class Main extends Application {
 
     /** Create a {@code DirectoryChooser} and set the active game directory if it is valid*/
     private void setDirectory(){
+        myDirectoryChooser.setInitialDirectory(new File(System.getProperty("user.dir")+RESOURCE_PATH));
         File directory = myDirectoryChooser.showDialog(myStage);
         if(directory!=null && checkDirectory(directory)){
             Image splash = new Image(String.format("%s%s",directory.toURI(),"splash.png"));

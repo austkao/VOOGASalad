@@ -6,6 +6,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.SliderBox;
@@ -26,6 +27,8 @@ public class GameplayEditor extends EditorSuper{
 
     public GameplayEditor(Group root, EditorManager em) {
         super(root,em);
+        RenderSystem myRenderSystem = getRenderSystem();
+        Text t = myRenderSystem.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
         consumer = new Consumer() {
             @Override
             public void accept(Object o) {

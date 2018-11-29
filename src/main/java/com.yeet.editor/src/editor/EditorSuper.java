@@ -4,14 +4,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import xml.XMLParser;
 import xml.XMLSaveBuilder;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -24,7 +22,7 @@ import java.util.HashMap;
  * @author ob29
  */
 
-public class EditorSuper extends Scene{
+public abstract class EditorSuper extends Scene{
 
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
@@ -40,7 +38,6 @@ public class EditorSuper extends Scene{
         rs = new RenderSystem();
         Text t = rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
         root.getChildren().add(t);
-
     }
 
     /**
@@ -90,9 +87,7 @@ public class EditorSuper extends Scene{
         try {
             FileChooser fileChooser = rs.makeFileChooser("xml");
             fileChooser.setTitle("Save File As");
-            Path userPath = Paths.get(System.getProperty("user.dir"));
             File defaultFile = em.getGameDirectory();
-
             fileChooser.setInitialDirectory(defaultFile);
             File file = fileChooser.showSaveDialog(new Stage());
             if(file != null) {
