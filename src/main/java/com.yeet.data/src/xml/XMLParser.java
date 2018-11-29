@@ -28,17 +28,7 @@ public class XMLParser implements Parser {
             Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
             xmlDocument = doc;
-            NodeList docNodes = xmlDocument.getChildNodes();
-            boolean verified = false;
-            for(int i = 0; i < docNodes.getLength(); i++) {
-                if(docNodes.item(i) instanceof Element) {
-                    Element elem = (Element) docNodes.item(i);
-                    if(elem.getTagName().equals("VOOGASalad")) {
-                        verified = true;
-                        System.out.println("success");
-                    }
-                }
-            }
+            boolean verified = determineFileValidity();
             if(!verified) {
                 throw new IOException("No VOOGASalad tag");
             }
@@ -83,5 +73,19 @@ public class XMLParser implements Parser {
             }
         }
         return values;
+    }
+
+    private boolean determineFileValidity() {
+        boolean verified = false;
+        NodeList docNodes = xmlDocument.getChildNodes();
+        for(int i = 0; i < docNodes.getLength(); i++) {
+            if(docNodes.item(i) instanceof Element) {
+                Element elem = (Element) docNodes.item(i);
+                if(elem.getTagName().equals("VOOGASalad")) {
+                    verified = true;
+                }
+            }
+        }
+        return verified;
     }
 }

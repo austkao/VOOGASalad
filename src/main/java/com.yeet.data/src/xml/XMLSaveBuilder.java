@@ -37,11 +37,8 @@ public class XMLSaveBuilder implements Saver {
      */
     public XMLSaveBuilder(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data, File file) {
         try {
-            int attributes = 0;
-            for(String s: structure.keySet()) {
-                attributes += structure.get(s).size();
-            }
-            if(attributes != data.keySet().size()) {
+            boolean isValid = determineMapParameterValidity(structure, data);
+            if(!isValid) {
                 throw new IOException("Invalid map parameters");
             }
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -98,5 +95,13 @@ public class XMLSaveBuilder implements Saver {
         } catch (TransformerException f) {
             System.out.println("Cannot create save file");
         }
+    }
+
+    private boolean determineMapParameterValidity(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
+        int attributes = 0;
+        for(String s: structure.keySet()) {
+            attributes += structure.get(s).size();
+        }
+        return (attributes == data.keySet().size());
     }
 }
