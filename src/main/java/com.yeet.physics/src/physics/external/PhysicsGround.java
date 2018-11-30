@@ -8,7 +8,7 @@ public class PhysicsGround extends PhysicsObject {
     }
 
     @Override
-    boolean isPhysicsGround(){
+    public boolean isPhysicsGround(){
         return true;
     }
 }

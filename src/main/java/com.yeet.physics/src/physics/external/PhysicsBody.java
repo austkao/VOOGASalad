@@ -7,7 +7,7 @@ public class PhysicsBody extends PhysicsObject {
     }
 
     @Override
-    boolean isPhysicsBody(){
+    public boolean isPhysicsBody(){
         return true;
     }
 

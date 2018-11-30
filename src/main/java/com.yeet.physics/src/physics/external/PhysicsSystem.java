@@ -34,7 +34,7 @@ public class PhysicsSystem {
         this.myMessageBus = EventBusFactory.getEventBus();
     }
 
-    void update() {
+    public void update() {
         CollisionDetector detector = new CollisionDetector(gameObjects);
         List<Collision> collisions = new ArrayList<>(detector.detectCollisions(gameObjects));
         MovementHandler movHandler = new MovementHandler(gameObjects);
@@ -73,12 +73,12 @@ public class PhysicsSystem {
         calc.updatePositions();
     }
 
-    private Map<Integer, Point2D> convertToMap() {
+    private Map<Integer, Point2D> convertToMap(List<PhysicsObject> objectList) {
         Map<Integer, Point2D> out = new HashMap<>();
-        for(PhysicsObject obj: gameObjects){
+        for(PhysicsObject obj: objectList){
             //Convert to map
             Point2D.Double point = new Point2D.Double(obj.getMyCoordinateBody().getPos().getX(), obj.getMyCoordinateBody().getPos().getY());
-            out.put(gameObjects.indexOf(obj), point);
+            out.put(objectList.indexOf(obj), point);
         }
         return out;
     }

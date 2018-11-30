@@ -1,17 +1,17 @@
 package physics.external;
 
-class PhysicsVector {
+public class PhysicsVector {
     protected double magnitude;
     protected double direction; // IN RADIANS
 
-    PhysicsVector (double magnitude, double direction) {
+    public PhysicsVector (double magnitude, double direction) {
         this.magnitude = magnitude;
         this.direction = direction;
     }
-    double getMagnitude() {
+    public double getMagnitude() {
         return magnitude;
     }
-    double getDirection() {
+    public double getDirection() {
         return direction;
     }
 }

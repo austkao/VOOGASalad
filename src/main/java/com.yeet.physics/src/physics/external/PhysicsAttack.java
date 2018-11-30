@@ -7,7 +7,7 @@ public class PhysicsAttack extends PhysicsObject {
     }
 
     @Override
-    boolean isPhysicsAttack() {
+    public boolean isPhysicsAttack() {
         return true;
     }
 }

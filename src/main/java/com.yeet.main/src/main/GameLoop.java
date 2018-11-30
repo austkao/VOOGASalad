@@ -3,6 +3,8 @@ package main;
 import physics.external.PhysicsSystem;
 import renderer.external.RenderSystem;
 
+import java.util.ArrayList;
+
 public class GameLoop {
     private PhysicsSystem physicsEngine;
     private RenderSystem renderEngine;
@@ -24,7 +26,7 @@ public class GameLoop {
 
 
     public GameLoop(){
-        physicsEngine = new PhysicsSystem();
+        physicsEngine = new PhysicsSystem(new ArrayList<>());
         //renderEngine= new RenderSystem(Font);
     }
 

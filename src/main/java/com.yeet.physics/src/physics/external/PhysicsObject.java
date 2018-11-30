@@ -5,15 +5,16 @@ import java.util.List;
 
 public abstract class PhysicsObject {
 
-    double myMass;
-    List<PhysicsVector> currentForces = new ArrayList<>();
-    CoordinateBody myCoordinateBody;
-    double myDirection; //0: right, PI: left
-    PhysicsVector myAcceleration;
-    PhysicsVector myVelocity;
-    int id;
 
-    PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
+    protected double myMass;
+    protected List<PhysicsVector> currentForces = new ArrayList<>();
+    protected CoordinateBody myCoordinateBody;
+    protected double myDirection; //0: right, PI: left
+    protected PhysicsVector myAcceleration;
+    protected PhysicsVector myVelocity;
+    protected int id;
+
+    public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
         this.myMass = mass;
         this.myCoordinateBody = new CoordinateBody(start, dims);
         this.myMass = mass;
@@ -24,56 +25,56 @@ public abstract class PhysicsObject {
         this.id = id;
     }
 
-    void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
+    public void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
         AccelerationCalculator ACalc = new AccelerationCalculator(force, myAcceleration, myVelocity, myMass);
         this.myAcceleration = ACalc.updateAcceleration();
         this.myVelocity = ACalc.updateVelocity();
     }
 
-    double getMass() {
+    public double getMass() {
         return myMass;
     }
 
-    PhysicsVector getAcceleration(){
+    public PhysicsVector getAcceleration(){
         return this.myAcceleration;
     }
 
-    PhysicsVector getVelocity(){
+    public PhysicsVector getVelocity(){
         return this.myVelocity;
     }
 
-    CoordinateBody getMyCoordinateBody() {
+    public CoordinateBody getMyCoordinateBody() {
         return myCoordinateBody;
     }
-    boolean isPhysicsAttack() {
+    public boolean isPhysicsAttack() {
         return false;
     }
 
-    boolean isPhysicsBody() {
+    public boolean isPhysicsBody() {
         return false;
     }
 
-    boolean isPhysicsGround(){
+    public boolean isPhysicsGround(){
         return false;
     }
 
-    void addCurrentForce(PhysicsVector force) {
+    public void addCurrentForce(PhysicsVector force) {
         currentForces.add(force);
     }
 
-    List<PhysicsVector> getCurrentForces() {
+    public List<PhysicsVector> getCurrentForces() {
         return currentForces;
     }
 
-    void clearCurrentForces() {
+    public void clearCurrentForces() {
         currentForces.clear();
     }
 
-    void setDirection(double dir) {
+    public void setDirection(double dir) {
         this.myDirection = dir;
     }
 
-    double getDirection() {
+    public double getDirection() {
         return myDirection;
     }
 
