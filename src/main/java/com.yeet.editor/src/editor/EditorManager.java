@@ -3,8 +3,8 @@ package editor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import renderer.external.RenderSystem;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,11 +21,13 @@ public class EditorManager {
     private Group root;
     private Stage myStage;
     private Scene homeScene;
+    private File gameDirectory;
 
-    public EditorManager(Stage stage, Scene scene){
+    public EditorManager(Stage stage, Scene scene, File directory){
         myStage = stage;
         homeScene = scene;
         root = new Group();
+        gameDirectory = directory;
         myEditors = makeEditors();
         myEditorHomes = makeEditorHomes();
         myScene = new EditorStart(root,this, myEditors,myEditorHomes);
@@ -35,9 +37,23 @@ public class EditorManager {
         myStage.setScene(myScene);
     }
 
-    public void loadEditorHomeScene() {
-        setEditorHomeScene();
+    public void setGameDirectory(File gameDirectory){
+        this.gameDirectory = gameDirectory;
+
     }
+
+    public File getGameDirectory(){
+      return gameDirectory;
+    }
+
+    public String getGameDirectoryString(){
+
+       return gameDirectory.toString();
+    }
+
+//    public void loadEditorHomeScene() {
+//        setEditorHomeScene();
+//    }
 
     public void goHome(){
         myStage.setScene(homeScene);
@@ -54,7 +70,7 @@ public class EditorManager {
     }
     private List<EditorHome> makeEditorHomes(){
         List<EditorHome> editors = new ArrayList<EditorHome>();
-        Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this));
+        Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this), new GameplayHome(new Group(), this));
         return editors;
     }
 

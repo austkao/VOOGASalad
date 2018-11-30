@@ -1,9 +1,9 @@
 package xml;
 
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+import renderer.external.RenderSystem;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import renderer.external.RenderSystem;
 
 /**
  * This class parses an xml file for the information wanted by a user.
@@ -21,7 +20,6 @@ import renderer.external.RenderSystem;
 public class XMLParser implements Parser {
 
     private Document xmlDocument;
-    private RenderSystem renderSys;
 
     public XMLParser(File file) {
         try {
@@ -30,17 +28,7 @@ public class XMLParser implements Parser {
             Document doc = dBuilder.parse(file);
             doc.getDocumentElement().normalize();
             xmlDocument = doc;
-            NodeList docNodes = xmlDocument.getChildNodes();
-            boolean verified = false;
-            for(int i = 0; i < docNodes.getLength(); i++) {
-                if(docNodes.item(i) instanceof Element) {
-                    Element elem = (Element) docNodes.item(i);
-                    if(elem.getTagName().equals("VOOGASalad")) {
-                        verified = true;
-                        System.out.println("success");
-                    }
-                }
-            }
+            boolean verified = determineFileValidity();
             if(!verified) {
                 throw new IOException("No VOOGASalad tag");
             }
@@ -85,5 +73,19 @@ public class XMLParser implements Parser {
             }
         }
         return values;
+    }
+
+    private boolean determineFileValidity() {
+        boolean verified = false;
+        NodeList docNodes = xmlDocument.getChildNodes();
+        for(int i = 0; i < docNodes.getLength(); i++) {
+            if(docNodes.item(i) instanceof Element) {
+                Element elem = (Element) docNodes.item(i);
+                if(elem.getTagName().equals("VOOGASalad")) {
+                    verified = true;
+                }
+            }
+        }
+        return verified;
     }
 }

@@ -2,24 +2,22 @@ package input.Internal;
 
 import messenger.external.KeyInputEvent;
 
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 public class Parser {
 
-    private Map<String, String> attackMapping;
+    private Map<String, ArrayList<String>> attackMapping;
     private TimeHandler timer;
-    public Parser(){
-        attackMapping = new HashMap<>();
-        attackMapping.put("A", "JAB");
-        attackMapping.put("S", "DOWN");
-        attackMapping.put("W", "UP");
-        attackMapping.put("D", "RIGHT");
-        attackMapping.put("AB", "SMASH");
-        attackMapping.put("SHORYUKEN", "SHORYUKEN");
-        attackMapping.put("SMASH", "SMASH");
-        //attackMapping.put("KAMI", "KAMI");
+    DataReceiver DR;
 
-        timer = new TimeHandler();
+    public Parser(File gameDir){
+        DR = new DataReceiver(gameDir);
+        setUpMapping();
+        timer = new TimeHandler(DR.getCombos());
 
     }
 
@@ -30,16 +28,34 @@ public class Parser {
      * @return
      *
      */
-    public List<String> parse(Queue<KeyInputEvent> q){
+    public List<String> parse(Queue<KeyInputEvent> q) throws Exception {
         var output = timer.comboHandler(q);
         List<String> parsed = new ArrayList<>();
         for(String o :output){
-            parsed.add(attackMapping.get(o));
+            if(o.length()>1){
+                parsed.add(o);
+            }
+            else{
+                try{
+                    parsed.add(attackMapping.get(o).get(0)); //Get the first elemtent of the value (an arraylist)
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                    throw new Exception();
+                }
+            }
         }
         return parsed;
     }
 
+    /**
+     Obtains the key mappings from the Data Reciever
+     */
+    private void setUpMapping(){
+        attackMapping = DR.getKeys();
+    }
+
     public String parse(KeyInputEvent e){
-        return attackMapping.get(e.getKey().getChar());
+        return attackMapping.get(e.getKey().getChar()).get(0);
     }
 }

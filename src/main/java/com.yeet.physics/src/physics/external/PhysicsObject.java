@@ -5,14 +5,14 @@ import java.util.List;
 
 public abstract class PhysicsObject {
 
-
     protected double myMass;
     protected List<PhysicsVector> currentForces = new ArrayList<>();
     protected CoordinateBody myCoordinateBody;
     protected double myDirection; //0: right, PI: left
     protected PhysicsVector myAcceleration;
     protected PhysicsVector myVelocity;
-    protected int id;
+
+    int id;
 
     public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
         this.myMass = mass;

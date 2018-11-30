@@ -16,7 +16,13 @@ At a high level, our architecture will consist of a uniform module called the "m
 *This section serves as a map of your design for other programmers to gain a general understanding of how and why the program was divided up, and how the individual parts work together to provide the desired functionality. Describe specific modules you intend to create, their purpose with regards to the program's functionality, and how they collaborate with each other, focusing specifically on each one's API. Include a picture of how the modules are related (these pictures can be hand drawn and scanned in, created with a standard drawing program, or screen shots from a UML design program). Discuss specific classes, methods, and data structures, but not individual lines of code.*
 
 #### Module Structure: 
-Our design will be composed of a multi-level module structure. At the lowest level, there will be a Messenger module, which provides the functionality for creating or supporting a MessageBus, which is the system through which all other systems will communicate with each other. Therefore, all other systems, such as Input Handling, Audio, Physics, etc., will all require this Messenger module. These other systems will also be individual modules, since their functionality should be entirely encapsulated and should only interact with the other systems through the Messenger system. Up on the highest level, the Game Player and the Game Editor will require the specific systems that they need in order to establish their functionality. For example, while the Game Player will likely require such systems as a Render system, Audio system, Input system, Physics system, etc., the Game Editor will not require the Physics system, so it does not need to require it. 
+Our design will be composed of a multi-level module structure. At the lowest level, there will be a Messenger module, which provides the functionality for creating or supporting a MessageBus, which is the system through which all other systems will communicate with each other. Therefore, all game handling systems, such as Input Handling, Audio, Physics, etc., will all require this Messenger module.
+
+These game handling systems will also be individual modules, since their functionality should be entirely encapsulated and should only interact with the other systems through the Messenger system.
+
+Up on the highest level, the Game Player and the Game Editor will require the specific systems that they need in order to establish their functionality. For example, the Game Player requires the Render system, Audio system, Input system, Physics system.
+
+There is one utility module, which is the Data module. Other modules will require this module to extract the information they need from XML files.
 
 ![Module Diagram](modules.PNG "Module Diagram")
 
@@ -26,7 +32,7 @@ Our design will be composed of a multi-level module structure. At the lowest lev
     * Exported (exposed):
         * ```public Class Player```
     * Not Exported (encapsulated):
-        * 
+        * ```public Class Screen```
 * Module: Game Editor
     * Exported (exposed):
         * ```public Class Editor```
@@ -47,9 +53,11 @@ Our design will be composed of a multi-level module structure. At the lowest lev
         * 
 * Module: Physics System
     * Exported (exposed):
-        * ```      ```
+        * ```public Class Interaction```
+        * ```public Class InputHandler```
     * Not Exported (encapsulated):
-        * 
+        * ```public Class PhysicsObject```
+        * ```public Class Shape```
 * Module: Audio System
     * Exported (exposed):
         * ``` public class AudioSystem ```
@@ -108,12 +116,11 @@ Our design will be composed of a multi-level module structure. At the lowest lev
         * ```public class CombatSystem```
     * Not Exported
         * ```public class Player```
+        * ```public class PlayerManager```
         
 * Module: Data Processor
     * Exported
         * ```public class XMLSaveBuilder```
-        * ```public class XMLFileLoader```
-    * Not Exported
         * ```public class XMLParser```
 * Module: Main
     * Exported (exposed):

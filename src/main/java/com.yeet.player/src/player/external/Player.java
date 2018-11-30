@@ -2,12 +2,16 @@ package player.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import input.external.InputSystem;
 import javafx.scene.Group;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import messenger.external.EventBusFactory;
+import messenger.external.KeyInputEvent;
 import messenger.external.TestSuccesfulEvent;
+import physics.external.PhysicsSystem;
+import physics.external.combatSystem.CombatSystem;
 import player.internal.*;
 import renderer.external.Renderer;
 
@@ -22,6 +26,10 @@ public class Player {
     private Stage myStage;
     private Renderer myRenderer;
 
+    private InputSystem myInputSystem;
+    private CombatSystem myCombatSystem;
+    private PhysicsSystem myPhysicsSystem;
+    private GameLoop myGameLoop;
 
     private MediaPlayer myBGMPlayer;
     private Media myBGM;
@@ -33,6 +41,7 @@ public class Player {
     private MainMenuScreen myMainMenuScreen;
     private CharacterSelectScreen myCharacterSelectScreen;
     private MatchRulesScreen myMatchRulesScreen;
+    private StageSelectScreen myStageSelectScreen;
     private CombatScreen myCombatScreen;
     private CombatResultsScreen myCombatResultsScreen;
 
@@ -51,6 +60,11 @@ public class Player {
     public void start(){
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
+        myInputSystem = new InputSystem(myDirectory);
+        myMessageBus.register(myInputSystem);
+        myPhysicsSystem = new PhysicsSystem();
+        myGameLoop = new GameLoop(myPhysicsSystem);
+        myMessageBus.register(myPhysicsSystem);
         myBGM = new Media(new File(myDirectory.getPath()).toURI().toString()+"Theme.m4a");
         myBGMPlayer = new MediaPlayer(myBGM);
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -72,11 +86,22 @@ public class Player {
             myFightMusicPlayer.stop();
             myBGMPlayer.play();
         },()-> {
-            myStage.setScene(myCombatScreen);
-            myFightMusicPlayer.stop();
+            myStage.setScene(myStageSelectScreen);
         });
         myMatchRulesScreen = new MatchRulesScreen(new Group(), myRenderer);
-        myCombatScreen =  new CombatScreen(new Group(),myRenderer);
+        myStageSelectScreen = new StageSelectScreen(new Group(),myRenderer,myDirectory,()-> {
+            myStage.setScene(myCharacterSelectScreen);
+        },()-> {
+            myFightMusicPlayer.stop();
+            myStage.setScene(myLoadingScreen);
+            myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,myStageSelectScreen.getStage(),(key)->myMessageBus.post(new KeyInputEvent(key)));
+            myCombatScreen.setCharacters(myCharacterSelectScreen.getCharacters());
+            myCombatSystem = new CombatSystem(myCombatScreen.getCharacterMap(),myCombatScreen.getTileMap(),myPhysicsSystem);
+            myMessageBus.register(myCombatSystem);
+            myMessageBus.register(myCombatScreen);
+            myStage.setScene(myCombatScreen);
+            myGameLoop.startLoop();
+        });
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
         //finished loading
         System.out.println("finished loading!");

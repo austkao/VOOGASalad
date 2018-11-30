@@ -9,8 +9,8 @@ module com.yeet.main {
     requires com.yeet.editor;
     requires com.yeet.console;
     requires com.yeet.input;
-    requires com.yeet.physics;
     requires com.yeet.renderer;
+    requires com.yeet.physics;
 
     exports main;
 }

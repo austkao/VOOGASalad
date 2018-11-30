@@ -13,7 +13,7 @@ class PhysicsBodyTest {
 
     @Test
     void createPhysicsBody() {
-        PhysicsBody body1 = new PhysicsBody(50, new Coordinate(0,0), new Dimensions(0,0));
+        PhysicsBody body1 = new PhysicsBody(0,50, new Coordinate(0,0), new Dimensions(0,0));
 
         PhysicsVector expectedAcc = new PhysicsVector(0,0);
         PhysicsVector expectedVel = new PhysicsVector(0,0);
@@ -25,7 +25,7 @@ class PhysicsBodyTest {
 
     @Test
     void applyForce() {
-        PhysicsBody body2 = new PhysicsBody(50, new Coordinate(0,0), new Dimensions(0,0));
+        PhysicsBody body2 = new PhysicsBody(0,50, new Coordinate(0,0), new Dimensions(0,0));
 
         PhysicsVector expectedAcc = new PhysicsVector(0.4,0);
         PhysicsVector expectedVel = new PhysicsVector(.05,0);
@@ -39,7 +39,7 @@ class PhysicsBodyTest {
 
     @Test
     void applyMultipleForces() {
-        PhysicsBody body3 = new PhysicsBody(50, new Coordinate(0,0), new Dimensions(0,0));
+        PhysicsBody body3 = new PhysicsBody(0,50, new Coordinate(0,0), new Dimensions(0,0));
 
         PhysicsVector expectedAcc = new PhysicsVector(Math.sqrt(2) * 0.4,PI/4);
         PhysicsVector expectedVel2 = new PhysicsVector(Math.sqrt(2) * 0.05,PI/4);
