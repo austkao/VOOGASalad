@@ -4,7 +4,6 @@ import com.google.common.eventbus.EventBus;
 import messenger.external.AttackIntersectEvent;
 import messenger.external.EventBusFactory;
 import messenger.external.GroundIntersectEvent;
-import messenger.external.PositionsUpdateEvent;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -57,8 +56,8 @@ public class PhysicsSystem {
         passHandler.update();
         applyForces();
         updatePositions();
-        PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
-        myMessageBus.post(newPos);
+        //PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
+        //myMessageBus.post(newPos);
         GroundIntersectEvent groundedPlayers = new GroundIntersectEvent(groundCollisions);
         if (groundedPlayers != null) {
             myMessageBus.post(groundCollisions);
@@ -102,7 +101,7 @@ public class PhysicsSystem {
         calc.updatePositions();
     }
 
-    private Map<Integer, Point2D> getPositionsMap() {
+    public Map<Integer, Point2D> getPositionsMap() {
         Map<Integer, Point2D> out = new HashMap<>();
         for(PhysicsObject obj: gameObjects.values()){
             Point2D.Double point = new Point2D.Double(obj.getMyCoordinateBody().getPos().getX(), obj.getMyCoordinateBody().getPos().getY());
@@ -111,7 +110,7 @@ public class PhysicsSystem {
         return out;
     }
 
-    private Map<Integer, Double> getDirectionsMap() {
+    public Map<Integer, Double> getDirectionsMap() {
         Map<Integer, Double> out = new HashMap<>();
         double direction;
         for(PhysicsObject obj: gameObjects.values()){

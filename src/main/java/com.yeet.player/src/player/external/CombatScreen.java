@@ -1,7 +1,6 @@
 package player.external;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -10,7 +9,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import messenger.external.EventBusFactory;
 import messenger.external.KeyInputEvent;
-import messenger.external.PositionsUpdateEvent;
 import physics.external.PhysicsSystem;
 import physics.external.combatSystem.CombatSystem;
 import player.internal.GameLoop;
@@ -24,6 +22,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /** Displays a stage and visualizes character combat animation
  *  @author bpx
@@ -109,7 +108,7 @@ public class CombatScreen extends Screen {
         myInputSystem = new InputSystem(myGameDirectory);
         myMessageBus.register(myInputSystem);
         myPhysicsSystem = new PhysicsSystem();
-        myGameLoop = new GameLoop(myPhysicsSystem);
+        myGameLoop = new GameLoop(myPhysicsSystem,this);
         myMessageBus.register(myPhysicsSystem);
         myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem);
         myMessageBus.register(myCombatSystem);
@@ -135,11 +134,11 @@ public class CombatScreen extends Screen {
         return myTileMap;
     }
 
-    @Subscribe
-    public void update(PositionsUpdateEvent event){
+    public void update(Map<Integer, Point2D> characterMap, Map<Integer, Double> directionsMap){
         for(int i=0;i<mySpriteMap.keySet().size();i++){
-            mySpriteMap.get(i).setLayoutX(event.getPositions().get(i).getX());
-            mySpriteMap.get(i).setLayoutY(event.getPositions().get(i).getY());
+            mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
+            mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());
+            //TODO: set direction of sprites
         }
     }
 }
