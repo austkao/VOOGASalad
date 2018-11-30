@@ -56,20 +56,11 @@ public class CombatScreen extends Screen {
     private HashMap<Integer, Sprite> mySpriteMap;
     private ArrayList<ImageView> myTiles;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName,HashMap<Integer, String> characterMap) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName) {
         super(root, renderer);
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
         myMessageBus.register(this);
-        //set up game systems
-        myInputSystem = new InputSystem(gameDirectory);
-        myMessageBus.register(myInputSystem);
-        myPhysicsSystem = new PhysicsSystem();
-        myGameLoop = new GameLoop(myPhysicsSystem);
-        myMessageBus.register(myPhysicsSystem);
-        setCharacters(characterMap);
-        myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem);
-        myMessageBus.register(myCombatSystem);
         //set up resource managers
         myParser = new XMLParser(new File(gameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myGameDirectory =  gameDirectory;
@@ -100,7 +91,7 @@ public class CombatScreen extends Screen {
         super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
     }
 
-    public void setCharacters(HashMap<Integer, String> characterNames){
+    public void setupCombatScene(HashMap<Integer, String> characterNames){
         for(int i=0;i<characterNames.keySet().size();i++){
             if(!characterNames.get(i).equals("")){
                 System.out.println(characterNames.get(i));
@@ -112,9 +103,17 @@ public class CombatScreen extends Screen {
                 mySpriteMap.put(i,sprite);
                 myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0,Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0));
                 super.getMyRoot().getChildren().add(sprite);
-                //super.getMyRoot().getChildren().add(new ImageView(new Image()))
             }
         }
+        //set up combat systems
+        myInputSystem = new InputSystem(myGameDirectory);
+        myMessageBus.register(myInputSystem);
+        myPhysicsSystem = new PhysicsSystem();
+        myGameLoop = new GameLoop(myPhysicsSystem);
+        myMessageBus.register(myPhysicsSystem);
+        myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem);
+        myMessageBus.register(myCombatSystem);
+        //music and audio
         myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         myBGMPlayer.play();

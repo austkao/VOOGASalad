@@ -8,8 +8,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import messenger.external.EventBusFactory;
 import messenger.external.TestSuccesfulEvent;
-import physics.external.PhysicsSystem;
-import physics.external.combatSystem.CombatSystem;
 import player.internal.*;
 import renderer.external.Renderer;
 
@@ -84,7 +82,8 @@ public class Player {
         },()-> {
             myFightMusicPlayer.stop();
             myStage.setScene(myLoadingScreen);
-            myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,myStageSelectScreen.getStage(),myCharacterSelectScreen.getCharacters());
+            myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,myStageSelectScreen.getStage());
+            myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacters());
             myStage.setScene(myCombatScreen);
             myCombatScreen.startLoop();
         });
