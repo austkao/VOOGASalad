@@ -56,8 +56,8 @@ public class StageGrid extends TilePane {
             if(imageView.getImage().isError()){
                 imageView.setImage(new Image(String.format("%s/%s",files.get(i).toURI(),"thumb.jpg")));
             }*/
-            System.out.println(String.format("%s\\%s",files.get(i).getPath(),"stageproperties.xml"));
-            myParser = new XMLParser(new File(String.format("%s\\%s",files.get(i).getPath(),"stageproperties.xml")));
+            System.out.println(String.format("%s//%s",files.get(i).getPath(),"stageproperties.xml"));
+            myParser = new XMLParser(new File(String.format("%s//%s",files.get(i).getPath(),"stageproperties.xml")));
             myBackgroundMap = myParser.parseFileForElement("background");
             ImageView imageView = new ImageView(new Image(directory.toURI()+"data/background/"+myBackgroundMap.get("bgFile").get(0)));
 

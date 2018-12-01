@@ -15,18 +15,16 @@ public class CollisionDetector {
     public List<Collision> detectCollisions(Map<Integer, PhysicsObject> bodies){
         List<Collision> collisions = new ArrayList<>();
         for(PhysicsObject bod: bodies.values()){
-            if (bod.getId() == 0 || bod.getId() < 1005) {
-                System.out.println("Object " + bod.getId() + " WIDTH: " + (bod.getMyCoordinateBody().getHitBox().getMaxX() - bod.getMyCoordinateBody().getHitBox().getMinX()));
-                System.out.println("TILE HEIGHT: " + (bod.getMyCoordinateBody().getHitBox().getMaxY() - bod.getMyCoordinateBody().getHitBox().getMinY()));
-                System.out.println("TILE POSX: " + bod.getMyCoordinateBody().getHitBox().getMinX());
-                System.out.println("TILE POSY: " + bod.getMyCoordinateBody().getHitBox().getMinY());
-            }
             for(PhysicsObject bod2: bodies.values()){
                 if(!bod.equals(bod2)){
+                    if (bod.getId() == 1 && bod2.getId() > 999) {
+                        System.out.println("getPos() " + bod.getId() + " BodyMinY Position: " + (bod.getMyCoordinateBody().getPos().getY() + 60));
+                        System.out.println("getPos() " + bod2.getId() + " GroundMaxY Position: " + bod2.getMyCoordinateBody().getPos().getY());
+                    }
                     if(bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody())){
-                        if (bod.getId() < 100 || bod2.getId() < 100) {
-                            System.out.println("COLLISION BETWEEN " + bod.getId() + " AND " + bod2.getId());
-                        }
+//                        if (bod.getId() == 1 || bod2.getId() < 100) {
+//                            System.out.println("COLLIDING WITH GROUND");
+//                        }
                         List<PhysicsObject> colliders = new ArrayList<>();
                         colliders.add(bod);
                         colliders.add(bod2);
