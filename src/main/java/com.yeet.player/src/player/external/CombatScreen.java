@@ -1,12 +1,15 @@
 package player.external;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
+import messenger.external.AttackSuccessfulEvent;
 import messenger.external.EventBusFactory;
 import messenger.external.KeyInputEvent;
 import physics.external.PhysicsSystem;
@@ -15,6 +18,7 @@ import player.internal.GameLoop;
 import player.internal.Screen;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
+import renderer.external.Structures.SpriteAnimation;
 import xml.XMLParser;
 
 import java.awt.geom.Point2D;
@@ -48,11 +52,14 @@ public class CombatScreen extends Screen {
 
     private HashMap<Integer, Point2D> myCharacterMap;
     private HashMap<Integer, Rectangle2D> myTileMap;
+    private HashMap<Integer, Sprite> mySpriteMap;
+    private HashMap<Integer, HashMap<String,SpriteAnimation>> myAnimationMap;
+
     private HashMap<String, ArrayList<String>> myBackgroundMap;
     private HashMap<String,ArrayList<String>> myMusicMap;
     private HashMap<String, ArrayList<String>> myStageMap;
     private HashMap<String, ArrayList<String>> mySpawnMap;
-    private HashMap<Integer, Sprite> mySpriteMap;
+
     private ArrayList<ImageView> myTiles;
 
     public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName) {
@@ -71,6 +78,7 @@ public class CombatScreen extends Screen {
         myStageMap = myParser.parseFileForElement("map");
         mySpawnMap =  myParser.parseFileForElement("position");
         mySpriteMap = new HashMap<>();
+        myAnimationMap = new HashMap<>();
         myTiles = new ArrayList<>();
         //set up visuals
         ImageView background = new ImageView(new Image(gameDirectory.toURI()+"data/background/"+myBackgroundMap.get("bgFile").get(0)));
@@ -93,15 +101,34 @@ public class CombatScreen extends Screen {
     public void setupCombatScene(HashMap<Integer, String> characterNames){
         for(int i=0;i<characterNames.keySet().size();i++){
             if(!characterNames.get(i).equals("")){
-                System.out.println(characterNames.get(i));
-                XMLParser propertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(i)+"/sprites/spriteproperties.xml"));
-                HashMap<String,ArrayList<String>> spriteProperties = propertiesParser.parseFileForElement("sprite");
-                Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(i)+"/sprites/spritesheet.png"),Double.parseDouble(((spriteProperties.get("width").get(0)))),Double.parseDouble(spriteProperties.get("height").get(0)));
+                //create sprites and set default viewport
+                XMLParser spritePropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(i)+"/sprites/spriteproperties.xml"));
+                HashMap<String,ArrayList<String>> spriteProperties = spritePropertiesParser.parseFileForElement("sprite");
+                Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(i)+"/sprites/spritesheet.png"),
+                        Double.parseDouble(((spriteProperties.get("offsetX").get(0)))),Double.parseDouble(((spriteProperties.get("offsetY").get(0)))),
+                        Double.parseDouble(((spriteProperties.get("width").get(0)))),Double.parseDouble(spriteProperties.get("height").get(0)));
                 sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0);
                 sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0);
                 mySpriteMap.put(i,sprite);
                 myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0,Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0));
                 super.getMyRoot().getChildren().add(sprite);
+                //set up animations for the sprite
+                XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(i)+"/sprites/animationproperties.xml"));
+                HashMap<String, ArrayList<String>> animationInfo = animationPropertiesParser.parseFileForElement("animation");
+                myAnimationMap.put(i,new HashMap<>());
+                for(int j = 0; j<animationInfo.get("name").size(); j++){
+                    Duration duration = Duration.seconds(Double.parseDouble(animationInfo.get("duration").get(j)));
+                    String name = animationInfo.get("name").get(j);
+                    int count = Integer.parseInt(animationInfo.get("count").get(j));
+                    int columns = Integer.parseInt(animationInfo.get("columns").get(j));
+                    double offsetX = Double.parseDouble(animationInfo.get("offsetX").get(j));
+                    double offsetY = Double.parseDouble(animationInfo.get("offsetY").get(j));
+                    double width = Double.parseDouble(animationInfo.get("width").get(j));
+                    double height = Double.parseDouble(animationInfo.get("height").get(j));
+                    SpriteAnimation animation = new SpriteAnimation(sprite,duration,count,columns,offsetX,offsetY,width,height);
+                    myAnimationMap.get(i).put(name,animation);
+                }
+
             }
         }
         //set up combat systems
@@ -139,6 +166,20 @@ public class CombatScreen extends Screen {
             mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
             mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());
             //TODO: set direction of sprites
+            if(directionsMap.get(i)==0){
+                // face right
+                mySpriteMap.get(i).setScaleX(-1);
+            }
+            else if(directionsMap.get(i)==Math.PI){
+                //face left
+                mySpriteMap.get(i).setScaleX(1);
+            }
         }
+    }
+
+    @Subscribe
+    public void showAttackAnimation(AttackSuccessfulEvent attackSuccessfulEvent){
+        int id = attackSuccessfulEvent.getInitiatorID();
+        myAnimationMap.get(id).get("special").play();
     }
 }

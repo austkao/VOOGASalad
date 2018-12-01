@@ -70,11 +70,11 @@ public class InputSystem {
             else if(action.equalsIgnoreCase("right")){
                 keyEvent = new MoveEvent(1, false);
             }
-            else if(!action.equalsIgnoreCase("jump")){
-                keyEvent = new AttackEvent(1);
+            else if(action.equalsIgnoreCase("jump")){
+                keyEvent = new JumpEvent(1);
             }
             else{
-                keyEvent = new JumpEvent(1);
+                keyEvent = new AttackEvent(1);
             }
             myMessageBus.post(keyEvent);
 
