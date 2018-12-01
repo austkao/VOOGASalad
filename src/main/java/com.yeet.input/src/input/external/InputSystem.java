@@ -64,13 +64,13 @@ public class InputSystem {
         for(String action:s){
             System.out.println(action);
             CombatActionEvent keyEvent;
-            if(action.equals("left")){
+            if(action.equalsIgnoreCase("left")){
                 keyEvent = new MoveEvent(1, true);
             }
-            else if(action.equals("right")){
+            else if(action.equalsIgnoreCase("right")){
                 keyEvent = new MoveEvent(1, false);
             }
-            else if(!action.equals("jump")){
+            else if(!action.equalsIgnoreCase("jump")){
                 keyEvent = new AttackEvent(1);
             }
             else{
