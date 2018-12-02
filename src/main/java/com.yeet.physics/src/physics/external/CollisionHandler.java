@@ -40,20 +40,19 @@ public class CollisionHandler {
             }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround()){
-                one.myVelocity = new PhysicsVector(0,0);
-                one.myAcceleration = new PhysicsVector(0,0);
-                PhysicsVector balancingForce = new PhysicsVector(one.getMass()*9.8, -PI/2);
-                one.addCurrentForce(balancingForce);
+//                PhysicsVector blankVector = new PhysicsVector(0,0);
+//                PhysicsVector oppositeGravity = new PhysicsVector(one.getMass()*9.8,-PI/2);
+//                one.myVelocity = blankVector;
+//                one.myAcceleration = blankVector;
+//                one.clearCurrentForces();
+//                one.addCurrentForce(oppositeGravity);
+//                one.getMyCoordinateBody().setPos(one.getMyCoordinateBody().getPos().getX(), two.getMyCoordinateBody().getPos().getY() - one.getMyCoordinateBody().getDims().getSizeY());
+                one.setGrounded(true);
                 groundCollisions.add(one.getId());
-                System.out.println("HITTING GROUND");
+                if (one.getId() == 1)
+                    System.out.println("COLLIDING WITH GROUND");
+
             }
-            // ground+body
-//            if(one.isPhysicsGround() && two.isPhysicsBody()){
-//                PhysicsVector balancingForce = new PhysicsVector(two.getMass()*9.8, -PI/2);
-//                two.addCurrentForce(balancingForce);
-//                groundCollisions.add(two.getId());
-//                System.out.println("HITTING GROUND");
-//            }
             // body+body (do nothing)
             if(one.isPhysicsBody() && two.isPhysicsBody()){
 

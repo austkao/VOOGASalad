@@ -37,6 +37,14 @@ public class Coordinate {
         return this.y;
     }
 
+    public void setX(double x){
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
     public double getZ(){
         return this.z;
     }
