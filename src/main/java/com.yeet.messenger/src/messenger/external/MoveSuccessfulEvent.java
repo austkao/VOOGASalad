@@ -2,6 +2,7 @@ package messenger.external;
 
 public class MoveSuccessfulEvent extends SuccessfulEvent{
 
+    private int playerID;
     // true if player is going left, false if player is going right
     boolean isGoingLeft;
 
@@ -16,6 +17,6 @@ public class MoveSuccessfulEvent extends SuccessfulEvent{
 
     @Override
     public String getName() {
-        return null;
+        return ("Move Successful Event: Player "+initiatorID+" moves "+(isGoingLeft ? "left" : "right"));
     }
 }

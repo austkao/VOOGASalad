@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import messenger.external.AttackSuccessfulEvent;
 import messenger.external.EventBusFactory;
 import messenger.external.KeyInputEvent;
+import messenger.external.MoveSuccessfulEvent;
 import physics.external.PhysicsSystem;
 import physics.external.combatSystem.CombatSystem;
 import player.internal.GameLoop;
@@ -128,7 +129,6 @@ public class CombatScreen extends Screen {
                     SpriteAnimation animation = new SpriteAnimation(sprite,duration,count,columns,offsetX,offsetY,width,height);
                     myAnimationMap.get(i).put(name,animation);
                 }
-
             }
         }
         //set up combat systems
@@ -165,7 +165,6 @@ public class CombatScreen extends Screen {
         for(int i=0;i<mySpriteMap.keySet().size();i++){
             mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
             mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());
-            //TODO: set direction of sprites
             if(directionsMap.get(i)==0){
                 // face right
                 mySpriteMap.get(i).setScaleX(-1);
@@ -174,6 +173,10 @@ public class CombatScreen extends Screen {
                 //face left
                 mySpriteMap.get(i).setScaleX(1);
             }
+            /*System.out.println("Retrieving state for player: "+i);
+            if(myCombatSystem.getPlayerState(i).equals(PlayerState.INITIAL)){
+                mySpriteMap.get(i).defaultViewport();
+            }*/
         }
     }
 
@@ -181,5 +184,11 @@ public class CombatScreen extends Screen {
     public void showAttackAnimation(AttackSuccessfulEvent attackSuccessfulEvent){
         int id = attackSuccessfulEvent.getInitiatorID();
         myAnimationMap.get(id).get("special").play();
+    }
+
+    @Subscribe
+    public void showMoveAnimation(MoveSuccessfulEvent moveSuccessfulEvent){
+        int id = moveSuccessfulEvent.getInitiatorID();
+        myAnimationMap.get(id).get("run").play();
     }
 }

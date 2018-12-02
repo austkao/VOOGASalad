@@ -15,4 +15,9 @@ public class AttackEvent extends CombatActionEvent{
     public void onFailure() {
 
     }
+
+    @Override
+    public String getName(){
+        return "Attack Event: Player "+initiatorID+" attempts to attack";
+    }
 }

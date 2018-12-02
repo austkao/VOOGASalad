@@ -90,7 +90,6 @@ public class InputSystem {
      */
     @Subscribe
     public void getKey(KeyInputEvent inputEvent){
-        System.out.println(inputEvent.getName());
         commandHolder.add(inputEvent);
     }
 
