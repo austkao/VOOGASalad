@@ -12,12 +12,16 @@ public class Parser {
 
     private Map<String, ArrayList<String>> attackMapping;
     private TimeHandler timer;
-    DataReceiver DR;
+    private Node comboTree;
+    private DataReceiver DR;
+    private ComboFactory CFactory;
 
     public Parser(File gameDir){
         DR = new DataReceiver(gameDir);
+        CFactory = new ComboFactory(DR.getCombos());
+        setUpCombos();
         setUpMapping();
-        timer = new TimeHandler(DR.getCombos());
+        timer = new TimeHandler(DR.getCombos()); //pass in the combos to the timeHandler
 
     }
 
@@ -46,6 +50,10 @@ public class Parser {
             }
         }
         return parsed;
+    }
+
+    private void setUpCombos(){
+        comboTree = CFactory.createTree();
     }
 
     /**
