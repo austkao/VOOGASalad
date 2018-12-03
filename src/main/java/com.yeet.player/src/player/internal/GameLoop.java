@@ -1,12 +1,12 @@
 package player.internal;
 
 import physics.external.PhysicsSystem;
-import renderer.external.RenderSystem;
+import player.external.CombatScreen;
 
 
 public class GameLoop {
     private PhysicsSystem physicsEngine;
-    private RenderSystem renderEngine;
+    private CombatScreen combatScreen;
 
 
     private boolean running = true;
@@ -24,9 +24,9 @@ public class GameLoop {
     final int MAX_UPDATES_BEFORE_RENDER = 5;
 
 
-    public GameLoop(PhysicsSystem physicsEngine){
+    public GameLoop(PhysicsSystem physicsEngine, CombatScreen combatScreen){
         this.physicsEngine = physicsEngine;
-        //renderEngine= new RenderSystem(Font);
+        this.combatScreen =  combatScreen;
     }
     /**
      * Begin running the main game loop. Updates physics system
@@ -74,7 +74,7 @@ public class GameLoop {
                 //Render. To do so, we need to calculate interpolation for a smooth render.
                 float interpolation = Math.min(1.0f, (float) ((now - lastUpdateTime) / TIME_BETWEEN_UPDATES));
                 //Render the game using the render system (essentially update our render system, and pass it the interpolation)
-                //drawGame(interpolation);
+                combatScreen.update(physicsEngine.getPositionsMap(),physicsEngine.getDirectionsMap());
                 lastRenderTime = now; // Set the current time to be the last render time
 
                 //Update the frames we got.
