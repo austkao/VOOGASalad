@@ -29,6 +29,11 @@ public abstract class PhysicsObject {
         AccelerationCalculator ACalc = new AccelerationCalculator(force, myAcceleration, myVelocity, myMass);
         this.myAcceleration = ACalc.updateAcceleration();
         this.myVelocity = ACalc.updateVelocity();
+        if (id == 1) {
+            System.out.println("CURRENT VELOCITY: ");
+            System.out.println(myVelocity.getMagnitude());
+            System.out.println(myVelocity.getDirection());
+        }
     }
 
     public double getMass() {

@@ -3,8 +3,6 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.PI;
-
 public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 10;
@@ -40,13 +38,6 @@ public class CollisionHandler {
             }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround()){
-//                PhysicsVector blankVector = new PhysicsVector(0,0);
-//                PhysicsVector oppositeGravity = new PhysicsVector(one.getMass()*9.8,-PI/2);
-//                one.myVelocity = blankVector;
-//                one.myAcceleration = blankVector;
-//                one.clearCurrentForces();
-//                one.addCurrentForce(oppositeGravity);
-//                one.getMyCoordinateBody().setPos(one.getMyCoordinateBody().getPos().getX(), two.getMyCoordinateBody().getPos().getY() - one.getMyCoordinateBody().getDims().getSizeY());
                 one.setGrounded(true);
                 groundCollisions.add(one.getId());
                 if (one.getId() == 1)

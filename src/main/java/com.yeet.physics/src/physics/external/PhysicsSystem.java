@@ -135,8 +135,9 @@ public class PhysicsSystem {
 
     public void jump(int id) {
         PhysicsObject currentBody = gameObjects.get(id);
-        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
         currentBody.setGrounded(false);
+        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
+        System.out.println("JUMP INITIATED");
     }
 
     public void move(int id, double direction) {
