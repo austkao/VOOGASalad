@@ -11,6 +11,7 @@ public class NetVectorCalculator {
     }
 
     public PhysicsVector getNetVector() {
+
         while(myVectors.size() > 1) {
             PhysicsVector vector1 = myVectors.get(0);
             PhysicsVector vector2 = myVectors.get(1);
