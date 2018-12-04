@@ -40,8 +40,6 @@ public class CollisionHandler {
             if(one.isPhysicsBody() && two.isPhysicsGround()){
                 one.setGrounded(true);
                 groundCollisions.add(one.getId());
-                if (one.getId() == 1)
-                    System.out.println("COLLIDING WITH GROUND");
 
             }
             // body+body (do nothing)

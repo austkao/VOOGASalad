@@ -90,8 +90,8 @@ public class PhysicsSystem {
                 NetVectorCalculator calc = new NetVectorCalculator(o.getCurrentForces());
                 o.applyForce(calc.getNetVector());
 
-                if (o.isPhysicsBody()) {
-                    System.out.println("ID " + o.getId() + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
+                if (o.getId() == 1) {
+                    System.out.println("ID 1 Net Vector: " + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
                 }
 
                 o.clearCurrentForces();
