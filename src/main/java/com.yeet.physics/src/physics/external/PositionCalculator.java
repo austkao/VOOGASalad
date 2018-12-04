@@ -25,6 +25,7 @@ public class PositionCalculator {
                     YVelocity = 0;
                 } else {
                     YVelocity = o.getVelocity().getMagnitude() * Math.sin(o.getVelocity().getDirection());
+                    System.out.println("Position Calculator YVelocity: " + YVelocity);
                 }
                 newCoordinate = new Coordinate(currentPosition.getX() + XVelocity * timeOfFrame, currentPosition.getY() + YVelocity * timeOfFrame);
             }

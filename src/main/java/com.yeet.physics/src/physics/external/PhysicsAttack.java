@@ -10,4 +10,11 @@ public class PhysicsAttack extends PhysicsObject {
     public boolean isPhysicsAttack() {
         return true;
     }
+
+    @Override
+    public PhysicsVector getXVelocity(){
+        double xMag = this.getVelocity().getMagnitude() * Math.cos(this.getVelocity().getDirection());
+        PhysicsVector xVel = new PhysicsVector(xMag, 0);
+        return xVel;
+    }
 }

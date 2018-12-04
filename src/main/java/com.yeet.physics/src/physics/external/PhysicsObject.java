@@ -26,7 +26,7 @@ public abstract class PhysicsObject {
     }
 
     public void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
-        AccelerationCalculator ACalc = new AccelerationCalculator(force, myAcceleration, myVelocity, myMass);
+        AccelerationCalculator ACalc = new AccelerationCalculator(force, myVelocity, myMass);
         this.myAcceleration = ACalc.updateAcceleration();
         this.myVelocity = ACalc.updateVelocity();
         if (id == 1) {
@@ -92,4 +92,6 @@ public abstract class PhysicsObject {
     }
 
     int getId(){return this.id;}
+
+    public abstract PhysicsVector getXVelocity();
 }

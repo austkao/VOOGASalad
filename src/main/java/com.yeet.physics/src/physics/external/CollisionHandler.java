@@ -28,17 +28,10 @@ public class CollisionHandler {
                 collisions.add(one.getId(), two.getId());
                 attackCollisions.add(collisions);
             }
-            // attack+body
-            if(one.isPhysicsAttack() && two.isPhysicsBody()){
-                PhysicsVector force = new PhysicsVector(defaultAttackMagnitude, one.getDirection());
-                two.addCurrentForce(force);
-                List<Integer> collisions = new ArrayList<>();
-                collisions.add(two.getId(), one.getId());
-                attackCollisions.add(collisions);
-            }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround()){
                 one.setGrounded(true);
+                one.setVelocity(one.getXVelocity());
                 groundCollisions.add(one.getId());
 
             }
