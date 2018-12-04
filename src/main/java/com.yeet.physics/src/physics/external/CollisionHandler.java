@@ -3,9 +3,12 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.PI;
+
 public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 10;
+    public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
 
     private List<Collision> myCollisions;
     private List<Integer> groundCollisions = new ArrayList<>();
@@ -30,10 +33,11 @@ public class CollisionHandler {
             }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround()){
-                one.setGrounded(true);
-                one.setVelocity(one.getXVelocity());
+                if (one.getVelocity().getDirection() > 0 && one.getVelocity().getDirection() < PI) {
+                    double YComponent = one.getVelocity().getMagnitude() * Math.sin(one.getVelocity().getDirection());
+                    one.addCurrentForce(new PhysicsVector((YComponent * one.getMass() / timeOfFrame), PI/2)); // F = Vm/t
+                }
                 groundCollisions.add(one.getId());
-
             }
             // body+body (do nothing)
             if(one.isPhysicsBody() && two.isPhysicsBody()){

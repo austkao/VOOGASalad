@@ -11,7 +11,6 @@ public abstract class PhysicsObject {
     protected double myDirection; //0: right, PI: left
     protected PhysicsVector myAcceleration;
     protected PhysicsVector myVelocity;
-    protected boolean isGrounded;
     protected int id;
 
     public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
@@ -66,10 +65,6 @@ public abstract class PhysicsObject {
     public boolean isPhysicsGround(){
         return false;
     }
-
-    public boolean isGrounded() { return isGrounded; }
-
-    public void setGrounded(boolean bool) { isGrounded = bool; }
 
     public void addCurrentForce(PhysicsVector force) {
         currentForces.add(force);
