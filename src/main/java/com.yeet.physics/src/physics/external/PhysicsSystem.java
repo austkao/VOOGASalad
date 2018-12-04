@@ -16,11 +16,10 @@ import static java.lang.Math.PI;
 
 public class PhysicsSystem {
 
-
     public static final double defaultMass = 50;
     public static final double defaultStrength = 20;
-    public static final double defaultJumpHeight = 50;
-    public static final double defaultMovementSpeed = 50;
+    public static final double defaultJumpHeight = 100;
+    public static final double defaultMovementSpeed = 3000;
     public static final double defaultAttackSpace = 10;
 
     private int playerId;
@@ -87,6 +86,9 @@ public class PhysicsSystem {
 
     public void applyForces() {
         for (PhysicsObject o : gameObjects.values()) {
+            if(o.getId() == 1){
+            System.out.println("ApplyForces: (before force applied) " + o.getVelocity().getMagnitude());
+            System.out.println("ApplyForces: (before force applied) " + o.getVelocity().getDirection());}
             if (!o.isPhysicsGround()) {
                 NetVectorCalculator calc = new NetVectorCalculator(o.getCurrentForces());
                 o.applyForce(calc.getNetVector());
@@ -97,6 +99,9 @@ public class PhysicsSystem {
 
                 o.clearCurrentForces();
             }
+            if(o.getId() == 1){
+            System.out.println("ApplyForces: " + o.getVelocity().getMagnitude());
+            System.out.println("ApplyForces: " + o.getVelocity().getDirection());}
         }
 
     }
@@ -143,6 +148,7 @@ public class PhysicsSystem {
     public void move(int id, double direction) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.setDirection(direction);
+        System.out.println(direction);
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultMovementSpeed, direction));
     }
 

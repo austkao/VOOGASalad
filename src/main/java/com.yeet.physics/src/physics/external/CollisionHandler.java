@@ -31,6 +31,7 @@ public class CollisionHandler {
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround()){
                 one.setGrounded(true);
+                one.setVelocity(one.getXVelocity());
                 groundCollisions.add(one.getId());
 
             }
