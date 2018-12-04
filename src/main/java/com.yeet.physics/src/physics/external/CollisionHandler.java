@@ -3,8 +3,6 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.PI;
-
 public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 10;
