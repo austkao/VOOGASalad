@@ -86,6 +86,10 @@ public class StageSelectScreen extends Screen {
         super.getMyRoot().getChildren().addAll(background,mainContainer);
     }
 
+    public String getStage(){
+        return mySelectedStage;
+    }
+
     private void chooseStage(String s) {
         mySelectedStage = s;
         nextScene.switchScene();

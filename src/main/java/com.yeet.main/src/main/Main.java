@@ -31,6 +31,7 @@ public class Main extends Application {
     public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
     public static final int DEFAULT_PLAIN_FONTSIZE = 25;
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
+    private static final String DEFAULT_GAME_DIRECTORY = "/src/main/java/com.yeet.main/resources/defaultgame";
 
 
     private Stage myStage;
@@ -60,6 +61,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        myDirectory = new File(System.getProperty("user.dir")+DEFAULT_GAME_DIRECTORY);
         //create window
         myStage = primaryStage;
         primaryStage.setWidth(1280);
@@ -75,8 +77,8 @@ public class Main extends Application {
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
         //set up systems
-        myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
-        myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
+        //myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
+        //myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         myRenderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
         myConsole = new Console();
@@ -85,7 +87,7 @@ public class Main extends Application {
         EventBusFactory.getEventBus().register(myPlayer);
         EventBusFactory.getEventBus().register(myConsole);
         //display setup
-        myPopup = createErrorPopup();
+        //myPopup = createErrorPopup();
         mySplashDisplay = createSplashDisplay();
         root.getChildren().add(mySplashDisplay);
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
@@ -118,9 +120,15 @@ public class Main extends Application {
         File stages = new File(defaultFile.getPath()+"/stages");
         File characters = new File(defaultFile.getPath()+"/characters");
         File data = new File(defaultFile.getPath()+"/data");
+        File background = new File(data.getPath()+"/background");
+        File bgm = new File(data.getPath()+"/bgm");
+        File tiles = new File(data.getPath()+"/tiles");
         stages.mkdir();
         characters.mkdir();
         data.mkdir();
+        background.mkdir();
+        bgm.mkdir();
+        tiles.mkdir();
         initializeGameEditor(defaultFile);
     }
 
@@ -132,9 +140,8 @@ public class Main extends Application {
     };
 
     private void initializeGameEditor(File gameFile) {
-        EditorManager emNew = new EditorManager(myStage,homeScene,gameFile);
-        emNew.setGameDirectory(gameFile);
-        emNew.setEditorHomeScene();
+        em.setGameDirectory(gameFile);
+        em.setEditorHomeScene();
     }
 
 

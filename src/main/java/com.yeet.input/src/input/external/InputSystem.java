@@ -18,24 +18,31 @@ public class InputSystem {
     private File GameDir;
 
 
-    public InputSystem(File GameDirectory){
-        myMessageBus = EventBusFactory.getEventBus();
-        commandHolder = new LinkedList<>();
-        timer = new Timer();
-        GameDir = GameDirectory;
-        myParser = new Parser(GameDir);
-        setUpTimer();
-
+    public InputSystem(File GameDirectory) {
+        try {
+            myMessageBus = EventBusFactory.getEventBus();
+            commandHolder = new LinkedList<>();
+            timer = new Timer();
+            GameDir = GameDirectory;
+            myParser = new Parser(GameDir);
+            setUpTimer();
+        } catch (Exception e) {
+            System.out.println("An error has occurred in the input system");
+        }
     }
 
-    private void setUpTimer(){
+    private void setUpTimer() throws Exception{
         //Set the schedule function and rate
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 //Called each time when 1000 milliseconds (1 second) (the period parameter)
                 if(commandHolder.size() >0){
-                    postEvent(myParser.parse(commandHolder));
+                    try {
+                        postEvent(myParser.parse(commandHolder));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     commandHolder.clear();
                 }
             }
@@ -43,7 +50,7 @@ public class InputSystem {
                 //Set how long before to start calling the TimerTask (in milliseconds)
                 0,
                 //Set the amount of time between each execution (in milliseconds)
-                1000);
+                100);
     }
 
 
@@ -57,13 +64,16 @@ public class InputSystem {
         for(String action:s){
             System.out.println(action);
             CombatActionEvent keyEvent;
-            if(action.equals("left")){
+            if(action.equals("LEFT")){
                 keyEvent = new MoveEvent(1, true);
             }
-            else if(action.equals("right")){
+            else if(action.equals("RIGHT")){
                 keyEvent = new MoveEvent(1, false);
             }
-            else if(!action.equals("jump")){
+            else if (action.equals("UP'")){
+                keyEvent =  new JumpEvent(1);
+            }
+            else if(!action.equals("JAB")){
                 keyEvent = new AttackEvent(1);
             }
             else{
@@ -72,8 +82,8 @@ public class InputSystem {
             myMessageBus.post(keyEvent);
 
             //TESTING: Also post an action event
-            //ActionEvent ae = new ActionEvent(action, "Attack");
-            //myMessageBus.post(ae);
+            ActionEvent ae = new ActionEvent(action, "Attack");
+            myMessageBus.post(ae);
         }
 
     }

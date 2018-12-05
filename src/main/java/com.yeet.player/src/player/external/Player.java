@@ -2,16 +2,12 @@ package player.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import input.external.InputSystem;
 import javafx.scene.Group;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import messenger.external.EventBusFactory;
-import messenger.external.KeyInputEvent;
 import messenger.external.TestSuccesfulEvent;
-import physics.external.PhysicsSystem;
-import physics.external.combatSystem.CombatSystem;
 import player.internal.*;
 import renderer.external.Renderer;
 
@@ -26,10 +22,7 @@ public class Player {
     private Stage myStage;
     private Renderer myRenderer;
 
-    private InputSystem myInputSystem;
-    private CombatSystem myCombatSystem;
-    private PhysicsSystem myPhysicsSystem;
-    private GameLoop myGameLoop;
+
 
     private MediaPlayer myBGMPlayer;
     private Media myBGM;
@@ -60,11 +53,6 @@ public class Player {
     public void start(){
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
-        myInputSystem = new InputSystem(myDirectory);
-        myMessageBus.register(myInputSystem);
-        myPhysicsSystem = new PhysicsSystem();
-        myGameLoop = new GameLoop(myPhysicsSystem);
-        myMessageBus.register(myPhysicsSystem);
         myBGM = new Media(new File(myDirectory.getPath()).toURI().toString()+"Theme.m4a");
         myBGMPlayer = new MediaPlayer(myBGM);
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -94,14 +82,11 @@ public class Player {
         },()-> {
             myFightMusicPlayer.stop();
             myStage.setScene(myLoadingScreen);
-            myCombatScreen.setCharacters(myCharacterSelectScreen.getCharacters());
-            myCombatSystem = new CombatSystem(myCombatScreen.getCharacterMap(),myPhysicsSystem);
-            myMessageBus.register(myCombatSystem);
-            myMessageBus.register(myCombatScreen);
+            myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,myStageSelectScreen.getStage());
+            myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacters());
             myStage.setScene(myCombatScreen);
-            myGameLoop.startLoop();
+            myCombatScreen.startLoop();
         });
-        myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,"example_stage_1",(key)->myMessageBus.post(new KeyInputEvent(key)));
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
         //finished loading
         System.out.println("finished loading!");

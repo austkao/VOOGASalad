@@ -71,7 +71,7 @@ public class RenderSystem implements Renderer{
      *  @param width The width of the button
      *  @param height The height of the button */
     public Button makeStringButton(String text, Color buttonColor, Boolean emphasis, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
-        Font font;
+        Font font = new Font(1.0);
         if(emphasis){
             font = myEmphasisFont;
         }
@@ -79,8 +79,11 @@ public class RenderSystem implements Renderer{
             font = myPlainFont;
         }
         Button button = new Button(text);
+        System.out.println(font.getName());
         //BUTTON_FORMAT: Color buttonColor, String fontName, Double borderRadius, Double fontSize
-        button.setStyle(String.format(BUTTON_FORMAT,toRGBCode(buttonColor),font.getName(),height,fontSize));
+        button.setStyle(String.format(BUTTON_FORMAT,
+                toRGBCode(buttonColor),
+                font.getName(),height,fontSize));
         button.setTextFill(textColor);
         button.setLayoutX(x);
         button.setLayoutY(y);

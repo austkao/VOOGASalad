@@ -68,7 +68,7 @@ public class Square extends Shape {
 
         for(int i = 0; i < this.getPath().size(); i++){
             Line thisLine = this.getPath().get(i);
-            if(thisLine.getXBounds()[1] > pos){
+            if(thisLine.getYBounds()[1] > pos){
                 pos = thisLine.getYBounds()[1];
             }
         }
