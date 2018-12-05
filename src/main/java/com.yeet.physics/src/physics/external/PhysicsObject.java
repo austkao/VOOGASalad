@@ -11,8 +11,8 @@ public abstract class PhysicsObject {
     protected double myDirection; //0: right, PI: left
     protected PhysicsVector myAcceleration;
     protected PhysicsVector myVelocity;
-
-    int id;
+    protected boolean isGrounded;
+    protected int id;
 
     public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
         this.myMass = mass;
@@ -43,6 +43,10 @@ public abstract class PhysicsObject {
         return this.myVelocity;
     }
 
+    public void setVelocity(PhysicsVector velocity){
+        this.myVelocity = velocity;
+    }
+
     public CoordinateBody getMyCoordinateBody() {
         return myCoordinateBody;
     }
@@ -57,6 +61,10 @@ public abstract class PhysicsObject {
     public boolean isPhysicsGround(){
         return false;
     }
+
+    public boolean isGrounded() { return isGrounded; }
+
+    public void setGrounded(boolean bool) { isGrounded = bool; }
 
     public void addCurrentForce(PhysicsVector force) {
         currentForces.add(force);

@@ -24,15 +24,11 @@ public class CombatSystem {
         this.physicsSystem = physicsSystem;
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
-            physicsSystem.addPhysicsObject(0, PhysicsSystem.defaultMass, playerMap.get(i).getX(), playerMap.get(i).getY(), 30, 70);
+            physicsSystem.addPhysicsObject(0, PhysicsSystem.defaultMass, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60);
         }
         // register tiles to physics engine
         for(int i=0;i < tileMap.keySet().size(); i++){
-            System.out.println("TILE WIDTH: " + tileMap.get(i).getWidth());
-            System.out.println("TILE HEIGHT: " + tileMap.get(i).getHeight());
-            System.out.println("TILE POSX: " + tileMap.get(i).getX());
-            System.out.println("TILE POSY: " + tileMap.get(i).getY());
-            physicsSystem.addPhysicsObject(2,PhysicsSystem.defaultMass, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
+            physicsSystem.addPhysicsObject(2,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
         }
 
     }
