@@ -15,4 +15,9 @@ public class PhysicsGround extends PhysicsObject {
     public PhysicsVector getXVelocity() {
         return null;
     }
+
+    @Override
+    public PhysicsVector getYVelocity() {
+        return null;
+    }
 }

@@ -17,10 +17,11 @@ public class PassiveForceHandler {
 
     public void update() {
         for (PhysicsObject o : myObjects.values()) {
-            if ((o.isPhysicsBody() && !o.isGrounded()) || (o.isPhysicsAttack() && !o.isGrounded())){
-                o.addCurrentForce(new PhysicsVector(o.getMass() * defaultGravityAcceleration, defaultGravityDirection)); // always add gravity
-                if (o.getId() == 1)
-                    System.out.println("APPLYING GRAVITY");
+            if ((o.isPhysicsBody())|| (o.isPhysicsAttack())){//((o.isPhysicsBody() && !o.isGrounded()) || (o.isPhysicsAttack() && !o.isGrounded()))
+                o.addCurrentForce(new PhysicsVector(Math.round(o.getMass() * defaultGravityAcceleration), defaultGravityDirection)); // always add gravity
+                if (o.getId() == 1) {
+                    //System.out.println("APPLYING GRAVITY");
+                }
             }
         }
     }

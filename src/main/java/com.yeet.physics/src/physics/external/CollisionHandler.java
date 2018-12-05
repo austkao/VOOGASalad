@@ -3,6 +3,10 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
+import static physics.external.PassiveForceHandler.defaultGravityAcceleration;
+import static physics.external.PassiveForceHandler.defaultGravityDirection;
+import static physics.external.PositionCalculator.timeOfFrame;
+
 public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 10;
@@ -31,9 +35,16 @@ public class CollisionHandler {
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround()){
                 one.setGrounded(true);
-                one.setVelocity(one.getXVelocity());
+                double bodyVelocity = one.getYVelocity().getMagnitude();
+                double bodyMass = one.getMass();
+                PhysicsVector updwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(2*timeOfFrame)), -Math.PI/2);
+                if(one.getId() == 1) {
+                    System.out.println("Upward force: " + bodyMass * bodyVelocity / (2 * timeOfFrame));
+                }
+                one.addCurrentForce(updwardForce);
+                PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * defaultGravityAcceleration), -defaultGravityDirection);
+                one.addCurrentForce(gravityOpposition);
                 groundCollisions.add(one.getId());
-
             }
             // body+body (do nothing)
             if(one.isPhysicsBody() && two.isPhysicsBody()){

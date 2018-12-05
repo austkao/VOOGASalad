@@ -30,9 +30,9 @@ public abstract class PhysicsObject {
         this.myAcceleration = ACalc.updateAcceleration();
         this.myVelocity = ACalc.updateVelocity();
         if (id == 1) {
-            System.out.println("CURRENT VELOCITY: ");
-            System.out.println(myVelocity.getMagnitude());
-            System.out.println(myVelocity.getDirection());
+            //System.out.println("CURRENT VELOCITY: ");
+            //System.out.println(myVelocity.getMagnitude());
+            //System.out.println(myVelocity.getDirection());
         }
     }
 
@@ -94,4 +94,6 @@ public abstract class PhysicsObject {
     int getId(){return this.id;}
 
     public abstract PhysicsVector getXVelocity();
+
+    public abstract PhysicsVector getYVelocity();
 }

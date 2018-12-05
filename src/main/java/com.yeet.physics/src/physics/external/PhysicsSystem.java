@@ -51,6 +51,13 @@ public class PhysicsSystem {
         collHandler.update();
         List<Integer> groundCollisions = collHandler.getGroundCollisions();
         List<List<Integer>> attackCollisions = collHandler.getAttackCollisions();
+        for(PhysicsObject o: gameObjects.values()){
+            if (o.getId() == 1) {
+                for (PhysicsVector v : o.getCurrentForces()) {
+                    System.out.println("Magnitude, Direction: " + v.getMagnitude() + ", " + v.getDirection());
+                }
+            }
+        }
         applyForces();
         updatePositions();
         //PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
@@ -87,8 +94,9 @@ public class PhysicsSystem {
     public void applyForces() {
         for (PhysicsObject o : gameObjects.values()) {
             if(o.getId() == 1){
-            System.out.println("ApplyForces: (before force applied) " + o.getVelocity().getMagnitude());
-            System.out.println("ApplyForces: (before force applied) " + o.getVelocity().getDirection());}
+            //System.out.println("ApplyForces: (before force applied) " + o.getVelocity().getMagnitude());
+            //System.out.println("ApplyForces: (before force applied) " + o.getVelocity().getDirection());
+            }
             if (!o.isPhysicsGround()) {
                 NetVectorCalculator calc = new NetVectorCalculator(o.getCurrentForces());
                 o.applyForce(calc.getNetVector());
@@ -100,8 +108,9 @@ public class PhysicsSystem {
                 o.clearCurrentForces();
             }
             if(o.getId() == 1){
-            System.out.println("ApplyForces: " + o.getVelocity().getMagnitude());
-            System.out.println("ApplyForces: " + o.getVelocity().getDirection());}
+            //System.out.println("ApplyForces: " + o.getVelocity().getMagnitude());
+            //System.out.println("ApplyForces: " + o.getVelocity().getDirection());
+            }
         }
 
     }

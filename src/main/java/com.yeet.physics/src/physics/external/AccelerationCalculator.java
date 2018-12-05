@@ -31,12 +31,12 @@ public class AccelerationCalculator {
     }
 
     private PhysicsVector condenseVector(List<PhysicsVector> vectors) {
-        System.out.println("Uncondensed Vectors: ");
+        //System.out.println("Uncondensed Vectors: ");
         for (PhysicsVector v : vectors) {
-            System.out.println(v.getMagnitude() + ", " + v.getDirection());
+            //System.out.println(v.getMagnitude() + ", " + v.getDirection());
         }
         NetVectorCalculator calc = new NetVectorCalculator(vectors);
-        System.out.println("Condensed Vector: " + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
+        //System.out.println("Condensed Vector: " + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
         return calc.getNetVector();
     }
 }
