@@ -16,6 +16,7 @@ import player.internal.Elements.MenuTopper;
 import renderer.external.Renderer;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /** Dynamic layout for the display of all available characters, allows users to select their
@@ -42,6 +43,7 @@ public class CharacterSelectScreen extends Screen {
     private CharacterChooseDisplay display4;
 
     private HashMap<Integer, String> myCharacterMap;
+    private ArrayList<String> myCharacterList;
 
 
     /** Creates a new {@code CharacterSelectScreen} with the specified parameters
@@ -59,6 +61,7 @@ public class CharacterSelectScreen extends Screen {
         myReadyBar.setLayoutY(420.0);
         myReadyBar.setOnMousePressed(event -> nextScene.switchScene());
         myCharacterMap = new HashMap<>();
+        myCharacterList = new ArrayList<>();
         for(int i=0;i<4;i++){
             myCharacterMap.put(i,"");
         }
@@ -149,25 +152,34 @@ public class CharacterSelectScreen extends Screen {
         return(getPlayerCount()>1);
     }
 
-    /** Returns current number of active players, including humans and computers */
+    /** Returns current number of active players, including humans and computers and records them in a {@code ArrayList}*/
     public int getPlayerCount(){
         int count = 0;
+        myCharacterList.clear();
         if(display1.getState()!= CharacterChooseDisplay.State.NONE && display1.getCharacterName().length()>0){
             count++;
+            myCharacterList.add(display1.getCharacterName());
         }
         if(display2.getState()!= CharacterChooseDisplay.State.NONE && display2.getCharacterName().length()>0){
             count++;
+            myCharacterList.add(display2.getCharacterName());
         }
         if(display3.getState()!= CharacterChooseDisplay.State.NONE && display3.getCharacterName().length()>0){
             count++;
+            myCharacterList.add(display3.getCharacterName());
         }
         if(display4.getState()!= CharacterChooseDisplay.State.NONE && display4.getCharacterName().length()>0){
             count++;
+            myCharacterList.add(display4.getCharacterName());
         }
         return count;
     }
 
-    public HashMap<Integer, String> getCharacters() {
+    public HashMap<Integer, String> getCharacterMap() {
         return myCharacterMap;
+    }
+
+    public ArrayList<String> getCharacterList(){
+        return myCharacterList;
     }
 }

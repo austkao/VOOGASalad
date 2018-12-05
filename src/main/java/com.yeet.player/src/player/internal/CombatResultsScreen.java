@@ -32,7 +32,7 @@ public class CombatResultsScreen extends Screen {
         StackPane winnerBanner = new StackPane();
         winnerBanner.setPrefSize(1280.0,200.0);
         winnerBanner.setAlignment(Pos.CENTER);
-        ImageView winnerBannerImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("winnerbanner.png")));
+        ImageView winnerBannerImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("winner_banner.png")));
         winnerBannerImage.setFitWidth(1280.0);
         winnerBannerImage.setFitHeight(200.0);
         winnerBannerText = this.getMyRenderer().makeText("",true,50,Color.WHITE,0.0,0.0);
