@@ -29,6 +29,7 @@ public abstract class EditorSuper extends Scene{
     protected Group root;
     protected EditorManager myEM;
     protected RenderSystem myRS;
+    protected EditorConstant myEC;
 
     public EditorSuper(Group root, EditorManager em){
         super(root);
@@ -43,7 +44,7 @@ public abstract class EditorSuper extends Scene{
      * Creates back button to the editor landing page
      */
     public void createBack(Scene scene){
-        Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,1000.0,0.0,150.0,50.0);
+        Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSTION.getValue(),0.0,150.0,50.0);
         back.setOnMouseClicked(e -> myEM.changeScene(scene));
         root.getChildren().add(back);
     }
