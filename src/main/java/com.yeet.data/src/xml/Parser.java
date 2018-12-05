@@ -1,5 +1,8 @@
 package xml;
 
+import org.w3c.dom.Document;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -16,4 +19,16 @@ public interface Parser {
      * The values should be the information the properties store.
      */
     HashMap parseFileForElement(String element);
+    /**
+     * Parse the file for the information contained within a certain attribute
+     * @param element represents the element the attribute falls under
+     * @param attribute represents the attribute to parse for
+     * @return an ArrayList containing the wanted information.
+     */
+    ArrayList parseFileForAttribute(String element, String attribute);
+    /**
+     * Create a new Document to work from when parsing a file
+     * @return A Document that encapsulates all of the file information
+     */
+    Document createDocument(File file);
 }
