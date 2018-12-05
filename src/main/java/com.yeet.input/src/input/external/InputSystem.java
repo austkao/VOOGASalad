@@ -77,7 +77,7 @@ public class InputSystem {
                 keyEvent = new AttackEvent(1);
             }
             else{
-                keyEvent = null;
+                keyEvent = new JumpEvent(1);
             }
             myMessageBus.post(keyEvent);
 

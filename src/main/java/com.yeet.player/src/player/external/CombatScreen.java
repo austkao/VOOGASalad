@@ -34,6 +34,7 @@ import java.util.Map;
  */
 public class CombatScreen extends Screen {
 
+    public static final double TILE_SIZE = 40.0;
     private EventBus myMessageBus;
 
     private InputSystem myInputSystem;
@@ -88,12 +89,12 @@ public class CombatScreen extends Screen {
         super.getMyRoot().getChildren().addAll(background);
         for(int i=0; i<myStageMap.get("x").size();i++){
             ImageView tile = new ImageView(new Image(gameDirectory.toURI()+"/data/tiles/"+myStageMap.get("image").get(i)));
-            tile.setFitHeight(40.0);
-            tile.setFitWidth(40.0);
-            tile.setLayoutX(Integer.parseInt(myStageMap.get("x").get(i))*40.0);
-            tile.setLayoutY(Integer.parseInt(myStageMap.get("y").get(i))*40.0);
+            tile.setFitHeight(TILE_SIZE);
+            tile.setFitWidth(TILE_SIZE);
+            tile.setLayoutX(Integer.parseInt(myStageMap.get("x").get(i))* TILE_SIZE);
+            tile.setLayoutY(Integer.parseInt(myStageMap.get("y").get(i))* TILE_SIZE);
             myTiles.add(tile);
-            myTileMap.put(i,new Rectangle2D.Double(Integer.parseInt(myStageMap.get("x").get(i))*40.0,Integer.parseInt(myStageMap.get("y").get(i))*40.0, 40.0, 40.0));
+            myTileMap.put(i,new Rectangle2D.Double(Integer.parseInt(myStageMap.get("x").get(i))*TILE_SIZE,Integer.parseInt(myStageMap.get("y").get(i))*TILE_SIZE, TILE_SIZE, TILE_SIZE));
             super.getMyRoot().getChildren().add(tile);
         }
         super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
@@ -108,10 +109,10 @@ public class CombatScreen extends Screen {
                 Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(i)+"/sprites/spritesheet.png"),
                         Double.parseDouble(((spriteProperties.get("offsetX").get(0)))),Double.parseDouble(((spriteProperties.get("offsetY").get(0)))),
                         Double.parseDouble(((spriteProperties.get("width").get(0)))),Double.parseDouble(spriteProperties.get("height").get(0)));
-                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0);
-                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0);
+                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get(i))*TILE_SIZE);
+                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get(i))*TILE_SIZE);
                 mySpriteMap.put(i,sprite);
-                myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("xPos").get(i))*40.0,Integer.parseInt(mySpawnMap.get("yPos").get(i))*40.0));
+                myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("xPos").get(i))*TILE_SIZE,Integer.parseInt(mySpawnMap.get("yPos").get(i))*TILE_SIZE));
                 super.getMyRoot().getChildren().add(sprite);
                 //set up animations for the sprite
                 XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(i)+"/sprites/animationproperties.xml"));
