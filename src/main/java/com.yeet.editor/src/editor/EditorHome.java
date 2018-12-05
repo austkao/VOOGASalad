@@ -45,7 +45,7 @@ public abstract class EditorHome extends Scene {
         Button buttonBack = rs.makeStringButton("Back", Color.BLACK, true, Color.WHITE, 30.0, 0.0, 0.0, 300.0, 50.0);
         buttonNew.setOnMouseClicked(e -> em.changeScene(myEditor));
         buttonBack.setOnMouseClicked(e -> em.setEditorHomeScene());
-        buttonEdit.setOnMouseClicked(e -> em.setEditorHomeScene());
+        buttonEdit.setOnMouseClicked(e -> em.setEditorHomeScene()); //TODO link with scrollpane
         myBox.getChildren().addAll(buttonNew, buttonEdit, buttonDelete, buttonBack);
         myBox.setLayoutX(800);
         myBox.setLayoutY(200);

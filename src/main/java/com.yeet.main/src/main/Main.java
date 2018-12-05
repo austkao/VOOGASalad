@@ -77,8 +77,8 @@ public class Main extends Application {
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
         //set up systems
-        myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
-        myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
+        //myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
+        //myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         myRenderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
         myConsole = new Console();
@@ -87,7 +87,7 @@ public class Main extends Application {
         EventBusFactory.getEventBus().register(myPlayer);
         EventBusFactory.getEventBus().register(myConsole);
         //display setup
-        myPopup = createErrorPopup();
+        //myPopup = createErrorPopup();
         mySplashDisplay = createSplashDisplay();
         root.getChildren().add(mySplashDisplay);
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
