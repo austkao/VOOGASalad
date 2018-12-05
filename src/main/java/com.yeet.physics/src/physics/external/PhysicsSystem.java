@@ -92,7 +92,7 @@ public class PhysicsSystem {
                 o.applyForce(calc.getNetVector());
 
                 if (o.isPhysicsBody()) {
-                    System.out.println("ID " + o.getId() + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
+                    //System.out.println("ID " + o.getId() + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
                 }
 
                 o.clearCurrentForces();

@@ -3,19 +3,18 @@ package player.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import messenger.external.AttackSuccessfulEvent;
-import messenger.external.EventBusFactory;
-import messenger.external.KeyInputEvent;
-import messenger.external.MoveSuccessfulEvent;
+import messenger.external.*;
 import physics.external.PhysicsSystem;
 import physics.external.combatSystem.CombatSystem;
 import player.internal.GameLoop;
+import player.internal.SceneSwitch;
 import player.internal.Screen;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
@@ -28,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /** Displays a stage and visualizes character combat animation
  *  @author bpx
@@ -36,6 +36,9 @@ public class CombatScreen extends Screen {
 
     public static final double TILE_SIZE = 40.0;
     private EventBus myMessageBus;
+
+    private SceneSwitch prevScene;
+    private Consumer<Integer> nextScene;
 
     private InputSystem myInputSystem;
     private CombatSystem myCombatSystem;
@@ -50,8 +53,6 @@ public class CombatScreen extends Screen {
 
     private MediaPlayer myBGMPlayer;
 
-
-
     private HashMap<Integer, Point2D> myCharacterMap;
     private HashMap<Integer, Rectangle2D> myTileMap;
     private HashMap<Integer, Sprite> mySpriteMap;
@@ -64,31 +65,36 @@ public class CombatScreen extends Screen {
 
     private ArrayList<ImageView> myTiles;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, String stageName) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, Consumer<Integer> nextScene) {
         super(root, renderer);
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
         myMessageBus.register(this);
+        //set up scene links
+        this.prevScene = prevScene;
+        this.nextScene = nextScene;
         //set up resource managers
-        myParser = new XMLParser(new File(gameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myGameDirectory =  gameDirectory;
-        myStageName = stageName;
         myCharacterMap = new HashMap<>();
         myTileMap = new HashMap<>();
+        mySpriteMap = new HashMap<>();
+        myAnimationMap = new HashMap<>();
+        myTiles = new ArrayList<>();
+        super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
+    }
+
+    public void setupCombatScene(HashMap<Integer, String> characterNames, String stageName){
+        myParser = new XMLParser(new File(myGameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myBackgroundMap = myParser.parseFileForElement("background");
         myMusicMap = myParser.parseFileForElement("music");
         myStageMap = myParser.parseFileForElement("map");
         mySpawnMap =  myParser.parseFileForElement("position");
-        mySpriteMap = new HashMap<>();
-        myAnimationMap = new HashMap<>();
-        myTiles = new ArrayList<>();
-        //set up visuals
-        ImageView background = new ImageView(new Image(gameDirectory.toURI()+"data/background/"+myBackgroundMap.get("bgFile").get(0)));
+        ImageView background = new ImageView(new Image(myGameDirectory.toURI()+"data/background/"+myBackgroundMap.get("bgFile").get(0)));
         background.setFitWidth(1280.0);
         background.setFitHeight(800.0);
         super.getMyRoot().getChildren().addAll(background);
         for(int i=0; i<myStageMap.get("x").size();i++){
-            ImageView tile = new ImageView(new Image(gameDirectory.toURI()+"/data/tiles/"+myStageMap.get("image").get(i)));
+            ImageView tile = new ImageView(new Image(myGameDirectory.toURI()+"/data/tiles/"+myStageMap.get("image").get(i)));
             tile.setFitHeight(TILE_SIZE);
             tile.setFitWidth(TILE_SIZE);
             tile.setLayoutX(Integer.parseInt(myStageMap.get("x").get(i))* TILE_SIZE);
@@ -97,10 +103,6 @@ public class CombatScreen extends Screen {
             myTileMap.put(i,new Rectangle2D.Double(Integer.parseInt(myStageMap.get("x").get(i))*TILE_SIZE,Integer.parseInt(myStageMap.get("y").get(i))*TILE_SIZE, TILE_SIZE, TILE_SIZE));
             super.getMyRoot().getChildren().add(tile);
         }
-        super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
-    }
-
-    public void setupCombatScene(HashMap<Integer, String> characterNames){
         for(int i=0;i<characterNames.keySet().size();i++){
             if(!characterNames.get(i).equals("")){
                 //create sprites and set default viewport
@@ -191,5 +193,14 @@ public class CombatScreen extends Screen {
     public void showMoveAnimation(MoveSuccessfulEvent moveSuccessfulEvent){
         int id = moveSuccessfulEvent.getInitiatorID();
         myAnimationMap.get(id).get("run").play();
+    }
+
+    @Subscribe
+    public void endCombat(GameOverEvent gameOverEvent){
+        Platform.runLater(
+                () -> {
+                    nextScene.accept(gameOverEvent.getWinnerID());
+                }
+        );
     }
 }

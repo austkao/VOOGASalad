@@ -47,8 +47,10 @@ public class CollisionHandler {
 //                one.getMyCoordinateBody().setPos(one.getMyCoordinateBody().getPos().getX(), two.getMyCoordinateBody().getPos().getY() - one.getMyCoordinateBody().getDims().getSizeY());
                 one.setGrounded(true);
                 groundCollisions.add(one.getId());
-                if (one.getId() == 1)
-                    System.out.println("COLLIDING WITH GROUND");
+                if (one.getId() == 1){
+                    //System.out.println("COLLIDING WITH GROUND");
+                }
+
 
             }
             // body+body (do nothing)

@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
 import messenger.external.EventBusFactory;
+import messenger.external.GameOverEvent;
 import messenger.external.TestSuccesfulEvent;
 
 import java.io.BufferedReader;
@@ -50,6 +51,9 @@ public class Console {
     private void createEvent(String event){
         if (event.equalsIgnoreCase("test")) {
             myEventBus.post(new TestSuccesfulEvent());
+        }
+        else if(event.matches("gameover [0-3]")){
+            myEventBus.post(new GameOverEvent(Integer.parseInt(event.substring(event.length()-1))));
         }
     }
 
