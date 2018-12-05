@@ -10,12 +10,20 @@ public enum FilePath {
     TILEPATH("/data/tiles");
 
     private String myPath;
+    private String gameDirectory;
 
     FilePath(String path) {
         myPath = path;
     }
 
     public String getPath() {
-        return myPath;
+        if(gameDirectory == null) {
+            return myPath;
+        }
+        return gameDirectory + myPath;
+    }
+
+    public void setGameDirectory(String directory) {
+        gameDirectory = directory;
     }
 }

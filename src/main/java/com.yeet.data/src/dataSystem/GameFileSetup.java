@@ -11,8 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GameFileSetup {
-
-    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
     private EventBus myEB;
     private FilenameFilter filter;
     private FilePath myFP;
@@ -34,18 +32,18 @@ public class GameFileSetup {
         int numGames = resources.listFiles(filter).length;
         File defaultFile = new File(resources.getPath() + "/game" + numGames);
         defaultFile.mkdir();
-        File stages = new File(defaultFile.getPath()+myFP.STAGEPATH.getPath());
-        File characters = new File(defaultFile.getPath()+myFP.CHARACTERPATH.getPath());
-        File data = new File(defaultFile.getPath()+myFP.DATAPATH.getPath());
-        File background = new File(defaultFile.getPath()+myFP.BACKGROUNDPATH.getPath());
-        File bgm = new File(defaultFile.getPath()+myFP.BGMPATH.getPath());
-        File tiles = new File(defaultFile.getPath()+myFP.TILEPATH.getPath());
-        stages.mkdir();
-        characters.mkdir();
-        data.mkdir();
-        background.mkdir();
-        bgm.mkdir();
-        tiles.mkdir();
+        myFP.setGameDirectory(defaultFile.getPath());
+        createDirectory(myFP.STAGEPATH.getPath());
+        createDirectory(myFP.CHARACTERPATH.getPath());
+        createDirectory(myFP.DATAPATH.getPath());
+        createDirectory(myFP.BACKGROUNDPATH.getPath());
+        createDirectory(myFP.BGMPATH.getPath());
+        createDirectory(myFP.TILEPATH.getPath());
         //myEB.post(event);
+    }
+
+    private void createDirectory(String path) {
+        File directory = new File(path);
+        directory.mkdir();
     }
 }
