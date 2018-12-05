@@ -23,6 +23,7 @@ public abstract class PhysicsObject {
         this.myCoordinateBody = new CoordinateBody(start, dims);
         this.myDirection = 0; // start facing right
         this.id = id;
+        this.isGrounded = false;
     }
 
     public void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
@@ -67,10 +68,6 @@ public abstract class PhysicsObject {
         return false;
     }
 
-    public boolean isGrounded() { return isGrounded; }
-
-    public void setGrounded(boolean bool) { isGrounded = bool; }
-
     public void addCurrentForce(PhysicsVector force) {
         currentForces.add(force);
     }
@@ -96,4 +93,12 @@ public abstract class PhysicsObject {
     public abstract PhysicsVector getXVelocity();
 
     public abstract PhysicsVector getYVelocity();
+
+    public void setGrounded(boolean b){
+        this.isGrounded = b;
+    }
+
+    public boolean isGrounded(){
+        return this.isGrounded;
+    }
 }

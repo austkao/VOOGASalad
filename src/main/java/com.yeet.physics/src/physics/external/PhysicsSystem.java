@@ -149,7 +149,6 @@ public class PhysicsSystem {
 
     public void jump(int id) {
         PhysicsObject currentBody = gameObjects.get(id);
-        currentBody.setGrounded(false);
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
         System.out.println("JUMP INITIATED");
     }

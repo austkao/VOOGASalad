@@ -6,10 +6,12 @@ import java.util.List;
 import static physics.external.PassiveForceHandler.defaultGravityAcceleration;
 import static physics.external.PassiveForceHandler.defaultGravityDirection;
 import static physics.external.PositionCalculator.timeOfFrame;
+import static java.lang.Math.PI;
 
 public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 10;
+    public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
 
     private List<Collision> myCollisions;
     private List<Integer> groundCollisions = new ArrayList<>();
