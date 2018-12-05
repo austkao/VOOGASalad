@@ -7,12 +7,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.*;
 
 import java.io.File;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +36,7 @@ public class CharacterEditor extends EditorSuper{
     private Sprite currentSprite;
     private SpriteAnimation currentAnimation;
     private currentFrame frame;
+    private Rectangle[] hitboxes;
 
 
     private Group root;
@@ -58,7 +62,7 @@ public class CharacterEditor extends EditorSuper{
             totalFrames = -1;
         }
         void advance(int add){
-            currentFrame = (currentFrame + add)%totalFrames;
+            currentFrame = Math.floorMod((currentFrame + add),totalFrames);
         }
         public String toString(){
             if (currentFrame == -1 || totalFrames == -1){
@@ -165,6 +169,7 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void stepAnimation(int adjust){
+
         currentAnimation.playFrom(currentAnimation.getCurrentTime().add(
                 new Duration(currentAnimation.getCycleDuration().toMillis()*adjust / currentAnimation.getCount())));
         currentAnimation.pause();
@@ -179,7 +184,7 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void stepBackAnimation(){
-        if (currentAnimation.getCurrentTime().equals(Duration.ZERO)){
+        if (currentAnimation.getCurrentTime().subtract(Duration.ZERO).toMillis() < 10.0){
             return;
         }
         currentAnimation.setRate(-1*Math.abs(currentAnimation.getRate()));
@@ -225,6 +230,7 @@ public class CharacterEditor extends EditorSuper{
         currentAnimation = scrollToAnimation.get(b);
         frame.currentFrame = 1;
         frame.totalFrames = currentAnimation.getCount();
+        hitboxes = new Rectangle[frame.totalFrames];
     }
 
     private ImageView initializeImageView(int width, int height, int x, int y){
