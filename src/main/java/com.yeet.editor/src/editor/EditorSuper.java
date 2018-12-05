@@ -22,7 +22,7 @@ import java.util.HashMap;
  * @author ob29
  */
 
-public abstract class EditorSuper extends Scene{
+public abstract class EditorSuper extends Scene implements EditorScreen {
 
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
@@ -36,17 +36,18 @@ public abstract class EditorSuper extends Scene{
         this.root = root;
         myEM = em;
         myRS = new RenderSystem();
-        Text t = myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
+        Text t = createTitle();
         root.getChildren().add(t);
     }
 
     /**
      * Creates back button to the editor landing page
      */
-    public void createBack(Scene scene){
-        Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSTION.getValue(),0.0,150.0,50.0);
+    public Button createBack(Scene scene){
+        Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSITION.getValue(),0.0,150.0,50.0);
         back.setOnMouseClicked(e -> myEM.changeScene(scene));
         root.getChildren().add(back);
+        return back;
     }
 
     /**
@@ -94,5 +95,11 @@ public abstract class EditorSuper extends Scene{
         } catch (IOException e) {
             System.out.println("An error occurred during the save process");
         }
+    }
+
+    public abstract String toString();
+
+    public Text createTitle() {
+        return myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
     }
 }

@@ -64,12 +64,12 @@ public class EditorManager {
     }
 
     private List<EditorSuper> makeEditors(){
-        List<EditorSuper> editors = new ArrayList<EditorSuper>();
+        List<EditorSuper> editors = new ArrayList<>();
         Collections.addAll(editors,new MapEditor(new Group(), this),new CharacterEditor(new Group(),this),new GameplayEditor(new Group(),this));
         return editors;
     }
     private List<EditorHome> makeEditorHomes(){
-        List<EditorHome> editors = new ArrayList<EditorHome>();
+        List<EditorHome> editors = new ArrayList<>();
         Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this), new GameplayHome(new Group(), this));
         return editors;
     }
