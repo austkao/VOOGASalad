@@ -53,6 +53,7 @@ public class Main extends Application {
     private Button editButton;
 
     private Scene homeScene;
+    private MainConstant myMC;
 
 
     public static void main(String[] args){
@@ -64,8 +65,8 @@ public class Main extends Application {
         myDirectory = new File(System.getProperty("user.dir")+DEFAULT_GAME_DIRECTORY);
         //create window
         myStage = primaryStage;
-        primaryStage.setWidth(1280);
-        primaryStage.setHeight(800);
+        primaryStage.setWidth(myMC.STAGEWIDTH.getValue());
+        primaryStage.setHeight(myMC.STAGEHEIGHT.getValue());
         primaryStage.setResizable(false);
         primaryStage.setTitle("Yeet Fighter Game Engine");
         primaryStage.initStyle(StageStyle.UNDECORATED);
