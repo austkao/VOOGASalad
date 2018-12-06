@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import dataSubsystem.GameFileSetup;
 import javafx.event.Event;
+import messenger.external.CreateGameEvent;
 import messenger.external.EventBusFactory;
 
 import java.io.File;
@@ -18,6 +19,7 @@ public class DataSystem {
 
     public DataSystem() {
         myEB = EventBusFactory.getEventBus();
+        myEB.register(this);
         filter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -27,12 +29,8 @@ public class DataSystem {
     }
 
     @Subscribe
-    public void createInitialGameFiles(Event event) {
-        new GameFileSetup();
-        Path userPath = Paths.get(System.getProperty("user.dir"));
-        File resources = new File(userPath+myFP.GAMEPATH.getPath());
-        int numGames = resources.listFiles(filter).length;
-        File defaultFile = new File(resources.getPath() + "/game" + numGames);
+    public void createInitialGameFiles(CreateGameEvent event) {
+        File defaultFile = event.getGameDirectory();
         defaultFile.mkdir();
         myFP.setGameDirectory(defaultFile.getPath());
         createDirectory(myFP.STAGEPATH.getPath());

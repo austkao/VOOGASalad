@@ -1,6 +1,7 @@
 package main;
 
 import console.external.Console;
+import dataSystem.DataSystem;
 import editor.EditorManager;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -40,6 +41,7 @@ public class Main extends Application {
     private static Console myConsole;
     private RenderSystem myRenderSystem;
     private Player myPlayer;
+    private DataSystem myDataSystem;
 
     private Font myEmphasisFont;
     private Font myPlainFont;
@@ -82,6 +84,7 @@ public class Main extends Application {
         myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         myRenderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
+        myDataSystem = new DataSystem();
         myConsole = new Console();
         myDirectoryChooser = myRenderSystem.makeDirectoryChooser();
         //register event listeners
