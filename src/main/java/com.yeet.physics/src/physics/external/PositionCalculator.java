@@ -15,13 +15,14 @@ public class PositionCalculator {
         Coordinate newCoordinate;
         for (PhysicsObject o : myObjects.values()) {
             Coordinate currentPosition = o.getMyCoordinateBody().getPos();
-            double XVelocity;
-            double YVelocity;
+            int XVelocity;
+            int YVelocity;
             if (o.isPhysicsGround()) {
                 newCoordinate = new Coordinate(currentPosition.getX(), currentPosition.getY());
             } else {
-                XVelocity = o.getVelocity().getMagnitude() * Math.cos(o.getVelocity().getDirection());
-                YVelocity = o.getVelocity().getMagnitude() * Math.sin(o.getVelocity().getDirection());
+                XVelocity =(int)(o.getVelocity().getMagnitude() * Math.cos(o.getVelocity().getDirection()));
+                YVelocity =(int)(o.getVelocity().getMagnitude() * Math.sin(o.getVelocity().getDirection()));
+                System.out.println("XVelocity of " + o.getId() + ": " + XVelocity);
                 newCoordinate = new Coordinate(currentPosition.getX() + XVelocity * timeOfFrame, Math.round(currentPosition.getY() + YVelocity * timeOfFrame));
             }
             o.getMyCoordinateBody().update(newCoordinate);

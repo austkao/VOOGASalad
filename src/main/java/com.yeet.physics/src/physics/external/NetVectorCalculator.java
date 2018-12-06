@@ -15,8 +15,8 @@ public class NetVectorCalculator {
         while(myVectors.size() > 1) {
             PhysicsVector vector1 = myVectors.get(0);
             PhysicsVector vector2 = myVectors.get(1);
-            double newX = getX(vector1) + getX(vector2);
-            double newY = getY(vector1) + getY(vector2);
+            double newX = (getX(vector1)) + (getX(vector2));
+            double newY = (getY(vector1)) + (getY(vector2));
             double newMagnitude = Math.sqrt(Math.pow(newX, 2) + Math.pow(newY, 2));
             //System.out.println("X Component: " + newX);
             //System.out.println("Y Component: " + newY);
