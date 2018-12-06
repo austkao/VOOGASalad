@@ -12,7 +12,7 @@ public class InputSystem {
 
     private EventBus myMessageBus;
     private Parser myParser;
-    private Queue<KeyInputEvent> commandHolder;
+    private List<KeyInputEvent> commandHolder;
     private Map<String, ArrayList<String>> inputKeys;
     private Timer timer;
     private File GameDir;
@@ -27,6 +27,7 @@ public class InputSystem {
             myParser = new Parser(GameDir);
             setUpTimer();
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("An error has occurred in the input system");
         }
     }
@@ -40,6 +41,9 @@ public class InputSystem {
                 if(commandHolder.size() >0){
                     try {
                         postEvent(myParser.parse(commandHolder));
+                        if(commandHolder.isEmpty()){
+                            myMessageBus.post(new IdleEvent());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -49,7 +53,7 @@ public class InputSystem {
             },
                 //Set how long before to start calling the TimerTask (in milliseconds)
                 0,
-                //Set the amount of time between each execution (in milliseconds)
+                //Set the amount of time between  each execution (in milliseconds)
                 1000);
     }
 
@@ -79,8 +83,8 @@ public class InputSystem {
             myMessageBus.post(keyEvent);
 
             //TESTING: Also post an action event
-            ActionEvent ae = new ActionEvent(action, "Attack");
-            myMessageBus.post(ae);
+            //ActionEvent ae = new ActionEvent(action, "Attack");
+            //myMessageBus.post(ae);
         }
 
     }

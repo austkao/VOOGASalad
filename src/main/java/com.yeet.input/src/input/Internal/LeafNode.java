@@ -17,7 +17,7 @@ public class LeafNode implements Node {
 
     @Override
     public String getKey() {
-        return null;
+        return comboName;
     }
 
     @Override
@@ -38,5 +38,10 @@ public class LeafNode implements Node {
     @Override
     public Node getChild(String s) {
         return null;
+    }
+
+    @Override
+    public boolean isAtEnd() {
+        return false;
     }
 }

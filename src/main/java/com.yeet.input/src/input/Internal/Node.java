@@ -18,4 +18,6 @@ public interface Node {
 
     Node getChild(String s);
 
+    boolean isAtEnd();
+
 }

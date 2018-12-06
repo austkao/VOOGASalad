@@ -33,11 +33,13 @@ public class ComboFactory {
 
 
     private void addChildLoop(Node root, List<String> comboList, String combo){
-        Node newChild;
-        String let = comboList.remove(0);
         if(comboList.size() == 0){
             root.addChild(new LeafNode(myCombos.get(combo).get(0)));
+            return;
         }
+        Node newChild;
+        String let = comboList.remove(0);
+
         if(!root.hasChild(let)){ // so long as that child doesn't already exist
             newChild = new ComboNode(let);
             root.addChild(newChild);

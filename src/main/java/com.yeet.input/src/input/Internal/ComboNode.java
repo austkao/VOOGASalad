@@ -13,6 +13,7 @@ public class ComboNode implements Node {
     public ComboNode(String letter){
         tag = letter;
         myChildren = new ArrayList<>();
+        myChildrenStrings = new ArrayList<>();
     }
 
     @Override
@@ -40,5 +41,15 @@ public class ComboNode implements Node {
     public Node getChild(String s){
         int index = myChildrenStrings.indexOf(s); //get index from string arraylist
         return myChildren.get(index);
+    }
+
+    @Override
+    public boolean isAtEnd(){
+        for(Node child:myChildren){
+            if(child instanceof LeafNode){
+                return true;
+            }
+        }
+        return false;
     }
 }
