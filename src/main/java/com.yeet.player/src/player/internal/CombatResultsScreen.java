@@ -27,6 +27,10 @@ public class CombatResultsScreen extends Screen {
 
     public CombatResultsScreen(Group root, Renderer renderer) {
         super(root, renderer);
+        ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("characterselect_bg.jpg")));
+        background.setFitWidth(1280.0);
+        background.setFitHeight(800.0);
+        background.setOpacity(50);
         VBox mainContainer = new VBox();
         Rectangle topSpacer = new Rectangle(1280,20, Color.TRANSPARENT);
         StackPane winnerBanner = new StackPane();
@@ -41,17 +45,28 @@ public class CombatResultsScreen extends Screen {
         playerBoxContainer.setAlignment(Pos.CENTER);
         winnerBanner.getChildren().addAll(winnerBannerImage,winnerBannerText);
         mainContainer.getChildren().addAll(topSpacer,winnerBanner,playerBoxContainer);
-        this.getMyRoot().getChildren().addAll(mainContainer);
+        this.getMyRoot().getChildren().addAll(background,mainContainer);
     }
 
     /** Sets the name of the winner
-     *  @param winnerName The name of the winner
+     *  @param allPlayers The character names of the players
+     *  @param playerRank The corresponding ranks of each character for the combat
      */
-    public void setWinner(String winnerName, List<String> allPlayers){
-        winnerBannerText.setText(winnerName);
-        this.playerList = allPlayers;
-        for(int i=0;i<allPlayers.size();i++){
-            //TODO: CREATE PLAYER DISPLAYS
+    public void setWinner(List<String> allPlayers, List<Integer> playerRank){
+        //search for winner
+        int winnerID = -1;
+        for(int i=0;i<playerRank.size();i++){
+            if(playerRank.get(i)==1){
+                winnerID = i;
+            }
         }
+        if(winnerID!=-1){
+            winnerBannerText.setText(allPlayers.get(winnerID));
+            this.playerList = allPlayers;
+            for(int i=0;i<allPlayers.size();i++){
+                //TODO: CREATE PLAYER DISPLAYS
+            }
+        }
+
     }
 }

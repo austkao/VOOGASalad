@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class Console {
 
@@ -52,8 +53,14 @@ public class Console {
         if (event.equalsIgnoreCase("test")) {
             myEventBus.post(new TestSuccesfulEvent());
         }
-        else if(event.matches("gameover [0-3]")){
-            myEventBus.post(new GameOverEvent(Integer.parseInt(event.substring(event.length()-1))));
+        else if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")){
+            int winnerID = Integer.parseInt(event.substring(9,10));
+            ArrayList<Integer> rankList = new ArrayList<>();
+            String[] rawRankList = event.split("[()]")[1].split("");
+            for(String s : rawRankList){
+                rankList.add(Integer.parseInt(s));
+            }
+            myEventBus.post(new GameOverEvent(winnerID,rankList));
         }
     }
 

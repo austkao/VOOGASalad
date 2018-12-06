@@ -26,8 +26,9 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /** Displays a stage and visualizes character combat animation
  *  @author bpx
@@ -38,7 +39,7 @@ public class CombatScreen extends Screen {
     private EventBus myMessageBus;
 
     private SceneSwitch prevScene;
-    private Consumer<Integer> nextScene;
+    private BiConsumer<Integer, List<Integer>> nextScene;
 
     private InputSystem myInputSystem;
     private CombatSystem myCombatSystem;
@@ -65,7 +66,7 @@ public class CombatScreen extends Screen {
 
     private ArrayList<ImageView> myTiles;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, Consumer<Integer> nextScene) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, List<Integer>> nextScene) {
         super(root, renderer);
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
@@ -196,10 +197,12 @@ public class CombatScreen extends Screen {
     }
 
     @Subscribe
-    public void endCombat(GameOverEvent gameOverEvent){
+    public synchronized void endCombat(GameOverEvent gameOverEvent){
         Platform.runLater(
                 () -> {
-                    nextScene.accept(gameOverEvent.getWinnerID());
+                    myBGMPlayer.stop();
+                    myGameLoop.stopLoop();
+                    nextScene.accept(gameOverEvent.getWinnerID(),gameOverEvent.getRankList());
                 }
         );
     }
