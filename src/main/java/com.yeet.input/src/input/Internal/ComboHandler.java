@@ -33,10 +33,10 @@ public class ComboHandler {
     public List<String> inputHandler(List<KeyInputEvent> q){
         List<String> output = new ArrayList<>();
         while(q.size()>0) {
-            String possibleCombo = parseComboTree(comboTree, new ArrayList<KeyInputEvent>(q));
+            String possibleCombo = parseComboTree(comboTree, new ArrayList<>(q));
             output.add(possibleCombo);
             q.remove(0);
-            System.out.println(possibleCombo);
+            //System.out.println(possibleCombo);
         }
 
 
@@ -66,7 +66,19 @@ public class ComboHandler {
         //q.clear();
         return output;
 
+    }
 
+    public List<String> inputHandler2(List<KeyInputEvent> q){
+        List<String> output = new ArrayList<>();
+        for(KeyInputEvent input : q){
+            try{
+                output.add(attackMapping.get(input.getName()).get(0));
+            }
+            catch(Exception e){
+                System.out.println("That input is not valid");
+            }
+        }
+        return output;
     }
 
     private String parseComboTree(Node root,  List<KeyInputEvent> q){

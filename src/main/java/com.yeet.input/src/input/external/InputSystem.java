@@ -66,6 +66,7 @@ public class InputSystem {
     public void postEvent(List<String> s){
         //TRUE if left, FALSE if right
         for(String action:s){
+            System.out.println(s.size());
             System.out.println(action);
             CombatActionEvent keyEvent;
             if(action.equals("LEFT")){
@@ -97,7 +98,7 @@ public class InputSystem {
      */
     @Subscribe
     public void getKey(KeyInputEvent inputEvent){
-        System.out.println(inputEvent.getName());
+        //System.out.println(inputEvent.getName());
         commandHolder.add(inputEvent);
     }
 
