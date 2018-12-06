@@ -22,7 +22,7 @@ public class Parser {
      *
      */
     public List<String> parse(List<KeyInputEvent> q) throws Exception {
-        var output = handler.inputHandler(q);
+        var output = handler.inputHandler2(q);
         //List<String> parsed = new ArrayList<>();
         //for(String o :output){
         //    if(o.length()>1){
