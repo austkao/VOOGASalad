@@ -13,8 +13,6 @@ import javafx.util.Duration;
 import renderer.external.Structures.*;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -206,7 +204,7 @@ public class CharacterEditor extends EditorSuper{
             first = true;
         }
         else{
-            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(3.0), 8,
+            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(1.5), 8,
                     8, 6.0, 89.0, 61.0, 60.0);
         }
         myAnimation.setCycleCount(Animation.INDEFINITE);
@@ -220,7 +218,10 @@ public class CharacterEditor extends EditorSuper{
     }
     
     private void selectAnimationFromScroll(ScrollableItem b){
-        currentAnimation.stop();
+        if (currentAnimation != null){
+            currentAnimation.stop();
+        }
+
         currentAnimation = scrollToAnimation.get(b);
         frame.currentFrame = 1;
         frame.totalFrames = currentAnimation.getCount();

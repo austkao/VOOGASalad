@@ -24,16 +24,13 @@ public class CombatSystem {
         this.physicsSystem = physicsSystem;
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
-            physicsSystem.addPhysicsObject(0, PhysicsSystem.defaultMass, playerMap.get(i).getX(), playerMap.get(i).getY(), 50, 50);
+            physicsSystem.addPhysicsObject(0, PhysicsSystem.defaultMass, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60);
         }
         // register tiles to physics engine
         for(int i=0;i < tileMap.keySet().size(); i++){
-            physicsSystem.addPhysicsObject(1,PhysicsSystem.defaultMass, tileMap.get(i).getMinX(),tileMap.get(i).getMinY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
+            physicsSystem.addPhysicsObject(2,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
         }
 
-//        XMLParser parser = new XMLParser();
-//        HashMap<String, ArrayList<String>> map = parser.parseFileForElement("character");
-        //physicsSystem.addPhysicsBodies(numOfPlayers);
     }
 
     @Subscribe

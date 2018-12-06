@@ -4,7 +4,6 @@ import com.google.common.eventbus.EventBus;
 import messenger.external.AttackIntersectEvent;
 import messenger.external.EventBusFactory;
 import messenger.external.GroundIntersectEvent;
-import messenger.external.PositionsUpdateEvent;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -20,8 +19,8 @@ public class PhysicsSystem {
 
     public static final double defaultMass = 50;
     public static final double defaultStrength = 20;
-    public static final double defaultJumpHeight = 20;
-    public static final double defaultMovementSpeed = 20;
+    public static final double defaultJumpHeight = 50;
+    public static final double defaultMovementSpeed = 50;
     public static final double defaultAttackSpace = 10;
 
     private int playerId;
@@ -29,8 +28,6 @@ public class PhysicsSystem {
     private int attackId;
 
 
-
-    //List<PhysicsObject> gameObjects = new ArrayList<>();
     List<PlayerCharacteristics> playerCharacteristics = new ArrayList<>();
 
     Map<Integer, PhysicsObject> gameObjects = new HashMap<>();
@@ -40,11 +37,13 @@ public class PhysicsSystem {
     public PhysicsSystem() {
         this.myMessageBus = EventBusFactory.getEventBus();
         this.playerId = 0;
-        this.groundId = 100;
-        this.attackId = 1000;
+        this.attackId = 100;
+        this.groundId = 1000;
     }
 
     public void update() {
+        PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
+        passHandler.update();
         CollisionDetector detector = new CollisionDetector(gameObjects);
         List<Collision> collisions = new ArrayList<>(detector.detectCollisions(gameObjects));
         //MovementHandler movHandler = new MovementHandler(gameObjects);
@@ -53,18 +52,16 @@ public class PhysicsSystem {
         collHandler.update();
         List<Integer> groundCollisions = collHandler.getGroundCollisions();
         List<List<Integer>> attackCollisions = collHandler.getAttackCollisions();
-        PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
-        passHandler.update();
         applyForces();
         updatePositions();
-        PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
-        myMessageBus.post(newPos);
+        //PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
+        //myMessageBus.post(newPos);
         GroundIntersectEvent groundedPlayers = new GroundIntersectEvent(groundCollisions);
-        if (groundedPlayers != null) {
+        if (groundedPlayers.getGroundedPlayers().size() > 0) {
             myMessageBus.post(groundCollisions);
         }
         AttackIntersectEvent attackPlayers = new AttackIntersectEvent(attackCollisions);
-        if (attackPlayers != null) {
+        if (attackPlayers.getAttackPlayers().size() > 0) {
             myMessageBus.post(attackCollisions);
         }
 
@@ -74,23 +71,32 @@ public class PhysicsSystem {
         int id;
         if (type == 0) {
             id = playerId;
+            gameObjects.put(id, new PhysicsBody(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
             playerId++;
         } else if (type == 1) {
-            id = groundId;
-            groundId++;
-        } else {
             id = attackId;
+            gameObjects.put(id, new PhysicsAttack(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
             attackId++;
+        } else {
+            id = groundId;
+            gameObjects.put(id, new PhysicsGround(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
+            groundId++;
         }
-        gameObjects.put(id, new PhysicsBody(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
         playerCharacteristics.add(new PlayerCharacteristics(id, defaultStrength, defaultJumpHeight, defaultMovementSpeed));
     }
 
     public void applyForces() {
-        for (PhysicsObject b : gameObjects.values()) {
-            NetVectorCalculator calc = new NetVectorCalculator(b.getCurrentForces());
-            b.applyForce(calc.getNetVector());
-            b.clearCurrentForces();
+        for (PhysicsObject o : gameObjects.values()) {
+            if (!o.isPhysicsGround()) {
+                NetVectorCalculator calc = new NetVectorCalculator(o.getCurrentForces());
+                o.applyForce(calc.getNetVector());
+
+                if (o.isPhysicsBody()) {
+                    System.out.println("ID " + o.getId() + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
+                }
+
+                o.clearCurrentForces();
+            }
         }
 
     }
@@ -100,21 +106,25 @@ public class PhysicsSystem {
         calc.updatePositions();
     }
 
-    private Map<Integer, Point2D> getPositionsMap() {
+    public Map<Integer, Point2D> getPositionsMap() {
         Map<Integer, Point2D> out = new HashMap<>();
         for(PhysicsObject obj: gameObjects.values()){
-            Point2D.Double point = new Point2D.Double(obj.getMyCoordinateBody().getPos().getX(), obj.getMyCoordinateBody().getPos().getY());
-            out.put(obj.getId(), point);
+            if (!obj.isPhysicsGround()) {
+                Point2D.Double point = new Point2D.Double(obj.getMyCoordinateBody().getPos().getX(), obj.getMyCoordinateBody().getPos().getY());
+                out.put(obj.getId(), point);
+            }
         }
         return out;
     }
 
-    private Map<Integer, Double> getDirectionsMap() {
+    public Map<Integer, Double> getDirectionsMap() {
         Map<Integer, Double> out = new HashMap<>();
         double direction;
         for(PhysicsObject obj: gameObjects.values()){
-            direction = obj.getDirection();
-            out.put(obj.getId(), direction);
+            if (obj.isPhysicsBody()) {
+                direction = obj.getDirection();
+                out.put(obj.getId(), direction);
+            }
         }
         return out;
     }
@@ -126,6 +136,7 @@ public class PhysicsSystem {
     public void jump(int id) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
+        currentBody.setGrounded(false);
     }
 
     public void move(int id, double direction) {

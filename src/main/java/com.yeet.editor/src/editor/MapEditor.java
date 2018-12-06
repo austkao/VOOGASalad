@@ -36,8 +36,7 @@ import java.util.function.Consumer;
 
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
-    private static final String DEFAULT_IMAGE_DIR = "/src/main/java/com.yeet.main/resources/examplegame/data/tiles";
-    private static final String DEFAULT_BACKGROUND_DIR = "/src/main/java/com.yeet.main/resources/examplegame/data/background";
+    private static final String DEFAULT_IMAGE_DIR = "/data/tiles";
     private static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
     private static final int DEFAULT_PLAIN_FONTSIZE = 12;
     private static final String DEFAULT_BGM = "BGM.mp3";
@@ -108,8 +107,8 @@ public class MapEditor extends EditorSuper{
     }
 
     private void initializeScrollPane(){
-        Path filePath = Paths.get(System.getProperty("user.dir"));
-        File paneFile = new File(filePath+DEFAULT_IMAGE_DIR);
+        File paneFile = new File(myEM.getGameDirectoryString()+DEFAULT_IMAGE_DIR);
+        System.out.println(paneFile.getPath());
         myScrollablePane = new ScrollablePane(paneFile,50,400.0);
         for(ScrollableItem b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
@@ -227,7 +226,6 @@ public class MapEditor extends EditorSuper{
         HashMap<String, ArrayList<String>> levelMap = level.createLevelMap();
         ArrayList<String> temp = new ArrayList<>();
         for(String s : levelMap.get("image")) {
-            System.out.println(s);
             temp.add(imageMap.get(s));
         }
         levelMap.get("image").clear();
@@ -250,14 +248,19 @@ public class MapEditor extends EditorSuper{
             HashMap<String, ArrayList<String>> data = loadXMLFile("map");
             ArrayList<String> xPos = data.get("x");
             ArrayList<String> yPos = data.get("y");
+            ArrayList<String> image = data.get("image");
             if(xPos.size() != yPos.size()) {
                 throw new IOException("Incorrect information contained within xml");
             }
+            Path tilePath = Paths.get(myEM.getGameDirectoryString(), DEFAULT_IMAGE_DIR);
             for(int i = 0; i < xPos.size(); i++) {
-                level.processTile(Integer.parseInt(xPos.get(i)), Integer.parseInt(yPos.get(i)), currentTileFile);
+                Path imagePath = Paths.get(tilePath.toString(), image.get(i));
+                File imageFile = new File(imagePath.toString());
+                level.processTile(Integer.parseInt(xPos.get(i)), Integer.parseInt(yPos.get(i)), new Image(imageFile.toURI().toString()));
             }
         } catch (Exception ex) {
             System.out.println("Cannot load file");
+            ex.printStackTrace();
         }
     }
 }
