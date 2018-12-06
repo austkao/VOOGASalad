@@ -54,7 +54,12 @@ public class PhysicsSystem {
         for(PhysicsObject o: gameObjects.values()){
             if (o.getId() == 1) {
                 for (PhysicsVector v : o.getCurrentForces()) {
-                    System.out.println("Magnitude, Direction: " + v.getMagnitude() + ", " + v.getDirection());
+                    //System.out.println("1: Magnitude, Direction: " + v.getMagnitude() + ", " + v.getDirection());
+                }
+            }
+            if (o.getId() == 0) {
+                for (PhysicsVector v : o.getCurrentForces()) {
+                    //System.out.println("0: Magnitude, Direction: " + v.getMagnitude() + ", " + v.getDirection());
                 }
             }
         }
@@ -93,18 +98,9 @@ public class PhysicsSystem {
 
     public void applyForces() {
         for (PhysicsObject o : gameObjects.values()) {
-            if(o.getId() == 1){
-            //System.out.println("ApplyForces: (before force applied) " + o.getVelocity().getMagnitude());
-            //System.out.println("ApplyForces: (before force applied) " + o.getVelocity().getDirection());
-            }
             if (!o.isPhysicsGround()) {
                 NetVectorCalculator calc = new NetVectorCalculator(o.getCurrentForces());
                 o.applyForce(calc.getNetVector());
-
-                if (o.getId() == 1) {
-                    System.out.println("ID 1 Net Vector: " + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
-                }
-
                 o.clearCurrentForces();
             }
             if(o.getId() == 1){

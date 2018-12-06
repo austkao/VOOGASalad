@@ -1,7 +1,6 @@
 package physics.external;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static physics.external.PassiveForceHandler.defaultGravityAcceleration;
 import static physics.external.PassiveForceHandler.defaultGravityDirection;
@@ -18,7 +17,22 @@ public class CollisionHandler {
     private List<List<Integer>> attackCollisions = new ArrayList<>();
 
     public CollisionHandler(List<Collision> collisions){
-        this.myCollisions = collisions;
+        Iterator<Collision> colIter = collisions.iterator();
+        Set<PhysicsObject> groundCols = new HashSet<>();
+        this.myCollisions = new ArrayList<>();
+        //Filter collisions so that only one ground collides with one body
+        while(colIter.hasNext()){
+            Collision col = colIter.next();
+            PhysicsObject one = col.getCollider1();
+            PhysicsObject two = col.getCollider2();
+            if(one.isPhysicsBody() && two.isPhysicsGround()){
+                if(!groundCols.contains(one)){
+                    groundCols.add(one);
+                    this.myCollisions.add(col);
+                }
+            }
+        }
+
     }
 
     public void update() {
@@ -39,9 +53,12 @@ public class CollisionHandler {
                 one.setGrounded(true);
                 double bodyVelocity = one.getYVelocity().getMagnitude();
                 double bodyMass = one.getMass();
-                PhysicsVector updwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(2*timeOfFrame)), -Math.PI/2);
+                PhysicsVector updwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame)), -Math.PI/2);
                 if(one.getId() == 1) {
-                    System.out.println("Upward force: " + bodyMass * bodyVelocity / (2 * timeOfFrame));
+                    System.out.println("1: Upward force: " + bodyMass * bodyVelocity / (timeOfFrame));
+                }
+                if(one.getId() == 0) {
+                    System.out.println("0: Upward force: " + bodyMass * bodyVelocity / (timeOfFrame));
                 }
                 one.addCurrentForce(updwardForce);
                 PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * defaultGravityAcceleration), -defaultGravityDirection);
