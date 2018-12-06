@@ -54,7 +54,7 @@ public class CharacterEditor extends EditorSuper{
 
     private boolean first = false;
 
-    class currentFrame{
+    static class currentFrame{
         int currentFrame;
         int totalFrames;
         currentFrame(){
