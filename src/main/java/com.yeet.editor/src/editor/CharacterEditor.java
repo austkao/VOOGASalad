@@ -69,8 +69,6 @@ public class CharacterEditor extends EditorSuper{
             }
             return "Frame "+currentFrame+"/"+totalFrames;
         }
-
-
     }
 
 
