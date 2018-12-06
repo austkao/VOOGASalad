@@ -21,18 +21,7 @@ public class PositionCalculator {
                 newCoordinate = new Coordinate(currentPosition.getX(), currentPosition.getY());
             } else {
                 XVelocity = o.getVelocity().getMagnitude() * Math.cos(o.getVelocity().getDirection());
-                if (o.isGrounded()) {
-                    //YVelocity = 0;
-                    YVelocity = o.getVelocity().getMagnitude() * Math.sin(o.getVelocity().getDirection());
-                    if(o.getId() == 1){
-                        System.out.println("Position Calculator YVelocity: " + YVelocity);
-                    }
-                } else {
-                    YVelocity = o.getVelocity().getMagnitude() * Math.sin(o.getVelocity().getDirection());
-                    if(o.getId() == 1){
-                        System.out.println("Position Calculator YVelocity: " + YVelocity);
-                    }
-                }
+                YVelocity = o.getVelocity().getMagnitude() * Math.sin(o.getVelocity().getDirection());
                 newCoordinate = new Coordinate(currentPosition.getX() + XVelocity * timeOfFrame, Math.round(currentPosition.getY() + YVelocity * timeOfFrame));
             }
             o.getMyCoordinateBody().update(newCoordinate);

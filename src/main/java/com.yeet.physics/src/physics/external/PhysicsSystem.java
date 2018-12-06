@@ -51,18 +51,6 @@ public class PhysicsSystem {
         collHandler.update();
         List<Integer> groundCollisions = collHandler.getGroundCollisions();
         List<List<Integer>> attackCollisions = collHandler.getAttackCollisions();
-        for(PhysicsObject o: gameObjects.values()){
-            if (o.getId() == 1) {
-                for (PhysicsVector v : o.getCurrentForces()) {
-                    //System.out.println("1: Magnitude, Direction: " + v.getMagnitude() + ", " + v.getDirection());
-                }
-            }
-            if (o.getId() == 0) {
-                for (PhysicsVector v : o.getCurrentForces()) {
-                    //System.out.println("0: Magnitude, Direction: " + v.getMagnitude() + ", " + v.getDirection());
-                }
-            }
-        }
         applyForces();
         updatePositions();
         //PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
@@ -103,10 +91,6 @@ public class PhysicsSystem {
                 o.applyForce(calc.getNetVector());
                 o.clearCurrentForces();
             }
-            if(o.getId() == 1){
-            //System.out.println("ApplyForces: " + o.getVelocity().getMagnitude());
-            //System.out.println("ApplyForces: " + o.getVelocity().getDirection());
-            }
         }
 
     }
@@ -145,14 +129,14 @@ public class PhysicsSystem {
 
     public void jump(int id) {
         PhysicsObject currentBody = gameObjects.get(id);
-        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
+        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * 15000, -PI/2));
         System.out.println("JUMP INITIATED");
     }
 
     public void move(int id, double direction) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.setDirection(direction);
-        System.out.println(direction);
+        System.out.println("MOVE");
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultMovementSpeed, direction));
     }
 

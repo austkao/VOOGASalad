@@ -55,10 +55,10 @@ public class CollisionHandler {
                 double bodyMass = one.getMass();
                 PhysicsVector updwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame)), -Math.PI/2);
                 if(one.getId() == 1) {
-                    System.out.println("1: Upward force: " + bodyMass * bodyVelocity / (timeOfFrame));
+                    //System.out.println("1: Upward force: " + bodyMass * bodyVelocity / (timeOfFrame));
                 }
                 if(one.getId() == 0) {
-                    System.out.println("0: Upward force: " + bodyMass * bodyVelocity / (timeOfFrame));
+                    //System.out.println("0: Upward force: " + bodyMass * bodyVelocity / (timeOfFrame));
                 }
                 one.addCurrentForce(updwardForce);
                 PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * defaultGravityAcceleration), -defaultGravityDirection);
