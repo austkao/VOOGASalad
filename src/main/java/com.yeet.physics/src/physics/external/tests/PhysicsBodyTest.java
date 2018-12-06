@@ -1,5 +1,5 @@
 package physics.external.tests;
-
+/*
 import org.junit.jupiter.api.Test;
 import physics.external.*;
 
@@ -60,3 +60,4 @@ class PhysicsBodyTest {
 
     }
 }
+*/
