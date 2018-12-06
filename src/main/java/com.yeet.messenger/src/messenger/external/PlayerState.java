@@ -35,9 +35,9 @@ public enum PlayerState {
     SINGLE_JUMP{
         @Override
         public PlayerState changeStatesOnEvent(CombatActionEvent event){
+            event.onSuccess();
             switch (event.getInputPlayerState()){
                 case SINGLE_JUMP:
-                    event.onSuccess();
                     return DOUBLE_JUMP;
             }
             return SINGLE_JUMP;
