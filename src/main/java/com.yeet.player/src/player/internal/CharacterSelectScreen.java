@@ -44,6 +44,7 @@ public class CharacterSelectScreen extends Screen {
 
     private HashMap<Integer, String> myCharacterMap;
     private ArrayList<String> myCharacterList;
+    private ArrayList<CharacterChooseDisplay> myCharacterChooserList;
 
 
     /** Creates a new {@code CharacterSelectScreen} with the specified parameters
@@ -62,6 +63,7 @@ public class CharacterSelectScreen extends Screen {
         myReadyBar.setOnMousePressed(event -> nextScene.switchScene());
         myCharacterMap = new HashMap<>();
         myCharacterList = new ArrayList<>();
+        myCharacterChooserList = new ArrayList<>();
         for(int i=0;i<4;i++){
             myCharacterMap.put(i,"");
         }
@@ -87,6 +89,10 @@ public class CharacterSelectScreen extends Screen {
         display2 = new CharacterChooseDisplay(Color.web("#4C7FFF"),super.getMyRenderer().makeText("Player 2",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button2);
         display3 = new CharacterChooseDisplay(Color.web("#FFF61B"),super.getMyRenderer().makeText("Player 3",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button3);
         display4 = new CharacterChooseDisplay(Color.web("#1FCB17"),super.getMyRenderer().makeText("Player 4",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button4);
+        myCharacterChooserList.add(display1);
+        myCharacterChooserList.add(display2);
+        myCharacterChooserList.add(display3);
+        myCharacterChooserList.add(display4);
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
         holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
@@ -181,5 +187,9 @@ public class CharacterSelectScreen extends Screen {
 
     public ArrayList<String> getCharacterList(){
         return myCharacterList;
+    }
+
+    public ArrayList<CharacterChooseDisplay> getCharacterChooserList(){
+        return (ArrayList<CharacterChooseDisplay>) myCharacterChooserList.clone();
     }
 }

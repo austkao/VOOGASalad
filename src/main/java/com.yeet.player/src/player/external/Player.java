@@ -89,7 +89,7 @@ public class Player {
         myCombatScreen =  new CombatScreen(new Group(),myRenderer,myDirectory,()->myStage.setScene(myCharacterSelectScreen),(winnerID,rankList)-> {
             //setup combat results screen
             myBGMPlayer.play();
-            myCombatResultsScreen.setWinner(myCharacterSelectScreen.getCharacterList(),rankList);
+            myCombatResultsScreen.setWinner(myCharacterSelectScreen.getCharacterList(),rankList, myCharacterSelectScreen.getCharacterChooserList());
             myStage.setScene(myCombatResultsScreen);
         });
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
