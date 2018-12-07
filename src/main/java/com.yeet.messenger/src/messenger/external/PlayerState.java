@@ -71,7 +71,16 @@ public enum PlayerState {
             }
             return BEING_ATTACKED;
         }
+    },
+
+    CROUCH{
+        @Override
+        public PlayerState changeStatesOnEvent(CombatActionEvent event) {
+            event.onSuccess();
+            return event.getInputPlayerState();
+        }
     };
+
 
     public abstract PlayerState changeStatesOnEvent(CombatActionEvent event);
 
