@@ -16,11 +16,10 @@ import static java.lang.Math.PI;
 
 public class PhysicsSystem {
 
-
     public static final double defaultMass = 50;
     public static final double defaultStrength = 20;
-    public static final double defaultJumpHeight = 50;
-    public static final double defaultMovementSpeed = 50;
+    public static final double defaultJumpHeight = 15000;
+    public static final double defaultMovementSpeed = 5000;
     public static final double defaultAttackSpace = 10;
 
     private int playerId;
@@ -90,11 +89,6 @@ public class PhysicsSystem {
             if (!o.isPhysicsGround()) {
                 NetVectorCalculator calc = new NetVectorCalculator(o.getCurrentForces());
                 o.applyForce(calc.getNetVector());
-
-                if (o.isPhysicsBody()) {
-                    //System.out.println("ID " + o.getId() + calc.getNetVector().getMagnitude() + ", " + calc.getNetVector().getDirection());
-                }
-
                 o.clearCurrentForces();
             }
         }
@@ -136,12 +130,13 @@ public class PhysicsSystem {
     public void jump(int id) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
-        currentBody.setGrounded(false);
+        System.out.println("JUMP INITIATED");
     }
 
     public void move(int id, double direction) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.setDirection(direction);
+        System.out.println("MOVE");
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultMovementSpeed, direction));
     }
 
