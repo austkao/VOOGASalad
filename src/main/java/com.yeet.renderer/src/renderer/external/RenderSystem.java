@@ -94,6 +94,9 @@ public class RenderSystem implements Renderer{
         button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize,1.0,1.0)));
         return button;
     }
+    public Font getPlainFont(){
+        return myPlainFont;
+    }
 
     /** Creates a button using an image
      *  @param image The {@code ImageView} that will be used as the button

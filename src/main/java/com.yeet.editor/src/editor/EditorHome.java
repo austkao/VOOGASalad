@@ -34,6 +34,9 @@ public abstract class EditorHome extends Scene {
     private void initializeScroll() {
 
     }
+    public RenderSystem getRender(){
+        return rs;
+    }
 
     public abstract void setEditor();
 

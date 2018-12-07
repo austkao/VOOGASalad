@@ -77,9 +77,7 @@ public class Main extends Application {
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
         //set up systems
-        //myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
-        //myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
-        myRenderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
+        myRenderSystem = new RenderSystem();
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
         myConsole = new Console();
         myDirectoryChooser = myRenderSystem.makeDirectoryChooser();
