@@ -49,7 +49,10 @@ public class CombatResultsScreen extends Screen {
         winnerBanner.getChildren().addAll(winnerBannerImage,winnerBannerText);
         mainContainer.getChildren().addAll(topSpacer,winnerBanner,midSpacer,playerBoxContainer);
         this.getMyRoot().getChildren().addAll(background,mainContainer);
-        this.setOnKeyPressed(event -> nextScene.switchScene());
+        this.setOnKeyPressed(event -> {
+            nextScene.switchScene();
+            this.reset();
+        });
     }
 
     /** Sets the name of the winner
@@ -108,4 +111,10 @@ public class CombatResultsScreen extends Screen {
         }
 
     }
+
+    /** Resets the combat results screen so it can be set again for the next combat */
+    public void reset(){
+        playerBoxContainer.getChildren().clear();
+    }
+
 }
