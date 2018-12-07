@@ -18,8 +18,8 @@ public class PhysicsSystem {
 
     public static final double defaultMass = 50;
     public static final double defaultStrength = 20;
-    public static final double defaultJumpHeight = 100;
-    public static final double defaultMovementSpeed = 3000;
+    public static final double defaultJumpHeight = 15000;
+    public static final double defaultMovementSpeed = 5000;
     public static final double defaultAttackSpace = 10;
 
     private int playerId;
@@ -129,7 +129,7 @@ public class PhysicsSystem {
 
     public void jump(int id) {
         PhysicsObject currentBody = gameObjects.get(id);
-        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * 15000, -PI/2));
+        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
         System.out.println("JUMP INITIATED");
     }
 

@@ -25,7 +25,7 @@ public class AccelerationCalculator {
 
     public PhysicsVector updateVelocity(){
         //V = V(0) + at
-        PhysicsVector newVelocity = new PhysicsVector(myAcceleration.getMagnitude() * timeOfFrame, myAcceleration.getDirection());
+        PhysicsVector newVelocity = new PhysicsVector((myAcceleration.getMagnitude() * timeOfFrame), myAcceleration.getDirection());
         myVelocities.add(newVelocity);
         return condenseVector(myVelocities);
     }
