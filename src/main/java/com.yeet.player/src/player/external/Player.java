@@ -92,7 +92,11 @@ public class Player {
             myCombatResultsScreen.setWinner(myCharacterSelectScreen.getCharacterList(),rankList, myCharacterSelectScreen.getCharacterChooserList());
             myStage.setScene(myCombatResultsScreen);
         });
-        myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer,()->myStage.setScene(myCombatScreen));
+        myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer,()-> {
+            myBGMPlayer.stop();
+            myFightMusicPlayer.play();
+            myStage.setScene(myCharacterSelectScreen);
+        });
         //finished loading
         myStage.setScene(mySplashScreen);
     }
