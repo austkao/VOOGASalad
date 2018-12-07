@@ -60,6 +60,7 @@ public class CharacterEditor extends EditorSuper{
         int currentFrame;
         int totalFrames;
         Map<Integer, Rectangle> frameBox;
+
         currentFrame(){
             frameBox = new HashMap<>();
             currentFrame = -1;
@@ -70,7 +71,11 @@ public class CharacterEditor extends EditorSuper{
             frameBox.put(currentFrame, r);
         }
         Rectangle getFrameBox(){
-            return frameBox.get(currentFrame);
+            if (frameBox.containsKey(currentFrame))
+            {
+                return frameBox.get(currentFrame);
+            }
+            return null;
         }
         void setTotalFrames(int t){
             totalFrames = t;
@@ -275,27 +280,42 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void chooseSpriteSheet(){
+        mySpritePane.getChildren().remove(currentSprite);
         File sprites = chooseImage("Choose Sprite Sheet");
         if (sprites !=  null){
             setImageView(spriteSheet,sprites.toURI().toString());
         }
         //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
-        Sprite mySprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
-        mySprite.setOnMouseClicked(e -> setRectangle(e));
-        mySprite.setScaleX(5);
-        mySprite.setScaleY(5);
-        currentSprite = mySprite;
+        currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
+        currentSprite.setScaleX(5);
+        currentSprite.setScaleY(5);
         mySpritePane.getChildren().add(currentSprite);
+
+
+
+        currentSprite.setOnMousePressed(e-> startRectangle(e));
+        currentSprite.setOnMouseReleased(e-> finishRectangle(e));
+
     }
 
-    private void setRectangle(MouseEvent e){
-        int x = (int)e.getX();
-        int y = (int)e.getY();
+    private void startRectangle(MouseEvent e){
+        System.out.println("got to start");
+        mySpritePane.getChildren().remove(frame.getFrameBox());
+        frame.setFrameBox(new Rectangle());
+        frame.getFrameBox().setX(e.getX());
+        frame.getFrameBox().setY(e.getY());
+    }
 
-        int width = Integer.parseInt(JOptionPane.showInputDialog("give the width"));
-        int height = Integer.parseInt(JOptionPane.showInputDialog("give the width"));
+    private void finishRectangle(MouseEvent e){
+        System.out.println("got to finish");
+        int x2 = (int)e.getX();
+        int y2 = (int)e.getY();
 
-        frame.setFrameBox(new Rectangle(x, y, width, height));
+        double width = frame.getFrameBox().getX()-x2;
+        double height = frame.getFrameBox().getY()-y2;
+
+        frame.getFrameBox().setWidth(width);
+        frame.getFrameBox().setHeight(height);
         mySpritePane.getChildren().add(frame.getFrameBox());
     }
     /**
@@ -306,8 +326,6 @@ public class CharacterEditor extends EditorSuper{
         if (portraitFile != null)
             setImageView(portrait, portraitFile.toURI().toString());
     }
-
-
 
     /**
      * general method for choosing an image
