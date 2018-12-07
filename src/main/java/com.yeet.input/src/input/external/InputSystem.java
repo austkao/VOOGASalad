@@ -12,7 +12,7 @@ public class InputSystem {
 
     private EventBus myMessageBus;
     private Parser myParser;
-    private Queue<KeyInputEvent> commandHolder;
+    private List<KeyInputEvent> commandHolder;
     private Map<String, ArrayList<String>> inputKeys;
     private Timer timer;
     private File GameDir;
@@ -27,6 +27,7 @@ public class InputSystem {
             myParser = new Parser(GameDir);
             setUpTimer();
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("An error has occurred in the input system");
         }
     }
@@ -40,6 +41,9 @@ public class InputSystem {
                 if(commandHolder.size() >0){
                     try {
                         postEvent(myParser.parse(commandHolder));
+                        if(commandHolder.isEmpty()){
+                            myMessageBus.post(new IdleEvent());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -62,6 +66,7 @@ public class InputSystem {
     public void postEvent(List<String> s){
         //TRUE if left, FALSE if right
         for(String action:s){
+            System.out.println(s.size());
             System.out.println(action);
             CombatActionEvent keyEvent;
             if(action.equals("LEFT")){
@@ -82,8 +87,8 @@ public class InputSystem {
             myMessageBus.post(keyEvent);
 
             //TESTING: Also post an action event
-            ActionEvent ae = new ActionEvent(action, "Attack");
-            myMessageBus.post(ae);
+            //ActionEvent ae = new ActionEvent(action, "Attack");
+            //myMessageBus.post(ae);
         }
 
     }
@@ -93,7 +98,7 @@ public class InputSystem {
      */
     @Subscribe
     public void getKey(KeyInputEvent inputEvent){
-        System.out.println(inputEvent.getName());
+        //System.out.println(inputEvent.getName());
         commandHolder.add(inputEvent);
     }
 

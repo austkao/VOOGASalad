@@ -2,7 +2,6 @@ package xml;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-import renderer.external.RenderSystem;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,18 +22,16 @@ public class XMLParser implements Parser {
 
     public XMLParser(File file) {
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbf.newDocumentBuilder();
-            Document doc = dBuilder.parse(file);
-            doc.getDocumentElement().normalize();
-            xmlDocument = doc;
+            xmlDocument = createDocument(file);
+            if(xmlDocument == null) {
+                throw new IOException("Invalid file");
+            }
             boolean verified = determineFileValidity();
             if(!verified) {
                 throw new IOException("No VOOGASalad tag");
             }
-        }
-        catch (ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
-            System.out.println("An error has occurred during initialization.");
+        } catch (IOException e) {
+            System.out.println("An error during initialization");
         }
     }
 
@@ -43,7 +40,6 @@ public class XMLParser implements Parser {
         NodeList elemNodes = xmlDocument.getElementsByTagName(element);
         for(int i = 0; i < elemNodes.getLength(); i++) {
             Element elem = (Element) elemNodes.item(i);
-            System.out.println(elem.getTagName());
             NamedNodeMap elemAttributes = elem.getAttributes();
             for (int j = 0; j < elemAttributes.getLength(); j++) {
                 Node attributeNode = elemAttributes.item(j);
@@ -57,22 +53,13 @@ public class XMLParser implements Parser {
         return attributeMap;
     }
 
-    public ArrayList<String> getAttributeValues(String elementTag, String attributeTag) {
-        NodeList elementList = xmlDocument.getElementsByTagName(elementTag);
-        ArrayList<String> values = new ArrayList<>();
-        for(int i = 0; i < elementList.getLength(); i++) {
-            Element elem = (Element) elementList.item(i);
-            NodeList elemNodes = elem.getChildNodes();
-            for(int j = 0; j < elemNodes.getLength(); j++) {
-                if(elemNodes.item(j) instanceof Attr) {
-                    Attr attribute = (Attr) elemNodes.item(j);
-                    if(attribute.getName().equals(attributeTag)) {
-                        values.add(attribute.getValue());
-                    }
-                }
-            }
+    public ArrayList<String> parseFileForAttribute(String element, String attributeTag) {
+        HashMap<String, ArrayList<String>> attributeMap = parseFileForElement(element);
+        if(attributeMap.containsKey(attributeTag)) {
+            return attributeMap.get(attributeTag);
+        } else {
+            return  new ArrayList<>();
         }
-        return values;
     }
 
     private boolean determineFileValidity() {
@@ -87,5 +74,19 @@ public class XMLParser implements Parser {
             }
         }
         return verified;
+    }
+
+    public Document createDocument(File file) {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbf.newDocumentBuilder();
+            Document doc = dBuilder.parse(file);
+            doc.getDocumentElement().normalize();
+            return doc;
+        }
+        catch (ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
+            System.out.println("An error occurred in creating the document.");
+            return null;
+        }
     }
 }

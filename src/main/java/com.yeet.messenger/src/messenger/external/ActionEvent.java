@@ -13,7 +13,7 @@ public class ActionEvent extends Event {
 
     @Override
     public String getName() {
-        return name;
+        return "Action Event: "+name;
     }
 
     public String getType(){
