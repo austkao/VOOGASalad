@@ -5,14 +5,20 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.*;
 
+import javax.swing.*;
 import java.io.File;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +39,7 @@ public class CharacterEditor extends EditorSuper{
     private Sprite currentSprite;
     private SpriteAnimation currentAnimation;
     private currentFrame frame;
-
+    private StackPane mySpritePane;
 
     private Group root;
     private VBox mySliders;
@@ -50,15 +56,30 @@ public class CharacterEditor extends EditorSuper{
 
     private boolean first = false;
 
-    class currentFrame{
+    static class currentFrame{
         int currentFrame;
         int totalFrames;
+        Map<Integer, Rectangle> frameBox;
         currentFrame(){
+            frameBox = new HashMap<>();
             currentFrame = -1;
             totalFrames = -1;
         }
+
+        void setFrameBox(Rectangle r){
+            frameBox.put(currentFrame, r);
+        }
+        Rectangle getFrameBox(){
+            return frameBox.get(currentFrame);
+        }
+        void setTotalFrames(int t){
+            totalFrames = t;
+            for (int i = 1; i <= totalFrames; i++){
+                frameBox.putIfAbsent(i, new Rectangle());
+            }
+        }
         void advance(int add){
-            currentFrame = (currentFrame + add)%totalFrames;
+            currentFrame = Math.floorMod((currentFrame + add),totalFrames);
         }
         public String toString(){
             if (currentFrame == -1 || totalFrames == -1){
@@ -98,6 +119,7 @@ public class CharacterEditor extends EditorSuper{
         frame = new currentFrame();
         makeSliders();
         makeButtons();
+        initializeStackPane();
     }
 
     private void makeButtons(){
@@ -164,7 +186,15 @@ public class CharacterEditor extends EditorSuper{
         }
     }
 
+    private void initializeStackPane(){
+        mySpritePane = new StackPane();
+        mySpritePane.setLayoutX(700);
+        mySpritePane.setLayoutY(500);
+        root.getChildren().add(mySpritePane);
+    }
+
     private void stepAnimation(int adjust){
+
         currentAnimation.playFrom(currentAnimation.getCurrentTime().add(
                 new Duration(currentAnimation.getCycleDuration().toMillis()*adjust / currentAnimation.getCount())));
         currentAnimation.pause();
@@ -179,7 +209,7 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void stepBackAnimation(){
-        if (currentAnimation.getCurrentTime().equals(Duration.ZERO)){
+        if (currentAnimation.getCurrentTime().subtract(Duration.ZERO).toMillis() < 10.0){
             return;
         }
         currentAnimation.setRate(-1*Math.abs(currentAnimation.getRate()));
@@ -224,7 +254,8 @@ public class CharacterEditor extends EditorSuper{
 
         currentAnimation = scrollToAnimation.get(b);
         frame.currentFrame = 1;
-        frame.totalFrames = currentAnimation.getCount();
+        frame.setTotalFrames(currentAnimation.getCount());
+
     }
 
     private ImageView initializeImageView(int width, int height, int x, int y){
@@ -250,12 +281,22 @@ public class CharacterEditor extends EditorSuper{
         }
         //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
         Sprite mySprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
-        root.getChildren().add(mySprite);
-        mySprite.setLayoutX(700);
-        mySprite.setLayoutY(500);
+        mySprite.setOnMouseClicked(e -> setRectangle(e));
         mySprite.setScaleX(5);
         mySprite.setScaleY(5);
         currentSprite = mySprite;
+        mySpritePane.getChildren().add(currentSprite);
+    }
+
+    private void setRectangle(MouseEvent e){
+        int x = (int)e.getX();
+        int y = (int)e.getY();
+
+        int width = Integer.parseInt(JOptionPane.showInputDialog("give the width"));
+        int height = Integer.parseInt(JOptionPane.showInputDialog("give the width"));
+
+        frame.setFrameBox(new Rectangle(x, y, width, height));
+        mySpritePane.getChildren().add(frame.getFrameBox());
     }
     /**
      * User selects background, and it is applied to level.

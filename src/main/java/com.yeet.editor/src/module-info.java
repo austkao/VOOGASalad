@@ -8,4 +8,5 @@ module com.yeet.editor {
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.swing;
+    requires java.desktop;
 }
