@@ -21,12 +21,13 @@ import java.util.List;
  */
 public class CombatResultsScreen extends Screen {
 
+    public static final int RANK_Y_DROP = 40;
     private Text winnerBannerText;
     private List<String> playerList;
 
     private HBox playerBoxContainer;
 
-    public CombatResultsScreen(Group root, Renderer renderer) {
+    public CombatResultsScreen(Group root, Renderer renderer, SceneSwitch nextScene) {
         super(root, renderer);
         ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("characterselect_bg.jpg")));
         background.setFitWidth(1280.0);
@@ -44,9 +45,11 @@ public class CombatResultsScreen extends Screen {
         playerBoxContainer = new HBox(5.0);
         playerBoxContainer.setPrefSize(1280.0,480.0);
         playerBoxContainer.setAlignment(Pos.CENTER);
+        Rectangle midSpacer = new Rectangle(1280.0,100.0,Color.TRANSPARENT);
         winnerBanner.getChildren().addAll(winnerBannerImage,winnerBannerText);
-        mainContainer.getChildren().addAll(topSpacer,winnerBanner,playerBoxContainer);
+        mainContainer.getChildren().addAll(topSpacer,winnerBanner,midSpacer,playerBoxContainer);
         this.getMyRoot().getChildren().addAll(background,mainContainer);
+        this.setOnKeyPressed(event -> nextScene.switchScene());
     }
 
     /** Sets the name of the winner
@@ -66,9 +69,41 @@ public class CombatResultsScreen extends Screen {
             winnerBannerText.setText(allPlayers.get(winnerID));
             this.playerList = allPlayers;
             for(int i=0;i<allPlayers.size();i++){
+                VBox displayContainer = new VBox();
                 CharacterChooseDisplay display = characterChooseList.get(i);
                 display.setDisable(true);
-                playerBoxContainer.getChildren().add(display);
+                VBox awardContainer = new VBox();
+                awardContainer.setPrefSize(display.getPrefWidth(),display.getPrefHeight());
+                awardContainer.setAlignment(Pos.CENTER);
+                ImageView awardImage;
+                if(playerRank.get(i)==1){
+                    awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("rank1_icon.png")));
+                }
+                else if(playerRank.get(i)==2){
+                    awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("rank2_icon.png")));
+                    displayContainer.getChildren().add(new Rectangle(display.getPrefWidth(), RANK_Y_DROP,Color.TRANSPARENT));
+                }
+                else if(playerRank.get(i)==3){
+                    awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("rank3_icon.png")));
+                    displayContainer.getChildren().add(new Rectangle(display.getPrefWidth(), RANK_Y_DROP *2, Color.TRANSPARENT));
+                }
+                else if(playerRank.get(i)==4){
+                    awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("rank4_icon.png")));
+                    displayContainer.getChildren().add(new Rectangle(display.getPrefWidth(), RANK_Y_DROP *3,Color.TRANSPARENT));
+                }
+                else{
+                    awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("empty.png")));
+                    displayContainer.getChildren().add(new Rectangle(display.getPrefWidth(), RANK_Y_DROP *4,Color.TRANSPARENT));
+                }
+                awardImage.setFitHeight(awardContainer.getPrefWidth()/2);
+                awardImage.setFitWidth(awardContainer.getPrefWidth()/2);
+                awardContainer.getChildren().addAll(awardImage);
+                display.getChildren().addAll(awardContainer);
+                displayContainer.getChildren().addAll(display);
+                playerBoxContainer.getChildren().add(displayContainer);
+                if(i!=allPlayers.size()-1){
+                    playerBoxContainer.getChildren().add(new Rectangle(90.0,480.0,Color.TRANSPARENT));
+                }
             }
         }
 
