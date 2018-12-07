@@ -15,7 +15,6 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import messenger.external.Event;
 import messenger.external.EventBusFactory;
 import player.external.Player;
 import renderer.external.RenderSystem;
@@ -148,7 +147,6 @@ public class Main extends Application {
 
     /** Create a {@code DirectoryChooser} and set the active game directory if it is valid*/
     private void setDirectory(File directory){
-        System.out.println(directory.getPath());
         try {
             if(directory!=null && checkDirectory(directory)){
                 Image splash = new Image(String.format("%s%s",directory.toURI(),"splash.png"));
