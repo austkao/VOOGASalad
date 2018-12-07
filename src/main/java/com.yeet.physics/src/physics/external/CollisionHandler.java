@@ -11,6 +11,7 @@ public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 10;
     public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
+    public static final double frictionCoefficient = .5;
 
     private List<Collision> myCollisions;
     private List<Integer> groundCollisions = new ArrayList<>();
@@ -55,8 +56,25 @@ public class CollisionHandler {
                 double bodyMass = one.getMass();
                 PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame)), -Math.PI/2);
                 one.addCurrentForce(upwardForce);
-                PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * defaultGravityAcceleration), -defaultGravityDirection);
+                PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * defaultGravityAcceleration), -Math.PI/2);
                 one.addCurrentForce(gravityOpposition);
+                System.out.println("X Velocity: " + one.getXVelocity().getMagnitude());
+                System.out.println("X Direction: " + one.getDirection());
+                if(Math.abs(one.getXVelocity().getMagnitude()) > 10) { //Should we apply kinetic friction?
+                    System.out.println("Applying force");
+                    PhysicsVector friction;
+                    if(one.getXVelocity().getMagnitude() > 0) {
+                        friction = new PhysicsVector((int) -one.getMass() * defaultGravityAcceleration * frictionCoefficient, 0);
+                    }else{
+                        friction = new PhysicsVector((int) one.getMass() * defaultGravityAcceleration * frictionCoefficient, 0);
+                    }
+                    one.addCurrentForce(friction);
+                }else{
+                    PhysicsVector staticFriction;
+                    bodyVelocity = one.getXVelocity().getMagnitude();
+                    staticFriction = new PhysicsVector(-bodyMass*bodyVelocity/timeOfFrame, 0);
+                    one.addCurrentForce(staticFriction);
+                }
                 groundCollisions.add(one.getId());
             }
             // body+body (do nothing)

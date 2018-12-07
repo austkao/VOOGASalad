@@ -18,7 +18,7 @@ public class PhysicsSystem {
 
     public static final double defaultMass = 50;
     public static final double defaultStrength = 20;
-    public static final double defaultJumpHeight = 15000;
+    public static final double defaultJumpHeight = 20000;
     public static final double defaultMovementSpeed = 5000;
     public static final double defaultAttackSpace = 10;
 

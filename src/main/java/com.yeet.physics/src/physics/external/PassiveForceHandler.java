@@ -8,7 +8,7 @@ public class PassiveForceHandler {
 
     public static final double defaultGravityAcceleration = 600;
     public static final double defaultGravityDirection = PI / 2;
-    public static final double frictionCoefficient = 20;
+    public static final double frictionCoefficient = .5;
     public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
 
 
@@ -22,7 +22,9 @@ public class PassiveForceHandler {
         for (PhysicsObject o : myObjects.values()) {
             if ((o.isPhysicsBody() || o.isPhysicsAttack())) {
                 o.addCurrentForce(new PhysicsVector(Math.round(o.getMass() * defaultGravityAcceleration), defaultGravityDirection)); // always add gravity
-                if (o.getId() == 1) {
+
+
+                /*if (o.getId() == 1) {
                     //System.out.println("APPLYING GRAVITY");
                     if (o.isGrounded && (Math.abs(o.getXVelocity().getMagnitude()) > 13)) {
                         o.addCurrentForce(new PhysicsVector((int) Math.signum(o.getXVelocity().getMagnitude()) * (-1) * o.getMass() * defaultGravityAcceleration * frictionCoefficient, o.getXVelocity().getDirection()));
@@ -30,7 +32,7 @@ public class PassiveForceHandler {
                         o.setVelocity(new PhysicsVector(0, 0));
                         //o.addCurrentForce(new PhysicsVector(o.getXVelocity().getMagnitude()*o.getMass()/timeOfFrame, Math.signum(o.getXVelocity().getMagnitude()) * (-1) * o.getXVelocity().getDirection()));
                     }
-                }
+                }*/
             }
         }
     }
