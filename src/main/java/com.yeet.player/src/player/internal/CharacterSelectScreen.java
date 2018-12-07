@@ -190,6 +190,11 @@ public class CharacterSelectScreen extends Screen {
     }
 
     public ArrayList<CharacterChooseDisplay> getCharacterChooserList(){
-        return (ArrayList<CharacterChooseDisplay>) myCharacterChooserList.clone();
+        ArrayList<CharacterChooseDisplay> result = new ArrayList<>();
+        for(CharacterChooseDisplay ccd : myCharacterChooserList){
+            CharacterChooseDisplay newccd = ccd.clone();
+            result.add(newccd);
+        }
+        return result;
     }
 }
