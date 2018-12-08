@@ -18,7 +18,7 @@ import static renderer.external.RenderUtils.toRGBCode;
  */
 public class CharacterChooseDisplay extends StackPane {
 
-    public static final String FORMAT_RECT = "-fx-border-radius: %s;-fx-background-radius: %s; -fx-background-color: %s";
+    public static final String FORMAT_RECT = "-fx-border-radius: %s;-fx-background-radius: %s; -fx-background-color: %s;";
 
     public enum State{
         HUMAN, CPU, NONE;
@@ -158,6 +158,9 @@ public class CharacterChooseDisplay extends StackPane {
         portrait.setImage(image);
     }
 
+    /** Set the character name for the {@code CharacterChooseDisplay}
+     *  @param text The new name to use
+     */
     public void setCharacterName(String text){
         myCharacterName.setText(text);
     }
@@ -175,10 +178,12 @@ public class CharacterChooseDisplay extends StackPane {
         }
     }
 
+    /** Returns the current name of the selected character */
     public String getCharacterName(){
         return myCharacterName.getText();
     }
 
+    /** Creates a clone of the {@code CharacterChooseDisplay} */
     public CharacterChooseDisplay clone(){
         Text charName = new Text(myCurrentCharacterName.getText());
         charName.setFont(myCurrentCharacterName.getFont());
@@ -190,6 +195,13 @@ public class CharacterChooseDisplay extends StackPane {
                result.nextState();
         }
         return result;
+    }
+
+    /** Switches the {@code CharacterChooseDisplay} to a display mode suitable for showing results */
+    public void switchToResultMode(){
+        super.setStyle(String.format(FORMAT_RECT,"20 20 20 20","20 20 20 20","rgba(0,0,0,0.5)")+"-fx-border-color: "+toRGBCode(myColor)+"; -fx-border-width: 10;");
+        bottom.setStyle(String.format(FORMAT_RECT,"0 35 0 0", "0 35 0 0", "transparent"));
+        myCharacterName.setOpacity(0);
     }
 
 }
