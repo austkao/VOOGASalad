@@ -4,6 +4,7 @@ import messenger.external.KeyInputEvent;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class Parser {
 
@@ -21,7 +22,7 @@ public class Parser {
      * @return
      *
      */
-    public List<String> parse(List<KeyInputEvent> q) throws Exception {
+    public Map<Integer, List<String>> parse(List<KeyInputEvent> q) throws Exception {
         var output = handler.inputHandler2(q);
         //List<String> parsed = new ArrayList<>();
         //for(String o :output){

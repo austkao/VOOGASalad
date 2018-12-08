@@ -40,10 +40,15 @@ public class InputSystem {
                 //Called each time when 1000 milliseconds (1 second) (the period parameter)
                 if(commandHolder.size() >0){
                     try {
-                        postEvent(myParser.parse(commandHolder));
-                        if(commandHolder.isEmpty()){
-                            myMessageBus.post(new IdleEvent());
+                        var inputs = myParser.parse(commandHolder); // Should return  mapping of player number to commands
+                        for (Map.Entry<Integer, List<String>> pair : inputs.entrySet()) {
+                            //System.out.println(pair.getKey()+ " " +pair.getValue());
+                            if(pair.getValue().isEmpty()){
+                                myMessageBus.post(new IdleEvent(pair.getKey()));
+                            }
+                            postEvent(pair.getValue(), pair.getKey());
                         }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -63,27 +68,27 @@ public class InputSystem {
      a class that represents an attack input
      */
     //TODO: Use reflection on this!
-    public void postEvent(List<String> s){
+    public void postEvent(List<String> s, int player){
         //TRUE if left, FALSE if right
-        for(String action:s){
-            System.out.println(s.size());
-            System.out.println(action);
+        for(String action : s){
             CombatActionEvent keyEvent;
             if(action.equals("LEFT")){
-                keyEvent = new MoveEvent(1, true);
+                keyEvent = new MoveEvent(player, true);
             }
             else if(action.equals("RIGHT")){
-                keyEvent = new MoveEvent(1, false);
+                keyEvent = new MoveEvent(player, false);
             }
-            else if (action.equals("UP")){
-                keyEvent =  new JumpEvent(1);
+            else if (action.equals("UP'")){
+                keyEvent =  new JumpEvent(player);
             }
-            else if(!action.equals("JAB")){
-                System.out.println();
-                keyEvent = new AttackEvent(1);
+            else if (action.equals("DOWN")){
+                keyEvent = new CrouchEvent(player);
+            }
+            else if(action.equals("JAB")){
+                keyEvent = new AttackEvent(player, action);
             }
             else{
-                keyEvent = new JumpEvent(1);
+                keyEvent = new JumpEvent(player);
             }
             myMessageBus.post(keyEvent);
 

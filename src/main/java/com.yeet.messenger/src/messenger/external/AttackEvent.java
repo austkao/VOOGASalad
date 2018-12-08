@@ -21,9 +21,9 @@ public class AttackEvent extends CombatActionEvent{
 
     public AttackEvent(int initiatorID, String type){
         super(initiatorID, PlayerState.ATTACKING);
-        if(!types.contains(type)){
-            throw new RuntimeException(String.format("Invalid string property for attack event: %s", type));
-        }
+        //if(!types.contains(type)){
+        //    throw new RuntimeException(String.format("Invalid string property for attack event: %s", type));
+        //}
         this.type = type;
     }
 

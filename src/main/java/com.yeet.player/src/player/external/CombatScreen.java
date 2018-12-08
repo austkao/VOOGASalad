@@ -184,6 +184,8 @@ public class CombatScreen extends Screen {
         for(int i=0;i<mySpriteMap.keySet().size();i++){
             mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
             mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());
+            System.out.println("SPRITE MAP: " + mySpriteMap.size());
+            System.out.println("DIRECTIONS MAP: " + directionsMap.size());
             if(directionsMap.get(i)==0){
                 // face right
                 mySpriteMap.get(i).setScaleX(-1);
