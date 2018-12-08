@@ -9,7 +9,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +25,8 @@ public class InputEditor extends EditorSuper {
     private ListView<String> inputDisplay;
     private ObservableList<String> inputTypes;
 
+    private Text keyShower;
+
 
     public InputEditor(Group root, EditorManager em){
         super(root,em);
@@ -32,7 +37,15 @@ public class InputEditor extends EditorSuper {
         v.setLayoutX(100.0);
         v.setLayoutY(50.0);
         setRequirements();
+        keyShower = myRS.makeText("PRESS KEY", true, 20,
+                Color.DARKTURQUOISE,  400.0, 50.0);
+        this.setOnKeyPressed(e -> updateKey(e));
+        root.getChildren().add(keyShower);
 
+    }
+
+    private void updateKey(KeyEvent e){
+        keyShower.setText(e.getText());
     }
 
     private void setRequirements(){
