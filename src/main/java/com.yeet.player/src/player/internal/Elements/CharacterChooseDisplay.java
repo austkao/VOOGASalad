@@ -18,7 +18,7 @@ import static renderer.external.RenderUtils.toRGBCode;
  */
 public class CharacterChooseDisplay extends StackPane {
 
-    public static final String FORMAT_RECT = "-fx-border-radius: %s;-fx-background-radius: %s; -fx-background-color: %s";
+    public static final String FORMAT_RECT = "-fx-border-radius: %s;-fx-background-radius: %s; -fx-background-color: %s;";
 
     public enum State{
         HUMAN, CPU, NONE;
@@ -27,6 +27,7 @@ public class CharacterChooseDisplay extends StackPane {
     private DragToken myButton;
     private State myState;
     private Color myColor;
+    private Color myCurrentColor;
     private String myDefaultPlayerName;
     private Text myCharacterName;
     private Text myCurrentCharacterName;
@@ -59,6 +60,7 @@ public class CharacterChooseDisplay extends StackPane {
         myButton.setOpacity(0);
         myState = State.NONE;
         myColor = color;
+        myCurrentColor = color;
         myDefaultPlayerName = playerText.getText();
         super.setAlignment(Pos.BOTTOM_RIGHT);
         super.setPrefSize(305.0,332.0);
@@ -119,8 +121,10 @@ public class CharacterChooseDisplay extends StackPane {
                 myState = State.HUMAN;
                 super.setStyle(String.format(FORMAT_RECT,"100 0 0 0","100 0 0 0",toRGBCode(Color.web("#1F1C1F"))));
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35",toRGBCode(myColor)));
+                myCurrentColor = myColor;
                 icon.setImage(human);
                 myCurrentCharacterName.setText(myDefaultPlayerName);
+                myCharacterName.setOpacity(1);
                 portrait.setOpacity(1);
                 myButton.resetColor();
                 myButton.setOpacity(1);
@@ -130,6 +134,7 @@ public class CharacterChooseDisplay extends StackPane {
                 myState = State.CPU;
                 super.setStyle(String.format(FORMAT_RECT, "0 0 0 0", "0 0 0 0","rgba(255,255,255,0.64)"));
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35",toRGBCode(Color.web("#5B585C"))));
+                myCurrentColor = Color.web("#5B585C");
                 icon.setImage(cpu);
                 myCurrentCharacterName.setText("CPU");
                 myButton.setColor(Color.web("#848484"));
@@ -138,8 +143,10 @@ public class CharacterChooseDisplay extends StackPane {
                 myState = State.NONE;
                 super.setStyle(String.format(FORMAT_RECT,"100 0 0 0","100 0 0 0","transparent"));
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35","transparent"));
+                myCurrentColor = Color.TRANSPARENT;
                 icon.setImage(none);
                 myCurrentCharacterName.setText("None");
+                myCharacterName.setOpacity(0);
                 portrait.setOpacity(0);
                 myButton.setOpacity(0);
                 myButton.setDisable(true);
@@ -156,6 +163,9 @@ public class CharacterChooseDisplay extends StackPane {
         portrait.setImage(image);
     }
 
+    /** Set the character name for the {@code CharacterChooseDisplay}
+     *  @param text The new name to use
+     */
     public void setCharacterName(String text){
         myCharacterName.setText(text);
     }
@@ -173,10 +183,18 @@ public class CharacterChooseDisplay extends StackPane {
         }
     }
 
+    /** Returns the current name of the selected character */
     public String getCharacterName(){
         return myCharacterName.getText();
     }
 
+    /** Returns the current {@code Color} of the {@code CharacterChooseDisplay} */
+    public Color getCurrentColor(){
+        return myCurrentColor;
+    }
+
+
+    /** Creates a clone of the {@code CharacterChooseDisplay} */
     public CharacterChooseDisplay clone(){
         Text charName = new Text(myCurrentCharacterName.getText());
         charName.setFont(myCurrentCharacterName.getFont());
@@ -188,6 +206,13 @@ public class CharacterChooseDisplay extends StackPane {
                result.nextState();
         }
         return result;
+    }
+
+    /** Switches the {@code CharacterChooseDisplay} to a display mode suitable for showing results */
+    public void switchToResultMode(){
+        super.setStyle(String.format(FORMAT_RECT,"20 20 20 20","20 20 20 20","rgba(0,0,0,0.5)")+"-fx-border-color: "+toRGBCode(myCurrentColor)+"; -fx-border-width: 10;");
+        bottom.setStyle(String.format(FORMAT_RECT,"0 35 0 0", "0 35 0 0", "transparent"));
+        myCharacterName.setOpacity(0);
     }
 
 }
