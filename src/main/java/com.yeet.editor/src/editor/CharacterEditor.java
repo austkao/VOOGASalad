@@ -103,7 +103,7 @@ public class CharacterEditor extends EditorSuper{
             if (currentFrame == -1 || totalFrames == -1){
                 return "Animation Not Set";
             }
-            return "Frame "+currentFrame+"/"+totalFrames + " - " + input;
+            return "Frame "+currentFrame+"/"+totalFrames + "\ninput: " + input;
         }
     }
 
@@ -284,6 +284,7 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private String showAlertInputOptions(int num){
+        // TODO: 12/8/2018 incorporate custom list
         Set<String> options = new HashSet<String>();
         options.add("test1");
         options.add("hello");
