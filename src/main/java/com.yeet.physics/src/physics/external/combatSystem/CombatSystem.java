@@ -47,6 +47,11 @@ public class CombatSystem {
     }
 
     @Subscribe
+    public void onIdleEvent(IdleEvent idleEvent){
+        playerManager.setToInitialStateByID(idleEvent.getId());
+    }
+
+    @Subscribe
     public void onAttackSuccessfulEvent(AttackSuccessfulEvent event){
         physicsSystem.attack(event.getInitiatorID());
     }
