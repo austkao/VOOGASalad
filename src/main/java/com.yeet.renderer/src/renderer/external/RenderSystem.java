@@ -197,8 +197,8 @@ public class RenderSystem implements Renderer{
      * @param y The y position of the {@code Slider}
      * @param w The width of the {@code Slider}
      */
-    public SliderBox makeSlider(String text, Consumer<Double> fieldSetter, Double x, Double y, Double w){
-        return new SliderBox(text, myPlainFont, fieldSetter, x, y, w);
+    public SliderBox makeSlider(String text, Double startVal,Consumer<Double> fieldSetter, Double x, Double y, Double w){
+        return new SliderBox(text, myPlainFont, startVal,fieldSetter, x, y, w);
     }
 
     /** Creates a {@code FileChooser} for a specific file type

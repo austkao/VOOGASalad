@@ -54,7 +54,6 @@ public class MapEditor extends EditorSuper{
     private Group root;
     private String myBackgroundImage;
     private String myBGMFileName;
-    private TextBox myBGM;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -106,16 +105,20 @@ public class MapEditor extends EditorSuper{
         Label musicLabel = new Label("Background Music");
         musicLabel.setLayoutX(250);
         musicLabel.setLayoutY(650);
-        myBGM = myRS.makeTextField(consumer, myBGMFileName, 350.0, 660.0, 400.0, 30.0, myPlainFont);
-        Button myBGMButton = myRS.makeStringButton("Set Background Music", Color.BLACK,true,Color.WHITE,
-                20.0,800.0,650.0,300.0,50.0);
-        myBGMButton.setOnMouseClicked(e -> chooseBGM());
+
+
+        Button settings = myRS.makeStringButton("Map Settings", Color.CRIMSON, true, Color.WHITE,
+                30.0,25.0, 200.0, 200.0, 50.0);
+        settings.setOnMouseClicked(e -> {
+            MapSettings s = new MapSettings();
+            s.setScene();
+        });
 
 
 
 
 
-        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, myBGM, myBGMButton, musicLabel);
+        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, settings);
     }
 
     private void initializeScrollPane(){
@@ -165,18 +168,7 @@ public class MapEditor extends EditorSuper{
         edit.show();
     }
 
-    private void chooseBGM(){
-        File musicFile = new File(myEM.getGameDirectoryString()+"/data/bgm");
-        ListView<String> musicList = myRS.makeDirectoryFileList(musicFile, false);
-        Stage edit = new Stage();
-        edit.setScene(new Scene(new Group(musicList)));
-        musicList.setOnMouseClicked(e -> {
-            myBGMFileName = musicList.getSelectionModel().getSelectedItem();
-            myBGM.setText(myBGMFileName);
-            edit.close();
-        });
-        edit.show();
-    }
+
 
     private void chooseTileImage(){
         File tileFile = chooseImage("Choose Tile Image");

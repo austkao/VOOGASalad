@@ -20,7 +20,10 @@ import java.util.function.Consumer;
  */
 public class GameplayEditor extends EditorSuper{
     private static String[] DEFAULT_GAME_MODES = new String[]{"SSBB","Street Fighter"};
+    private Consumer<Double> consumerG;
+    private Consumer<Double> consumerF;
     private Consumer consumer;
+    //private Double Gravity
     private ObservableList<String> inputTypes;
     private ListView<String> inputDisplay;
     private TextArea userInput;
@@ -28,12 +31,12 @@ public class GameplayEditor extends EditorSuper{
 
     public GameplayEditor(Group root, EditorManager em) {
         super(root,em);
-        consumer = new Consumer() {
-            @Override
-            public void accept(Object o) {
-                o = o;
-            }
-        };
+        consumerG = (x) -> System.out.println(x);
+        //consumerG.accept(x);
+        consumerF = (x) -> System.out.println(x);
+        //consumerF.accept("Java2s.com");
+        consumer = (x) -> System.out.println(x);
+
         inputTypes = FXCollections.observableArrayList();
 
         VBox vb1 = makeVBox1();
@@ -87,8 +90,12 @@ public class GameplayEditor extends EditorSuper{
 
     public VBox makeVBox2(){
         VBox vbox = new VBox(10.0);
-        SliderBox gravity = myRS.makeSlider("Gravity",consumer,0.0,0.0,150.0);
-        SliderBox friction = myRS.makeSlider("Friction",consumer,0.0,0.0,150.0);
+        SliderBox gravity = myRS.makeSlider("Gravity",1.0,consumer,0.0,0.0,150.0);
+        gravity.getSlider().setMin(-1.0);
+        gravity.getSlider().setMax(5.0);
+        SliderBox friction = myRS.makeSlider("Friction",25.0,consumer,0.0,0.0,150.0);
+        friction.getSlider().setMin(0.0);
+        friction.getSlider().setMax(50.0);
         vbox.getChildren().addAll(gravity,friction);
         return vbox;
     }

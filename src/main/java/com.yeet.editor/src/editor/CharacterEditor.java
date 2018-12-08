@@ -181,9 +181,9 @@ public class CharacterEditor extends EditorSuper{
 
     private void makeSliders(){
         mySliders = new VBox(10);
-        healthSlider = myRS.makeSlider("health",consumer,0.0,0.0,200.0);
-        attackSlider = myRS.makeSlider("attack",consumer,0.0,0.0,200.0);
-        defenseSlider = myRS.makeSlider("defense",consumer,0.0,0.0,200.0);
+        healthSlider = myRS.makeSlider("health",50.0,consumer,0.0,0.0,200.0);
+        attackSlider = myRS.makeSlider("attack",50.0,consumer,0.0,0.0,200.0);
+        defenseSlider = myRS.makeSlider("defense",50.0,consumer,0.0,0.0,200.0);
 
         mySliders.getChildren().addAll(healthSlider,attackSlider,defenseSlider);
         mySliders.setLayoutX(900.0);
