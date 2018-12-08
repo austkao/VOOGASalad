@@ -38,7 +38,7 @@ public class InputTester extends Application {
         myMessageBus.post(test);
 
         //Sleeping to assure that the combo works
-        Thread.sleep(2000);
+        //Thread.sleep(2000);
 
         KeyInputEvent test2 = new KeyInputEvent(KeyCode.B);
         myMessageBus.post(test2);
