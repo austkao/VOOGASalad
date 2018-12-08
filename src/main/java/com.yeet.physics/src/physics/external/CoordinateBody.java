@@ -7,8 +7,8 @@ public class CoordinateBody {
 
     private Dimensions dims;
 
-    //private Square hitBox;
-    private Rectangle2D hitBox;
+    //private Square coordinateBox;
+    private Rectangle2D coordinateBox;
 
     //private List<Line> path;
 
@@ -17,7 +17,7 @@ public class CoordinateBody {
     public CoordinateBody(Coordinate start, Dimensions dims){
         this.dims = dims;
         this.pos = start;
-        this.hitBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), this.dims.getSizeX(), this.dims.getSizeY());
+        this.coordinateBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), this.dims.getSizeX(), this.dims.getSizeY());
 //        this.path = new ArrayList<>();
 //
 //        Point2D.Double top0 = new Point2D.Double(start.getX(), start.getY());
@@ -44,7 +44,7 @@ public class CoordinateBody {
 
     public void update(Coordinate newPos){
         this.pos = newPos;
-        this.hitBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), dims.getSizeX(), dims.getSizeY());
+        this.coordinateBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), dims.getSizeX(), dims.getSizeY());
 
 //        this.path = new ArrayList<Line>();
 //
@@ -85,9 +85,9 @@ public class CoordinateBody {
     OUTPUT: T or F depending on weather or not this body intersects with the one passed into the parameter
      */
     public boolean intersects(CoordinateBody c){
-        return (this.getHitBox().intersects(c.getHitBox()));
-//        Square myBox = this.getHitBox();
-//        Square theirBox = c.getHitBox();
+        return (this.getCoordinateBox().intersects(c.getCoordinateBox()));
+//        Square myBox = this.getCoordinateBox();
+//        Square theirBox = c.getCoordinateBox();
 //        boolean above = false;
 //        boolean below = false;
 //        boolean left = false;
@@ -117,7 +117,7 @@ public class CoordinateBody {
         this.dims = dims;
     }
 
-    public Rectangle2D getHitBox() {
-        return this.hitBox;
+    public Rectangle2D getCoordinateBox() {
+        return this.coordinateBox;
     }
 }

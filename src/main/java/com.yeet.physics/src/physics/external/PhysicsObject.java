@@ -89,11 +89,7 @@ public abstract class PhysicsObject {
 
     public abstract PhysicsVector getYVelocity();
 
-    public void setGrounded(boolean b){
-        this.isGrounded = b;
-    }
-
-    public boolean isGrounded(){
-        return this.isGrounded;
+    public int getParentID() {
+        return 0;
     }
 }
