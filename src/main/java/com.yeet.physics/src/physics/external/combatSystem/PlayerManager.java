@@ -3,6 +3,7 @@ package physics.external.combatSystem;
 import messenger.external.CombatActionEvent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PlayerManager {
@@ -35,6 +36,12 @@ public class PlayerManager {
             throw new RuntimeException(String.format("ID %d does not exist", id));
         }
         playerMap.get(id).changePlayerStateOnEvent(event);
+    }
+
+    public void setBots(List<Integer> botsID){
+        for(int id: botsID){
+            getPlayerByID(id).setIsBot(true);
+        }
     }
 
     // check if the id passed in exists in the map

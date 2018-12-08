@@ -25,6 +25,7 @@ public class Player {
     private List<List<Integer>> hitboxes;
     private Player beingAttackedBy;
     private PlayerState playerState;
+    private boolean isBot;
 
     public Player(){
         playerState = PlayerState.INITIAL;
@@ -64,6 +65,10 @@ public class Player {
         target.freeTargets();
     }
 
+    public void setIsBot(boolean isBot){
+        this.isBot = isBot;
+    }
+
     /* set who is attacking this player */
     private void setBeingAttackedBy(Player attacker){
         this.beingAttackedBy = attacker;
@@ -74,6 +79,8 @@ public class Player {
             p.setToInitialState();
         }
     }
+
+
 
     @Override
     public String toString(){

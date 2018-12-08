@@ -17,6 +17,7 @@ public class CombatSystem {
     EventBus eventBus;
     private PlayerManager playerManager;
     private PhysicsSystem physicsSystem;
+    private List<Integer> botList;
 
     public CombatSystem(Player bot){
         eventBus = EventBusFactory.getEventBus();
@@ -49,7 +50,9 @@ public class CombatSystem {
     public void onCombatEvent(CombatActionEvent event){
         System.out.println(event.getInputPlayerState());
         int id = event.getInitiatorID();
-        playerManager.changePlayerStateByIDOnEvent(id, event);
+        if(!botList.contains(id)){
+            playerManager.changePlayerStateByIDOnEvent(id, event);
+        }
     }
 
     @Subscribe
@@ -106,7 +109,8 @@ public class CombatSystem {
 
     @Subscribe
     public void onGameStart(GameStartEvent gameStartEvent){
-        
+        List<Integer> botList = gameStartEvent.getBots();
+        playerManager.setBots(botList);
     }
 
 }
