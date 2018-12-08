@@ -2,11 +2,13 @@ package editor;
 
 import javafx.animation.Animation;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -15,10 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.*;
 
-import javax.swing.*;
 import java.io.File;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,14 +31,21 @@ import java.util.function.Consumer;
 
 public class CharacterEditor extends EditorSuper{
     private static final String DEFAULT_PORTRAIT = "lucinaglasses.png";
+    private static final String HIT_TEXT = "HITBOX";
+    private static final String HURT_TEXT = "HURTBOX";
 
     private ImageView portrait;
+
     private ImageView spriteSheet;
 
     private Sprite currentSprite;
+
+    //Animation variables
     private SpriteAnimation currentAnimation;
-    private currentFrame frame;
-    private StackPane mySpritePane;
+    private Pane mySpritePane;
+    private ScrollablePane animationList;
+    private Map<ScrollableItem, SpriteAnimation> scrollToAnimation;
+    private Map<SpriteAnimation, FrameInfo> animationFrame;
 
     private Group root;
     private VBox mySliders;
@@ -47,58 +53,57 @@ public class CharacterEditor extends EditorSuper{
     private SliderBox attackSlider;
     private SliderBox defenseSlider;
     private Consumer consumer;
-
-    private ScrollablePane animationList;
-    private Map<ScrollableItem, SpriteAnimation> scrollToAnimation;
-
     private Text frameText;
+    private SwitchButton hitOrHurt;
 
 
     private boolean first = false;
 
-    static class currentFrame{
+
+    static class FrameInfo {
         int currentFrame;
         int totalFrames;
-        Map<Integer, Rectangle> frameBox;
+        Map<Integer, Rectangle> hitBoxes;
+        Map<Integer, Rectangle> hurtBoxes;
 
-        currentFrame(){
-            frameBox = new HashMap<>();
+        FrameInfo(int total){
             currentFrame = -1;
-            totalFrames = -1;
+            totalFrames = total;
+            hitBoxes = new HashMap<>();
+            hurtBoxes = new HashMap<>();
+            for (int i = 1; i <= totalFrames; i++){
+                hitBoxes.putIfAbsent(i, new Rectangle());
+                hurtBoxes.putIfAbsent(i, new Rectangle());
+            }
         }
 
-        void setFrameBox(Rectangle r){
-            frameBox.put(currentFrame, r);
+        void setHitBox(Rectangle r){
+            hitBoxes.put(currentFrame, r);
         }
-        Rectangle getFrameBox(){
-            if (frameBox.containsKey(currentFrame))
-            {
-                return frameBox.get(currentFrame);
-            }
-            return null;
+        void setHurtBox(Rectangle r){
+            hurtBoxes.put(currentFrame, r);
         }
-        void setTotalFrames(int t){
-            totalFrames = t;
-            for (int i = 1; i <= totalFrames; i++){
-                frameBox.putIfAbsent(i, new Rectangle());
-            }
+        Rectangle getHitBox(){
+            return hitBoxes.get(currentFrame);
+        }
+        Rectangle getHurtBox(){
+            return hurtBoxes.get(currentFrame);
         }
         void advance(int add){
             currentFrame = Math.floorMod((currentFrame + add),totalFrames);
+            if (currentFrame == 0){
+                currentFrame = totalFrames;
+            }
         }
         public String toString(){
             if (currentFrame == -1 || totalFrames == -1){
-                return "unintialized";
-            }
-            if (currentFrame == 0){
-                return "Frame "+totalFrames+"/"+totalFrames;
+                return "Animation Not Set";
             }
             return "Frame "+currentFrame+"/"+totalFrames;
         }
 
 
     }
-
 
     public CharacterEditor(Group root, EditorManager em){
         super(root,em);
@@ -121,10 +126,10 @@ public class CharacterEditor extends EditorSuper{
                 o = o;
             }
         };
-        frame = new currentFrame();
+        animationFrame = new HashMap<>();
         makeSliders();
         makeButtons();
-        initializeStackPane();
+        initializeSpritePane();
     }
 
     private void makeButtons(){
@@ -159,11 +164,17 @@ public class CharacterEditor extends EditorSuper{
                 Color.WHITE, 20.0, 725.0, 175.0, 95.0, 50.0);
         stepBackward.setOnMouseClicked(e -> stepBackAnimation());
 
-        frameText = myRS.makeText(frame.toString(), true, 30,
+        frameText = myRS.makeText("Animation Not Set", true, 30,
                 Color.AQUA, 500.0, 250.0);
 
-        root.getChildren().addAll(saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation, stepForward,
-                stepBackward, frameText, addPortrait);
+        List<String> options = new ArrayList<>();
+        options.add(HURT_TEXT);
+        options.add(HIT_TEXT);
+        hitOrHurt = myRS.makeSwitchButtons(options, true, Color.BLUE,
+                Color.RED, 5.0,400.0, 400.0, 50.0, 25.0 );
+
+        root.getChildren().addAll(addPortrait, saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation,
+                stepForward, stepBackward, frameText, hitOrHurt );
     }
 
     private void makeSliders(){
@@ -179,51 +190,86 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private void playAnimation(){
+
+        if (testNull(currentAnimation, "Current Animation not set")){
+            return;
+        }
+        FrameInfo frame = animationFrame.get(currentAnimation);
+        mySpritePane.getChildren().remove(frame.getHitBox());
+        mySpritePane.getChildren().remove(frame.getHurtBox());
         currentAnimation.setRate(Math.abs(currentAnimation.getRate()));
         if (currentAnimation.getStatus().equals(Animation.Status.RUNNING)){
             currentAnimation.jumpTo(new Duration(0));
             currentAnimation.stop();
             frame.currentFrame = 1;
             frameText.setText(frame.toString());
+            mySpritePane.getChildren().add(frame.getHitBox());
+            mySpritePane.getChildren().add(frame.getHurtBox());
         }
         else{
             currentAnimation.play();
         }
     }
 
-    private void initializeStackPane(){
-        mySpritePane = new StackPane();
-        mySpritePane.setLayoutX(700);
-        mySpritePane.setLayoutY(500);
+    private void initializeSpritePane(){
+        mySpritePane = new Pane();
+        mySpritePane.setLayoutX(600);
+        mySpritePane.setLayoutY(400);
+        mySpritePane.setMinSize(300, 300);
+        mySpritePane.setMaxSize(300, 300);
         root.getChildren().add(mySpritePane);
     }
 
-    private void stepAnimation(int adjust){
+    /*
+        Alert system found at:
+        https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
+     */
+    private boolean testNull(Object object, String message){
+        if (object == null){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
+                    ButtonType.OK);
+            alert.showAndWait();
+            return true;
+        }
+        return false;
+    }
 
+
+    private void stepAnimation(int adjust){
+        FrameInfo frame = animationFrame.get(currentAnimation);
+        mySpritePane.getChildren().remove(frame.getHitBox());
+        mySpritePane.getChildren().remove(frame.getHurtBox());
+        //currentAnimation.setRate(adjust*Math.abs(currentAnimation.getRate()));
         currentAnimation.playFrom(currentAnimation.getCurrentTime().add(
                 new Duration(currentAnimation.getCycleDuration().toMillis()*adjust / currentAnimation.getCount())));
         currentAnimation.pause();
-
+        frame.advance(adjust);
+        frameText.setText(frame.toString());
+        mySpritePane.getChildren().add(frame.getHitBox());
+        mySpritePane.getChildren().add(frame.getHurtBox());
     }
 
     private void stepForwardAnimation(){
-        currentAnimation.setRate(Math.abs(currentAnimation.getRate()));
+        if (testNull(currentAnimation, "Animation not set")){
+            return;
+        }
         stepAnimation(1);
-        frame.advance(1);
-        frameText.setText(frame.toString());
     }
 
     private void stepBackAnimation(){
-        if (currentAnimation.getCurrentTime().subtract(Duration.ZERO).toMillis() < 10.0){
+        if (testNull(currentAnimation, "Animation not set")){
             return;
         }
-        currentAnimation.setRate(-1*Math.abs(currentAnimation.getRate()));
+        else if (currentAnimation.getCurrentTime().subtract(Duration.ZERO).toMillis() < 10.0){
+            return;
+        }
         stepAnimation(-1);
-        frame.advance(-1);
-        frameText.setText(frame.toString());
     }
     
     private void makeSpriteAnimation(){
+        if (testNull(spriteSheet, "Sprite Sheet Not Set")){
+            return;
+        }
         File image = chooseImage("Choose thumbnail for animation");
         if (image == null){
             return;
@@ -245,6 +291,7 @@ public class CharacterEditor extends EditorSuper{
         myAnimation.setCycleCount(Animation.INDEFINITE);
         scrollToAnimation.put(animPic, myAnimation);
         animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
+        animationFrame.put(myAnimation, new FrameInfo(myAnimation.getCount()));
     }
 
     private void initializeScrollPane(){
@@ -255,12 +302,15 @@ public class CharacterEditor extends EditorSuper{
     private void selectAnimationFromScroll(ScrollableItem b){
         if (currentAnimation != null){
             currentAnimation.stop();
+            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
+            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
         }
 
         currentAnimation = scrollToAnimation.get(b);
+        FrameInfo frame = animationFrame.get(currentAnimation);
         frame.currentFrame = 1;
-        frame.setTotalFrames(currentAnimation.getCount());
-
+        stepForwardAnimation();
+        stepBackAnimation();
     }
 
     private ImageView initializeImageView(int width, int height, int x, int y){
@@ -272,8 +322,6 @@ public class CharacterEditor extends EditorSuper{
         root.getChildren().add(picture);
         return picture;
     }
-
-
 
     private void setImageView(ImageView img, String portraitURL){
         img.setImage(new Image(portraitURL));
@@ -287,36 +335,74 @@ public class CharacterEditor extends EditorSuper{
         }
         //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
         currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
-        currentSprite.setScaleX(5);
-        currentSprite.setScaleY(5);
+        currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
+        currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
+
         mySpritePane.getChildren().add(currentSprite);
-
-
 
         currentSprite.setOnMousePressed(e-> startRectangle(e));
         currentSprite.setOnMouseReleased(e-> finishRectangle(e));
-
+        currentAnimation = null;
+        animationFrame = new HashMap<>();
+        scrollToAnimation = new HashMap<>();
+        initializeScrollPane();
     }
 
     private void startRectangle(MouseEvent e){
-        System.out.println("got to start");
-        mySpritePane.getChildren().remove(frame.getFrameBox());
-        frame.setFrameBox(new Rectangle());
-        frame.getFrameBox().setX(e.getX());
-        frame.getFrameBox().setY(e.getY());
+        if (testNull(currentAnimation, "Animation Not Set")){
+            return;
+        }
+        FrameInfo frame = animationFrame.get(currentAnimation);
+        if (hitOrHurt.getState().equals(HIT_TEXT)){
+            mySpritePane.getChildren().remove(frame.getHitBox());
+            frame.setHitBox(new Rectangle());
+            frame.getHitBox().setX(e.getX());
+            frame.getHitBox().setY(e.getY());
+        }
+        else{
+            mySpritePane.getChildren().remove(frame.getHurtBox());
+            frame.setHurtBox(new Rectangle());
+            frame.getHurtBox().setX(e.getX());
+            frame.getHurtBox().setY(e.getY());
+        }
     }
 
     private void finishRectangle(MouseEvent e){
-        System.out.println("got to finish");
-        int x2 = (int)e.getX();
-        int y2 = (int)e.getY();
+        if (testNull(currentAnimation, "Animation Not Set")){
+            return;
+        }
+        double x2 = e.getX();
+        double y2 = e.getY();
 
-        double width = frame.getFrameBox().getX()-x2;
-        double height = frame.getFrameBox().getY()-y2;
+        FrameInfo frame = animationFrame.get(currentAnimation);
 
-        frame.getFrameBox().setWidth(width);
-        frame.getFrameBox().setHeight(height);
-        mySpritePane.getChildren().add(frame.getFrameBox());
+
+        if (hitOrHurt.getState().equals(HIT_TEXT)){
+            double x1 = frame.getHitBox().getX();
+            double y1 = frame.getHitBox().getY();
+            double width = x2 - x1;
+            double height = y2 - y1;
+
+
+            frame.setHitBox(new Rectangle(width, height, Color.TRANSPARENT));
+            frame.getHitBox().setStroke(Color.RED);
+            frame.getHitBox().setStrokeWidth(5);
+            mySpritePane.getChildren().add(frame.getHitBox());
+            frame.getHitBox().relocate(x1, y1);
+        }
+        else{
+            double x1 = frame.getHurtBox().getX();
+            double y1 = frame.getHurtBox().getY();
+            double width = x2 - x1;
+            double height = y2 - y1;
+
+            frame.setHurtBox(new Rectangle(width, height, Color.TRANSPARENT));
+            frame.getHurtBox().setStroke(Color.BLUE);
+            frame.getHurtBox().setStrokeWidth(5);
+            mySpritePane.getChildren().add(frame.getHurtBox());
+            frame.getHurtBox().relocate(x1, y1);
+        }
+
     }
     /**
      * User selects background, and it is applied to level.
