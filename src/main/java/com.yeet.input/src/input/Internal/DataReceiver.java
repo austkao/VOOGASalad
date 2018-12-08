@@ -29,7 +29,7 @@ public class DataReceiver {
     public List<Map<String, ArrayList<String>>> getKeys(){
         List<Map<String, ArrayList<String>>> allInputs = new ArrayList<>();
         for(int i = 0; i<numPlayers; i++){
-            allInputs.add(myParser.parseFileForElement("input"+Integer.toString(i+1))); //Collect the keyInputs for ALL of the players
+            allInputs.add(myParser.parseFileForElement("input"+Integer.toString(i))); //Collect the keyInputs for ALL of the players
 
         }
         //inputKeys = myParser.parseFileForElement("input");
@@ -40,7 +40,7 @@ public class DataReceiver {
     public Map<String, ArrayList<String>> getCombos(){
         List<Map<String, ArrayList<String>>> allCombos = new ArrayList<>();
         for(int i = 0; i<numPlayers; i++){
-            allCombos.add(myParser.parseFileForElement("combo"+ Integer.toString(i+1))); //Collect the keyInputs for ALL of the players
+            allCombos.add(myParser.parseFileForElement("combo"+ Integer.toString(i))); //Collect the keyInputs for ALL of the players
         }
         comboKeys = myParser.parseFileForElement("combo");
         return comboKeys;
