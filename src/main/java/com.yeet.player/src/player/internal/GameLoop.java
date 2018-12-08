@@ -5,8 +5,11 @@ import player.external.CombatScreen;
 
 
 public class GameLoop {
+
     private PhysicsSystem physicsEngine;
     private CombatScreen combatScreen;
+
+    private Thread myLoop;
 
 
     private boolean running = true;
@@ -27,13 +30,26 @@ public class GameLoop {
     public GameLoop(PhysicsSystem physicsEngine, CombatScreen combatScreen){
         this.physicsEngine = physicsEngine;
         this.combatScreen =  combatScreen;
+        myLoop = new Thread(this::gameLoop);
     }
     /**
      * Begin running the main game loop. Updates physics system
      */
     public void startLoop(){
-        Thread loop = new Thread(this::gameLoop);
-        loop.start();
+        myLoop.start();
+    }
+
+    public void stopLoop(){
+        myLoop.stop();
+        running = false;
+    }
+
+    public void pauseLoop(){
+        myLoop.suspend();
+    }
+
+    public void resumeLoop(){
+        myLoop.resume();
     }
 
     /**
@@ -81,7 +97,7 @@ public class GameLoop {
                 int thisSecond = (int) (lastUpdateTime / 1000000000);
                 if (thisSecond > lastSecondTime)
                 {
-                    System.out.println("NEW SECOND " + thisSecond + " " + frameCount);
+                    //System.out.println("NEW SECOND " + thisSecond + " " + frameCount);
                     fps = frameCount;
                     frameCount = 0;
                     lastSecondTime = thisSecond;

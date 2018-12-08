@@ -40,7 +40,6 @@ public class XMLParser implements Parser {
         NodeList elemNodes = xmlDocument.getElementsByTagName(element);
         for(int i = 0; i < elemNodes.getLength(); i++) {
             Element elem = (Element) elemNodes.item(i);
-            System.out.println(elem.getTagName());
             NamedNodeMap elemAttributes = elem.getAttributes();
             for (int j = 0; j < elemAttributes.getLength(); j++) {
                 Node attributeNode = elemAttributes.item(j);

@@ -23,8 +23,8 @@ class NetForceCalculatorTest {
 
         assertEquals(expected.getMagnitude(), calc.getNetVector().getMagnitude());
         assertEquals(expected.getDirection(), calc.getNetVector().getDirection());
-        System.out.println("Result Magnitude: " + calc.getNetVector().getMagnitude());
-        System.out.println("Result Direction: " + calc.getNetVector().getDirection());
+        //System.out.println("Result Magnitude: " + calc.getNetVector().getMagnitude());
+        //System.out.println("Result Direction: " + calc.getNetVector().getDirection());
     }
 
     @Test
@@ -40,7 +40,7 @@ class NetForceCalculatorTest {
 
         assertEquals(expected.getMagnitude(), calc.getNetVector().getMagnitude(), 1);
         assertEquals(expected.getDirection(), calc.getNetVector().getDirection(), 1);
-        System.out.println("Result Magnitude: " + calc.getNetVector().getMagnitude());
-        System.out.println("Result Direction: " + calc.getNetVector().getDirection());
+        //System.out.println("Result Magnitude: " + calc.getNetVector().getMagnitude());
+        //System.out.println("Result Direction: " + calc.getNetVector().getDirection());
     }
 }

@@ -17,11 +17,6 @@ public class CollisionDetector {
         for(PhysicsObject bod: bodies.values()){
             for(PhysicsObject bod2: bodies.values()){
                 if(!bod.equals(bod2)){
-                    if (bod.getId() == 1 && bod2.getId() > 999) {
-                        System.out.println("getPos() " + bod.getId() + " BodyMinY Position: " + (bod.getMyCoordinateBody().getPos().getY()));
-                        System.out.println("getPos() " + bod.getId() + " BodyMaxY Position: " + (bod.getMyCoordinateBody().getPos().getY() + 60));
-                        System.out.println("getPos() " + bod2.getId() + " GroundMinY Position: " + bod2.getMyCoordinateBody().getPos().getY());
-                    }
                     if(bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody())){
                         List<PhysicsObject> colliders = new ArrayList<>();
                         colliders.add(bod);
