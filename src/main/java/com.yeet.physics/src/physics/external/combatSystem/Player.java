@@ -73,4 +73,9 @@ public class Player {
         return String.format("Player %d named %s", id, name);
     }
 
+    /** Returns the {@code Player} object's current state */
+    public PlayerState getState(){
+        return playerState;
+    }
+
 }

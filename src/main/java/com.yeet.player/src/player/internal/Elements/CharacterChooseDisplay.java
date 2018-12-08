@@ -121,6 +121,7 @@ public class CharacterChooseDisplay extends StackPane {
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35",toRGBCode(myColor)));
                 icon.setImage(human);
                 myCurrentCharacterName.setText(myDefaultPlayerName);
+                myCharacterName.setOpacity(1);
                 portrait.setOpacity(1);
                 myButton.resetColor();
                 myButton.setOpacity(1);
@@ -140,6 +141,7 @@ public class CharacterChooseDisplay extends StackPane {
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35","transparent"));
                 icon.setImage(none);
                 myCurrentCharacterName.setText("None");
+                myCharacterName.setOpacity(0);
                 portrait.setOpacity(0);
                 myButton.setOpacity(0);
                 myButton.setDisable(true);
@@ -175,6 +177,19 @@ public class CharacterChooseDisplay extends StackPane {
 
     public String getCharacterName(){
         return myCharacterName.getText();
+    }
+
+    public CharacterChooseDisplay clone(){
+        Text charName = new Text(myCurrentCharacterName.getText());
+        charName.setFont(myCurrentCharacterName.getFont());
+        Text playerName = new Text(myCharacterName.getText());
+        playerName.setFont(myCharacterName.getFont());
+        CharacterChooseDisplay result = new CharacterChooseDisplay(myColor,charName,playerName,myButton);
+        result.setPortrait(portrait.getImage());
+        while(result.getState()!=myState){
+               result.nextState();
+        }
+        return result;
     }
 
 }

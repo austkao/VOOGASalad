@@ -40,6 +40,7 @@ public class SliderBox extends HBox {
         mySliderLabel = new Label(String.valueOf(SLIDER_DEFAULT));
         mySliderLabel.setLabelFor(mySlider);
         mySliderLabel.setFont(font);
+        mySlider.setOnMouseDragged(event -> mySliderLabel.setText(String.valueOf(Math.round(mySlider.getValue() * 10.0) / 10.0)));
         mySlider.setOnMouseReleased(event -> setNewValue(mySlider.getValue()));
         this.getChildren().addAll(name,mySlider,mySliderLabel);
     }
