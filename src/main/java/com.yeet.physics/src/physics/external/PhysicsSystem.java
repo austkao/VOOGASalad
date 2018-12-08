@@ -21,7 +21,7 @@ public class PhysicsSystem {
     public static final double DEFAULT_JUMP_HEIGHT = 20000;
     public static final double DEFAULT_MOVEMENT_SPEED = 5000;
     public static final double DEFAULT_ATTACK_SPACE = 10;
-    public static final double TERMINAL_VELOCITY = 400;
+    public static final double TERMINAL_VELOCITY = 100;
 
     private int playerId;
     private int groundId;
@@ -52,14 +52,6 @@ public class PhysicsSystem {
         collHandler.update();
         List<Integer> groundCollisions = collHandler.getGroundCollisions();
         List<List<Integer>> attackCollisions = collHandler.getAttackCollisions();
-        for(PhysicsObject o: this.gameObjects.values()){
-            if(o.getId() == 1){
-                System.out.println("Subrects: ");
-                for(SubRectangle subRect: o.getMyCoordinateBody().getSubRects()){
-                    System.out.println(subRect.getPosX());
-                }
-            }
-        }
         applyForces();
         updatePositions();
         //PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
@@ -92,7 +84,6 @@ public class PhysicsSystem {
     public void applyForces() {
         for (PhysicsObject o : gameObjects.values()) {
             if (o.getId() == 0) {
-                System.out.println("AF Current Forces:");
                 for (PhysicsVector f : o.getCurrentForces()) {
                     System.out.println(f.getMagnitude() + ", " + f.getDirection());
                 }

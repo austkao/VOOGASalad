@@ -25,7 +25,11 @@ public class CollisionHandler {
         //Filter collisions so that only one ground collides with one body
         while(collisionIterator.hasNext()){
             Collision col = collisionIterator.next();
+
             PhysicsObject one = col.getCollider1();
+            if(one.getId() == 1){
+                System.out.println(col.getSide().getMySide());
+            }
             PhysicsObject two = col.getCollider2();
             if (one.isPhysicsBody() && two.isPhysicsGround()) {
                 filterGroundCollisions(groundCols, one, col);
@@ -67,7 +71,7 @@ public class CollisionHandler {
                 attackCollisions.add(collisions);
             }
             // body+ground
-            if(one.isPhysicsBody() && two.isPhysicsGround()){
+            if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){
                 double bodyVelocity = one.getYVelocity().getMagnitude();
                 double bodyMass = one.getMass();
                 PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame)), -Math.PI/2);
