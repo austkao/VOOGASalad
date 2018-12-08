@@ -48,7 +48,7 @@ public class CombatSystem {
 
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
-        System.out.println(event.getInputPlayerState());
+        //System.out.println(event.getInputPlayerState());
         int id = event.getInitiatorID();
         if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);
@@ -109,7 +109,7 @@ public class CombatSystem {
 
     @Subscribe
     public void onGameStart(GameStartEvent gameStartEvent){
-        List<Integer> botList = gameStartEvent.getBots();
+        botList = gameStartEvent.getBots();
         playerManager.setBots(botList);
     }
 
