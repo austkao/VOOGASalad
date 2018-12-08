@@ -278,7 +278,9 @@ public class CharacterEditor extends EditorSuper{
         mySpritePane.getChildren().add(currentSprite);
 
         currentSprite.setOnMousePressed(e-> startRectangle(e));
-        currentSprite.setOnMouseReleased(e-> finishRectangle(e));
+        currentSprite.setOnMouseDragged(e -> showIntermediateRectangle(e));
+        //currentSprite.setOnMouse
+        //currentSprite.setOnMouseReleased(e-> finishRectangle(e));
         currentAnimation = null;
         animationFrame = new HashMap<>();
         scrollToAnimation = new HashMap<>();
@@ -384,6 +386,7 @@ public class CharacterEditor extends EditorSuper{
         if (testNull(currentAnimation, "Animation Not Set")){
             return;
         }
+        e.setDragDetect(true);
         FrameInfo frame = animationFrame.get(currentAnimation);
         if (hitOrHurt.getState().equals(HIT_TEXT)){
             mySpritePane.getChildren().remove(frame.getHitBox());
@@ -397,6 +400,16 @@ public class CharacterEditor extends EditorSuper{
             frame.getHurtBox().setX(e.getX());
             frame.getHurtBox().setY(e.getY());
         }
+    }
+    private void removeIntermediateRectangle(MouseEvent e){
+
+    }
+    private void showIntermediateRectangle(MouseEvent e){
+        e.setDragDetect(false);
+        FrameInfo frame = animationFrame.get(currentAnimation);
+        mySpritePane.getChildren().remove(frame.getHitBox());
+        mySpritePane.getChildren().remove(frame.getHurtBox());
+        finishRectangle(e);
     }
     private void finishRectangle(MouseEvent e){
         if (testNull(currentAnimation, "Animation Not Set")){
