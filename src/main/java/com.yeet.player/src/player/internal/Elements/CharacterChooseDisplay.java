@@ -121,6 +121,7 @@ public class CharacterChooseDisplay extends StackPane {
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35",toRGBCode(myColor)));
                 icon.setImage(human);
                 myCurrentCharacterName.setText(myDefaultPlayerName);
+                myCharacterName.setOpacity(1);
                 portrait.setOpacity(1);
                 myButton.resetColor();
                 myButton.setOpacity(1);
@@ -140,6 +141,7 @@ public class CharacterChooseDisplay extends StackPane {
                 colorblock.setStyle(String.format(FORMAT_RECT, "0 35 0 35", "0 35 0 35","transparent"));
                 icon.setImage(none);
                 myCurrentCharacterName.setText("None");
+                myCharacterName.setOpacity(0);
                 portrait.setOpacity(0);
                 myButton.setOpacity(0);
                 myButton.setDisable(true);
