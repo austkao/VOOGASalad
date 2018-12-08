@@ -109,8 +109,9 @@ public class CombatResultsScreen extends Screen {
                 display.getChildren().addAll(awardContainer);
                 displayContainer.getChildren().addAll(display);
                 playerBoxContainer.getChildren().add(displayContainer);
+                double hspace = 170-40*allPlayers.size();
                 if(i!=allPlayers.size()-1){
-                    playerBoxContainer.getChildren().add(new Rectangle(90.0,480.0,Color.TRANSPARENT));
+                    playerBoxContainer.getChildren().add(new Rectangle(hspace,480.0,Color.TRANSPARENT));
                 }
             }
         }

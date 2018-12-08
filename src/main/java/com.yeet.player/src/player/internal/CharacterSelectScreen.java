@@ -60,7 +60,7 @@ public class CharacterSelectScreen extends Screen {
         myDirectory = gameDirectory;
         myReadyBar = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("ready_bar.png")));
         myReadyBar.setLayoutY(420.0);
-        myReadyBar.setOnMousePressed(event -> nextScene.switchScene());
+        myReadyBar.setOnMousePressed(event -> handleInput(KeyCode.ENTER));
         myCharacterMap = new HashMap<>();
         myCharacterList = new ArrayList<>();
         myCharacterChooserList = new ArrayList<>();
@@ -103,7 +103,7 @@ public class CharacterSelectScreen extends Screen {
      *  @param code The {@code KeyCode} to process
      */
     private void handleInput(KeyCode code) {
-        if((code.equals(KeyCode.ENTER) || code.equals(KeyCode.SPACE)) && isReady){
+        if((code.equals(KeyCode.ENTER) || code.equals(KeyCode.SPACE)) && checkPlayerCount()){
             nextScene.switchScene();
         }
     }
@@ -166,23 +166,44 @@ public class CharacterSelectScreen extends Screen {
             count++;
             myCharacterList.add(display1.getCharacterName());
         }
+        else{
+            myCharacterMap.remove(0);
+        }
         if(display2.getState()!= CharacterChooseDisplay.State.NONE && display2.getCharacterName().length()>0){
             count++;
             myCharacterList.add(display2.getCharacterName());
+        }
+        else{
+            myCharacterMap.remove(1);
         }
         if(display3.getState()!= CharacterChooseDisplay.State.NONE && display3.getCharacterName().length()>0){
             count++;
             myCharacterList.add(display3.getCharacterName());
         }
+        else{
+            myCharacterMap.remove(2);
+        }
         if(display4.getState()!= CharacterChooseDisplay.State.NONE && display4.getCharacterName().length()>0){
             count++;
             myCharacterList.add(display4.getCharacterName());
+        }
+        else{
+            myCharacterMap.remove(3);
         }
         return count;
     }
 
     public HashMap<Integer, String> getCharacterMap() {
         return myCharacterMap;
+    }
+
+    public HashMap<Integer, Color> getColorMap(){
+        HashMap<Integer, Color> colorMap = new HashMap<>();
+        colorMap.put(0,display1.getCurrentColor());
+        colorMap.put(1,display2.getCurrentColor());
+        colorMap.put(2,display3.getCurrentColor());
+        colorMap.put(3,display4.getCurrentColor());
+        return colorMap;
     }
 
     public ArrayList<String> getCharacterList(){

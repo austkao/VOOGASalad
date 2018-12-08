@@ -86,7 +86,7 @@ public class CombatScreen extends Screen {
         super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
     }
 
-    public void setupCombatScene(HashMap<Integer, String> characterNames, String stageName){
+    public void setupCombatScene(HashMap<Integer, String> characterNames, HashMap<Integer, Color> characterColors, String stageName){
         myParser = new XMLParser(new File(myGameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myBackgroundMap = myParser.parseFileForElement("background");
         myMusicMap = myParser.parseFileForElement("music");
@@ -107,33 +107,21 @@ public class CombatScreen extends Screen {
             super.getMyRoot().getChildren().add(tile);
         }
         for(int i=0;i<characterNames.keySet().size();i++){
-            if(!characterNames.get(i).equals("")){
+            if(!characterNames.get(characterNames.keySet().toArray()[i]).equals("")){
                 //create sprites and set default viewport
-                XMLParser spritePropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(i)+"/sprites/spriteproperties.xml"));
+                XMLParser spritePropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/sprites/spriteproperties.xml"));
                 HashMap<String,ArrayList<String>> spriteProperties = spritePropertiesParser.parseFileForElement("sprite");
-                Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(i)+"/sprites/spritesheet.png"),
+                Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get((int)characterNames.keySet().toArray()[i])+"/sprites/spritesheet.png"),
                         Double.parseDouble(((spriteProperties.get("offsetX").get(0)))),Double.parseDouble(((spriteProperties.get("offsetY").get(0)))),
                         Double.parseDouble(((spriteProperties.get("width").get(0)))),Double.parseDouble(spriteProperties.get("height").get(0)));
-                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get(i))*TILE_SIZE);
-                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get(i))*TILE_SIZE);
+                sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get((int)characterNames.keySet().toArray()[i]))*TILE_SIZE);
+                sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get((int)characterNames.keySet().toArray()[i]))*TILE_SIZE);
                 mySpriteMap.put(i,sprite);
                 myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("xPos").get(i))*TILE_SIZE,Integer.parseInt(mySpawnMap.get("yPos").get(i))*TILE_SIZE));
-                PlayerMarker marker;
-                if(i==0){
-                    marker = new PlayerMarker(Color.web("#FD1B1B"),sprite);
-                }
-                else if(i==1){
-                    marker = new PlayerMarker(Color.web("#4C7FFF"),sprite);
-                }
-                else if(i==2){
-                    marker = new PlayerMarker(Color.web("#FFF61B"),sprite);
-                }
-                else{
-                    marker = new PlayerMarker(Color.web("#1FCB17"),sprite);
-                }
+                PlayerMarker marker = new PlayerMarker(characterColors.get((int)characterNames.keySet().toArray()[i]),sprite);
                 super.getMyRoot().getChildren().addAll(marker,sprite);
                 //set up animations for the sprite
-                XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(i)+"/sprites/animationproperties.xml"));
+                XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/sprites/animationproperties.xml"));
                 HashMap<String, ArrayList<String>> animationInfo = animationPropertiesParser.parseFileForElement("animation");
                 myAnimationMap.put(i,new HashMap<>());
                 for(int j = 0; j<animationInfo.get("name").size(); j++){
