@@ -18,6 +18,7 @@ public class CombatSystem {
     private PlayerManager playerManager;
     private PhysicsSystem physicsSystem;
     private List<Integer> botList;
+    private HashMap<Integer, Point2D> playerMap;
 
     public CombatSystem(Player bot){
         eventBus = EventBusFactory.getEventBus();
@@ -27,7 +28,8 @@ public class CombatSystem {
 
     public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem){
         eventBus = EventBusFactory.getEventBus();
-        playerManager = new PlayerManager(playerMap.keySet().size());
+        this.playerMap = playerMap;
+//        playerManager = new PlayerManager(playerMap.keySet().size());
         this.physicsSystem = physicsSystem;
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
@@ -48,7 +50,7 @@ public class CombatSystem {
 
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
-        System.out.println(event.getInputPlayerState());
+//        System.out.println(event.getInputPlayerState());
         int id = event.getInitiatorID();
         if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);
@@ -109,7 +111,8 @@ public class CombatSystem {
 
     @Subscribe
     public void onGameStart(GameStartEvent gameStartEvent){
-        List<Integer> botList = gameStartEvent.getBots();
+        botList = gameStartEvent.getBots();
+        playerManager = new PlayerManager(playerMap.size());
         playerManager.setBots(botList);
     }
 
