@@ -5,8 +5,8 @@ import java.util.Set;
 
 public class AttackEvent extends CombatActionEvent{
 
-    private static final String STRONG_TYPE = "STRONG";
-    private static final String WEAK_TYPE = "WEAK";
+    public static final String STRONG_TYPE = "STRONG";
+    public static final String WEAK_TYPE = "WEAK";
     private static Set<String> types = new HashSet<>();
     private String type;
 
