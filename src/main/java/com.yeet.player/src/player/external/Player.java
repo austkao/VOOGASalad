@@ -88,7 +88,7 @@ public class Player {
         },()-> {
             myFightMusicPlayer.stop();
             myStage.setScene(myLoadingScreen);
-            myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacterMap(), myCharacterSelectScreen.getColorMap(),myStageSelectScreen.getStage());
+            myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacterMap(), myCharacterSelectScreen.getColorMap(),myCharacterSelectScreen.getBots(),myStageSelectScreen.getStage());
             myStage.setScene(myCombatScreen);
             myCombatScreen.startLoop();
         });

@@ -86,7 +86,7 @@ public class CombatScreen extends Screen {
         super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
     }
 
-    public void setupCombatScene(HashMap<Integer, String> characterNames, HashMap<Integer, Color> characterColors, String stageName){
+    public void setupCombatScene(HashMap<Integer, String> characterNames, HashMap<Integer, Color> characterColors, List<Integer> botList, String stageName){
         myParser = new XMLParser(new File(myGameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myBackgroundMap = myParser.parseFileForElement("background");
         myMusicMap = myParser.parseFileForElement("music");
@@ -150,6 +150,7 @@ public class CombatScreen extends Screen {
         myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         myBGMPlayer.play();
+        myMessageBus.post(new GameStartEvent(botList));
     }
 
     public void startLoop(){

@@ -193,10 +193,12 @@ public class CharacterSelectScreen extends Screen {
         return count;
     }
 
+    /** Returns the {@code HashMap} of player ID to character name */
     public HashMap<Integer, String> getCharacterMap() {
         return myCharacterMap;
     }
 
+    /** Returns the {@code HashMap} of player ID to current {@code Color} */
     public HashMap<Integer, Color> getColorMap(){
         HashMap<Integer, Color> colorMap = new HashMap<>();
         colorMap.put(0,display1.getCurrentColor());
@@ -206,10 +208,30 @@ public class CharacterSelectScreen extends Screen {
         return colorMap;
     }
 
+    /** Returns the list of IDs of bot players */
+    public ArrayList<Integer> getBots(){
+        ArrayList<Integer> bots = new ArrayList<>();
+        if(display1.getState().equals(CharacterChooseDisplay.State.CPU)){
+            bots.add(0);
+        }
+        if(display2.getState().equals(CharacterChooseDisplay.State.CPU)){
+            bots.add(1);
+        }
+        if(display3.getState().equals(CharacterChooseDisplay.State.CPU)){
+            bots.add(2);
+        }
+        if(display4.getState().equals(CharacterChooseDisplay.State.CPU)){
+            bots.add(3);
+        }
+        return bots;
+    }
+
+    /** Returns the list of character names */
     public ArrayList<String> getCharacterList(){
         return myCharacterList;
     }
 
+    /** Returns the list of all {@code CharacterChooseDisplay} objects */
     public ArrayList<CharacterChooseDisplay> getCharacterChooserList(){
         ArrayList<CharacterChooseDisplay> result = new ArrayList<>();
         for(CharacterChooseDisplay ccd : myCharacterChooserList){
