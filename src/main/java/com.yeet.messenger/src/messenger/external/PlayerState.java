@@ -55,6 +55,7 @@ public enum PlayerState {
                     event.onFailure();
                     return DOUBLE_JUMP;
             }
+            event.onSuccess();
             return INITIAL;
         }
     },
