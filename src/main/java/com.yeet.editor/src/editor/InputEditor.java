@@ -20,14 +20,18 @@ public class InputEditor extends EditorSuper {
     VBox v;
     private TextArea userInput;
     private ListView<String> inputDisplay;
-    private ObservableList inputTypes;
+    private ObservableList<String> inputTypes;
 
 
     public InputEditor(Group root, EditorManager em){
         super(root,em);
-        makeVBox1();
         inputTypes = FXCollections.observableArrayList();
         inputDisplay = new ListView<>();
+        inputDisplay.setMaxHeight(200.0);
+        makeVBox1();
+        v.setLayoutX(100.0);
+        v.setLayoutY(20.0);
+
     }
 
     @Override
@@ -62,9 +66,9 @@ public class InputEditor extends EditorSuper {
             inputTypes.add(text);
             inputDisplay.setItems(inputTypes);
             //System.out.println("text = " + text);
-            //for (int i = 0; i < inputTypes.size(); i++){
-            //    System.out.println(inputTypes.get(i));
-            //}
+            for (int i = 0; i < inputTypes.size(); i++){
+                System.out.println(inputTypes.get(i));
+            }
         }
     }
 
