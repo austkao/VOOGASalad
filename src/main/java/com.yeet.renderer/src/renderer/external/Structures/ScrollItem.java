@@ -2,6 +2,11 @@ package renderer.external.Structures;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -10,15 +15,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import renderer.external.RenderSystem;
 
-import static renderer.external.RenderSystem.BUTTON_FORMAT;
-import static renderer.external.RenderSystem.BUTTON_SCALE;
-import static renderer.external.RenderUtils.toRGBCode;
 
 
 public class ScrollItem {
 
-    private Button button;
-    private Button imageButton;
+    private ToggleButton button;
+    private ToggleButton imageButton;
     private Image image;
     private ImageView imageView;
     private RenderSystem rs;
@@ -38,14 +40,29 @@ public class ScrollItem {
         imageView.setPreserveRatio(true);
         //imageView.setFitWidth(100);
         imageView.setFitHeight(100);
-        button = new Button(desc.getText(),imageView);
+        button = new ToggleButton(desc.getText(),imageView);
         button.setTextFill(Color.WHITE);
         button.wrapTextProperty().setValue(true);
         rs.styleButton(button);
         rs.buttonHoverEffect(button);
+        button.selectedProperty().addListener((p, ov, nv) -> {
+            selectEffect(button);
+        });
+
+        //button.setOnMouseClicked(e -> selectEffect(button));
+    }
+
+    private void selectEffect(ToggleButton b){
+        if(b.isSelected()){
+            DropShadow drop = new DropShadow(12.0,Color.BLUE);
+            drop.setHeight(30.0);
+            b.setEffect(drop);
+        }else{
+            b.setEffect(null);
+        }
     }
     private void initializeImageButton(){
-        imageButton = new Button();
+        imageButton = new ToggleButton();
         ImageView copy = new ImageView(image);
         copy.setPreserveRatio(true);
         //imageView.setFitWidth(100);
@@ -53,13 +70,16 @@ public class ScrollItem {
         imageButton.setGraphic(copy);
         rs.styleButton(imageButton);
         rs.buttonHoverEffect(imageButton);
+        imageButton.selectedProperty().addListener((p, ov, nv) -> {
+            selectEffect(imageButton);
+        });
     }
 
-    public Button getButton() {
+    public ToggleButton getButton() {
         return button;
     }
 
-    public Button getImageButton(){return imageButton;}
+    public ToggleButton getImageButton(){return imageButton;}
 
     public void setPos(double x, double y){
         button.setLayoutX(x);

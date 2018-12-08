@@ -4,8 +4,11 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -19,14 +22,19 @@ public class ScrollablePaneNew extends Pane {
 
     private ObservableList<ScrollItem> items;
     private ScrollPane scrollPane;
-    private HashMap<String, String> currentImages;
     private VBox normalView;
     private VBox gridView;
     private boolean gridFlag = true;
+    private Button activeItem;
+    private ToggleGroup tgNormal;
+    private ToggleGroup tgGrid;
 
 
 
     public ScrollablePaneNew(File dir,double x, double y){
+        tgNormal = new ToggleGroup();
+        tgGrid = new ToggleGroup();
+
         scrollPane = new ScrollPane();
         normalView = new VBox(8);
         gridView = new VBox(5);
@@ -36,6 +44,7 @@ public class ScrollablePaneNew extends Pane {
         buildNormalView();
         buildGridView();
         switchView();
+
     }
 
     private void initializeScrollPane(double x, double y){
@@ -61,6 +70,7 @@ public class ScrollablePaneNew extends Pane {
                 currentH = new HBox(3);
             }
             currentH.getChildren().add(items.get(i).getImageButton());
+            tgGrid.getToggles().add(items.get(i).getImageButton());
         }
         hboxes.add(currentH);
         gridView.getChildren().addAll(hboxes);
@@ -70,6 +80,7 @@ public class ScrollablePaneNew extends Pane {
 
     public void addItem(Image image){
         ScrollItem si= new ScrollItem(image,new Text("Hi my name is Hi my name is Hi my name is SLim SHady"));
+        tgNormal.getToggles().add(si.getButton());
         items.add(si);
         normalView.getChildren().add(items.get(items.size()-1).getButton());
     }
@@ -109,7 +120,4 @@ public class ScrollablePaneNew extends Pane {
         return scrollPane;
     }
 
-    public HashMap getCurrentImages() {
-        return currentImages;
-    }
 }

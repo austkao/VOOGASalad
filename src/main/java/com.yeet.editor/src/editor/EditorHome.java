@@ -46,7 +46,7 @@ public abstract class EditorHome extends Scene {
         Path userPath = Paths.get(System.getProperty("user.dir"));
         File dir = new File(userPath+RESOURCE_PATH+getDir());
         myScroll = new ScrollablePaneNew(dir,200,150);
-        switchView = getRender().makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,20.0,100.0,30.0);
+        switchView = getRender().makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,100.0,100.0,30.0);
         switchView.setOnMouseClicked(event -> myScroll.switchView());
     }
     public RenderSystem getRender(){
