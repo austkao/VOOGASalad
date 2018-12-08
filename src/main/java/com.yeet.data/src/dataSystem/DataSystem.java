@@ -32,14 +32,12 @@ public class DataSystem {
     public void createInitialGameFiles(CreateGameEvent event) {
         File defaultFile = event.getGameDirectory();
         defaultFile.mkdir();
-        myFP.setGameDirectory(defaultFile.getPath());
-        createDirectory(myFP.STAGEPATH.getPath());
-        createDirectory(myFP.CHARACTERPATH.getPath());
-        createDirectory(myFP.DATAPATH.getPath());
-        createDirectory(myFP.BACKGROUNDPATH.getPath());
-        createDirectory(myFP.BGMPATH.getPath());
-        createDirectory(myFP.TILEPATH.getPath());
-        //myEB.post(event);
+        createDirectory(defaultFile.getPath() + myFP.STAGEPATH.getPath());
+        createDirectory(defaultFile.getPath() + myFP.CHARACTERPATH.getPath());
+        createDirectory(defaultFile.getPath() + myFP.DATAPATH.getPath());
+        createDirectory(defaultFile.getPath() + myFP.BACKGROUNDPATH.getPath());
+        createDirectory(defaultFile.getPath() + myFP.BGMPATH.getPath());
+        createDirectory(defaultFile.getPath() + myFP.TILEPATH.getPath());
     }
 
     @Subscribe

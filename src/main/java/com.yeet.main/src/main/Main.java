@@ -1,5 +1,6 @@
 package main;
 
+import com.google.common.eventbus.EventBus;
 import console.external.Console;
 import dataSystem.DataSystem;
 import editor.EditorManager;
@@ -16,6 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import messenger.external.CreateGameEvent;
 import messenger.external.Event;
 import messenger.external.EventBusFactory;
 import player.external.Player;
@@ -37,25 +39,21 @@ public class Main extends Application {
 
     private Stage myStage;
     private Stage myPopup;
-
     private static Console myConsole;
     private RenderSystem myRenderSystem;
     private Player myPlayer;
     private DataSystem myDataSystem;
-
     private Font myEmphasisFont;
     private Font myPlainFont;
     private EditorManager em;
-
     private DirectoryChooser myDirectoryChooser;
     private File myDirectory;
-
     private ImageView mySplashDisplay;
     private Button playButton;
     private Button editButton;
-
     private Scene homeScene;
     private MainConstant myMC;
+    private EventBus myEB;
 
 
     public static void main(String[] args){
@@ -64,6 +62,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        myEB = EventBusFactory.getEventBus();
         myDirectory = new File(System.getProperty("user.dir")+DEFAULT_GAME_DIRECTORY);
         //create window
         myStage = primaryStage;
@@ -120,19 +119,7 @@ public class Main extends Application {
         File resources = new File(userPath+RESOURCE_PATH);
         int numGames = resources.listFiles(filter).length;
         File defaultFile = new File(resources.getPath() + "/game" + numGames);
-        defaultFile.mkdir();
-        File stages = new File(defaultFile.getPath()+"/stages");
-        File characters = new File(defaultFile.getPath()+"/characters");
-        File data = new File(defaultFile.getPath()+"/data");
-        File background = new File(data.getPath()+"/background");
-        File bgm = new File(data.getPath()+"/bgm");
-        File tiles = new File(data.getPath()+"/tiles");
-        stages.mkdir();
-        characters.mkdir();
-        data.mkdir();
-        background.mkdir();
-        bgm.mkdir();
-        tiles.mkdir();
+        myEB.post(new CreateGameEvent("new game", defaultFile));
         initializeGameEditor(defaultFile);
     }
 
