@@ -79,6 +79,7 @@ public class InputSystem {
                 keyEvent =  new JumpEvent(1);
             }
             else if(!action.equals("JAB")){
+                System.out.println();
                 keyEvent = new AttackEvent(1);
             }
             else{
