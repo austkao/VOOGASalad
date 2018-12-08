@@ -15,6 +15,7 @@ import renderer.external.Structures.TextBox;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 
@@ -74,4 +75,7 @@ public class GameplayEditor extends EditorSuper{
     }
 
 
+    public Set<String> getInputTypes(){
+        return null;
+    }
 }

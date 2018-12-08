@@ -442,6 +442,7 @@ public class CharacterEditor extends EditorSuper{
         data.put("health", healthList);
         data.put("attack", attackList);
         data.put("defense", defenseList);
+
         try {
             generateSave(structure, data);
         } catch (Exception ex) {
