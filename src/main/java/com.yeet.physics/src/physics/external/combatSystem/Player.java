@@ -3,6 +3,7 @@ package physics.external.combatSystem;
 import messenger.external.CombatActionEvent;
 import messenger.external.PlayerState;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class Player {
 
-    private int id;
+    protected int id;
     private String name;
     private int health;
     private int numOfLives;
@@ -24,9 +25,11 @@ public class Player {
     private List<List<Integer>> hitboxes;
     private Player beingAttackedBy;
     private PlayerState playerState;
+    private boolean isBot;
 
     public Player(){
         playerState = PlayerState.INITIAL;
+        isAttackingTargets = new ArrayList<>();
     }
 
     public Player(int id){
@@ -43,9 +46,14 @@ public class Player {
         playerState = playerState.changeStatesOnEvent(event);
     }
 
-    /*  */
+    /* reset player's state to default state */
     public void setToInitialState(){
         this.playerState = PlayerState.INITIAL;
+    }
+
+    /* set player's current state */
+    protected void setPlayerState(PlayerState playerState){
+        this.playerState = playerState;
     }
 
     /* add who is being attacked by this player */
@@ -55,6 +63,10 @@ public class Player {
         target.setBeingAttackedBy(this);
         target.playerState = PlayerState.BEING_ATTACKED;
         target.freeTargets();
+    }
+
+    public void setIsBot(boolean isBot){
+        this.isBot = isBot;
     }
 
     /* set who is attacking this player */
@@ -68,14 +80,11 @@ public class Player {
         }
     }
 
+
+
     @Override
     public String toString(){
         return String.format("Player %d named %s", id, name);
-    }
-
-    /** Returns the {@code Player} object's current state */
-    public PlayerState getState(){
-        return playerState;
     }
 
 }
