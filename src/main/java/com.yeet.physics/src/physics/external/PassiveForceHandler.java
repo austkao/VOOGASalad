@@ -21,17 +21,6 @@ public class PassiveForceHandler {
         for (PhysicsObject o : myObjects.values()) {
             if (o.isPhysicsBody() && (o.getYVelocity().getMagnitude() < TERMINAL_VELOCITY)) {
                 o.addCurrentForce(new PhysicsVector(Math.round(o.getMass() * DEFAULT_GRAVITY_ACCELERATION), DEFAULT_GRAVITY_DIRECTION)); // always add gravity
-
-
-                /*if (o.getId() == 1) {
-                    //System.out.println("APPLYING GRAVITY");
-                    if (o.isGrounded && (Math.abs(o.getXVelocity().getMagnitude()) > 13)) {
-                        o.addCurrentForce(new PhysicsVector((int) Math.signum(o.getXVelocity().getMagnitude()) * (-1) * o.getMass() * DEFAULT_GRAVITY_ACCELERATION * frictionCoefficient, o.getXVelocity().getDirection()));
-                    } else if (o.isGrounded()) {
-                        o.setVelocity(new PhysicsVector(0, 0));
-                        //o.addCurrentForce(new PhysicsVector(o.getXVelocity().getMagnitude()*o.getMass()/timeOfFrame, Math.signum(o.getXVelocity().getMagnitude()) * (-1) * o.getXVelocity().getDirection()));
-                    }
-                }*/
             }
         }
     }

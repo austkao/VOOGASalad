@@ -21,7 +21,7 @@ public class PhysicsSystem {
     public static final double DEFAULT_JUMP_HEIGHT = 40000;
     public static final double DEFAULT_MOVEMENT_SPEED = 5000;
     public static final double DEFAULT_ATTACK_SPACE = 10;
-    public static final double TERMINAL_VELOCITY = 400;
+    public static final double TERMINAL_VELOCITY = 600;
 
     private int playerId;
     private int groundId;
