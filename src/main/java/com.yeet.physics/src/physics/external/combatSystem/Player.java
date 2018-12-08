@@ -3,6 +3,7 @@ package physics.external.combatSystem;
 import messenger.external.CombatActionEvent;
 import messenger.external.PlayerState;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class Player {
 
-    private int id;
+    protected int id;
     private String name;
     private int health;
     private int numOfLives;
@@ -27,6 +28,7 @@ public class Player {
 
     public Player(){
         playerState = PlayerState.INITIAL;
+        isAttackingTargets = new ArrayList<>();
     }
 
     public Player(int id){

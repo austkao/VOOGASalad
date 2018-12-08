@@ -15,8 +15,8 @@ import static java.lang.Math.PI;
 public class CombatSystem {
 
     EventBus eventBus;
-    PlayerManager playerManager;
-    PhysicsSystem physicsSystem;
+    private PlayerManager playerManager;
+    private PhysicsSystem physicsSystem;
 
     public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem){
         eventBus = EventBusFactory.getEventBus();
@@ -48,7 +48,11 @@ public class CombatSystem {
 
     @Subscribe
     public void onIdleEvent(IdleEvent idleEvent){
-        playerManager.setToInitialStateByID(idleEvent.getId());
+        int id = idleEvent.getId();
+        if(playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.SINGLE_JUMP
+                || playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.DOUBLE_JUMP){
+            playerManager.setToInitialStateByID(id);
+        }
     }
 
     @Subscribe
