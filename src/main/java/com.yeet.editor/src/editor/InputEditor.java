@@ -87,10 +87,6 @@ public class InputEditor extends EditorSuper {
             userInput.clear();
             inputTypes.add(text);
             inputDisplay.setItems(inputTypes);
-            //System.out.println("text = " + text);
-            for (int i = 0; i < inputTypes.size(); i++){
-                System.out.println(inputTypes.get(i));
-            }
         }
     }
 
