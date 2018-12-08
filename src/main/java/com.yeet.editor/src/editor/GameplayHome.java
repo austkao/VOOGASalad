@@ -18,4 +18,8 @@ public class GameplayHome extends EditorHome{
     public String toString(){
         return "Game Home";
     }
+
+    public String getDir(){
+        return "portraits/";
+    }
 }

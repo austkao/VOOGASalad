@@ -1,7 +1,10 @@
 package renderer.external.Structures;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -28,16 +31,25 @@ public class ScrollablePaneNew extends Pane {
         normalView = new VBox(8);
         gridView = new VBox(5);
         items = FXCollections.observableArrayList();
-        scrollPane.setPrefSize(500, 500);
+        initializeScrollPane(x,y);
+        loadFiles(dir);
+        buildNormalView();
+        buildGridView();
+        switchView();
+    }
+
+    private void initializeScrollPane(double x, double y){
+        scrollPane.setBackground(Background.EMPTY);
+        scrollPane.setPrefSize(520, 600);
         scrollPane.setFitToWidth(true);
         scrollPane.setLayoutX(x);
         scrollPane.setLayoutY(y);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        //scrollPane.setScaleY(.8);
-        //currentImages = new HashMap<>();
-        loadFiles(dir);
-        buildGridView();
-        switchView();
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    }
+
+    private void buildNormalView(){
+        normalView.setMaxWidth(460.0);
+        normalView.setAlignment(Pos.CENTER);
     }
 
     private void buildGridView(){
@@ -60,13 +72,14 @@ public class ScrollablePaneNew extends Pane {
         ScrollItem si= new ScrollItem(image,new Text("Hi my name is Hi my name is Hi my name is SLim SHady"));
         items.add(si);
         normalView.getChildren().add(items.get(items.size()-1).getButton());
-
-        //items.get(items.size()-1).setPos(0,125*items.size());
     }
 
     public void switchView(){
         if(gridFlag){
-            scrollPane.setContent(normalView);
+            StackPane holder = new StackPane(normalView); //must wrap VBox in some other layout pane to center it within scrollpane
+            holder.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
+                    scrollPane.getViewportBounds().getWidth(), scrollPane.viewportBoundsProperty()));
+            scrollPane.setContent(holder);
             gridFlag = false;
         } else {
             scrollPane.setContent(gridView);
@@ -84,7 +97,6 @@ public class ScrollablePaneNew extends Pane {
             if(imgFile.toString().endsWith(".png")){
                 Image itemImage = new Image(imgFile.toURI().toString());
                 addItem(itemImage);
-                //currentImages.put(itemImage.toString(), imgFile.getName());
             }
         }
     }
