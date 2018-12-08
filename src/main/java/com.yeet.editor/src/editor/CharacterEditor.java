@@ -2,9 +2,7 @@ package editor;
 
 import javafx.animation.Animation;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,10 +16,7 @@ import javafx.util.Duration;
 import renderer.external.Structures.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -65,8 +60,10 @@ public class CharacterEditor extends EditorSuper{
         int totalFrames;
         Map<Integer, Rectangle> hitBoxes;
         Map<Integer, Rectangle> hurtBoxes;
+        String input;
 
-        FrameInfo(int total){
+        FrameInfo(int total, String inputString){
+            input = inputString;
             currentFrame = -1;
             totalFrames = total;
             hitBoxes = new HashMap<>();
@@ -75,6 +72,13 @@ public class CharacterEditor extends EditorSuper{
                 hitBoxes.putIfAbsent(i, new Rectangle());
                 hurtBoxes.putIfAbsent(i, new Rectangle());
             }
+        }
+
+        void setInput(String s){
+            input = s;
+        }
+        String getInput(){
+            return input;
         }
 
         void setHitBox(Rectangle r){
@@ -99,10 +103,8 @@ public class CharacterEditor extends EditorSuper{
             if (currentFrame == -1 || totalFrames == -1){
                 return "Animation Not Set";
             }
-            return "Frame "+currentFrame+"/"+totalFrames;
+            return "Frame "+currentFrame+"/"+totalFrames + " - " + input;
         }
-
-
     }
 
     public CharacterEditor(Group root, EditorManager em){
@@ -265,7 +267,50 @@ public class CharacterEditor extends EditorSuper{
         }
         stepAnimation(-1);
     }
-    
+
+
+    private String getCombo(){
+        String combo = "";
+        int inputNum = 1;
+        String nextInput = showAlertInputOptions(inputNum);
+        while (!"".equals(nextInput)){
+            System.out.println(nextInput);
+            combo = combo + "_" + nextInput;
+            inputNum++;
+            nextInput = showAlertInputOptions(inputNum);
+        }
+        System.out.println(combo);
+        return combo;
+    }
+
+    private String showAlertInputOptions(int num){
+        Set<String> options = new HashSet<String>();
+        options.add("test1");
+        options.add("hello");
+        options.add("rahul");
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Enter input #" + num);
+
+        boolean disabled = false;
+
+        for (String option: options){
+            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().add(optionButton);
+            dialog.getDialogPane().lookupButton(optionButton).setDisable(disabled);
+        }
+
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        ButtonType input = dialog.showAndWait().orElse(ButtonType.CLOSE);
+
+        if (input == ButtonType.CLOSE){
+            return "";
+        }
+        return input.getText();
+
+    }
+
     private void makeSpriteAnimation(){
         if (testNull(spriteSheet, "Sprite Sheet Not Set")){
             return;
@@ -276,8 +321,8 @@ public class CharacterEditor extends EditorSuper{
         }
         ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
 
-        //SpriteAnimation myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 22,
-        //        11, 0.0, 0.0, 111.818181, 56.0);
+        String inputString = getCombo();
+
         SpriteAnimation myAnimation;
         if (!first){
             myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 11,
@@ -291,7 +336,7 @@ public class CharacterEditor extends EditorSuper{
         myAnimation.setCycleCount(Animation.INDEFINITE);
         scrollToAnimation.put(animPic, myAnimation);
         animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
-        animationFrame.put(myAnimation, new FrameInfo(myAnimation.getCount()));
+        animationFrame.put(myAnimation, new FrameInfo(myAnimation.getCount(), inputString));
     }
 
     private void initializeScrollPane(){
