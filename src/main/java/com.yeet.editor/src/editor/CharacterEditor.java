@@ -51,6 +51,7 @@ public class CharacterEditor extends EditorSuper{
     private Text frameText;
     private SwitchButton hitOrHurt;
 
+    private InputEditor inputEditor;
 
     private boolean first = false;
 
@@ -107,9 +108,10 @@ public class CharacterEditor extends EditorSuper{
         }
     }
 
-    public CharacterEditor(Group root, EditorManager em){
+    public CharacterEditor(Group root, EditorManager em, InputEditor editor){
         super(root,em);
         this.root = root;
+        this.inputEditor = editor;
         portrait = initializeImageView(200, 300, 275, 25);
         //spriteSheet = initializeImageView(600, 400, 25, 350);
         spriteSheet = new ImageView();
@@ -284,11 +286,8 @@ public class CharacterEditor extends EditorSuper{
     }
 
     private String showAlertInputOptions(int num){
-        // TODO: 12/8/2018 incorporate custom list
-        Set<String> options = new HashSet<String>();
-        options.add("test1");
-        options.add("hello");
-        options.add("rahul");
+
+        Set<String> options = inputEditor.getInputTypes();
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Enter input #" + num);
