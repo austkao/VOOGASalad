@@ -35,14 +35,14 @@ public class InputTester extends Application {
 
     public void doSomething() throws InterruptedException {
         //NORMALLY, this would be called by the front-end
-        KeyInputEvent test = new KeyInputEvent(KeyCode.A);
+        KeyInputEvent test = new KeyInputEvent(KeyCode.O);
         myMessageBus.post(test);
 
-        //Sleeping to assure that the combo works
-        //Thread.sleep(2000);
-
-        KeyInputEvent test2 = new KeyInputEvent(KeyCode.B);
+        KeyInputEvent test2 = new KeyInputEvent(KeyCode.P);
         myMessageBus.post(test2);
+
+        KeyInputEvent test3 = new KeyInputEvent(KeyCode.I);
+        myMessageBus.post(test3);
 
         GameStartEvent start1 = new GameStartEvent(new ArrayList<Integer>());
         myMessageBus.post(start1);

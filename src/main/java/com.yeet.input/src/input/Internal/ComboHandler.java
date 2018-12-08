@@ -32,12 +32,11 @@ public class ComboHandler {
      */
     public List<String> inputHandler(List<KeyInputEvent> q){
         List<String> output = new ArrayList<>();
-        while(q.size()>0) {
-            String possibleCombo = parseComboTree(comboTree, new ArrayList<>(q));
-            output.add(possibleCombo);
-            q.remove(0);
-            //System.out.println(possibleCombo);
-        }
+
+        String possibleCombo = parseComboTree(comboTree, q);
+        output.add(possibleCombo);
+        System.out.println(possibleCombo);
+
         //if(q.size() == 1){
         //    return;
         //}
@@ -87,7 +86,7 @@ public class ComboHandler {
         String nextInput = q.remove(0).getName();
         if(root.hasChild(nextInput)){
             Node child = root.getChild(nextInput);
-            parseComboTree(child, q);
+            return parseComboTree(child, q);
         }
         else if(!root.hasChild(nextInput)){
             return ""; // No Possible combos

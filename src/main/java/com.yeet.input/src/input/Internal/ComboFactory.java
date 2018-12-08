@@ -35,6 +35,7 @@ public class ComboFactory {
     private void addChildLoop(Node root, List<String> comboList, String combo){
         if(comboList.size() == 0){
             root.addChild(new LeafNode(myCombos.get(combo).get(0)));
+            //System.out.println(root.getChildren().get(0).getKey());
             return;
         }
         Node newChild;
@@ -43,10 +44,12 @@ public class ComboFactory {
         if(!root.hasChild(let)){ // so long as that child doesn't already exist
             newChild = new ComboNode(let);
             root.addChild(newChild);
+            System.out.println(newChild.getKey());
         }
         else{
             newChild = root.getChild(let);
         }
+        //System.out.println(newChild.getKey());
         addChildLoop(newChild, comboList, combo);
     }
 }

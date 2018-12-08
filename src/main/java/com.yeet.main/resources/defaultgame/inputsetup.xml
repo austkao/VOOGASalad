@@ -7,6 +7,7 @@
 
     <input1 P = "LEFT" L = "DOWN" O = "UP" I = "RIGHT" ></input1>
     <combo1 OL = "SMASH" POI = "FIREBALL"></combo1>
+    <combo OL = "SMASH" OPOI = "FIREBALL" OPI = "SHORYUKEN"></combo>
 
 </VOOGASalad>
 
