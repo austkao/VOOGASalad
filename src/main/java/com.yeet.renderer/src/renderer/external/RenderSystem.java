@@ -97,6 +97,17 @@ public class RenderSystem implements Renderer{
         return myPlainFont;
     }
 
+    public void buttonHoverEffect(Button button){
+        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15, 1.1,1.1)));
+        button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15,1.0,1.0)));
+    }
+
+    public void styleButton(Button button){
+        button.setStyle(String.format(BUTTON_FORMAT,
+                toRGBCode(Color.BLACK),
+                this.getPlainFont().getName(),15,20));
+    }
+
     /** Creates a button using an image
      *  @param image The {@code ImageView} that will be used as the button
      *  @param x The x position of the button

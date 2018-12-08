@@ -113,18 +113,10 @@ public class MapEditor extends EditorSuper{
         myBGMButton.setOnMouseClicked(e -> chooseBGM());
 
 
-        File scrollf = new File("/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/acacia_log.png");
-        Image scrollIm = new Image(scrollf.toURI().toString());
-        Text text = new Text("hi my name ny name isjnjnjnjnj jnjn");
-        ScrollItem b = new ScrollItem(scrollIm,text);
-
-        b.getButton().setLayoutX(30.0);
-        b.getButton().setLayoutY(30.0);
-
-        b.getButton().setPrefSize(300,200);
 
 
-        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, myBGM, myBGMButton, musicLabel,b.getButton());
+
+        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, myBGM, myBGMButton, musicLabel);
     }
 
     private void initializeScrollPane(){
@@ -163,7 +155,8 @@ public class MapEditor extends EditorSuper{
      * User selects background, and it is applied to level.
      */
     private void chooseBackground(){
-        File backgroundFile = new File(myEM.getGameDirectoryString()+"/data/background");
+        Path userPath = Paths.get(System.getProperty("user.dir"));
+        File backgroundFile = new File(userPath+RESOURCE_PATH+"/backgrounds");
         ListView<String> backgroundList = myRS.makeDirectoryFileList(backgroundFile, false);
         Stage edit = new Stage();
         edit.setScene(new Scene(new Group(backgroundList)));
@@ -225,7 +218,9 @@ public class MapEditor extends EditorSuper{
     private void snapShot(Node node,String dir) {
         WritableImage img = node.snapshot(new SnapshotParameters(), null);
         Path userPath = Paths.get(System.getProperty("user.dir"));
-        File file = new File(userPath+RESOURCE_PATH+dir+"test.png");
+        File directory = new File(userPath+RESOURCE_PATH+dir);
+        int dsize = directory.listFiles().length;
+        File file = new File(directory.getPath()+"/test" + dsize + ".png");
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", file);
         } catch (IOException e) {

@@ -9,16 +9,24 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.ScrollablePane;
+import renderer.external.Structures.ScrollablePaneNew;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public abstract class EditorHome extends Scene {
+    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources/";
 
-    private ScrollablePane myScroll;
+    private ScrollablePaneNew myScroll;
     private VBox myBox;
     private RenderSystem rs;
+    private Button switchView;
 
     private Group root;
     protected EditorManager em;
     protected EditorSuper myEditor;
+
 
     public EditorHome(Group root, EditorManager em) {
         super(root);
@@ -26,13 +34,20 @@ public abstract class EditorHome extends Scene {
         this.em = em;
         rs = new RenderSystem();
         initializeVBox();
-        Text t = rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
-        root.getChildren().add(t);
+        initializeScroll();
+        Text title = rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
+        root.getChildren().addAll(title,myScroll.getScrollPane(),switchView);
 
     }
 
-    private void initializeScroll() {
+    protected abstract String getDir();
 
+    private void initializeScroll() {
+        Path userPath = Paths.get(System.getProperty("user.dir"));
+        File dir = new File(userPath+RESOURCE_PATH+getDir());
+        myScroll = new ScrollablePaneNew(dir,200,150);
+        switchView = getRender().makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,20.0,100.0,30.0);
+        switchView.setOnMouseClicked(event -> myScroll.switchView());
     }
     public RenderSystem getRender(){
         return rs;

@@ -1,5 +1,6 @@
 package renderer.external.Structures;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,9 +16,6 @@ import static renderer.external.RenderUtils.toRGBCode;
 
 
 public class ScrollItem {
-
-    private static final double TILE_WIDTH = 128;
-
 
     private Button button;
     private Button imageButton;
@@ -37,24 +35,24 @@ public class ScrollItem {
         //button.setBackground(Background.EMPTY); //toggle background
     }
     private void initializeButton(Image image, Text desc){
+        imageView.setPreserveRatio(true);
+        //imageView.setFitWidth(100);
+        imageView.setFitHeight(100);
         button = new Button(desc.getText(),imageView);
         button.setTextFill(Color.WHITE);
         button.wrapTextProperty().setValue(true);
-        button.setStyle(String.format(BUTTON_FORMAT,
-                toRGBCode(Color.BLACK),
-                rs.getPlainFont().getName(),20,20));
-        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),rs.getPlainFont().getName(),20,20, 1.1,1.1)));
-        button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),rs.getPlainFont().getName(),20,20,1.0,1.0)));
+        rs.styleButton(button);
+        rs.buttonHoverEffect(button);
     }
     private void initializeImageButton(){
         imageButton = new Button();
         ImageView copy = new ImageView(image);
+        copy.setPreserveRatio(true);
+        //imageView.setFitWidth(100);
+        copy.setFitHeight(100);
         imageButton.setGraphic(copy);
-        imageButton.setStyle(String.format(BUTTON_FORMAT,
-                toRGBCode(Color.BLACK),
-                rs.getPlainFont().getName(),20,20));
-        imageButton.setOnMouseEntered(event->imageButton.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),rs.getPlainFont().getName(),20,20, 1.1,1.1)));
-        imageButton.setOnMouseExited(event -> imageButton.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),rs.getPlainFont().getName(),20,20,1.0,1.0)));
+        rs.styleButton(imageButton);
+        rs.buttonHoverEffect(imageButton);
     }
 
     public Button getButton() {
