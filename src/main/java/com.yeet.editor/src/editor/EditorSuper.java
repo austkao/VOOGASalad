@@ -94,4 +94,7 @@ public abstract class EditorSuper extends Scene{
             System.out.println("An error occurred during the save process");
         }
     }
+    public RenderSystem getRS(){
+        return myRS;
+    }
 }
