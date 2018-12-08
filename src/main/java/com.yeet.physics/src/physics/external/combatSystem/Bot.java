@@ -8,7 +8,7 @@ import java.util.Map;
 
 public abstract class Bot extends Player{
 
-    // how many possible states to transition to
+    // how many possible states to step to
     // moving, move, jump, attack, crouch
     protected PlayerState[] states = {PlayerState.MOVING, PlayerState.SINGLE_JUMP, PlayerState.ATTACKING, PlayerState.CROUCH};
     protected static Map<PlayerState, Integer> map;
@@ -36,6 +36,7 @@ public abstract class Bot extends Player{
 
     /* implement this method to define the rule of transitioning
         from initial state to a new state */
+    public abstract void step();
     public abstract void transition();
     /* determine what the next state is based on a probability distribution */
     protected abstract PlayerState getNextState(Double[] distribution);

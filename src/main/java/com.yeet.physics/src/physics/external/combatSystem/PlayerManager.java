@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerManager {
-    private static final int INITIAL_ID = 1;
+    private static final int INITIAL_ID = 0;
     Map<Integer, Player> playerMap;
     int numOfPlayers;
 
     public PlayerManager(int numOfPlayers){
         playerMap = new HashMap<>();
         this.numOfPlayers = numOfPlayers;
-        for(int id = INITIAL_ID; id <= numOfPlayers; id++){
+        for(int id = INITIAL_ID; id < numOfPlayers; id++){
             playerMap.put(id, new Player(id));
         }
     }

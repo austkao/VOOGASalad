@@ -23,6 +23,7 @@ import java.util.*;
 public class NormalBot extends Bot {
     Queue<CombatActionEvent> queue = new LinkedList<>();
     Queue<Integer> opponents = new PriorityQueue<>();
+    PhysicsSystem physicsSystem;
 
     Double[][] matrix = {{},
                          {},
@@ -36,8 +37,25 @@ public class NormalBot extends Bot {
     }
 
     public NormalBot(HashMap<Integer, Point2D> playerMap, PhysicsSystem physicsSystem){
+        this.physicsSystem = physicsSystem;
+
+    }
+
+    private void updatePositions(){
         Map<Integer, Point2D> positions = physicsSystem.getPositionsMap();
 
+        for(int id: positions.keySet()){
+            if(id==this.id){
+
+            }
+            else{
+
+            }
+        }
+    }
+
+    @Override
+    public void step() {
 
     }
 
@@ -53,7 +71,13 @@ public class NormalBot extends Bot {
 
     @Subscribe
     public void onCombatActionEvent(CombatActionEvent combatActionEvent){
-
+        switch (combatActionEvent.getInputPlayerState()){
+            case MOVING: case CROUCH: case SINGLE_JUMP: case ATTACKING:
+                queue.offer(combatActionEvent);
+        }
     }
 
+    private void recordPlayerMovement(CombatActionEvent combatActionEvent){
+
+    }
 }

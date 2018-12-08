@@ -18,7 +18,7 @@ public class DummyBot extends Bot{
     }
 
     @Override
-    public void transition() {
+    public void step() {
         PlayerState currentState = this.getPlayerState();
 
         int row = map.get(currentState);
@@ -37,6 +37,11 @@ public class DummyBot extends Bot{
                 eventBus.post(new CrouchEvent(id));
                 break;
         }
+    }
+
+    @Override
+    public void transition() {
+
     }
 
     @Override
