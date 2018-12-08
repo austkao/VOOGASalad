@@ -71,6 +71,7 @@ public class InputSystem {
     public void postEvent(List<String> s, int player){
         //TRUE if left, FALSE if right
         for(String action : s){
+            System.out.println(player);
             CombatActionEvent keyEvent;
             if(action.equals("LEFT")){
                 keyEvent = new MoveEvent(player, true);

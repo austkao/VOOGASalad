@@ -5,7 +5,8 @@
 
     <combo0 AB = "SMASH" ABC = "SHORYUKEN"></combo0>
 
-    <input0 P = "LEFT" L = "DOWN" O = "UP" I = "RIGHT" ></input0>
-    <combo0 OL = "SMASH" POI = "FIREBALL"></combo0>
+    <input1 P = "LEFT" L = "DOWN" O = "UP" I = "RIGHT" ></input1>
+    <combo1 OL = "SMASH" POI = "FIREBALL"></combo1>
 
 </VOOGASalad>
+
