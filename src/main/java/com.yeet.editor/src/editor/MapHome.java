@@ -15,7 +15,7 @@ public class MapHome extends EditorHome{
         super(root,em);
         setEditor();
         Path userPath = Paths.get(System.getProperty("user.dir"));
-        File dir = new File(userPath+RESOURCE_PATH+"defaultgame/data/tiles");
+        File dir = new File(userPath+RESOURCE_PATH+"allmaps");
         ScrollablePaneNew scrollpane = new ScrollablePaneNew(dir,200,150);
         Button switchView = getRender().makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,20.0,100.0,30.0);
         switchView.setOnMouseClicked(event -> scrollpane.switchView());

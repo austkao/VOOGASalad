@@ -44,7 +44,7 @@ public class ScrollablePaneNew extends Pane {
         List<HBox> hboxes = new ArrayList<>();
         HBox currentH = new HBox(3);
         for(int i = 0; i < items.size(); i++){
-            if(i%4 == 0 && i != 0){
+            if(i%3 == 0 && i != 0){
                 hboxes.add(currentH);
                 currentH = new HBox(3);
             }
