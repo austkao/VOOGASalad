@@ -50,7 +50,6 @@ public class CombatSystem {
 
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
-//        System.out.println(event.getInputPlayerState());
         int id = event.getInitiatorID();
         if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);

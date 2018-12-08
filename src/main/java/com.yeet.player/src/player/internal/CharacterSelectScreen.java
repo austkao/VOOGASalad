@@ -85,10 +85,10 @@ public class CharacterSelectScreen extends Screen {
         DragToken button2 = new DragToken(super.getMyRenderer().makeText("P2",true,40,Color.WHITE,0.0,0.0),Color.web("#4C7FFF"),439,548,40, this::getCharacter);
         DragToken button3 = new DragToken(super.getMyRenderer().makeText("P3",true,40,Color.WHITE,0.0,0.0),Color.web("#FFF61B"),752,548,40, this::getCharacter);
         DragToken button4 = new DragToken(super.getMyRenderer().makeText("P4",true,40,Color.WHITE,0.0,0.0),Color.web("#1FCB17"),1079,548,40, this::getCharacter);
-        display1 = new CharacterChooseDisplay(Color.web("#FD1B1B"),super.getMyRenderer().makeText("Player 1",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button1);
-        display2 = new CharacterChooseDisplay(Color.web("#4C7FFF"),super.getMyRenderer().makeText("Player 2",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button2);
-        display3 = new CharacterChooseDisplay(Color.web("#FFF61B"),super.getMyRenderer().makeText("Player 3",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button3);
-        display4 = new CharacterChooseDisplay(Color.web("#1FCB17"),super.getMyRenderer().makeText("Player 4",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button4);
+        display1 = new CharacterChooseDisplay(Color.web("#FD1B1B"),super.getMyRenderer().makeText("Player 1",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button1, this::characterChooserStateChangeHandler);
+        display2 = new CharacterChooseDisplay(Color.web("#4C7FFF"),super.getMyRenderer().makeText("Player 2",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button2, this::characterChooserStateChangeHandler);
+        display3 = new CharacterChooseDisplay(Color.web("#FFF61B"),super.getMyRenderer().makeText("Player 3",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button3, this::characterChooserStateChangeHandler);
+        display4 = new CharacterChooseDisplay(Color.web("#1FCB17"),super.getMyRenderer().makeText("Player 4",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button4, this::characterChooserStateChangeHandler);
         myCharacterChooserList.add(display1);
         myCharacterChooserList.add(display2);
         myCharacterChooserList.add(display3);
@@ -97,6 +97,11 @@ public class CharacterSelectScreen extends Screen {
         holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
         this.setOnKeyPressed(event -> handleInput(event.getCode()));
+    }
+
+    private void characterChooserStateChangeHandler(CharacterChooseDisplay.State newstate){
+        isReady = checkPlayerCount();
+        handleReadyBar();
     }
 
     /** Handles key input to the scene
@@ -143,6 +148,10 @@ public class CharacterSelectScreen extends Screen {
         myCharGrid.getCharacter(token);
         // ready checking
         isReady = checkPlayerCount();
+        handleReadyBar();
+    }
+
+    private void handleReadyBar() {
         if(isReady){
             if(!super.getMyRoot().getChildren().contains(myReadyBar)){
                 super.getMyRoot().getChildren().add(myReadyBar);
@@ -155,6 +164,7 @@ public class CharacterSelectScreen extends Screen {
 
     /** Checks if there are enough players to start a match */
     private boolean checkPlayerCount(){
+        System.out.println(getPlayerCount());
         return(getPlayerCount()>1);
     }
 
@@ -162,30 +172,51 @@ public class CharacterSelectScreen extends Screen {
     public int getPlayerCount(){
         int count = 0;
         myCharacterList.clear();
-        if(display1.getState()!= CharacterChooseDisplay.State.NONE && display1.getCharacterName().length()>0){
-            count++;
-            myCharacterList.add(display1.getCharacterName());
+        if(display1.getState()!= CharacterChooseDisplay.State.NONE){
+            if(display1.getCharacterName().length()>0){
+                count++;
+                myCharacterList.add(display1.getCharacterName());
+            }
+            else{
+                return -1;
+            }
         }
         else{
             myCharacterMap.remove(0);
         }
-        if(display2.getState()!= CharacterChooseDisplay.State.NONE && display2.getCharacterName().length()>0){
-            count++;
-            myCharacterList.add(display2.getCharacterName());
+        if(display2.getState()!= CharacterChooseDisplay.State.NONE){
+            if(display2.getCharacterName().length()>0){
+                count++;
+                myCharacterList.add(display2.getCharacterName());
+            }
+            else{
+                return -1;
+            }
+
         }
         else{
             myCharacterMap.remove(1);
         }
-        if(display3.getState()!= CharacterChooseDisplay.State.NONE && display3.getCharacterName().length()>0){
-            count++;
-            myCharacterList.add(display3.getCharacterName());
+        if(display3.getState()!= CharacterChooseDisplay.State.NONE){
+            if(display3.getCharacterName().length()>0){
+                count++;
+                myCharacterList.add(display3.getCharacterName());
+            }
+            else{
+                return -1;
+            }
         }
         else{
             myCharacterMap.remove(2);
         }
-        if(display4.getState()!= CharacterChooseDisplay.State.NONE && display4.getCharacterName().length()>0){
-            count++;
-            myCharacterList.add(display4.getCharacterName());
+        if(display4.getState()!= CharacterChooseDisplay.State.NONE){
+            if(display4.getCharacterName().length()>0){
+                count++;
+                myCharacterList.add(display4.getCharacterName());
+            }
+            else{
+                return -1;
+            }
         }
         else{
             myCharacterMap.remove(3);
