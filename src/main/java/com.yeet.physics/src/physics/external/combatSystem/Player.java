@@ -45,9 +45,14 @@ public class Player {
         playerState = playerState.changeStatesOnEvent(event);
     }
 
-    /*  */
+    /* reset player's state to default state */
     public void setToInitialState(){
         this.playerState = PlayerState.INITIAL;
+    }
+
+    /* set player's current state */
+    protected void setPlayerState(PlayerState playerState){
+        this.playerState = playerState;
     }
 
     /* add who is being attacked by this player */
@@ -73,11 +78,6 @@ public class Player {
     @Override
     public String toString(){
         return String.format("Player %d named %s", id, name);
-    }
-
-    /** Returns the {@code Player} object's current state */
-    public PlayerState getState(){
-        return playerState;
     }
 
 }
