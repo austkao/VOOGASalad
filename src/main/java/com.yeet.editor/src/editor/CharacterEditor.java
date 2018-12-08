@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
@@ -73,13 +74,6 @@ public class CharacterEditor extends EditorSuper{
                 hitBoxes.putIfAbsent(i, new Rectangle());
                 hurtBoxes.putIfAbsent(i, new Rectangle());
             }
-        }
-
-        void setInput(String s){
-            input = s;
-        }
-        String getInput(){
-            return input;
         }
 
         void setHitBox(Rectangle r){
@@ -153,8 +147,12 @@ public class CharacterEditor extends EditorSuper{
         getSpriteSheet.setOnMouseClicked(e -> chooseSpriteSheet());
 
         Button setAnimation = myRS.makeStringButton("Set Sprite Animation", Color.ORCHID, true,
-                Color.WHITE, 20.0, 600.0, 100.0, 200.0, 50.0);
+                Color.WHITE, 20.0, 500.0, 100.0, 200.0, 50.0);
         setAnimation.setOnMouseClicked(e -> makeSpriteAnimation());
+
+        Button setInputCombo = myRS.makeStringButton("Set Input Combo", Color.CORNFLOWERBLUE, true,
+                Color.WHITE, 20.0, 725.0, 100.0, 200.0, 50.0);
+        setInputCombo.setOnMouseClicked(e -> setInputCombo());
 
         Button playAnimation = myRS.makeStringButton("Play Animation", Color.DARKVIOLET, true,
                 Color.WHITE, 20.0, 500.0, 175.0, 200.0, 50.0);
@@ -174,13 +172,15 @@ public class CharacterEditor extends EditorSuper{
         List<String> options = new ArrayList<>();
         options.add(HURT_TEXT);
         options.add(HIT_TEXT);
-        hitOrHurt = myRS.makeSwitchButtons(options, true, Color.BLUE,
-                Color.RED, 5.0,400.0, 400.0, 50.0, 25.0 );
+        Font switchFont = new Font(15);
+        hitOrHurt = new SwitchButton(options, 250.0, 400.0, 350.0, 20.0, 5.0, Color.BLACK,
+                Color.FLORALWHITE, switchFont);
+        //hitOrHurt = myRS.makeSwitchButtons(options, true, Color.BLACK,
+        //        Color.FLORALWHITE, 5.0,400.0, 400.0, 50.0, 15.0 );
 
         root.getChildren().addAll(addPortrait, saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation,
-                stepForward, stepBackward, frameText, hitOrHurt );
+                setInputCombo, stepForward, stepBackward, frameText, hitOrHurt );
     }
-
     private void makeSliders(){
         mySliders = new VBox(10);
         healthSlider = myRS.makeSlider("health",50.0,consumer,0.0,0.0,200.0);
@@ -193,8 +193,29 @@ public class CharacterEditor extends EditorSuper{
         root.getChildren().add(mySliders);
     }
 
-    private void playAnimation(){
+    private void initializeSpritePane(){
+        mySpritePane = new Pane();
+        mySpritePane.setLayoutX(600);
+        mySpritePane.setLayoutY(400);
+        mySpritePane.setMinSize(300, 300);
+        mySpritePane.setMaxSize(300, 300);
+        root.getChildren().add(mySpritePane);
+    }
+    private void initializeScrollPane(){
+        animationList = new ScrollablePane(50.0,300.0);
+        root.getChildren().add(animationList.getScrollPane());
+    }
+    private ImageView initializeImageView(int width, int height, int x, int y){
+        ImageView picture = new ImageView();
+        picture.setFitWidth(width);
+        picture.setFitHeight(height);
+        picture.setLayoutX(x);
+        picture.setLayoutY(y);
+        root.getChildren().add(picture);
+        return picture;
+    }
 
+    private void playAnimation(){
         if (testNull(currentAnimation, "Current Animation not set")){
             return;
         }
@@ -214,31 +235,6 @@ public class CharacterEditor extends EditorSuper{
             currentAnimation.play();
         }
     }
-
-    private void initializeSpritePane(){
-        mySpritePane = new Pane();
-        mySpritePane.setLayoutX(600);
-        mySpritePane.setLayoutY(400);
-        mySpritePane.setMinSize(300, 300);
-        mySpritePane.setMaxSize(300, 300);
-        root.getChildren().add(mySpritePane);
-    }
-
-    /*
-        Alert system found at:
-        https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
-     */
-    private boolean testNull(Object object, String message){
-        if (object == null){
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
-                    ButtonType.OK);
-            alert.showAndWait();
-            return true;
-        }
-        return false;
-    }
-
-
     private void stepAnimation(int adjust){
         FrameInfo frame = animationFrame.get(currentAnimation);
         mySpritePane.getChildren().remove(frame.getHitBox());
@@ -252,14 +248,12 @@ public class CharacterEditor extends EditorSuper{
         mySpritePane.getChildren().add(frame.getHitBox());
         mySpritePane.getChildren().add(frame.getHurtBox());
     }
-
     private void stepForwardAnimation(){
         if (testNull(currentAnimation, "Animation not set")){
             return;
         }
         stepAnimation(1);
     }
-
     private void stepBackAnimation(){
         if (testNull(currentAnimation, "Animation not set")){
             return;
@@ -270,19 +264,74 @@ public class CharacterEditor extends EditorSuper{
         stepAnimation(-1);
     }
 
-
-    private String getCombo(){
-        String combo = "";
-        int inputNum = 1;
-        String nextInput = showAlertInputOptions(inputNum);
-        while (!"".equals(nextInput)){
-            System.out.println(nextInput);
-            combo = combo + "_" + nextInput;
-            inputNum++;
-            nextInput = showAlertInputOptions(inputNum);
+    private void chooseSpriteSheet(){
+        mySpritePane.getChildren().remove(currentSprite);
+        File sprites = chooseImage("Choose Sprite Sheet");
+        if (sprites !=  null){
+            setImageView(spriteSheet,sprites.toURI().toString());
         }
-        System.out.println(combo);
-        return combo;
+        //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
+        currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
+        currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
+        currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
+
+        mySpritePane.getChildren().add(currentSprite);
+
+        currentSprite.setOnMousePressed(e-> startRectangle(e));
+        currentSprite.setOnMouseReleased(e-> finishRectangle(e));
+        currentAnimation = null;
+        animationFrame = new HashMap<>();
+        scrollToAnimation = new HashMap<>();
+        initializeScrollPane();
+    }
+    /**
+     * User selects background, and it is applied to level.
+     */
+    private void choosePortrait(){
+        File portraitFile = chooseImage("Choose Portrait File");
+        if (portraitFile != null)
+            setImageView(portrait, portraitFile.toURI().toString());
+    }
+
+    private void makeSpriteAnimation(){
+        if (testNull(spriteSheet.getImage(), "Sprite Sheet Not Set")){
+            return;
+        }
+        File image = chooseImage("Choose thumbnail for animation");
+        if (image == null){
+            return;
+        }
+        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
+
+        String inputString = getCombo();
+
+        SpriteAnimation myAnimation;
+        if (!first){
+            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 11,
+                    11, 6.0, 640.0, 61.0, 60.0);
+            first = true;
+        }
+        else{
+            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(1.5), 8,
+                    8, 6.0, 89.0, 61.0, 60.0);
+        }
+        myAnimation.setCycleCount(Animation.INDEFINITE);
+        scrollToAnimation.put(animPic, myAnimation);
+        animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
+        animationFrame.put(myAnimation, new FrameInfo(myAnimation.getCount(), inputString));
+    }
+    private void selectAnimationFromScroll(ScrollableItem b){
+        if (currentAnimation != null){
+            currentAnimation.stop();
+            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
+            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
+        }
+
+        currentAnimation = scrollToAnimation.get(b);
+        FrameInfo frame = animationFrame.get(currentAnimation);
+        frame.currentFrame = 1;
+        stepForwardAnimation();
+        stepBackAnimation();
     }
 
     private String showAlertInputOptions(int num){
@@ -310,87 +359,25 @@ public class CharacterEditor extends EditorSuper{
         return input.getText();
 
     }
-
-    private void makeSpriteAnimation(){
-        if (testNull(spriteSheet, "Sprite Sheet Not Set")){
+    private void setInputCombo(){
+        if (testNull(currentAnimation, "Animation not selected")){
             return;
         }
-        File image = chooseImage("Choose thumbnail for animation");
-        if (image == null){
-            return;
-        }
-        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
-
-        String inputString = getCombo();
-
-        SpriteAnimation myAnimation;
-        if (!first){
-            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 11,
-                    11, 6.0, 640.0, 61.0, 60.0);
-            first = true;
-        }
-        else{
-            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(1.5), 8,
-                    8, 6.0, 89.0, 61.0, 60.0);
-        }
-        myAnimation.setCycleCount(Animation.INDEFINITE);
-        scrollToAnimation.put(animPic, myAnimation);
-        animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
-        animationFrame.put(myAnimation, new FrameInfo(myAnimation.getCount(), inputString));
+        animationFrame.get(currentAnimation).input = getCombo();
+        frameText.setText(animationFrame.get(currentAnimation).toString());
     }
-
-    private void initializeScrollPane(){
-        animationList = new ScrollablePane(50.0,300.0);
-        root.getChildren().add(animationList.getScrollPane());
-    }
-    
-    private void selectAnimationFromScroll(ScrollableItem b){
-        if (currentAnimation != null){
-            currentAnimation.stop();
-            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
-            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
+    private String getCombo(){
+        String combo = "";
+        int inputNum = 1;
+        String nextInput = showAlertInputOptions(inputNum);
+        while (!"".equals(nextInput)){
+            System.out.println(nextInput);
+            combo = combo + "_" + nextInput;
+            inputNum++;
+            nextInput = showAlertInputOptions(inputNum);
         }
-
-        currentAnimation = scrollToAnimation.get(b);
-        FrameInfo frame = animationFrame.get(currentAnimation);
-        frame.currentFrame = 1;
-        stepForwardAnimation();
-        stepBackAnimation();
-    }
-
-    private ImageView initializeImageView(int width, int height, int x, int y){
-        ImageView picture = new ImageView();
-        picture.setFitWidth(width);
-        picture.setFitHeight(height);
-        picture.setLayoutX(x);
-        picture.setLayoutY(y);
-        root.getChildren().add(picture);
-        return picture;
-    }
-
-    private void setImageView(ImageView img, String portraitURL){
-        img.setImage(new Image(portraitURL));
-    }
-
-    private void chooseSpriteSheet(){
-        mySpritePane.getChildren().remove(currentSprite);
-        File sprites = chooseImage("Choose Sprite Sheet");
-        if (sprites !=  null){
-            setImageView(spriteSheet,sprites.toURI().toString());
-        }
-        //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
-        currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
-        currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
-        currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
-
-        mySpritePane.getChildren().add(currentSprite);
-
-        currentSprite.setOnMousePressed(e-> startRectangle(e));
-        currentSprite.setOnMouseReleased(e-> finishRectangle(e));
-        currentAnimation = null;
-        animationFrame = new HashMap<>();
-        scrollToAnimation = new HashMap<>();
-        initializeScrollPane();
+        System.out.println(combo);
+        return combo;
     }
 
     private void startRectangle(MouseEvent e){
@@ -411,7 +398,6 @@ public class CharacterEditor extends EditorSuper{
             frame.getHurtBox().setY(e.getY());
         }
     }
-
     private void finishRectangle(MouseEvent e){
         if (testNull(currentAnimation, "Animation Not Set")){
             return;
@@ -449,25 +435,6 @@ public class CharacterEditor extends EditorSuper{
         }
 
     }
-    /**
-     * User selects background, and it is applied to level.
-     */
-    private void choosePortrait(){
-        File portraitFile = chooseImage("Choose Portrait File");
-        if (portraitFile != null)
-            setImageView(portrait, portraitFile.toURI().toString());
-    }
-
-    /**
-     * general method for choosing an image
-     * @returns file chosen
-     */
-    private File chooseImage(String message){
-        FileChooser fileChooser = myRS.makeFileChooser("image");
-        fileChooser.setTitle(message);
-        return fileChooser.showOpenDialog(getWindow());
-    }
-
 
     public String toString(){
         return "CharacterEditor";
@@ -495,7 +462,6 @@ public class CharacterEditor extends EditorSuper{
             //ex.printStackTrace();
         }
     }
-
     private void loadCharacterData() {
         try {
             HashMap<String, ArrayList<String>> data = loadXMLFile("character");
@@ -508,5 +474,33 @@ public class CharacterEditor extends EditorSuper{
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
+    }
+
+
+
+    /**
+     * general method for choosing an image
+     * @returns file chosen
+     */
+    private File chooseImage(String message){
+        FileChooser fileChooser = myRS.makeFileChooser("image");
+        fileChooser.setTitle(message);
+        return fileChooser.showOpenDialog(getWindow());
+    }
+    /*
+    Alert system found at:
+    https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
+    */
+    private boolean testNull(Object object, String message){
+        if (object == null){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
+                    ButtonType.OK);
+            alert.showAndWait();
+            return true;
+        }
+        return false;
+    }
+    private void setImageView(ImageView img, String portraitURL){
+        img.setImage(new Image(portraitURL));
     }
 }
