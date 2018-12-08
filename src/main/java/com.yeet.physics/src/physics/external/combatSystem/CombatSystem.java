@@ -24,7 +24,7 @@ public class CombatSystem {
         this.physicsSystem = physicsSystem;
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
-            physicsSystem.addPhysicsObject(0, PhysicsSystem.defaultMass, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60);
+            physicsSystem.addPhysicsObject(0, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60);
         }
         // register tiles to physics engine
         for(int i=0;i < tileMap.keySet().size(); i++){
