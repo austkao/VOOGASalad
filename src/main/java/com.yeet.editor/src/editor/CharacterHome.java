@@ -25,24 +25,26 @@ import java.util.Set;
 
 public class CharacterHome extends EditorHome {
     private static final String PORTRAITS = "portraits/";
-
+    private InputEditor inputEditor;
 
     public CharacterHome(Group root, EditorManager em){
         super(root,em);
+
+        setInputEditor();
         setEditor();
+
         Button input = getRender().makeStringButton("Edit Inputs",Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
         getMyBox().getChildren().add(input);
-        input.setOnMouseClicked(e->setInputEditor());
+        input.setOnMouseClicked(e-> em.changeScene(inputEditor));
     }
 
     private void setInputEditor(){
-        myEditor = new InputEditor(new Group(), em);
-        myEditor.createBack(this);
-        em.changeScene(myEditor);
+        inputEditor = new InputEditor(new Group(), em);
+        inputEditor.createBack(this);
     }
 
     public void setEditor(){
-        myEditor = new CharacterEditor(new Group(),em);
+        myEditor = new CharacterEditor(new Group(),em, inputEditor);
         myEditor.createBack(this);
     }
 

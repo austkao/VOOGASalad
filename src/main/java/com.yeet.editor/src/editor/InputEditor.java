@@ -30,8 +30,17 @@ public class InputEditor extends EditorSuper {
         inputDisplay.setMaxHeight(200.0);
         makeVBox1();
         v.setLayoutX(100.0);
-        v.setLayoutY(20.0);
+        v.setLayoutY(50.0);
+        setRequirements();
 
+    }
+
+    private void setRequirements(){
+        inputTypes.add("UP");
+        inputTypes.add("DOWN");
+        inputTypes.add("LEFT");
+        inputTypes.add("RIGHT");
+        inputDisplay.setItems(inputTypes);
     }
 
     @Override
