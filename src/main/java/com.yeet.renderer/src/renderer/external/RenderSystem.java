@@ -79,7 +79,6 @@ public class RenderSystem implements Renderer{
             font = myPlainFont;
         }
         Button button = new Button(text);
-        System.out.println(font.getName());
         //BUTTON_FORMAT: Color buttonColor, String fontName, Double borderRadius, Double fontSize
         button.setStyle(String.format(BUTTON_FORMAT,
                 toRGBCode(buttonColor),
