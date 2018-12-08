@@ -30,7 +30,7 @@ public class StageGrid extends TilePane {
         super();
         this.setHgap(SPACING);
         this.setVgap(SPACING);
-        this.setStyle("-fx-background-color: black");
+        this.setStyle("-fx-background-color: rgba(0,0,0,0.5)");
         int stageCount = 0;
         ArrayList<File> files  = new ArrayList<>();
         for(File f : new File(directory.getPath()+"//stages").listFiles()){
@@ -46,6 +46,7 @@ public class StageGrid extends TilePane {
         int rowCount = (int)Math.ceil(stageCount/(float)columnCount);
         double w = gridWidth/(float)columnCount;
         double h = gridHeight/(float)rowCount;
+        double d = Math.min(w,h);
         for(int i = 0; i < stageCount; i++) {
             StackPane imageHolder = new StackPane();
             imageHolder.setMinSize(w-SPACING,h-SPACING);
@@ -57,10 +58,9 @@ public class StageGrid extends TilePane {
 
             myBackgroundMap = myParser.parseFileForElement("background");
             ImageView imageView = new ImageView(new Image(directory.toURI()+"data/background/"+myBackgroundMap.get("bgFile").get(0)));
-
+            imageView.setFitWidth(d-SPACING);
+            imageView.setFitHeight((d-SPACING));
             centerCrop(imageView);
-            imageView.setFitWidth(w-SPACING);
-            imageView.setFitHeight((w-SPACING));
             imageHolder.getChildren().addAll(imageView);
             this.getChildren().add(imageHolder);
             int index = i;

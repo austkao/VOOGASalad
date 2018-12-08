@@ -82,14 +82,22 @@ public class Player {
         },()-> {
             myFightMusicPlayer.stop();
             myStage.setScene(myLoadingScreen);
-            myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,myStageSelectScreen.getStage());
-            myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacters());
+            myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacterMap(), myStageSelectScreen.getStage());
             myStage.setScene(myCombatScreen);
             myCombatScreen.startLoop();
         });
-        myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
+        myCombatScreen =  new CombatScreen(new Group(),myRenderer,myDirectory,()->myStage.setScene(myCharacterSelectScreen),(winnerID,rankList)-> {
+            //setup combat results screen
+            myBGMPlayer.play();
+            myCombatResultsScreen.setWinner(myCharacterSelectScreen.getCharacterList(),rankList, myCharacterSelectScreen.getCharacterChooserList());
+            myStage.setScene(myCombatResultsScreen);
+        });
+        myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer,()-> {
+            myBGMPlayer.stop();
+            myFightMusicPlayer.play();
+            myStage.setScene(myCharacterSelectScreen);
+        });
         //finished loading
-        System.out.println("finished loading!");
         myStage.setScene(mySplashScreen);
     }
 

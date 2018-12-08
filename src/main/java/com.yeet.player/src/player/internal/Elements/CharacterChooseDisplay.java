@@ -177,4 +177,17 @@ public class CharacterChooseDisplay extends StackPane {
         return myCharacterName.getText();
     }
 
+    public CharacterChooseDisplay clone(){
+        Text charName = new Text(myCurrentCharacterName.getText());
+        charName.setFont(myCurrentCharacterName.getFont());
+        Text playerName = new Text(myCharacterName.getText());
+        playerName.setFont(myCharacterName.getFont());
+        CharacterChooseDisplay result = new CharacterChooseDisplay(myColor,charName,playerName,myButton);
+        result.setPortrait(portrait.getImage());
+        while(result.getState()!=myState){
+               result.nextState();
+        }
+        return result;
+    }
+
 }

@@ -1,20 +1,38 @@
 package physics.external;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import static physics.external.PassiveForceHandler.defaultGravityAcceleration;
+import static physics.external.PassiveForceHandler.defaultGravityDirection;
+import static physics.external.PositionCalculator.timeOfFrame;
 import static java.lang.Math.PI;
 
 public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 10;
+    public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
 
     private List<Collision> myCollisions;
     private List<Integer> groundCollisions = new ArrayList<>();
     private List<List<Integer>> attackCollisions = new ArrayList<>();
 
     public CollisionHandler(List<Collision> collisions){
-        this.myCollisions = collisions;
+        Iterator<Collision> colIter = collisions.iterator();
+        Set<PhysicsObject> groundCols = new HashSet<>();
+        this.myCollisions = new ArrayList<>();
+        //Filter collisions so that only one ground collides with one body
+        while(colIter.hasNext()){
+            Collision col = colIter.next();
+            PhysicsObject one = col.getCollider1();
+            PhysicsObject two = col.getCollider2();
+            if(one.isPhysicsBody() && two.isPhysicsGround()){
+                if(!groundCols.contains(one)){
+                    groundCols.add(one);
+                    this.myCollisions.add(col);
+                }
+            }
+        }
+
     }
 
     public void update() {
@@ -30,28 +48,16 @@ public class CollisionHandler {
                 collisions.add(one.getId(), two.getId());
                 attackCollisions.add(collisions);
             }
-            // attack+body
-            if(one.isPhysicsAttack() && two.isPhysicsBody()){
-                PhysicsVector force = new PhysicsVector(defaultAttackMagnitude, one.getDirection());
-                two.addCurrentForce(force);
-                List<Integer> collisions = new ArrayList<>();
-                collisions.add(two.getId(), one.getId());
-                attackCollisions.add(collisions);
-            }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround()){
-//                PhysicsVector blankVector = new PhysicsVector(0,0);
-//                PhysicsVector oppositeGravity = new PhysicsVector(one.getMass()*9.8,-PI/2);
-//                one.myVelocity = blankVector;
-//                one.myAcceleration = blankVector;
-//                one.clearCurrentForces();
-//                one.addCurrentForce(oppositeGravity);
-//                one.getMyCoordinateBody().setPos(one.getMyCoordinateBody().getPos().getX(), two.getMyCoordinateBody().getPos().getY() - one.getMyCoordinateBody().getDims().getSizeY());
                 one.setGrounded(true);
+                double bodyVelocity = one.getYVelocity().getMagnitude();
+                double bodyMass = one.getMass();
+                PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame)), -Math.PI/2);
+                one.addCurrentForce(upwardForce);
+                PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * defaultGravityAcceleration), -defaultGravityDirection);
+                one.addCurrentForce(gravityOpposition);
                 groundCollisions.add(one.getId());
-                if (one.getId() == 1)
-                    System.out.println("COLLIDING WITH GROUND");
-
             }
             // body+body (do nothing)
             if(one.isPhysicsBody() && two.isPhysicsBody()){
