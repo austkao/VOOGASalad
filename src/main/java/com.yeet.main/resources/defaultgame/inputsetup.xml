@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VOOGASalad author="yeet">
     <players players = "2"></players>
-    <input1 A = "JAB" S = "DOWN" W = "UP" D = "RIGHT" B = "SPECIAL"></input1>
+    <input1 A = "LEFT" R = "JAB" S = "DOWN" W = "UP" D = "RIGHT" B = "SPECIAL"></input1>
 
     <combo1 AB = "SMASH" ABC = "SHORYUKEN"></combo1>
 
