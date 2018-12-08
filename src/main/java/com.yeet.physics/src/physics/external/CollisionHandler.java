@@ -55,9 +55,7 @@ public class CollisionHandler {
                 one.addCurrentForce(upwardForce);
                 PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION), -Math.PI/2);
                 one.addCurrentForce(gravityOpposition);
-                System.out.println("X Velocity: " + one.getXVelocity().getMagnitude());
                 if(Math.abs(one.getXVelocity().getMagnitude()) > 10) { //Should we apply kinetic friction?
-                    System.out.println("Applying force");
                     PhysicsVector friction;
                     if(one.getXVelocity().getMagnitude() > 0) {
                         friction = new PhysicsVector((int) -one.getMass() * DEFAULT_GRAVITY_ACCELERATION * frictionCoefficient, 0);

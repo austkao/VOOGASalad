@@ -48,7 +48,6 @@ public class CombatSystem {
 
     @Subscribe
     public void onAttackSuccessfulEvent(AttackSuccessfulEvent event){
-        System.out.println("ATTACK");
         physicsSystem.attack(event.getInitiatorID());
     }
 

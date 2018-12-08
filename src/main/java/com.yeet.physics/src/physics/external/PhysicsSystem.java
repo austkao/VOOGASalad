@@ -120,8 +120,7 @@ public class PhysicsSystem {
                 direction = obj.getDirection();
                 out.put(obj.getId(), direction);
             }
-        }
-        return out;
+        }return out;
     }
 
     public Map<Integer, PhysicsObject> getGameObjects() {
@@ -131,14 +130,12 @@ public class PhysicsSystem {
     public void jump(int id) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * DEFAULT_JUMP_HEIGHT, -PI/2));
-        System.out.println("JUMP INITIATED");
     }
 
     public void move(int id, double direction) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.setDirection(direction);
         if (Math.abs(currentBody.getXVelocity().getMagnitude()) < TERMINAL_VELOCITY) {
-            System.out.println("MOVE");
             currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * DEFAULT_MOVEMENT_SPEED, direction));
         }
     }
@@ -152,7 +149,8 @@ public class PhysicsSystem {
         }
         Coordinate playerLocation = gameObjects.get(id).getMyCoordinateBody().getPos();
         Coordinate attackLocation = new Coordinate(playerLocation.getX() + direction * DEFAULT_ATTACK_SPACE,playerLocation.getY() + DEFAULT_ATTACK_SPACE);
-        PhysicsAttack attack = new PhysicsAttack(id,gameObjects.get(id).getMass(), attackLocation,new Dimensions(20, 10));
-        gameObjects.put(id, attack);
+        PhysicsAttack attack = new PhysicsAttack(attackId, gameObjects.get(id).getMass(), attackLocation, new Dimensions(20, 10));
+        gameObjects.put(attackId, attack);
+        attackId++;
     }
 }
