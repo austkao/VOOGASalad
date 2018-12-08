@@ -45,8 +45,8 @@ public class MainMenuScreen extends Screen {
         smashButton.setX(x);
         smashButton.setY(y);
         smashButton.setOnMouseEntered(event -> {
-            smashButton.setScaleY(1.2);
-            smashButton.setScaleX(1.2);
+            smashButton.setScaleY(1.1);
+            smashButton.setScaleX(1.1);
         });
         smashButton.setOnMouseExited(event -> {
             smashButton.setScaleY(1.0);
