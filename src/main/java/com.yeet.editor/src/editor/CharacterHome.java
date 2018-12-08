@@ -32,8 +32,14 @@ public class CharacterHome extends EditorHome {
         setEditor();
         Button input = getRender().makeStringButton("Edit Inputs",Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
         getMyBox().getChildren().add(input);
+        input.setOnMouseClicked(e->setInputEditor());
     }
 
+    private void setInputEditor(){
+        myEditor = new InputEditor(new Group(), em);
+        myEditor.createBack(this);
+        em.changeScene(myEditor);
+    }
 
     public void setEditor(){
         myEditor = new CharacterEditor(new Group(),em);
