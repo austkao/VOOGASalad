@@ -46,6 +46,9 @@ public class ScrollItem {
     private void initializeImageButton(){
         imageButton = new Button();
         ImageView copy = new ImageView(image);
+        copy.setPreserveRatio(true);
+        //imageView.setFitWidth(100);
+        copy.setFitHeight(100);
         imageButton.setGraphic(copy);
         rs.styleButton(imageButton);
         rs.buttonHoverEffect(imageButton);

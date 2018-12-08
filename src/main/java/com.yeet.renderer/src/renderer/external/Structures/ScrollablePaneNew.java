@@ -50,6 +50,7 @@ public class ScrollablePaneNew extends Pane {
             }
             currentH.getChildren().add(items.get(i).getImageButton());
         }
+        hboxes.add(currentH);
         gridView.getChildren().addAll(hboxes);
     }
 
