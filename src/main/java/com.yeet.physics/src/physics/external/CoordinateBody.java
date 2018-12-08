@@ -1,6 +1,8 @@
 package physics.external;
 
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CoordinateBody {
 
@@ -12,12 +14,20 @@ public class CoordinateBody {
 
     //private List<Line> path;
 
+    private List<SubRectangle> subRects;
+
     private Coordinate pos;
+
+    private int xSubRects = 4;
+    private int ySubRects = 4;
 
     public CoordinateBody(Coordinate start, Dimensions dims){
         this.dims = dims;
         this.pos = start;
         this.hitBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), this.dims.getSizeX(), this.dims.getSizeY());
+        this.subRects = new ArrayList<>();
+    }
+
 //        this.path = new ArrayList<>();
 //
 //        Point2D.Double top0 = new Point2D.Double(start.getX(), start.getY());
@@ -40,11 +50,31 @@ public class CoordinateBody {
 //        this.path.add(bottom);
 //        this.path.add(right);
 //        this.path.add(left);
+
+    public void drawSubRects(){
+        double subSizeX = this.dims.getSizeX()/xSubRects;
+        double subSizeY = this.dims.getSizeY()/ySubRects;
+        for(int y = 0; y < ySubRects; y++){
+            for(int x = 0; x < xSubRects; x++){
+                double locX = this.pos.getX() + (x*(subSizeX));
+                double locY = this.pos.getY() + (y*(subSizeY));
+                if(!((y >= 1 && (x >= 1 && x <= xSubRects-2)) && (y <= ySubRects-2 && (x >= 1 && x <= xSubRects-2)))){//Messy Logic
+                    this.subRects.add(new SubRectangle(locX + (x*subSizeX),locY + (y*subSizeY), subSizeX, subSizeY ));
+                }
+            }
+        }
+    }
+
+    public void updateSubRects(){
+        for(SubRectangle sub: this.getSubRects()){
+        }
     }
 
     public void update(Coordinate newPos){
         this.pos = newPos;
         this.hitBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), dims.getSizeX(), dims.getSizeY());
+        //this.subRects.clear();
+        //this.drawSubRects();
 
 //        this.path = new ArrayList<Line>();
 //
@@ -84,29 +114,33 @@ public class CoordinateBody {
     INPUT: This function takes in another coordinate body
     OUTPUT: T or F depending on weather or not this body intersects with the one passed into the parameter
      */
-    public boolean intersects(CoordinateBody c){
-        return (this.getHitBox().intersects(c.getHitBox()));
-//        Square myBox = this.getHitBox();
-//        Square theirBox = c.getHitBox();
-//        boolean above = false;
-//        boolean below = false;
-//        boolean left = false;
-//        boolean right = false;
-//
-//
-//        if(theirBox.getMinX() > myBox.getMaxX()){
-//            right = true;
-//        }
-//        if(theirBox.getMaxX() < myBox.getMinX()){
-//            left = true;
-//        }
-//        if(theirBox.getMaxY() < myBox.getMinY()){
-//            below = true;
-//        }
-//        if(theirBox.getMinY() > myBox.getMaxY()){
-//            above = true;
-//        }
-//        return (! (above || below || left || right));
+    public Intersection intersects(CoordinateBody c){
+
+        Rectangle2D object = c.getHitBox();
+
+        boolean below = object.getY() <= (this.getHitBox().getY() + this.getDims().getSizeY());
+        boolean above = (object.getY() + object.getHeight()) >= this.getHitBox().getY();
+        boolean left = (object.getX() + object.getWidth()) >= this.getHitBox().getX();
+        boolean right = object.getX() <= (this.getHitBox().getX() + this.getDims().getSizeX());
+
+        // Checking which side of the brick the bouncer is hitting
+        boolean aboveHit = object.getY() < this.getHitBox().getY();
+        boolean belowHit = object.getY() + object.getHeight() > this.getHitBox().getY() + this.getDims().getSizeY();
+        boolean leftHit = object.getX() < this.getHitBox().getX();
+        boolean rightHit = object.getX() + object.getWidth() > this.getHitBox().getX() + this.getDims().getSizeX();
+
+        if(below && above && left && right) {
+            if (aboveHit) {
+                return new Intersection(new Side("TOP"));
+            } else if (belowHit) {
+                return new Intersection(new Side("BOTTOM");
+            } else if (leftHit) {
+                return new Intersection(new Side("LEFT"));
+            } else if (rightHit) {
+                return new Intersection(new Side("RIGHT"));
+            }
+        }
+        return new Intersection(new Side("NONE"));
     }
 
     public Dimensions getDims(){
@@ -119,5 +153,12 @@ public class CoordinateBody {
 
     public Rectangle2D getHitBox() {
         return this.hitBox;
+    }
+
+    public List<SubRectangle> getSubRects(){
+        return this.subRects;
+    }
+    public void setSubRects(List<SubRectangle> mySubRects){
+        this.subRects = mySubRects;
     }
 }

@@ -52,6 +52,14 @@ public class PhysicsSystem {
         collHandler.update();
         List<Integer> groundCollisions = collHandler.getGroundCollisions();
         List<List<Integer>> attackCollisions = collHandler.getAttackCollisions();
+        for(PhysicsObject o: this.gameObjects.values()){
+            if(o.getId() == 1){
+                System.out.println("Subrects: ");
+                for(SubRectangle subRect: o.getMyCoordinateBody().getSubRects()){
+                    System.out.println(subRect.getPosX());
+                }
+            }
+        }
         applyForces();
         updatePositions();
         //PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value

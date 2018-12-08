@@ -48,6 +48,9 @@ public class CollisionHandler {
             }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround()){
+                System.out.println("");
+                System.out.println("GROUND COLLISION");
+                System.out.println("");
                 one.setGrounded(true);
                 double bodyVelocity = one.getYVelocity().getMagnitude();
                 double bodyMass = one.getMass();

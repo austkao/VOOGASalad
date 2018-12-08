@@ -7,7 +7,7 @@ public class Collision extends Interaction {
 
     private List<PhysicsObject> colliders;
 
-    public Collision(List<PhysicsObject> colliders){
+    public Collision(List<PhysicsObject> colliders, Side s){
         super(colliders);
         this.colliders = colliders;
     }
