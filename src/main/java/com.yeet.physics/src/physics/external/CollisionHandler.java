@@ -6,7 +6,7 @@ import static physics.external.PassiveForceHandler.DEFAULT_GRAVITY_ACCELERATION;
 
 public class CollisionHandler {
 
-    public static double defaultAttackMagnitude = 2000000;
+    public static double defaultAttackMagnitude = 200000;
     public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
     public static final double frictionCoefficient = .5;
 
@@ -63,7 +63,8 @@ public class CollisionHandler {
                     System.out.println(f.getMagnitude() + ", " + f.getDirection());
                 }
                 List<Integer> collisions = new ArrayList<>();
-                collisions.add(one.getId(), two.getId());
+                collisions.add(one.getId());
+                collisions.add(two.getId());
                 attackCollisions.add(collisions);
             }
             // body+ground

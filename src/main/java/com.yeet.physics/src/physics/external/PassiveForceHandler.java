@@ -6,11 +6,9 @@ import static java.lang.Math.PI;
 
 public class PassiveForceHandler {
 
-    public static final double DEFAULT_GRAVITY_ACCELERATION = 600;
+    public static final double DEFAULT_GRAVITY_ACCELERATION = 1800;
     public static final double DEFAULT_GRAVITY_DIRECTION = PI / 2;
-    public static final double TERMINAL_VELOCITY = 400;
-    public static final double frictionCoefficient = .5;
-    public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
+    public static final double TERMINAL_VELOCITY = 800;
 
 
     private Map<Integer, PhysicsObject> myObjects;
