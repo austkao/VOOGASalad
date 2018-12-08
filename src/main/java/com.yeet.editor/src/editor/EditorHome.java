@@ -70,6 +70,10 @@ public abstract class EditorHome extends Scene {
         root.getChildren().add(myBox);
     }
 
+    public VBox getMyBox(){
+        return myBox;
+    }
+
 
 
 
