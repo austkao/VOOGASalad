@@ -46,7 +46,11 @@ public class CombatResultsScreen extends Screen {
         playerBoxContainer.setPrefSize(1280.0,480.0);
         playerBoxContainer.setAlignment(Pos.CENTER);
         Rectangle midSpacer = new Rectangle(1280.0,100.0,Color.TRANSPARENT);
-        winnerBanner.getChildren().addAll(winnerBannerImage,winnerBannerText);
+        Rectangle winnerBannerSpacer = new Rectangle(1280.0,20.0,Color.TRANSPARENT);
+        VBox winnerTextContainer = new VBox();
+        winnerTextContainer.setAlignment(Pos.CENTER);
+        winnerTextContainer.getChildren().addAll(winnerBannerSpacer,winnerBannerText);
+        winnerBanner.getChildren().addAll(winnerBannerImage,winnerTextContainer);
         mainContainer.getChildren().addAll(topSpacer,winnerBanner,midSpacer,playerBoxContainer);
         this.getMyRoot().getChildren().addAll(background,mainContainer);
         this.setOnKeyPressed(event -> {
@@ -75,6 +79,7 @@ public class CombatResultsScreen extends Screen {
                 VBox displayContainer = new VBox();
                 CharacterChooseDisplay display = characterChooseList.get(i);
                 display.setDisable(true);
+                display.switchToResultMode();
                 VBox awardContainer = new VBox();
                 awardContainer.setPrefSize(display.getPrefWidth(),display.getPrefHeight());
                 awardContainer.setAlignment(Pos.CENTER);
@@ -104,8 +109,9 @@ public class CombatResultsScreen extends Screen {
                 display.getChildren().addAll(awardContainer);
                 displayContainer.getChildren().addAll(display);
                 playerBoxContainer.getChildren().add(displayContainer);
+                double hspace = 170-40*allPlayers.size();
                 if(i!=allPlayers.size()-1){
-                    playerBoxContainer.getChildren().add(new Rectangle(90.0,480.0,Color.TRANSPARENT));
+                    playerBoxContainer.getChildren().add(new Rectangle(hspace,480.0,Color.TRANSPARENT));
                 }
             }
         }
