@@ -6,9 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
@@ -108,7 +106,6 @@ public class MapEditor extends EditorSuper{
 
     private void initializeScrollPane(){
         File paneFile = new File(myEM.getGameDirectoryString()+DEFAULT_IMAGE_DIR);
-        System.out.println(paneFile.getPath());
         myScrollablePane = new ScrollablePane(paneFile,50,400.0);
         for(ScrollableItem b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));

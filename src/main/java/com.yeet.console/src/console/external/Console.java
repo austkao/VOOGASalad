@@ -4,12 +4,14 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
 import messenger.external.EventBusFactory;
+import messenger.external.GameOverEvent;
 import messenger.external.TestSuccesfulEvent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class Console {
 
@@ -50,6 +52,15 @@ public class Console {
     private void createEvent(String event){
         if (event.equalsIgnoreCase("test")) {
             myEventBus.post(new TestSuccesfulEvent());
+        }
+        else if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")){
+            int winnerID = Integer.parseInt(event.substring(9,10));
+            ArrayList<Integer> rankList = new ArrayList<>();
+            String[] rawRankList = event.split("[()]")[1].split("");
+            for(String s : rawRankList){
+                rankList.add(Integer.parseInt(s));
+            }
+            myEventBus.post(new GameOverEvent(winnerID,rankList));
         }
     }
 

@@ -16,6 +16,7 @@ import player.internal.Elements.MenuTopper;
 import renderer.external.Renderer;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /** Dynamic layout for the display of all available characters, allows users to select their
@@ -42,6 +43,8 @@ public class CharacterSelectScreen extends Screen {
     private CharacterChooseDisplay display4;
 
     private HashMap<Integer, String> myCharacterMap;
+    private ArrayList<String> myCharacterList;
+    private ArrayList<CharacterChooseDisplay> myCharacterChooserList;
 
 
     /** Creates a new {@code CharacterSelectScreen} with the specified parameters
@@ -59,6 +62,8 @@ public class CharacterSelectScreen extends Screen {
         myReadyBar.setLayoutY(420.0);
         myReadyBar.setOnMousePressed(event -> nextScene.switchScene());
         myCharacterMap = new HashMap<>();
+        myCharacterList = new ArrayList<>();
+        myCharacterChooserList = new ArrayList<>();
         for(int i=0;i<4;i++){
             myCharacterMap.put(i,"");
         }
@@ -84,6 +89,10 @@ public class CharacterSelectScreen extends Screen {
         display2 = new CharacterChooseDisplay(Color.web("#4C7FFF"),super.getMyRenderer().makeText("Player 2",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button2);
         display3 = new CharacterChooseDisplay(Color.web("#FFF61B"),super.getMyRenderer().makeText("Player 3",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button3);
         display4 = new CharacterChooseDisplay(Color.web("#1FCB17"),super.getMyRenderer().makeText("Player 4",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button4);
+        myCharacterChooserList.add(display1);
+        myCharacterChooserList.add(display2);
+        myCharacterChooserList.add(display3);
+        myCharacterChooserList.add(display4);
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
         holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
@@ -149,25 +158,43 @@ public class CharacterSelectScreen extends Screen {
         return(getPlayerCount()>1);
     }
 
-    /** Returns current number of active players, including humans and computers */
+    /** Returns current number of active players, including humans and computers and records them in a {@code ArrayList}*/
     public int getPlayerCount(){
         int count = 0;
+        myCharacterList.clear();
         if(display1.getState()!= CharacterChooseDisplay.State.NONE && display1.getCharacterName().length()>0){
             count++;
+            myCharacterList.add(display1.getCharacterName());
         }
         if(display2.getState()!= CharacterChooseDisplay.State.NONE && display2.getCharacterName().length()>0){
             count++;
+            myCharacterList.add(display2.getCharacterName());
         }
         if(display3.getState()!= CharacterChooseDisplay.State.NONE && display3.getCharacterName().length()>0){
             count++;
+            myCharacterList.add(display3.getCharacterName());
         }
         if(display4.getState()!= CharacterChooseDisplay.State.NONE && display4.getCharacterName().length()>0){
             count++;
+            myCharacterList.add(display4.getCharacterName());
         }
         return count;
     }
 
-    public HashMap<Integer, String> getCharacters() {
+    public HashMap<Integer, String> getCharacterMap() {
         return myCharacterMap;
+    }
+
+    public ArrayList<String> getCharacterList(){
+        return myCharacterList;
+    }
+
+    public ArrayList<CharacterChooseDisplay> getCharacterChooserList(){
+        ArrayList<CharacterChooseDisplay> result = new ArrayList<>();
+        for(CharacterChooseDisplay ccd : myCharacterChooserList){
+            CharacterChooseDisplay newccd = ccd.clone();
+            result.add(newccd);
+        }
+        return result;
     }
 }

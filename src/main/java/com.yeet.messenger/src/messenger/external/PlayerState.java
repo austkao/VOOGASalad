@@ -82,6 +82,7 @@ public enum PlayerState {
         }
     };
 
+
     public abstract PlayerState changeStatesOnEvent(CombatActionEvent event);
 
 }

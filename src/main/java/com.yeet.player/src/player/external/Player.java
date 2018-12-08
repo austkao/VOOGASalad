@@ -3,6 +3,7 @@ package player.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -21,6 +22,7 @@ public class Player {
     private EventBus myMessageBus;
     private Stage myStage;
     private Renderer myRenderer;
+    private Scene originalScene;
 
 
 
@@ -51,6 +53,7 @@ public class Player {
 
     /** Gives control of the {@code Stage} to the {@code Player} and begins sub-screen loading*/
     public void start(){
+        originalScene = myStage.getScene();
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
         myBGM = new Media(new File(myDirectory.getPath()).toURI().toString()+"Theme.m4a");
@@ -68,6 +71,9 @@ public class Player {
             myFightMusicPlayer.play();
             myStage.setScene(myCharacterSelectScreen);
 
+        },()-> {
+            myBGMPlayer.stop();
+            myStage.setScene(originalScene);
         });
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
             myStage.setScene(myMainMenuScreen);
@@ -82,14 +88,22 @@ public class Player {
         },()-> {
             myFightMusicPlayer.stop();
             myStage.setScene(myLoadingScreen);
-            myCombatScreen =  new CombatScreen(new Group(),myRenderer, myDirectory,myStageSelectScreen.getStage());
-            myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacters());
+            myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacterMap(), myStageSelectScreen.getStage());
             myStage.setScene(myCombatScreen);
             myCombatScreen.startLoop();
         });
-        myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer);
+        myCombatScreen =  new CombatScreen(new Group(),myRenderer,myDirectory,()->myStage.setScene(myCharacterSelectScreen),(winnerID,rankList)-> {
+            //setup combat results screen
+            myBGMPlayer.play();
+            myCombatResultsScreen.setWinner(myCharacterSelectScreen.getCharacterList(),rankList, myCharacterSelectScreen.getCharacterChooserList());
+            myStage.setScene(myCombatResultsScreen);
+        });
+        myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer,()-> {
+            myBGMPlayer.stop();
+            myFightMusicPlayer.play();
+            myStage.setScene(myCharacterSelectScreen);
+        });
         //finished loading
-        System.out.println("finished loading!");
         myStage.setScene(mySplashScreen);
     }
 
