@@ -87,8 +87,15 @@ public class Main extends Application {
         EventBusFactory.getEventBus().register(myConsole);
         //display setup
         myPopup = createErrorPopup();
+        ImageView displayFiller = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("home_splash_filler.png")));
+        displayFiller.setX(80.0);
+        displayFiller.setY(76.0);
+        root.getChildren().add(displayFiller);
         mySplashDisplay = createSplashDisplay();
         root.getChildren().add(mySplashDisplay);
+        Text titleText = myRenderSystem.makeText("Yeet Fighter Game Engine",true,70,Color.WHITE,851.0,63.0);
+        titleText.setWrappingWidth(389.0);
+        root.getChildren().add(titleText);
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
         root.getChildren().add(newButton);
         editButton = myRenderSystem.makeStringButton("Edit Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,311.68,307.21,94.6);

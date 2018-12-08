@@ -9,7 +9,7 @@ public class ComboHandler {
 
     private Map<String, ArrayList<String>> testCombos;
 
-    private Map<String, ArrayList<String>> attackMapping;
+    private List<Map<String, ArrayList<String>>> attackMapping;
     private static final double COMBO_THRESHOLD = 250;
     private Node comboTree;
     private DataReceiver DR;
@@ -38,10 +38,6 @@ public class ComboHandler {
             q.remove(0);
             //System.out.println(possibleCombo);
         }
-
-
-
-
         //if(q.size() == 1){
         //    return;
         //}
@@ -68,17 +64,20 @@ public class ComboHandler {
 
     }
 
-    public List<String> inputHandler2(List<KeyInputEvent> q){
-        List<String> output = new ArrayList<>();
-        for(KeyInputEvent input : q){
-            try{
-                output.add(attackMapping.get(input.getName()).get(0));
+    public Map<Integer, List<String>> inputHandler2(List<KeyInputEvent> q){
+        Map<Integer, List<String>> parsedInputs = new HashMap<>();
+        int cnt = 0;
+        for(var playerMap : attackMapping){
+            List<String> output = new ArrayList<>();
+            for(KeyInputEvent input:q){
+                if(playerMap.keySet().contains(input.getName())){
+                    output.add(playerMap.get(input.getName()).get(0));
+                }
             }
-            catch(Exception e){
-                System.out.println("That input is not valid");
-            }
+            parsedInputs.put(cnt+1, output);
+            cnt += 1;
         }
-        return output;
+        return parsedInputs;
     }
 
     private String parseComboTree(Node root,  List<KeyInputEvent> q){
