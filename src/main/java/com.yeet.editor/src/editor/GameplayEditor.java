@@ -2,24 +2,15 @@ package editor;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import messenger.external.KeyInputEvent;
-import renderer.external.RenderSystem;
 import renderer.external.Structures.SliderBox;
 import renderer.external.Structures.SwitchButton;
 import renderer.external.Structures.TextBox;
-
-import java.awt.event.KeyEvent;
-import java.security.Key;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -37,7 +28,6 @@ public class GameplayEditor extends EditorSuper{
 
     public GameplayEditor(Group root, EditorManager em) {
         super(root,em);
-        Text t = getRS().makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
         consumer = new Consumer() {
             @Override
             public void accept(Object o) {
@@ -49,12 +39,10 @@ public class GameplayEditor extends EditorSuper{
         VBox vb1 = makeVBox1();
         vb1.setLayoutX(100.0);
         vb1.setLayoutY(100.0);
-        root.getChildren().add(vb1);
-
         VBox vb2 = makeVBox2();
         vb2.setLayoutX(700.0);
         vb2.setLayoutY(100.0);
-        root.getChildren().add(vb2);
+        root.getChildren().addAll(vb1,vb2);
     }
 
     public TextArea createUserCommandLine() {
@@ -69,9 +57,7 @@ public class GameplayEditor extends EditorSuper{
         TextBox splashField = myRS.makeTextField(consumer,"Splash Screen",0.0,0.0,10.0,50.0);
         TextBox mainBGMField = myRS.makeTextField(consumer,"Main Background Music",0.0,0.0,10.0,50.0);
         List<String> options = Arrays.asList(DEFAULT_GAME_MODES);
-        SwitchButton sb = myRS.makeSwitchButtons(options,false,
-                Color.WHITE,
-                Color.BLACK,
+        SwitchButton sb = myRS.makeSwitchButtons(options,false, Color.WHITE, Color.BLACK,
                 8.0,200.0,200.0,400.0,50.0);
         userInput = createUserCommandLine();
         inputDisplay = new ListView<>();
@@ -80,8 +66,6 @@ public class GameplayEditor extends EditorSuper{
             if(e.getCode() == KeyCode.ENTER){
                 addInputItem();
             } });
-
-
         vbox.getChildren().addAll(splashField,mainBGMField,sb,userInput,inputDisplay);
         return vbox;
     }
@@ -108,11 +92,6 @@ public class GameplayEditor extends EditorSuper{
         vbox.getChildren().addAll(gravity,friction);
         return vbox;
     }
-
-
-
-
-
 
     public String toString(){
         return "GameplayEditor";
