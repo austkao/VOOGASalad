@@ -10,6 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.util.function.Consumer;
+
 import static renderer.external.RenderUtils.toRGBCode;
 
 /** Custom extension of {@code StackPane} that is used to display what character the player has chosen, as well as toggle
@@ -53,7 +55,7 @@ public class CharacterChooseDisplay extends StackPane {
      *  @param characterText The {@code Text} with the default character name
      *  @param button The token for choosing characters
      */
-    public CharacterChooseDisplay(Color color, Text playerText, Text characterText, DragToken button){
+    public CharacterChooseDisplay(Color color, Text playerText, Text characterText, DragToken button, Consumer<State> playerStateConsumer){
         super();
         myButton = button;
         myButton.setDisable(true);
@@ -111,7 +113,10 @@ public class CharacterChooseDisplay extends StackPane {
         namepiece.getChildren().addAll(nameBox);
         nameBox.getChildren().addAll(iconHolder, myCurrentCharacterName);
         iconHolder.getChildren().addAll(icon);
-        iconHolder.setOnMousePressed(event -> nextState());
+        iconHolder.setOnMousePressed(event -> {
+            nextState();
+            playerStateConsumer.accept(myState);
+        });
     }
 
     /** Advances the {@code CharacterChooseDisplay} to the next state, NONE->HUMAN->CPU, then goes back to NONE*/
@@ -200,7 +205,7 @@ public class CharacterChooseDisplay extends StackPane {
         charName.setFont(myCurrentCharacterName.getFont());
         Text playerName = new Text(myCharacterName.getText());
         playerName.setFont(myCharacterName.getFont());
-        CharacterChooseDisplay result = new CharacterChooseDisplay(myColor,charName,playerName,myButton);
+        CharacterChooseDisplay result = new CharacterChooseDisplay(myColor,charName,playerName,myButton,null);
         result.setPortrait(portrait.getImage());
         while(result.getState()!=myState){
                result.nextState();
