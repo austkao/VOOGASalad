@@ -2,10 +2,7 @@ package physics.external;
 
 import java.util.*;
 
-import static physics.external.PassiveForceHandler.defaultGravityAcceleration;
-import static physics.external.PassiveForceHandler.defaultGravityDirection;
-import static physics.external.PositionCalculator.timeOfFrame;
-import static java.lang.Math.PI;
+import static physics.external.PassiveForceHandler.DEFAULT_GRAVITY_ACCELERATION;
 
 public class CollisionHandler {
 
@@ -56,17 +53,16 @@ public class CollisionHandler {
                 double bodyMass = one.getMass();
                 PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame)), -Math.PI/2);
                 one.addCurrentForce(upwardForce);
-                PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * defaultGravityAcceleration), -Math.PI/2);
+                PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION), -Math.PI/2);
                 one.addCurrentForce(gravityOpposition);
                 System.out.println("X Velocity: " + one.getXVelocity().getMagnitude());
-                System.out.println("X Direction: " + one.getDirection());
                 if(Math.abs(one.getXVelocity().getMagnitude()) > 10) { //Should we apply kinetic friction?
                     System.out.println("Applying force");
                     PhysicsVector friction;
                     if(one.getXVelocity().getMagnitude() > 0) {
-                        friction = new PhysicsVector((int) -one.getMass() * defaultGravityAcceleration * frictionCoefficient, 0);
+                        friction = new PhysicsVector((int) -one.getMass() * DEFAULT_GRAVITY_ACCELERATION * frictionCoefficient, 0);
                     }else{
-                        friction = new PhysicsVector((int) one.getMass() * defaultGravityAcceleration * frictionCoefficient, 0);
+                        friction = new PhysicsVector((int) one.getMass() * DEFAULT_GRAVITY_ACCELERATION * frictionCoefficient, 0);
                     }
                     one.addCurrentForce(friction);
                 }else{
