@@ -9,7 +9,7 @@ public class CoordinateBody {
 
     private Dimensions dims;
 
-    //private Square hitBox;
+    //private Square coordinateBox;
     private Rectangle2D hitBox;
 
     //private List<Line> path;
@@ -25,7 +25,6 @@ public class CoordinateBody {
         this.dims = dims;
         this.pos = start;
         this.hitBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), this.dims.getSizeX(), this.dims.getSizeY());
-        this.subRects = new ArrayList<>();
     }
 
 //        this.path = new ArrayList<>();
@@ -133,7 +132,7 @@ public class CoordinateBody {
             if (aboveHit) {
                 return new Intersection(new Side("TOP"));
             } else if (belowHit) {
-                return new Intersection(new Side("BOTTOM");
+                return new Intersection(new Side("BOTTOM"));
             } else if (leftHit) {
                 return new Intersection(new Side("LEFT"));
             } else if (rightHit) {

@@ -21,7 +21,7 @@ public class PassiveForceHandler {
 
     public void update() {
         for (PhysicsObject o : myObjects.values()) {
-            if ((o.isPhysicsBody() || o.isPhysicsAttack()) && (o.getYVelocity().getMagnitude() < TERMINAL_VELOCITY)) {
+            if (o.isPhysicsBody() && (o.getYVelocity().getMagnitude() < TERMINAL_VELOCITY)) {
                 o.addCurrentForce(new PhysicsVector(Math.round(o.getMass() * DEFAULT_GRAVITY_ACCELERATION), DEFAULT_GRAVITY_DIRECTION)); // always add gravity
             }
         }
