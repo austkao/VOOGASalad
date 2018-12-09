@@ -65,7 +65,11 @@ public class CharacterGrid extends VBox {
                     XMLParser characterPropertiesParser = new XMLParser(new File(directory.getPath()+"/characters/"+files.get((charactersPerRow*(i))+j).getName()+"/characterproperties.xml"));
                     double x = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","x").get(0));
                     double y = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","y").get(0));
-                    portrait.setViewport(new Rectangle2D(x,y, THUMB_WIDTH, THUMB_HEIGHT));
+                    double w = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","w").get(0));
+                    double h = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","h").get(0));
+                    portrait.setViewport(new Rectangle2D(x,y, w, h));
+                    portrait.setFitWidth(THUMB_WIDTH);
+                    portrait.setFitHeight(THUMB_HEIGHT);
                     myImageMap.put(portrait,files.get((charactersPerRow*(i))+j).getName());
                     Text label = new Text(files.get((charactersPerRow*(i))+j).getName());
                     label.setFont(text.getFont());
