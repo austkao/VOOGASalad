@@ -3,7 +3,9 @@ package editor.interactive;
 import editor.EditorConstant;
 import editor.EditorManager;
 import editor.EditorScreen;
+import editor.home.CharacterHome;
 import editor.home.EditorHome;
+import editor.home.MapHome;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Editor super class
@@ -55,9 +58,12 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         back.setOnMouseClicked(e -> {
             if(!isNew) {
                 myEM.changeScene(scene);
-                if(scene instanceof EditorHome) {
-                    EditorHome home = (EditorHome) scene;
-                    home.updateScroll();
+                if(scene instanceof MapHome) {
+                    MapHome home = (MapHome) scene;
+                    home.updateScroll("stages");
+                } else if(scene instanceof CharacterHome) {
+                    CharacterHome home = (CharacterHome) scene;
+                    home.updateScroll("characters");
                 }
             } else {
                 System.out.println("Add error alert here.");

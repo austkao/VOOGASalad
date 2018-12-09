@@ -6,12 +6,10 @@ import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBase;
 import messenger.external.CreateStageEvent;
-import messenger.external.DeleteDirectoryEvent;
-import renderer.external.Structures.ScrollablePaneNew;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 public class MapHome extends EditorHome {
     private static final String ALL_MAPS = "allmaps/";
 
@@ -19,7 +17,8 @@ public class MapHome extends EditorHome {
         super(new Group(), em);
         buttonNew.setOnMouseClicked(e -> nameNewObject("Create New Stage","Stage name:"));
         buttonEdit.setOnMouseClicked(e -> initializeEditor(myScroll.getSelectedItem(), null));
-        buttonDelete.setOnMouseClicked(e -> deleteDirectory(myScroll.getSelectedItem()));
+        buttonDelete.setOnMouseClicked(e -> deleteMap(myScroll.getSelectedItem()));
+        myScroll = initializeScroll("stages");
     }
 
     public String toString(){
@@ -67,14 +66,12 @@ public class MapHome extends EditorHome {
         initializeEditor(null, stageDirectory);
     }
 
-    @Override
-    protected void deleteDirectory(ButtonBase bb) {
+    protected void deleteMap(ButtonBase bb) {
         if(bb != null) {
             myScroll.removeItem();
             String stageName = bb.getText();
             File stageDirectory = Paths.get(em.getGameDirectoryString(), "stages", stageName).toFile();
-            System.out.println(stageDirectory.getPath());
-            myEB.post(new DeleteDirectoryEvent("Delete Stage", stageDirectory));
+            deleteDirectory(stageDirectory);
         }
     }
 }

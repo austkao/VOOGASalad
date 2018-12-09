@@ -1,6 +1,5 @@
 package editor.home;
 
-
 import editor.EditorManager;
 import editor.interactive.CharacterEditor;
 import editor.interactive.InputEditor;
@@ -8,6 +7,9 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.paint.Color;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 public class CharacterHome extends EditorHome {
     private static final String PORTRAITS = "portraits/";
@@ -20,6 +22,8 @@ public class CharacterHome extends EditorHome {
         Button input = getRender().makeStringButton("Edit Inputs",Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
         getMyBox().getChildren().add(input);
         input.setOnMouseClicked(e-> em.changeScene(inputEditor));
+        myScroll = initializeScroll("characters");
+        buttonDelete.setOnMouseClicked(e -> deleteCharacter(myScroll.getSelectedItem()));
     }
 
     private void setInputEditor(){
@@ -37,11 +41,14 @@ public class CharacterHome extends EditorHome {
 
     }
 
-    @Override
-    protected void deleteDirectory(ButtonBase bb) {
-
+    private void deleteCharacter(ButtonBase bb) {
+        if(bb != null) {
+            myScroll.removeItem();
+            String characterName = bb.getText();
+            File stageDirectory = Paths.get(em.getGameDirectoryString(), "characters", characterName).toFile();
+            deleteDirectory(stageDirectory);
+        }
     }
-
 
     public String toString(){
         return "Character Home";

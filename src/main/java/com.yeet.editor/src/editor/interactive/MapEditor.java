@@ -239,6 +239,8 @@ public class MapEditor extends EditorSuper {
             File xmlFile = Paths.get(myStageDirectory.getPath(), "stageproperties.xml").toFile();
             generateSave(structure, levelMap, xmlFile);
             snapShot(level,ALL_MAPS);
+            Text saveSuccess = myRS.makeText("Saved", true, 20, Color.BLACK, 600.0, 700.0);
+            root.getChildren().add(saveSuccess);
         } catch (Exception ex) {
             System.out.println("Invalid save");
             ex.printStackTrace();

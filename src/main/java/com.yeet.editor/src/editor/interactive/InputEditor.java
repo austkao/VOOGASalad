@@ -46,13 +46,14 @@ public class InputEditor extends EditorSuper {
 //        Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,20.0,650.0,100.0,150.0,50.0);
 //        remove.setOnMouseClicked(e ->
 //                myScroll.removeItem());//TODO: REMOVE FROM INPUTTYPES AS WELL
-        Button test = myRS.makeStringButton("show bindings",Color.BLACK,true,Color.WHITE,20.0,650.0,80.0,150.0,50.0);
+        Button test = myRS.makeStringButton("Show Bindings",Color.BLACK,true,Color.WHITE,20.0,650.0,80.0,150.0,50.0);
         test.setOnMouseClicked(e -> {
                     getBindings();
                     System.out.println(bindings);
                 });
-
-        root.getChildren().addAll(tabs,test);
+        Button save = myRS.makeStringButton("Save",Color.BLACK,true,Color.WHITE,20.0,650.0,150.0,150.0,50.0);
+        save.setOnMouseClicked(e -> createSaveFile());
+        root.getChildren().addAll(tabs,test, save);
     }
 
 
@@ -177,5 +178,11 @@ public class InputEditor extends EditorSuper {
         return "Input Editor";
     }
 
-
+    private void createSaveFile() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        //structure.put("input")
+        for(ScrollablePaneNew sp : myScrolls) {
+            
+        }
+    }
 }
