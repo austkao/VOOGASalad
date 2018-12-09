@@ -97,6 +97,7 @@ public class CombatSystem {
     public void onAttackIntersectEvent(AttackIntersectEvent event){
         for(List<Integer> list: event.getAttackPlayers()){
             Player playerBeingAttacked = playerManager.getPlayerByID(list.get(0));
+
             Player playerAttacking = playerManager.getPlayerByID(list.get(1));
             playerAttacking.addAttackingTargets(playerBeingAttacked);
         }
