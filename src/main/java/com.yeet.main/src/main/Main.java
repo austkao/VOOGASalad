@@ -1,6 +1,8 @@
 package main;
 
+import com.google.common.eventbus.EventBus;
 import console.external.Console;
+import dataSystem.DataSystem;
 import editor.EditorManager;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -15,6 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import messenger.external.CreateGameEvent;
 import messenger.external.EventBusFactory;
 import player.external.Player;
 import renderer.external.RenderSystem;
@@ -35,24 +38,27 @@ public class Main extends Application {
 
     private Stage myStage;
     private Stage myPopup;
-
     private static Console myConsole;
     private RenderSystem myRenderSystem;
     private Player myPlayer;
-
+    private DataSystem myDataSystem;
     private Font myEmphasisFont;
     private Font myPlainFont;
     private EditorManager em;
-
     private DirectoryChooser myDirectoryChooser;
     private File myDirectory;
-
     private ImageView mySplashDisplay;
     private Button playButton;
     private Button editButton;
-
     private Scene homeScene;
-
+    private MainConstant myMC;
+    private EventBus myEB;
+    private FilenameFilter filter = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            return name.startsWith("game");
+        }
+    };
 
     public static void main(String[] args){
         launch(args);
@@ -60,11 +66,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        myEB = EventBusFactory.getEventBus();
         myDirectory = new File(System.getProperty("user.dir")+DEFAULT_GAME_DIRECTORY);
         //create window
         myStage = primaryStage;
-        primaryStage.setWidth(1280);
-        primaryStage.setHeight(800);
+        primaryStage.setWidth(myMC.STAGEWIDTH.getValue());
+        primaryStage.setHeight(myMC.STAGEHEIGHT.getValue());
         primaryStage.setResizable(false);
         primaryStage.setTitle("Yeet Fighter Game Engine");
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -76,16 +83,17 @@ public class Main extends Application {
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
         //set up systems
-        myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
-        myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
-        myRenderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
+
+        myRenderSystem = new RenderSystem();
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
+        myDataSystem = new DataSystem();
         myConsole = new Console();
         myDirectoryChooser = myRenderSystem.makeDirectoryChooser();
         //register event listeners
         EventBusFactory.getEventBus().register(myPlayer);
         EventBusFactory.getEventBus().register(myConsole);
         //display setup
+
         myPopup = createErrorPopup();
         ImageView displayFiller = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("home_splash_filler.png")));
         displayFiller.setX(80.0);
@@ -122,28 +130,9 @@ public class Main extends Application {
         File resources = new File(userPath+RESOURCE_PATH);
         int numGames = resources.listFiles(filter).length;
         File defaultFile = new File(resources.getPath() + "/game" + numGames);
-        defaultFile.mkdir();
-        File stages = new File(defaultFile.getPath()+"/stages");
-        File characters = new File(defaultFile.getPath()+"/characters");
-        File data = new File(defaultFile.getPath()+"/data");
-        File background = new File(data.getPath()+"/background");
-        File bgm = new File(data.getPath()+"/bgm");
-        File tiles = new File(data.getPath()+"/tiles");
-        stages.mkdir();
-        characters.mkdir();
-        data.mkdir();
-        background.mkdir();
-        bgm.mkdir();
-        tiles.mkdir();
+        myEB.post(new CreateGameEvent("new game", defaultFile));
         initializeGameEditor(defaultFile);
     }
-
-    FilenameFilter filter = new FilenameFilter() {
-        @Override
-        public boolean accept(File dir, String name) {
-            return name.startsWith("game");
-        }
-    };
 
     private void initializeGameEditor(File gameFile) {
         em.setGameDirectory(gameFile);
