@@ -11,7 +11,7 @@ public class ComboHandler {
 
     private List<Map<String, ArrayList<String>>> attackMapping;
     private static final double COMBO_THRESHOLD = 250;
-    private Node comboTree;
+    private List<Node> comboTrees;
     private DataReceiver DR;
     private ComboFactory CFactory;
 
@@ -30,42 +30,28 @@ public class ComboHandler {
      * the parsed inputs
      *
      */
-    public List<String> inputHandler(List<KeyInputEvent> q){
-        List<String> output = new ArrayList<>();
-
-        String possibleCombo = parseComboTree(comboTree, q);
-        output.add(possibleCombo);
-        System.out.println(possibleCombo);
-
-        //if(q.size() == 1){
-        //    return;
-        //}
-        //String stringEvents = "";
-        //for(KeyInputEvent k : q){
-        //    stringEvents+=(k.getKey().getChar());
-        //}
-//
-        //List output = new ArrayList<>();
-        //for(String combo:testCombos.keySet()){
-        //    if(stringEvents.toLowerCase().contains(combo.toLowerCase())){
-        //        output.add(testCombos.get(combo).get(0));
-        //        stringEvents = stringEvents.replace(combo, "");
-        //    }
-        //    }
-        //for(String remaining: Arrays.asList(stringEvents.split(""))) {
-        //    if(!remaining.equals("")){
-        //        output.add(remaining);
-        //    }
-//
-        //}
-        //q.clear();
-        return output;
-
-    }
-
-    public Map<Integer, List<String>> inputHandler2(List<KeyInputEvent> q){
+    public Map<Integer, List<String>> inputHandler(List<KeyInputEvent> q){
         Map<Integer, List<String>> parsedInputs = new HashMap<>();
+
         int cnt = 0;
+        for(Node playerTree : comboTrees){
+            String possibleCombo = parseComboTree(playerTree, new ArrayList<>(q));
+            System.out.println(comboTrees.size());
+            if(possibleCombo != null && !possibleCombo.equals("")){
+                var arr = new ArrayList();
+                arr.add(possibleCombo);
+                parsedInputs.put(cnt, arr);
+            }
+            cnt += 1;
+        }
+
+        // NOTE: We are assuming that since the timeframe for checking is so tiny,
+        //a user will only be inputting either a combo or a noncombo
+        if(parsedInputs.keySet().size() > 0){
+            return parsedInputs;
+        }
+
+        cnt = 0;
         for(var playerMap : attackMapping){
             List<String> output = new ArrayList<>();
             for(KeyInputEvent input:q){
@@ -76,8 +62,12 @@ public class ComboHandler {
             parsedInputs.put(cnt, output);
             cnt += 1;
         }
+
         return parsedInputs;
+
+
     }
+
 
     private String parseComboTree(Node root,  List<KeyInputEvent> q){
         if(root.isAtEnd()){
@@ -89,14 +79,14 @@ public class ComboHandler {
             return parseComboTree(child, q);
         }
         else if(!root.hasChild(nextInput)){
-            return ""; // No Possible combos
+            return null; // No Possible combos
         }
         return null;
 
     }
 
     private void setUpCombos(){
-        comboTree = CFactory.createTree();
+        comboTrees = CFactory.createTree();
         //TODO: When input is recieved, if it is a combo, navigate the tree to verify if it is a valid combo
     }
 

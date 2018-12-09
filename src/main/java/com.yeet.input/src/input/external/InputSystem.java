@@ -85,11 +85,8 @@ public class InputSystem {
             else if (action.equals("DOWN")){
                 keyEvent = new CrouchEvent(player);
             }
-            else if(action.equals("JAB")){
-                keyEvent = new AttackEvent(player, action);
-            }
             else{
-                keyEvent = new JumpEvent(player);
+                keyEvent = new AttackEvent(player, action);
             }
             myMessageBus.post(keyEvent);
 

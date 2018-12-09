@@ -23,10 +23,7 @@ public class Parser {
      *
      */
     public Map<Integer, List<String>> parse(List<KeyInputEvent> q) throws Exception {
-        var output = handler.inputHandler2(q);
-
-        /// COMBO EXPERIMENTATION (just for printing)
-        var output2= handler.inputHandler(q);
+        var output = handler.inputHandler(q);
 
         return output;
     }
