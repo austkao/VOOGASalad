@@ -11,6 +11,7 @@ module com.yeet.main {
     requires com.yeet.input;
     requires com.yeet.renderer;
     requires com.yeet.physics;
+    requires com.yeet.data;
 
     exports main;
 }

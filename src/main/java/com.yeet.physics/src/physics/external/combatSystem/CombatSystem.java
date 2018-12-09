@@ -15,8 +15,15 @@ import static java.lang.Math.PI;
 public class CombatSystem {
 
     EventBus eventBus;
-    PlayerManager playerManager;
-    PhysicsSystem physicsSystem;
+    private PlayerManager playerManager;
+    private PhysicsSystem physicsSystem;
+    private List<Integer> botList;
+
+    public CombatSystem(Player bot){
+        eventBus = EventBusFactory.getEventBus();
+        bot.id = 1;
+        playerManager = new PlayerManager(1);
+    }
 
     public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem){
         eventBus = EventBusFactory.getEventBus();
@@ -30,7 +37,6 @@ public class CombatSystem {
         for(int i=0;i < tileMap.keySet().size(); i++){
             physicsSystem.addPhysicsObject(2,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
         }
-
     }
 
     /** Returns the {@code PlayerState} of the player specified
@@ -42,18 +48,32 @@ public class CombatSystem {
 
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
+        //System.out.println(event.getInputPlayerState());
         int id = event.getInitiatorID();
-        playerManager.changePlayerStateByIDOnEvent(id, event);
+        if(!botList.contains(id)){
+            playerManager.changePlayerStateByIDOnEvent(id, event);
+        }
+    }
+
+    @Subscribe
+    public void onIdleEvent(IdleEvent idleEvent){
+        int id = idleEvent.getId();
+        if(playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.SINGLE_JUMP
+                || playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.DOUBLE_JUMP){
+            playerManager.setToInitialStateByID(id);
+        }
     }
 
     @Subscribe
     public void onAttackSuccessfulEvent(AttackSuccessfulEvent event){
+//        System.out.println("Attack!!!");
         physicsSystem.attack(event.getInitiatorID());
     }
 
     @Subscribe
     public void onMoveSuccessfulEvent(MoveSuccessfulEvent event){
         boolean direction = event.getDirection();
+//        System.out.println("Move" + direction);
         // move left
         if(direction){
             physicsSystem.move(event.getInitiatorID(), PI);
@@ -83,7 +103,14 @@ public class CombatSystem {
 
     @Subscribe
     public void onJumpSuccessfulEvent(JumpSuccessfulEvent event){
+//        System.out.println("Jump.");
         physicsSystem.jump(event.getInitiatorID());
+    }
+
+    @Subscribe
+    public void onGameStart(GameStartEvent gameStartEvent){
+        botList = gameStartEvent.getBots();
+        playerManager.setBots(botList);
     }
 
 }
