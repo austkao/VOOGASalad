@@ -129,4 +129,17 @@ public class MenuTopper extends HBox {
         switchGameMode();
     }
 
+    public String getGameMode(){
+        if(myGameMode.equals(Gamemode.STOCK)){
+            return("STOCK");
+        }
+        else{
+            return("TIME");
+        }
+    }
+
+    public Integer getTypeValue(){
+        return Integer.parseInt(myCarousel.getValue().substring(0,1));
+    }
+
 }

@@ -35,6 +35,8 @@ public class CharacterSelectScreen extends Screen {
     private boolean isReady;
     private ImageView myReadyBar;
 
+    private MenuTopper myMenuTopper;
+
     private CharacterGrid myCharGrid;
 
     private CharacterChooseDisplay display1;
@@ -75,7 +77,7 @@ public class CharacterSelectScreen extends Screen {
         bg.setFitWidth(1280);
         bg.setFitHeight(800);
         bg.setOpacity(0.52);
-        HBox menuBlock = new MenuTopper(super.getMyRenderer().makeText("",true,5,Color.BLACK,0.0,0.),30.0,previousScene);
+        myMenuTopper = new MenuTopper(super.getMyRenderer().makeText("",true,5,Color.BLACK,0.0,0.),30.0,previousScene);
         myCharGrid = new CharacterGrid(myDirectory,CHAR_PER_ROW, super.getMyRenderer().makeText("",true,15,Color.WHITE,0.0,0.0), this::setCharacter);
         Rectangle spacer = new Rectangle(1280,10,Color.TRANSPARENT);
         HBox charBox = new HBox(10);
@@ -94,7 +96,7 @@ public class CharacterSelectScreen extends Screen {
         myCharacterChooserList.add(display3);
         myCharacterChooserList.add(display4);
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
-        holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
+        holder.getChildren().addAll(myMenuTopper,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
         this.setOnKeyPressed(event -> handleInput(event.getCode()));
     }
@@ -270,5 +272,13 @@ public class CharacterSelectScreen extends Screen {
             result.add(newccd);
         }
         return result;
+    }
+
+    public String getGamemode(){
+        return myMenuTopper.getGameMode();
+    }
+
+    public Integer getTypeValue(){
+        return myMenuTopper.getTypeValue();
     }
 }

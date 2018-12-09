@@ -14,7 +14,6 @@ import messenger.external.KeyInputEvent;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 public class InputTester extends Application {
     private static final String GAME_DIR_STRING = "/src/main/java/com.yeet.main/resources/defaultgame";
@@ -44,7 +43,7 @@ public class InputTester extends Application {
         KeyInputEvent test2 = new KeyInputEvent(KeyCode.B);
         myMessageBus.post(test2);
 
-        GameStartEvent start1 = new GameStartEvent(new ArrayList<Integer>());
+        GameStartEvent start1 = new GameStartEvent(null,0,null);
         myMessageBus.post(start1);
         //KeyInputEvent test3 = new KeyInputEvent(KeyCode.S);
         //myMessageBus.post(test3);
