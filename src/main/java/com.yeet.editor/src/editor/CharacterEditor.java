@@ -46,7 +46,7 @@ public class CharacterEditor extends EditorSuper{
     private Pane mySpritePane;
     private ScrollablePane animationList;
     private Map<ScrollableItem, SpriteAnimation> scrollToAnimation;
-    private Map<SpriteAnimation, FrameInfo> animationFrame;
+    private Map<SpriteAnimation, AnimationInfo> animationFrame;
 
     private Group root;
     private VBox mySliders;
@@ -59,17 +59,15 @@ public class CharacterEditor extends EditorSuper{
 
     private InputEditor inputEditor;
 
-    private boolean first = false;
-
-
-    static class FrameInfo {
+    static class AnimationInfo {
         int currentFrame;
         int totalFrames;
+        int attackPower;
         Map<Integer, Rectangle> hitBoxes;
         Map<Integer, Rectangle> hurtBoxes;
         List<String> input;
 
-        FrameInfo(int total, List<String> inputString){
+        AnimationInfo(int total, List<String> inputString, int power) {
             input = inputString;
             currentFrame = -1;
             totalFrames = total;
@@ -79,6 +77,7 @@ public class CharacterEditor extends EditorSuper{
                 hitBoxes.putIfAbsent(i, new Rectangle());
                 hurtBoxes.putIfAbsent(i, new Rectangle());
             }
+            attackPower = power;
         }
 
         void setHitBox(Rectangle r){
@@ -236,7 +235,7 @@ public class CharacterEditor extends EditorSuper{
         if (testNull(currentAnimation, "Current Animation not set")){
             return;
         }
-        FrameInfo frame = animationFrame.get(currentAnimation);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
         mySpritePane.getChildren().remove(frame.getHitBox());
         mySpritePane.getChildren().remove(frame.getHurtBox());
         currentAnimation.setRate(Math.abs(currentAnimation.getRate()));
@@ -253,7 +252,7 @@ public class CharacterEditor extends EditorSuper{
         }
     }
     private void stepAnimation(int adjust){
-        FrameInfo frame = animationFrame.get(currentAnimation);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
         mySpritePane.getChildren().remove(frame.getHitBox());
         mySpritePane.getChildren().remove(frame.getHurtBox());
         //currentAnimation.setRate(adjust*Math.abs(currentAnimation.getRate()));
@@ -294,13 +293,10 @@ public class CharacterEditor extends EditorSuper{
 
         mySpritePane.getChildren().add(currentSprite);
 
-
-
         AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
         currentSprite.setOnMousePressed(e -> anchor.set(startSelection(e, anchor.get())));
         currentSprite.setOnMouseDragged(e -> dragSelection(e, anchor.get()));
-        currentSprite.setOnMouseReleased(e -> finishSelection(e, anchor.get()));
-
+        //currentSprite.setOnMouseReleased(e -> finishSelection(e, anchor.get()));
 
         currentAnimation = null;
         animationFrame = new HashMap<>();
@@ -313,7 +309,7 @@ public class CharacterEditor extends EditorSuper{
             return anchor;
         }
 
-        FrameInfo frame = animationFrame.get(currentAnimation);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
         Rectangle newBox = new Rectangle();
         newBox.setX(e.getX());
         newBox.setY(e.getY());
@@ -341,7 +337,7 @@ public class CharacterEditor extends EditorSuper{
         if (testNull(currentAnimation, "Animation Not Set")){
             return;
         }
-        FrameInfo frame = animationFrame.get(currentAnimation);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
         Rectangle selection = new Rectangle();
         if (hitOrHurt.getState().equals(HIT_TEXT)){
             selection = frame.getHitBox();
@@ -360,8 +356,7 @@ public class CharacterEditor extends EditorSuper{
             return;
         }
     }
-
-
+    
     /**
      * User selects background, and it is applied to level.
      */
@@ -383,20 +378,38 @@ public class CharacterEditor extends EditorSuper{
 
         List<String> inputString = getCombo();
 
-        SpriteAnimation myAnimation;
-        if (!first){
-            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(2.0), 11,
-                    11, 6.0, 640.0, 61.0, 60.0);
-            first = true;
-        }
-        else{
-            myAnimation = myRS.makeSpriteAnimation(currentSprite, Duration.seconds(1.5), 8,
-                    8, 6.0, 89.0, 61.0, 60.0);
-        }
-        myAnimation.setCycleCount(Animation.INDEFINITE);
+        SpriteAnimation myAnimation = getNewAnimation();
+
+        TextInputDialog text = new TextInputDialog("");
+        text.setTitle("Enter Attack Power");
+        int power = Integer.parseInt(text.showAndWait().orElse("0"));
+
         scrollToAnimation.put(animPic, myAnimation);
         animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
-        animationFrame.put(myAnimation, new FrameInfo(myAnimation.getCount(), inputString));
+        animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power));
+    }
+
+    private SpriteAnimation getNewAnimation(){
+        TextInputDialog text = new TextInputDialog("");
+        text.setTitle("Enter Time In seconds");
+        int time = Integer.parseInt(text.showAndWait().orElse("0"));
+        text.setTitle("Enter Frame Count");
+        int count = Integer.parseInt(text.showAndWait().orElse("0"));
+        text.setTitle("Enter Number of Columns");
+        int columns = Integer.parseInt(text.showAndWait().orElse("0"));
+        text.setTitle("Enter X Offset");
+        double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
+        text.setTitle("Enter Y Offset");
+        double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
+        text.setTitle("Enter Width");
+        double width = Double.parseDouble(text.showAndWait().orElse("0"));
+        text.setTitle("Enter Height");
+        double height = Double.parseDouble(text.showAndWait().orElse("0"));
+        SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
+                offsetX, offsetY, width, height);
+        myAnimation.setCycleCount(Animation.INDEFINITE);
+
+        return myAnimation;
     }
     private void selectAnimationFromScroll(ScrollableItem b){
         if (currentAnimation != null){
@@ -406,7 +419,7 @@ public class CharacterEditor extends EditorSuper{
         }
 
         currentAnimation = scrollToAnimation.get(b);
-        FrameInfo frame = animationFrame.get(currentAnimation);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
         frame.currentFrame = 1;
         stepForwardAnimation();
         stepBackAnimation();
@@ -459,7 +472,7 @@ public class CharacterEditor extends EditorSuper{
     private void startRectangle(MouseEvent e){
 
         e.setDragDetect(true);
-        FrameInfo frame = animationFrame.get(currentAnimation);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
         if (hitOrHurt.getState().equals(HIT_TEXT)){
             mySpritePane.getChildren().remove(frame.getHitBox());
             frame.setHitBox(new Rectangle());
@@ -480,7 +493,7 @@ public class CharacterEditor extends EditorSuper{
         }
         double x2 = e.getX();
         double y2 = e.getY();
-        FrameInfo frame = animationFrame.get(currentAnimation);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
 
 
         if (hitOrHurt.getState().equals(HIT_TEXT)){
