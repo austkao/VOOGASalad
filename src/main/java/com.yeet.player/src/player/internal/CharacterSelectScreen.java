@@ -101,6 +101,7 @@ public class CharacterSelectScreen extends Screen {
         this.setOnKeyPressed(event -> handleInput(event.getCode()));
     }
 
+    /** Handler for when a {@code CharacterChooseDisplay} changes states */
     private void characterChooserStateChangeHandler(CharacterChooseDisplay.State newstate){
         isReady = checkPlayerCount();
         handleReadyBar();
@@ -153,6 +154,7 @@ public class CharacterSelectScreen extends Screen {
         handleReadyBar();
     }
 
+    /** Hides or shows the ready bar depending on the ready status */
     private void handleReadyBar() {
         if(isReady){
             if(!super.getMyRoot().getChildren().contains(myReadyBar)){
@@ -273,10 +275,12 @@ public class CharacterSelectScreen extends Screen {
         return result;
     }
 
+    /** Returns the current Game Mode */
     public String getGamemode(){
         return myMenuTopper.getGameMode();
     }
 
+    /** Returns the value associated with the current Game Mode */
     public Integer getTypeValue(){
         return myMenuTopper.getTypeValue();
     }
