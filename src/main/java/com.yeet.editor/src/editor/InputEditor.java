@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -13,6 +14,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import renderer.external.Structures.InputItem;
+import renderer.external.Structures.ScrollablePaneNew;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,62 +23,34 @@ import java.util.Set;
 public class InputEditor extends EditorSuper {
 
 
-    VBox v;
+    private VBox v;
     private TextArea userInput;
-    private ListView<String> inputDisplay;
     private ObservableList<String> inputTypes;
-
-    private Text keyShower;
+    private ScrollablePaneNew myScroll;
 
 
     public InputEditor(Group root, EditorManager em){
         super(root,em);
         inputTypes = FXCollections.observableArrayList();
-        inputDisplay = new ListView<>();
-        inputDisplay.setMaxHeight(200.0);
+        myScroll = new ScrollablePaneNew(200.0,200.0);
+        myScroll.setMaxHeight(150.0);
+        myScroll.setMaxWidth(150.0);
         makeVBox1();
-        v.setLayoutX(100.0);
-        v.setLayoutY(50.0);
-        setRequirements();
-        keyShower = myRS.makeText("PRESS KEY", true, 20,
-                Color.DARKTURQUOISE,  400.0, 50.0);
-        this.setOnKeyPressed(e -> updateKey(e));
-        root.getChildren().add(keyShower);
-
-    }
-
-    private void updateKey(KeyEvent e){
-        keyShower.setText(e.getText());
-    }
-
-    private void setRequirements(){
-        inputTypes.add("UP");
-        inputTypes.add("DOWN");
-        inputTypes.add("LEFT");
-        inputTypes.add("RIGHT");
-        inputDisplay.setItems(inputTypes);
-    }
-
-    @Override
-    public String toString(){
-        return "Input Editor";
-    }
-
-
-    private void makeVBox1(){
-        v = new VBox(20.0);
-        userInput = createUserCommandLine();
-        inputDisplay = new ListView<>();
-        inputDisplay.setMaxHeight(200.0);
         userInput.setOnKeyPressed(e ->{
             if(e.getCode() == KeyCode.ENTER){
-                addInputItem();
+                addItemtoScroll();
             } });
-        v.getChildren().addAll(userInput,inputDisplay);
-        root.getChildren().add(v);
+        v.setLayoutX(100.0);
+        v.setLayoutY(50.0);
+        //setRequirements();
+        Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,20.0,600.0,300.0,150.0,50.0);
+        remove.setOnMouseClicked(e -> myScroll.removeItem());
+        root.getChildren().addAll(remove);
     }
 
-    private void addInputItem(){
+
+
+    private void addItemtoScroll(){
         String text = userInput.getText();
         if(text.indexOf(" ") >= 0 || text.indexOf("_") >= 0 || inputTypes.contains(text)){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -86,9 +61,39 @@ public class InputEditor extends EditorSuper {
         }else {
             userInput.clear();
             inputTypes.add(text);
-            inputDisplay.setItems(inputTypes);
+            InputItem testItem = new InputItem(new Text(text));
+            myScroll.addItem(testItem);
         }
     }
+
+
+
+
+
+
+
+//    private void setRequirements(){
+//        inputTypes.add(new Text("UP"));
+//        inputTypes.add(new Text("DOWN"));
+//        inputTypes.add(new Text("LEFT"));
+//        inputTypes.add(new Text("RIGHT"));
+//        //inputDisplay.setItems(inputTypes);
+//    }
+
+
+
+    private void makeVBox1(){
+        v = new VBox(20.0);
+        userInput = createUserCommandLine();
+
+        userInput.setOnKeyPressed(e ->{
+            if(e.getCode() == KeyCode.ENTER){
+                addItemtoScroll();
+            } });
+        v.getChildren().addAll(userInput,myScroll.getScrollPane());
+        root.getChildren().add(v);
+    }
+
 
     public Set<String> getInputTypes(){
         return new HashSet<>(inputTypes);
@@ -98,6 +103,11 @@ public class InputEditor extends EditorSuper {
         input.setPrefWidth(200);
         input.setPrefHeight(50);
         return input;
+    }
+
+    @Override
+    public String toString(){
+        return "Input Editor";
     }
 
 
