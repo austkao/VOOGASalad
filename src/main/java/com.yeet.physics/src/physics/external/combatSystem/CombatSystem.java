@@ -9,6 +9,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Math.PI;
 
@@ -95,12 +96,15 @@ public class CombatSystem {
 
     @Subscribe
     public void onAttackIntersectEvent(AttackIntersectEvent event){
+        Map<Integer, Double> playersBeingRekt = new HashMap<>();
         for(List<Integer> list: event.getAttackPlayers()){
             Player playerBeingAttacked = playerManager.getPlayerByID(list.get(0));
-
             Player playerAttacking = playerManager.getPlayerByID(list.get(1));
             playerAttacking.addAttackingTargets(playerBeingAttacked);
+            double health = playerBeingAttacked.reduceHealth(playerAttacking.getAttackDamage());
+            playersBeingRekt.put(playerBeingAttacked.id, health);
         }
+        eventBus.post(new GetRektEvent(playersBeingRekt));
     }
 
     @Subscribe

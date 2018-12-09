@@ -16,6 +16,6 @@ public class GetRektEvent extends Event{
 
     @Override
     public String getName() {
-        return peopleBeingRekt +" are being rekt.";
+        return peopleBeingRekt + " are being rekt.";
     }
 }
