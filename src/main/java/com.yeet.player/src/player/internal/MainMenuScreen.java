@@ -28,22 +28,24 @@ public class MainMenuScreen extends Screen {
     private MediaPlayer selectSE;
     private MessageBar myMessageBar;
 
-    public MainMenuScreen(Group root, Renderer renderer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch) {
+    public MainMenuScreen(Group root, Renderer renderer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch) {
         super(root, renderer);
         selectSE = new MediaPlayer(new Media(new File("src/main/java/com.yeet.player/resources/select.mp3").toURI().toString()));
         ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("mainmenu_bg.png")));
         background.setFitHeight(800.0);
         background.setFitWidth(1280.0);
         ImageView smashButton = makeButton("smash_button.png", SMASH_TITLE, SMASH_MSG,880.0,523.0,74.0,85.0, event -> {
-            selectSE.play();
             selectSE.setOnEndOfMedia(() -> {
                 smashSceneSwitch.switchScene();
                 selectSE.stop();
             });
+            selectSE.play();
         });
         ImageView settingsButton = makeButton("settings_button.png", SETTINGS_TITLE, SETTINGS_MSG,610.0,146.0,649.0,254.0, event -> {
-
-            //TODO: implement settings scene
+            selectSE.setOnEndOfMedia(() -> {
+                settingsSceneSwitch.switchScene();
+                selectSE.stop();
+            });
             selectSE.play();
         });
         ImageView quitButton = makeButton("quit_button.png",QUIT_TITLE, QUIT_MSG,610.0,132.0,649.0,436.0, event -> quitSceneSwitch.switchScene());
