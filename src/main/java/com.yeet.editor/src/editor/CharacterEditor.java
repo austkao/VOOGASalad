@@ -1,8 +1,11 @@
 package editor;
 
 import javafx.animation.Animation;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +21,8 @@ import renderer.external.Structures.*;
 
 import java.io.File;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -62,9 +67,9 @@ public class CharacterEditor extends EditorSuper{
         int totalFrames;
         Map<Integer, Rectangle> hitBoxes;
         Map<Integer, Rectangle> hurtBoxes;
-        String input;
+        List<String> input;
 
-        FrameInfo(int total, String inputString){
+        FrameInfo(int total, List<String> inputString){
             input = inputString;
             currentFrame = -1;
             totalFrames = total;
@@ -98,8 +103,19 @@ public class CharacterEditor extends EditorSuper{
             if (currentFrame == -1 || totalFrames == -1){
                 return "Animation Not Set";
             }
-            return "Frame "+currentFrame+"/"+totalFrames + "\ninput: " + input;
+            String ret = "Frame "+currentFrame+"/"+totalFrames + "\ninput: ";
+            for (int i = 0 ; i < input.size(); i++){
+                if (i < input.size() - 1){
+                    ret += input.get(i)+"-";
+                }
+                else{
+                    ret += input.get(i);
+                }
+            }
+            return ret;
         }
+        void setInput(List<String> in){ input = in;}
+        List<String> getInput(){return input;}
     }
 
     public CharacterEditor(Group root, EditorManager em, InputEditor editor){
@@ -168,6 +184,7 @@ public class CharacterEditor extends EditorSuper{
 
         frameText = myRS.makeText("Animation Not Set", true, 30,
                 Color.AQUA, 500.0, 250.0);
+        frameText.setWrappingWidth(350.0);
 
         List<String> options = new ArrayList<>();
         options.add(HURT_TEXT);
@@ -188,7 +205,7 @@ public class CharacterEditor extends EditorSuper{
         defenseSlider = myRS.makeSlider("defense",50.0,consumer,0.0,0.0,200.0);
 
         mySliders.getChildren().addAll(healthSlider,attackSlider,defenseSlider);
-        mySliders.setLayoutX(900.0);
+        mySliders.setLayoutX(950.0);
         mySliders.setLayoutY(200.0);
         root.getChildren().add(mySliders);
     }
@@ -277,15 +294,74 @@ public class CharacterEditor extends EditorSuper{
 
         mySpritePane.getChildren().add(currentSprite);
 
-        currentSprite.setOnMousePressed(e-> startRectangle(e));
-        currentSprite.setOnMouseDragged(e -> showIntermediateRectangle(e));
-        //currentSprite.setOnMouse
-        //currentSprite.setOnMouseReleased(e-> finishRectangle(e));
+
+
+        AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
+        currentSprite.setOnMousePressed(e -> anchor.set(startSelection(e, anchor.get())));
+        currentSprite.setOnMouseDragged(e -> dragSelection(e, anchor.get()));
+        currentSprite.setOnMouseReleased(e -> finishSelection(e, anchor.get()));
+
+
         currentAnimation = null;
         animationFrame = new HashMap<>();
         scrollToAnimation = new HashMap<>();
         initializeScrollPane();
     }
+
+    private Point2D startSelection(MouseEvent e, Point2D anchor){
+        if (testNull(currentAnimation, "Animation Not Set")){
+            return anchor;
+        }
+
+        FrameInfo frame = animationFrame.get(currentAnimation);
+        Rectangle newBox = new Rectangle();
+        newBox.setX(e.getX());
+        newBox.setY(e.getY());
+        newBox.setFill(null);
+        newBox.setStrokeWidth(5);
+        mySpritePane.getChildren().add(newBox);
+
+        if (hitOrHurt.getState().equals(HIT_TEXT)){
+            mySpritePane.getChildren().remove(frame.getHitBox());
+            newBox.setStroke(Color.RED);
+            frame.setHitBox(newBox);
+        }
+        else{
+            mySpritePane.getChildren().remove(frame.getHurtBox());
+            newBox.setStroke(Color.BLUE);
+            frame.setHurtBox(newBox);
+        }
+
+        anchor = new Point2D(e.getX(), e.getY());
+
+        return anchor;
+    }
+
+    private void dragSelection(MouseEvent e, Point2D anchor){
+        if (testNull(currentAnimation, "Animation Not Set")){
+            return;
+        }
+        FrameInfo frame = animationFrame.get(currentAnimation);
+        Rectangle selection = new Rectangle();
+        if (hitOrHurt.getState().equals(HIT_TEXT)){
+            selection = frame.getHitBox();
+        }
+        else{
+            selection = frame.getHurtBox();
+        }
+        selection.setWidth(Math.abs(e.getX() - anchor.getX()));
+        selection.setHeight(Math.abs(e.getY() - anchor.getY()));
+        selection.setX(Math.min(anchor.getX(), e.getX()));
+        selection.setY(Math.min(anchor.getY(), e.getY()));
+    }
+
+    private void finishSelection(MouseEvent e, Point2D anchor){
+        if (testNull(currentAnimation, "Animation Not Set")){
+            return;
+        }
+    }
+
+
     /**
      * User selects background, and it is applied to level.
      */
@@ -305,7 +381,7 @@ public class CharacterEditor extends EditorSuper{
         }
         ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
 
-        String inputString = getCombo();
+        List<String> inputString = getCombo();
 
         SpriteAnimation myAnimation;
         if (!first){
@@ -365,27 +441,23 @@ public class CharacterEditor extends EditorSuper{
         if (testNull(currentAnimation, "Animation not selected")){
             return;
         }
-        animationFrame.get(currentAnimation).input = getCombo();
+        animationFrame.get(currentAnimation).setInput(getCombo());
         frameText.setText(animationFrame.get(currentAnimation).toString());
     }
-    private String getCombo(){
-        String combo = "";
+    private List<String> getCombo(){
+        List<String> combo = new ArrayList<>();
         int inputNum = 1;
         String nextInput = showAlertInputOptions(inputNum);
         while (!"".equals(nextInput)){
-            System.out.println(nextInput);
-            combo = combo + "_" + nextInput;
+            combo.add(nextInput);
             inputNum++;
             nextInput = showAlertInputOptions(inputNum);
         }
-        System.out.println(combo);
         return combo;
     }
 
     private void startRectangle(MouseEvent e){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return;
-        }
+
         e.setDragDetect(true);
         FrameInfo frame = animationFrame.get(currentAnimation);
         if (hitOrHurt.getState().equals(HIT_TEXT)){
@@ -401,27 +473,18 @@ public class CharacterEditor extends EditorSuper{
             frame.getHurtBox().setY(e.getY());
         }
     }
-    private void removeIntermediateRectangle(MouseEvent e){
 
-    }
-    private void showIntermediateRectangle(MouseEvent e){
-        e.setDragDetect(false);
-        FrameInfo frame = animationFrame.get(currentAnimation);
-        mySpritePane.getChildren().remove(frame.getHitBox());
-        mySpritePane.getChildren().remove(frame.getHurtBox());
-        finishRectangle(e);
-    }
     private void finishRectangle(MouseEvent e){
         if (testNull(currentAnimation, "Animation Not Set")){
             return;
         }
         double x2 = e.getX();
         double y2 = e.getY();
-
         FrameInfo frame = animationFrame.get(currentAnimation);
 
 
         if (hitOrHurt.getState().equals(HIT_TEXT)){
+            mySpritePane.getChildren().remove(frame.getHitBox());
             double x1 = frame.getHitBox().getX();
             double y1 = frame.getHitBox().getY();
             double width = x2 - x1;
@@ -435,6 +498,7 @@ public class CharacterEditor extends EditorSuper{
             frame.getHitBox().relocate(x1, y1);
         }
         else{
+            mySpritePane.getChildren().remove(frame.getHurtBox());
             double x1 = frame.getHurtBox().getX();
             double y1 = frame.getHurtBox().getY();
             double width = x2 - x1;
