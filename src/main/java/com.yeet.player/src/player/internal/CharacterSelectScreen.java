@@ -60,7 +60,7 @@ public class CharacterSelectScreen extends Screen {
         myDirectory = gameDirectory;
         myReadyBar = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("ready_bar.png")));
         myReadyBar.setLayoutY(420.0);
-        myReadyBar.setOnMousePressed(event -> nextScene.switchScene());
+        myReadyBar.setOnMousePressed(event -> handleInput(KeyCode.ENTER));
         myCharacterMap = new HashMap<>();
         myCharacterList = new ArrayList<>();
         myCharacterChooserList = new ArrayList<>();
@@ -85,10 +85,10 @@ public class CharacterSelectScreen extends Screen {
         DragToken button2 = new DragToken(super.getMyRenderer().makeText("P2",true,40,Color.WHITE,0.0,0.0),Color.web("#4C7FFF"),439,548,40, this::getCharacter);
         DragToken button3 = new DragToken(super.getMyRenderer().makeText("P3",true,40,Color.WHITE,0.0,0.0),Color.web("#FFF61B"),752,548,40, this::getCharacter);
         DragToken button4 = new DragToken(super.getMyRenderer().makeText("P4",true,40,Color.WHITE,0.0,0.0),Color.web("#1FCB17"),1079,548,40, this::getCharacter);
-        display1 = new CharacterChooseDisplay(Color.web("#FD1B1B"),super.getMyRenderer().makeText("Player 1",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button1);
-        display2 = new CharacterChooseDisplay(Color.web("#4C7FFF"),super.getMyRenderer().makeText("Player 2",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button2);
-        display3 = new CharacterChooseDisplay(Color.web("#FFF61B"),super.getMyRenderer().makeText("Player 3",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button3);
-        display4 = new CharacterChooseDisplay(Color.web("#1FCB17"),super.getMyRenderer().makeText("Player 4",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button4);
+        display1 = new CharacterChooseDisplay(Color.web("#FD1B1B"),super.getMyRenderer().makeText("Player 1",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button1, this::characterChooserStateChangeHandler);
+        display2 = new CharacterChooseDisplay(Color.web("#4C7FFF"),super.getMyRenderer().makeText("Player 2",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button2, this::characterChooserStateChangeHandler);
+        display3 = new CharacterChooseDisplay(Color.web("#FFF61B"),super.getMyRenderer().makeText("Player 3",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button3, this::characterChooserStateChangeHandler);
+        display4 = new CharacterChooseDisplay(Color.web("#1FCB17"),super.getMyRenderer().makeText("Player 4",false,40,Color.BLACK,0.0,0.0),super.getMyRenderer().makeText("",true,60,Color.WHITE,0.0,0.0), button4, this::characterChooserStateChangeHandler);
         myCharacterChooserList.add(display1);
         myCharacterChooserList.add(display2);
         myCharacterChooserList.add(display3);
@@ -99,11 +99,16 @@ public class CharacterSelectScreen extends Screen {
         this.setOnKeyPressed(event -> handleInput(event.getCode()));
     }
 
+    private void characterChooserStateChangeHandler(CharacterChooseDisplay.State newstate){
+        isReady = checkPlayerCount();
+        handleReadyBar();
+    }
+
     /** Handles key input to the scene
      *  @param code The {@code KeyCode} to process
      */
     private void handleInput(KeyCode code) {
-        if((code.equals(KeyCode.ENTER) || code.equals(KeyCode.SPACE)) && isReady){
+        if((code.equals(KeyCode.ENTER) || code.equals(KeyCode.SPACE)) && checkPlayerCount()){
             nextScene.switchScene();
         }
     }
@@ -143,6 +148,10 @@ public class CharacterSelectScreen extends Screen {
         myCharGrid.getCharacter(token);
         // ready checking
         isReady = checkPlayerCount();
+        handleReadyBar();
+    }
+
+    private void handleReadyBar() {
         if(isReady){
             if(!super.getMyRoot().getChildren().contains(myReadyBar)){
                 super.getMyRoot().getChildren().add(myReadyBar);
@@ -155,6 +164,7 @@ public class CharacterSelectScreen extends Screen {
 
     /** Checks if there are enough players to start a match */
     private boolean checkPlayerCount(){
+        System.out.println(getPlayerCount());
         return(getPlayerCount()>1);
     }
 
@@ -162,33 +172,97 @@ public class CharacterSelectScreen extends Screen {
     public int getPlayerCount(){
         int count = 0;
         myCharacterList.clear();
-        if(display1.getState()!= CharacterChooseDisplay.State.NONE && display1.getCharacterName().length()>0){
-            count++;
-            myCharacterList.add(display1.getCharacterName());
+        if(display1.getState()!= CharacterChooseDisplay.State.NONE){
+            if(display1.getCharacterName().length()>0){
+                count++;
+                myCharacterList.add(display1.getCharacterName());
+            }
+            else{
+                return -1;
+            }
         }
-        if(display2.getState()!= CharacterChooseDisplay.State.NONE && display2.getCharacterName().length()>0){
-            count++;
-            myCharacterList.add(display2.getCharacterName());
+        else{
+            myCharacterMap.remove(0);
         }
-        if(display3.getState()!= CharacterChooseDisplay.State.NONE && display3.getCharacterName().length()>0){
-            count++;
-            myCharacterList.add(display3.getCharacterName());
+        if(display2.getState()!= CharacterChooseDisplay.State.NONE){
+            if(display2.getCharacterName().length()>0){
+                count++;
+                myCharacterList.add(display2.getCharacterName());
+            }
+            else{
+                return -1;
+            }
+
         }
-        if(display4.getState()!= CharacterChooseDisplay.State.NONE && display4.getCharacterName().length()>0){
-            count++;
-            myCharacterList.add(display4.getCharacterName());
+        else{
+            myCharacterMap.remove(1);
+        }
+        if(display3.getState()!= CharacterChooseDisplay.State.NONE){
+            if(display3.getCharacterName().length()>0){
+                count++;
+                myCharacterList.add(display3.getCharacterName());
+            }
+            else{
+                return -1;
+            }
+        }
+        else{
+            myCharacterMap.remove(2);
+        }
+        if(display4.getState()!= CharacterChooseDisplay.State.NONE){
+            if(display4.getCharacterName().length()>0){
+                count++;
+                myCharacterList.add(display4.getCharacterName());
+            }
+            else{
+                return -1;
+            }
+        }
+        else{
+            myCharacterMap.remove(3);
         }
         return count;
     }
 
+    /** Returns the {@code HashMap} of player ID to character name */
     public HashMap<Integer, String> getCharacterMap() {
         return myCharacterMap;
     }
 
+    /** Returns the {@code HashMap} of player ID to current {@code Color} */
+    public HashMap<Integer, Color> getColorMap(){
+        HashMap<Integer, Color> colorMap = new HashMap<>();
+        colorMap.put(0,display1.getCurrentColor());
+        colorMap.put(1,display2.getCurrentColor());
+        colorMap.put(2,display3.getCurrentColor());
+        colorMap.put(3,display4.getCurrentColor());
+        return colorMap;
+    }
+
+    /** Returns the list of IDs of bot players */
+    public ArrayList<Integer> getBots(){
+        ArrayList<Integer> bots = new ArrayList<>();
+        if(display1.getState().equals(CharacterChooseDisplay.State.CPU)){
+            bots.add(0);
+        }
+        if(display2.getState().equals(CharacterChooseDisplay.State.CPU)){
+            bots.add(1);
+        }
+        if(display3.getState().equals(CharacterChooseDisplay.State.CPU)){
+            bots.add(2);
+        }
+        if(display4.getState().equals(CharacterChooseDisplay.State.CPU)){
+            bots.add(3);
+        }
+        return bots;
+    }
+
+    /** Returns the list of character names */
     public ArrayList<String> getCharacterList(){
         return myCharacterList;
     }
 
+    /** Returns the list of all {@code CharacterChooseDisplay} objects */
     public ArrayList<CharacterChooseDisplay> getCharacterChooserList(){
         ArrayList<CharacterChooseDisplay> result = new ArrayList<>();
         for(CharacterChooseDisplay ccd : myCharacterChooserList){

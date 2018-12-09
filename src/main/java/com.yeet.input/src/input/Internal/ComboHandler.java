@@ -74,7 +74,7 @@ public class ComboHandler {
                     output.add(playerMap.get(input.getName()).get(0));
                 }
             }
-            parsedInputs.put(cnt+1, output);
+            parsedInputs.put(cnt, output);
             cnt += 1;
         }
         return parsedInputs;

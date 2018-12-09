@@ -16,11 +16,12 @@ import static java.lang.Math.PI;
 
 public class PhysicsSystem {
 
-    public static final double defaultMass = 50;
-    public static final double defaultStrength = 20;
-    public static final double defaultJumpHeight = 15000;
-    public static final double defaultMovementSpeed = 5000;
-    public static final double defaultAttackSpace = 10;
+    public static final double DEFAULT_MASS = 50;
+    public static final double DEFAULT_STRENGTH = 20;
+    public static final double DEFAULT_JUMP_HEIGHT = 20000;
+    public static final double DEFAULT_MOVEMENT_SPEED = 5000;
+    public static final double DEFAULT_ATTACK_SPACE = 10;
+    public static final double TERMINAL_VELOCITY = 400;
 
     private int playerId;
     private int groundId;
@@ -81,7 +82,7 @@ public class PhysicsSystem {
             gameObjects.put(id, new PhysicsGround(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
             groundId++;
         }
-        playerCharacteristics.add(new PlayerCharacteristics(id, defaultStrength, defaultJumpHeight, defaultMovementSpeed));
+        playerCharacteristics.add(new PlayerCharacteristics(id, DEFAULT_STRENGTH, DEFAULT_JUMP_HEIGHT, DEFAULT_MOVEMENT_SPEED));
     }
 
     public void applyForces() {
@@ -119,8 +120,7 @@ public class PhysicsSystem {
                 direction = obj.getDirection();
                 out.put(obj.getId(), direction);
             }
-        }
-        return out;
+        }return out;
     }
 
     public Map<Integer, PhysicsObject> getGameObjects() {
@@ -129,15 +129,15 @@ public class PhysicsSystem {
 
     public void jump(int id) {
         PhysicsObject currentBody = gameObjects.get(id);
-        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultJumpHeight, -PI/2));
-        System.out.println("JUMP INITIATED");
+        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * DEFAULT_JUMP_HEIGHT, -PI/2));
     }
 
     public void move(int id, double direction) {
         PhysicsObject currentBody = gameObjects.get(id);
         currentBody.setDirection(direction);
-        System.out.println("MOVE");
-        currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * defaultMovementSpeed, direction));
+        if (Math.abs(currentBody.getXVelocity().getMagnitude()) < TERMINAL_VELOCITY) {
+            currentBody.addCurrentForce(new PhysicsVector(currentBody.getMass() * DEFAULT_MOVEMENT_SPEED, direction));
+        }
     }
 
     public void attack(int id) {
@@ -148,8 +148,9 @@ public class PhysicsSystem {
             direction = -1;
         }
         Coordinate playerLocation = gameObjects.get(id).getMyCoordinateBody().getPos();
-        Coordinate attackLocation = new Coordinate(playerLocation.getX() + direction * defaultAttackSpace,playerLocation.getY() + defaultAttackSpace);
-        PhysicsAttack attack = new PhysicsAttack(id,gameObjects.get(id).getMass(), attackLocation,new Dimensions(20, 10));
-        gameObjects.put(id, attack);
+        Coordinate attackLocation = new Coordinate(playerLocation.getX() + direction * DEFAULT_ATTACK_SPACE,playerLocation.getY() + DEFAULT_ATTACK_SPACE);
+        PhysicsAttack attack = new PhysicsAttack(attackId, gameObjects.get(id).getMass(), attackLocation, new Dimensions(20, 10));
+        gameObjects.put(attackId, attack);
+        attackId++;
     }
 }
