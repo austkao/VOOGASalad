@@ -2,15 +2,11 @@ package dataSystem;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import dataSubsystem.GameFileSetup;
 import javafx.event.Event;
 import messenger.external.CreateGameEvent;
 import messenger.external.EventBusFactory;
 
 import java.io.File;
-import java.io.FilenameFilter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class DataSystem {
     private EventBus myEB;

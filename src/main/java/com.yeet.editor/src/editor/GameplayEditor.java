@@ -1,17 +1,14 @@
 package editor;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import renderer.external.Structures.SliderBox;
 import renderer.external.Structures.SwitchButton;
 import renderer.external.Structures.TextBox;
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 
