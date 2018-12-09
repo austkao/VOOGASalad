@@ -60,6 +60,7 @@ public class MapEditor extends EditorSuper {
     private ResourceBundle myTags;
     private File myStageDirectory;
     private File backgroundFile;
+    private Text saved;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -114,17 +115,18 @@ public class MapEditor extends EditorSuper {
             MapSettings s = new MapSettings();
             s.setScene();
         });
+        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 600.0, 700.0);
         root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, settings);
         backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
     }
 
-    public MapEditor(EditorManager em, File xmlFile, boolean isNew) {
+    public MapEditor(EditorManager em, File xmlFile, boolean isEdit) {
         this(em);
         File stageProperties = Paths.get(xmlFile.getPath(), "stageproperties.xml").toFile();
-        if(!isNew) {
+        if(isEdit) {
             loadMapFile(stageProperties);
         }
-        isNew = isNew;
+        isSaved = isEdit;
         myStageDirectory = xmlFile;
     }
 
@@ -185,6 +187,8 @@ public class MapEditor extends EditorSuper {
             myScrollablePane.addItem(new ScrollItem(currentTileFile, new Text()));
             int size = myScrollablePane.getItems().size();
             myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image, myCurrentTileName));
+            isSaved = false;
+            root.getChildren().remove(saved);
         }
         catch (Exception e){
             System.out.println("Invalid image");
@@ -200,6 +204,10 @@ public class MapEditor extends EditorSuper {
         int xindex = (int)e.getX()/level.getTileWidth();
         int yindex = (int)e.getY()/level.getTileHeight();
         level.processTile(xindex, yindex, currentTileFile, myCurrentTileName);
+        if(isSaved) {
+            isSaved = false;
+            root.getChildren().remove(saved);
+        }
     }
 
     private void selectTileFromScroll(Image image, String name){
@@ -239,8 +247,9 @@ public class MapEditor extends EditorSuper {
             File xmlFile = Paths.get(myStageDirectory.getPath(), "stageproperties.xml").toFile();
             generateSave(structure, levelMap, xmlFile);
             snapShot(level,ALL_MAPS);
-            Text saveSuccess = myRS.makeText("Saved", true, 20, Color.BLACK, 600.0, 700.0);
-            root.getChildren().add(saveSuccess);
+
+            root.getChildren().add(saved);
+            isSaved = true;
         } catch (Exception ex) {
             System.out.println("Invalid save");
             ex.printStackTrace();

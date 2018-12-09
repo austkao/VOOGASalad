@@ -38,7 +38,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     protected EditorManager myEM;
     protected RenderSystem myRS;
     protected EditorConstant myEC;
-    protected boolean isNew;
+    protected boolean isSaved;
 
     public EditorSuper(Group root, EditorManager em){
         super(root);
@@ -47,7 +47,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         myRS = new RenderSystem();
         Text t = createTitle();
         root.getChildren().add(t);
-        isNew = false;
+        isSaved = true;
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     public Button createBack(Scene scene){
         Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSITION.getValue(),0.0,150.0,50.0);
         back.setOnMouseClicked(e -> {
-            if(!isNew) {
+            if(isSaved) {
                 myEM.changeScene(scene);
                 if(scene instanceof MapHome) {
                     MapHome home = (MapHome) scene;

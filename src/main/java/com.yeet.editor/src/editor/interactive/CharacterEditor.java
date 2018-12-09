@@ -1,7 +1,6 @@
 package editor.interactive;
 
 import editor.EditorManager;
-import editor.interactive.InputEditor;
 import javafx.animation.Animation;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -20,10 +19,13 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import renderer.external.Structures.*;
-
+import xml.XMLParser;
 import java.io.File;
-import java.util.*;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -50,7 +52,6 @@ public class CharacterEditor extends EditorSuper {
     private Map<ScrollableItem, SpriteAnimation> scrollToAnimation;
     private Map<SpriteAnimation, AnimationInfo> animationFrame;
 
-    private Group root;
     private VBox mySliders;
     private SliderBox healthSlider;
     private SliderBox attackSlider;
@@ -58,7 +59,7 @@ public class CharacterEditor extends EditorSuper {
     private Consumer consumer;
     private Text frameText;
     private SwitchButton hitOrHurt;
-
+    private File myDirectory;
     private InputEditor inputEditor;
 
     static class AnimationInfo {
@@ -119,9 +120,8 @@ public class CharacterEditor extends EditorSuper {
         List<String> getInput(){return input;}
     }
 
-    public CharacterEditor(Group root, EditorManager em, InputEditor editor){
-        super(root,em);
-        this.root = root;
+    public CharacterEditor(EditorManager em, InputEditor editor){
+        super(new Group(),em);
         this.inputEditor = editor;
         portrait = initializeImageView(200, 300, 275, 25);
         //spriteSheet = initializeImageView(600, 400, 25, 350);
@@ -145,6 +145,17 @@ public class CharacterEditor extends EditorSuper {
         makeSliders();
         makeButtons();
         initializeSpritePane();
+    }
+
+    public CharacterEditor(EditorManager em, InputEditor editor, File characterDirectory, boolean isEdit) {
+        this(em, editor);
+        myDirectory = characterDirectory;
+        if(isEdit) {
+            File characterProperties = Paths.get(characterDirectory.getPath(), "characterproperties.xml").toFile();
+            loadCharacterData(characterProperties);
+        } else {
+
+        }
     }
 
     private void makeButtons(){
@@ -491,6 +502,21 @@ public class CharacterEditor extends EditorSuper {
         return "CharacterEditor";
     }
 
+    private void loadCharacterData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> data = parser.parseFileForElement("character");
+            ArrayList<String> health = data.get("health");
+            ArrayList<String> attack = data.get("attack");
+            ArrayList<String> defense = data.get("defense");
+            healthSlider.setNewValue(Double.parseDouble(health.get(0)));
+            attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
+            defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
+
     private void createSaveFile() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> characterAttributes = new ArrayList<>();
@@ -505,12 +531,11 @@ public class CharacterEditor extends EditorSuper {
         data.put("health", healthList);
         data.put("attack", attackList);
         data.put("defense", defenseList);
-
         try {
-            //generateSave(structure, data);
+            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "characterproperties.xml").toFile();
+            generateSave(structure, data, xmlFile);
         } catch (Exception ex) {
             System.out.println("Invalid save");
-            //ex.printStackTrace();
         }
     }
 
