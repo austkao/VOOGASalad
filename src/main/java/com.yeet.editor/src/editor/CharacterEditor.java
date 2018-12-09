@@ -440,18 +440,18 @@ public class CharacterEditor extends EditorSuper{
 
     private String showAlertInputOptions(int num){
 
-        Set<String> options = inputEditor.getInputTypes();
+        //Set<String> options = inputEditor.getInputTypes();
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Enter input #" + num);
 
         boolean disabled = false;
 
-        for (String option: options){
-            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().add(optionButton);
-            dialog.getDialogPane().lookupButton(optionButton).setDisable(disabled);
-        }
+//        for (String option: options){
+//            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
+//            dialog.getDialogPane().getButtonTypes().add(optionButton);
+//            dialog.getDialogPane().lookupButton(optionButton).setDisable(disabled);
+//        }
 
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 

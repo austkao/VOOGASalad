@@ -27,6 +27,7 @@ public class InputItem implements Scrollable {
         rs = new RenderSystem();
         initializeButton(desc);
         button.setOnKeyPressed(e -> addKeyBinding(e));
+
     }
 
     private void addKeyBinding(KeyEvent e){
