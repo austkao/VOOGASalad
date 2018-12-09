@@ -43,7 +43,9 @@ public class MapHome extends EditorHome {
         //System.out.println(directory.getPath());
         if(bb != null) {
             String stageName = bb.getText();
+            System.out.println(stageName);
             File stageDirectory = Paths.get(em.getGameDirectoryString(), "stages", stageName).toFile();
+            System.out.println(stageDirectory.getPath());
             setEditor(stageDirectory, true);
             return;
         } else if(directory != null) {
@@ -59,7 +61,6 @@ public class MapHome extends EditorHome {
     @Override
     protected void createNewObject(String name) {
         Path stagePath = Paths.get(em.getGameDirectoryString(),"stages", name);
-        System.out.println(stagePath.toString());
         File stageDirectory = stagePath.toFile();
         myEB.post(new CreateStageEvent("Create Stage", stageDirectory));
         popupStage.close();
