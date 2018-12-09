@@ -53,8 +53,8 @@ public class StageGrid extends TilePane {
             imageHolder.setPrefSize(w-SPACING,h-SPACING);
             imageHolder.setMaxSize(w-SPACING,h-SPACING);
             imageHolder.setAlignment(Pos.CENTER);
-
-            myParser = new XMLParser(new File(String.format("%s//%s",files.get(i).getPath(),"stageproperties.xml")));
+            File parse = new File(String.format("%s//%s",files.get(i).getPath(),"stageproperties.xml"));
+            myParser = new XMLParser(parse);
 
             myBackgroundMap = myParser.parseFileForElement("background");
             ImageView imageView = new ImageView(new Image(directory.toURI()+"data/background/"+myBackgroundMap.get("bgFile").get(0)));

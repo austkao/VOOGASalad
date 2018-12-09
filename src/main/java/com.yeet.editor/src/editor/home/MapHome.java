@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import messenger.external.CreateStageEvent;
+import messenger.external.DeleteDirectoryEvent;
 import messenger.external.EventBusFactory;
 import renderer.external.Structures.ScrollablePaneNew;
 import renderer.external.Structures.TextBox;
@@ -26,21 +27,15 @@ public class MapHome extends EditorHome {
     private static final String ALL_MAPS = "allmaps/";
 
     private EventBus myEB;
-    private Consumer consumer;
-    private Stage popupStage;
+
 
     public MapHome(Group root, EditorManager em){
         super(root,em);
         myEB = EventBusFactory.getEventBus();
-        consumer = new Consumer() {
-            @Override
-            public void accept(Object o) {
-                o = o;
-            }
-        };
-        buttonNew.setOnMouseClicked(e -> nameNewStage());
+
+        buttonNew.setOnMouseClicked(e -> nameNewObject("Create New Stage","Stage name:"));
         buttonEdit.setOnMouseClicked(e -> initializeEditor(myScroll.getSelectedItem(), null));
-        buttonDelete.setOnMouseClicked(e -> deleteStage());
+        buttonDelete.setOnMouseClicked(e -> deleteStage(myScroll.getSelectedItem()));
     }
 
     public String toString(){
@@ -61,21 +56,6 @@ public class MapHome extends EditorHome {
 
     }
 
-
-    public void nameNewStage() {
-        popupStage = new Stage();
-        popupStage.setTitle("Create New Stage");
-        TextBox stageName = rs.makeTextField(consumer, "", 100.0,20.0,200.0,30.0, rs.getPlainFont());
-        Text stageLabel = rs.makeText("Stage Name:", false, 12, Color.BLACK, 20.0, 50.0);
-        Button create = rs.makeStringButton("Create", Color.BLACK, false, Color.GRAY, 12.0,50.0, 100.0, 100.0, 30.0);
-        Button cancel = rs.makeStringButton("Cancel", Color.BLACK, false, Color.GRAY, 12.0,200.0, 100.0, 100.0, 30.0);
-        create.setOnMouseClicked(e -> createNewStage(stageName.getText()));
-        cancel.setOnMouseClicked(e -> popupStage.close());
-        Scene creationScene = new Scene(new Group(stageName, stageLabel, create, cancel), 400, 200);
-        popupStage.setScene(creationScene);
-        popupStage.show();
-    }
-
     public void initializeEditor(ButtonBase bb, File directory) {
         //System.out.println(directory.getPath());
         if(bb != null) {
@@ -93,7 +73,8 @@ public class MapHome extends EditorHome {
         errorAlert.showAndWait();
     }
 
-    public void createNewStage(String name) {
+    @Override
+    public void createNewObject(String name) {
         Path stagePath = Paths.get(em.getGameDirectoryString(),"stages", name);
         System.out.println(stagePath.toString());
         File stageDirectory = stagePath.toFile();
@@ -102,9 +83,13 @@ public class MapHome extends EditorHome {
         initializeEditor(null, stageDirectory);
     }
 
-    private void deleteStage() {
-        myScroll.removeItem();
-        //myEB.post(new DeleteDirectoryEvent());
+    private void deleteStage(ButtonBase bb) {
+        if(bb != null) {
+            myScroll.removeItem();
+            String stageName = bb.getText();
+            File stageDirectory = Paths.get(em.getGameDirectoryString(), "stages", stageName).toFile();
+            myEB.post(new DeleteDirectoryEvent("Delete Stage", stageDirectory));
+        }
     }
 
     public ScrollablePaneNew getScroll() {

@@ -17,6 +17,11 @@ public class GameplayHome extends EditorHome {
         myEditor.createBack(this);
     }
 
+    @Override
+    public void createNewObject(String name) {
+
+    }
+
     public String toString(){
         return "Game Home";
     }

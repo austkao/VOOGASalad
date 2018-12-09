@@ -10,12 +10,15 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.ScrollablePaneNew;
+import renderer.external.Structures.TextBox;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Consumer;
 
 public abstract class EditorHome extends Scene implements EditorScreen {
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources/";
@@ -32,7 +35,8 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     protected EditorManager em;
     protected EditorSuper myEditor;
     protected EditorConstant myEC;
-
+    protected Stage popupStage;
+    private Consumer consumer;
 
     public EditorHome(Group root, EditorManager em) {
         super(root);
@@ -43,6 +47,12 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         initializeScroll();
         Text title = createTitle();
         root.getChildren().addAll(title,myScroll.getScrollPane(),switchView);
+        consumer = new Consumer() {
+            @Override
+            public void accept(Object o) {
+                o = o;
+            }
+        };
     }
 
     protected abstract String getDir();
@@ -87,4 +97,20 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         buttonBack.setOnMouseClicked(e -> em.setEditorHomeScene());
         return buttonBack;
     }
+
+    public void nameNewObject(String title, String label) {
+        popupStage = new Stage();
+        popupStage.setTitle(title);
+        TextBox stageName = rs.makeTextField(consumer, "", 100.0,20.0,200.0,30.0, rs.getPlainFont());
+        Text stageLabel = rs.makeText(label, false, 12, Color.BLACK, 20.0, 50.0);
+        Button create = rs.makeStringButton("Create", Color.BLACK, false, Color.GRAY, 12.0,50.0, 100.0, 100.0, 30.0);
+        Button cancel = rs.makeStringButton("Cancel", Color.BLACK, false, Color.GRAY, 12.0,200.0, 100.0, 100.0, 30.0);
+        create.setOnMouseClicked(e -> createNewObject(stageName.getText()));
+        cancel.setOnMouseClicked(e -> popupStage.close());
+        Scene creationScene = new Scene(new Group(stageName, stageLabel, create, cancel), 400, 200);
+        popupStage.setScene(creationScene);
+        popupStage.show();
+    }
+
+    public abstract void createNewObject(String name);
 }
