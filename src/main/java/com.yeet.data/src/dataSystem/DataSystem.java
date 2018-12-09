@@ -5,10 +5,12 @@ import com.google.common.eventbus.Subscribe;
 import dataSubsystem.GameFileSetup;
 import javafx.event.Event;
 import messenger.external.CreateGameEvent;
+import messenger.external.CreateStageEvent;
 import messenger.external.EventBusFactory;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -36,6 +38,18 @@ public class DataSystem {
     @Subscribe
     public void saveGameFiles(Event event) {
         //myEB.post(event);
+    }
+
+    @Subscribe
+    public void createStageFiles(CreateStageEvent event) {
+        File gameStageDirectory = event.getStageDirectory();
+        gameStageDirectory.mkdir();
+        File stageProperties = new File(gameStageDirectory.getPath()+myFP.STAGEPROPERTIES.getPath());
+        try {
+            stageProperties.createNewFile();
+        } catch (IOException e) {
+            System.out.println("Could not create stage file");
+        }
     }
 
     private void createDirectory(String path) {

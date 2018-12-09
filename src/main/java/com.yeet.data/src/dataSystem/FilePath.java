@@ -7,7 +7,8 @@ public enum FilePath {
     DATAPATH("/data"),
     BACKGROUNDPATH("/data/background"),
     BGMPATH("/data/bgm"),
-    TILEPATH("/data/tiles");
+    TILEPATH("/data/tiles"),
+    STAGEPROPERTIES("/stageproperties.xml");
 
     private String myPath;
 
