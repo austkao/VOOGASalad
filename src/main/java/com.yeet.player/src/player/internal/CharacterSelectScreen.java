@@ -75,7 +75,7 @@ public class CharacterSelectScreen extends Screen {
         bg.setFitWidth(1280);
         bg.setFitHeight(800);
         bg.setOpacity(0.52);
-        HBox menuBlock = new MenuTopper(30.0,previousScene);
+        HBox menuBlock = new MenuTopper(super.getMyRenderer().makeText("",true,5,Color.BLACK,0.0,0.),30.0,previousScene);
         myCharGrid = new CharacterGrid(myDirectory,CHAR_PER_ROW, super.getMyRenderer().makeText("",true,15,Color.WHITE,0.0,0.0), this::setCharacter);
         Rectangle spacer = new Rectangle(1280,10,Color.TRANSPARENT);
         HBox charBox = new HBox(10);
