@@ -1,8 +1,6 @@
 package editor.interactive;
 
 import editor.EditorManager;
-import editor.home.MapHome;
-import editor.interactive.EditorSuper;
 import editor.MapSettings;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
@@ -16,16 +14,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import renderer.external.Structures.Level;
-import renderer.external.Structures.ScrollableItem;
-import renderer.external.Structures.ScrollablePane;
-
 import renderer.external.Scrollable;
 import renderer.external.Structures.*;
+import xml.XMLParser;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -60,21 +55,18 @@ public class MapEditor extends EditorSuper {
     private String myCurrentTileName;
     private ScrollablePaneNew myScrollablePane;
     private Level level;
-    private Group root;
     private String myBackgroundImage;
     private String myBGMFileName;
     private ResourceBundle myTags;
     private File myStageDirectory;
-    private MapHome myMH;
+    private File backgroundFile;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
-     * @param root
      * @param em
      */
-    public MapEditor(Group root, EditorManager em){
-        super(root,em);
-        this.root = root;
+    public MapEditor(EditorManager em){
+        super(new Group(), em);
         myBackgroundImage = DEFAULT_BACKGROUND_IMAGE;
         myBGMFileName = DEFAULT_BGM;
         try {
@@ -123,14 +115,17 @@ public class MapEditor extends EditorSuper {
             s.setScene();
         });
         root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, settings);
+        backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
     }
 
-    public MapEditor(Group root, EditorManager em, File xmlFile, MapHome MH) {
-        this(root, em);
+    public MapEditor(EditorManager em, File xmlFile, boolean isNew) {
+        this(em);
         File stageProperties = Paths.get(xmlFile.getPath(), "stageproperties.xml").toFile();
-        loadMapFile(stageProperties);
+        if(!isNew) {
+            loadMapFile(stageProperties);
+        }
+        isNew = isNew;
         myStageDirectory = xmlFile;
-        myMH = MH;
     }
 
     private void initializeScrollPane(){
@@ -168,18 +163,16 @@ public class MapEditor extends EditorSuper {
      * User selects background, and it is applied to level.
      */
     private void chooseBackground(){
-        File backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
         ListView<String> backgroundList = myRS.makeDirectoryFileList(backgroundFile, false);
         Stage edit = new Stage();
         edit.setScene(new Scene(new Group(backgroundList)));
         backgroundList.setOnMouseClicked(e -> {
-            level.setBackground(backgroundFile.toURI()+"/"+backgroundList.getSelectionModel().getSelectedItem());
+            myBackgroundImage = backgroundList.getSelectionModel().getSelectedItem();
+            level.setBackground(backgroundFile.toURI()+"/"+myBackgroundImage);
             edit.close();
         });
         edit.show();
     }
-
-
 
     private void chooseTileImage(){
         File tileFile = chooseImage("Choose Tile Image");
@@ -224,7 +217,6 @@ public class MapEditor extends EditorSuper {
         File file = Paths.get(myStageDirectory.getPath(), myStageDirectory.getName()+".png").toFile();
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", file);
-            myMH.getScroll().addItem(new ScrollItem(img, new Text(myStageDirectory.getName())));
         } catch (IOException e) {
             // TODO: handle exception here
         }
@@ -255,16 +247,20 @@ public class MapEditor extends EditorSuper {
 
     private void loadMapFile(File xmlFile) {
         try {
-            HashMap<String, ArrayList<String>> data = loadXMLFile("map", xmlFile);
+            XMLParser parser = loadXMLFile(xmlFile);
+            HashMap<String, ArrayList<String>> data = parser.parseFileForElement("map");
             ArrayList<String> xPos = data.get("x");
             ArrayList<String> yPos = data.get("y");
             ArrayList<String> image = data.get("image");
+            ArrayList<String> background = parser.parseFileForAttribute("background", "bgFile");
+            level.setBackground(backgroundFile.toURI()+"/"+background.get(0));
+            myBackgroundImage = background.get(0);
             if(xPos.size() != yPos.size()) {
                 throw new IOException("Incorrect information contained within xml");
             }
             Path tilePath = Paths.get(myEM.getGameDirectoryString(), DEFAULT_IMAGE_DIR);
             for(int i = 0; i < xPos.size(); i++) {
-                Path imagePath = Paths.get(tilePath.toString(), image.get(i));
+                Path imagePath = Paths.get(tilePath.toString(), image.get(i)+".png");
                 File imageFile = new File(imagePath.toString());
                 level.processTile(Integer.parseInt(xPos.get(i)), Integer.parseInt(yPos.get(i)), new Image(imageFile.toURI().toString()), image.get(i));
             }

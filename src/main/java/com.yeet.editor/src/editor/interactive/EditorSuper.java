@@ -3,6 +3,7 @@ package editor.interactive;
 import editor.EditorConstant;
 import editor.EditorManager;
 import editor.EditorScreen;
+import editor.home.EditorHome;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -34,6 +35,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     protected EditorManager myEM;
     protected RenderSystem myRS;
     protected EditorConstant myEC;
+    protected boolean isNew;
 
     public EditorSuper(Group root, EditorManager em){
         super(root);
@@ -42,6 +44,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         myRS = new RenderSystem();
         Text t = createTitle();
         root.getChildren().add(t);
+        isNew = false;
     }
 
     /**
@@ -49,7 +52,17 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
      */
     public Button createBack(Scene scene){
         Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSITION.getValue(),0.0,150.0,50.0);
-        back.setOnMouseClicked(e -> myEM.changeScene(scene));
+        back.setOnMouseClicked(e -> {
+            if(!isNew) {
+                myEM.changeScene(scene);
+                if(scene instanceof EditorHome) {
+                    EditorHome home = (EditorHome) scene;
+                    home.updateScroll();
+                }
+            } else {
+                System.out.println("Add error alert here.");
+            }
+        });
         root.getChildren().add(back);
         return back;
     }
@@ -64,17 +77,16 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         root.getChildren().add(save);
     }
 
-    public HashMap<String, ArrayList<String>> loadXMLFile(String tag, File xmlFile) {
+    public XMLParser loadXMLFile(File xmlFile) {
         try {
             if(xmlFile != null) {
-                XMLParser parser = new XMLParser(xmlFile);
-                return parser.parseFileForElement(tag);
+                return new XMLParser(xmlFile);
             } else {
                 throw new IOException("Cannot load file");
             }
         } catch (IOException e) {
             System.out.println("An error has occurred.");
-            return new HashMap<>();
+            return null;
         }
     }
 

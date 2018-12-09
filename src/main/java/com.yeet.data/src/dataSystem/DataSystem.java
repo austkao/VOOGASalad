@@ -51,11 +51,26 @@ public class DataSystem {
 
     @Subscribe
     public void deleteDirectory(DeleteDirectoryEvent event) {
-        event.getDirectory().delete();
+        File directory = event.getDirectory();
+        while(directory.exists()) {
+            System.out.println("Entered loop");
+            deleteFile(directory);
+        }
     }
 
     private void createDirectory(String path) {
         File directory = new File(path);
         directory.mkdir();
+    }
+
+    private void deleteFile(File file) {
+        File[] files = file.listFiles();
+        if(files == null || files.length == 0) {
+            file.delete();
+        } else {
+            for(File f : files) {
+                deleteFile(f);
+            }
+        }
     }
 }

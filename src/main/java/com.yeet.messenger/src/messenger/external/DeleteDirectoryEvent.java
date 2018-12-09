@@ -7,7 +7,8 @@ public class DeleteDirectoryEvent extends Event {
     private File myDirectory;
 
     public DeleteDirectoryEvent(String name, File directory) {
-
+        myName = name;
+        myDirectory = directory;
     }
 
     @Override
