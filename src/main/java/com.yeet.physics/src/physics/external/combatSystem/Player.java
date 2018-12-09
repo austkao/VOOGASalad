@@ -20,7 +20,6 @@ public class Player {
     private int numOfLives;
     private int powerLevel;
     private int attackDamage;
-    private float attackSpeed;
     private List<Player> isAttackingTargets;
     private List<List<Integer>> hitboxes;
     private Player beingAttackedBy;

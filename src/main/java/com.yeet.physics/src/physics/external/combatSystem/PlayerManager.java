@@ -1,6 +1,7 @@
 package physics.external.combatSystem;
 
 import messenger.external.CombatActionEvent;
+import physics.external.PhysicsSystem;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +39,10 @@ public class PlayerManager {
         playerMap.get(id).changePlayerStateOnEvent(event);
     }
 
-    public void setBots(List<Integer> botsID){
+    public void setBots(List<Integer> botsID, PhysicsSystem physicsSystem){
         for(int id: botsID){
-            getPlayerByID(id).setIsBot(true);
+//            getPlayerByID(id).setIsBot(true);
+            playerMap.put(id, new NormalBot(physicsSystem));
         }
     }
 

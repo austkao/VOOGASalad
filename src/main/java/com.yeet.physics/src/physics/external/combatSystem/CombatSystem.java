@@ -60,7 +60,7 @@ public class CombatSystem {
     public void onIdleEvent(IdleEvent idleEvent){
         int id = idleEvent.getId();
         if(playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.SINGLE_JUMP
-                || playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.DOUBLE_JUMP){
+                && playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.DOUBLE_JUMP){
             playerManager.setToInitialStateByID(id);
         }
     }
@@ -105,6 +105,7 @@ public class CombatSystem {
     @Subscribe
     public void onJumpSuccessfulEvent(JumpSuccessfulEvent event){
 //        System.out.println("Jump.");
+        System.out.println(playerManager.getPlayerByID(event.getInitiatorID()).getPlayerState());
         physicsSystem.jump(event.getInitiatorID());
     }
 
@@ -112,7 +113,14 @@ public class CombatSystem {
     public void onGameStart(GameStartEvent gameStartEvent){
         botList = gameStartEvent.getBots();
         playerManager = new PlayerManager(playerMap.size());
-        playerManager.setBots(botList);
+        playerManager.setBots(botList, physicsSystem);
+        PlayerGraph graph = new PlayerGraph(playerManager, physicsSystem.getPositionsMap());
+        for(int id: botList){
+            ((Bot)playerManager.getPlayerByID(id)).setPlayerGraph(graph);
+        }
     }
+
+//    @Subscribe
+
 
 }

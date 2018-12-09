@@ -5,7 +5,6 @@ import messenger.external.CombatActionEvent;
 import messenger.external.PlayerState;
 import physics.external.PhysicsSystem;
 
-import java.awt.geom.Point2D;
 import java.util.*;
 
 /*
@@ -22,8 +21,8 @@ import java.util.*;
 
 public class NormalBot extends Bot {
     Queue<CombatActionEvent> queue = new LinkedList<>();
-    Queue<Integer> opponents = new PriorityQueue<>();
-    PhysicsSystem physicsSystem;
+    private PhysicsSystem physicsSystem;
+//    private PlayerGraph playerGraph;
 
     Double[][] matrix = {{},
                          {},
@@ -36,32 +35,26 @@ public class NormalBot extends Bot {
         setPlayerState(PlayerState.MOVING);
     }
 
-    public NormalBot(HashMap<Integer, Point2D> playerMap, PhysicsSystem physicsSystem){
+    public NormalBot(PhysicsSystem physicsSystem){
+        super();
+        setTransitionMatrix(matrix);
+        setPlayerState(PlayerState.MOVING);
         this.physicsSystem = physicsSystem;
-
     }
 
-    private void updatePositions(){
-        Map<Integer, Point2D> positions = physicsSystem.getPositionsMap();
-
-        for(int id: positions.keySet()){
-            if(id==this.id){
-
-            }
-            else{
-
-            }
-        }
-    }
 
     @Override
     public void step() {
+        //update positions
+        playerGraph.updatePositionMap(physicsSystem.getPositionsMap());
+
+        Player nearest = playerGraph.getNearestNeighbor(this.id);
 
     }
 
     @Override
     public void transition() {
-
+        
     }
 
     @Override
