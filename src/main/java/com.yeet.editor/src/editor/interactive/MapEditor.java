@@ -60,21 +60,17 @@ public class MapEditor extends EditorSuper {
     private String myCurrentTileName;
     private ScrollablePaneNew myScrollablePane;
     private Level level;
-    private Group root;
     private String myBackgroundImage;
     private String myBGMFileName;
     private ResourceBundle myTags;
     private File myStageDirectory;
-    private MapHome myMH;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
-     * @param root
      * @param em
      */
-    public MapEditor(Group root, EditorManager em){
-        super(root,em);
-        this.root = root;
+    public MapEditor(EditorManager em){
+        super(new Group(), em);
         myBackgroundImage = DEFAULT_BACKGROUND_IMAGE;
         myBGMFileName = DEFAULT_BGM;
         try {
@@ -125,12 +121,11 @@ public class MapEditor extends EditorSuper {
         root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, settings);
     }
 
-    public MapEditor(Group root, EditorManager em, File xmlFile, MapHome MH) {
-        this(root, em);
+    public MapEditor(EditorManager em, File xmlFile) {
+        this(em);
         File stageProperties = Paths.get(xmlFile.getPath(), "stageproperties.xml").toFile();
         loadMapFile(stageProperties);
         myStageDirectory = xmlFile;
-        myMH = MH;
     }
 
     private void initializeScrollPane(){
@@ -224,7 +219,6 @@ public class MapEditor extends EditorSuper {
         File file = Paths.get(myStageDirectory.getPath(), myStageDirectory.getName()+".png").toFile();
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", file);
-            myMH.getScroll().addItem(new ScrollItem(img, new Text(myStageDirectory.getName())));
         } catch (IOException e) {
             // TODO: handle exception here
         }

@@ -3,6 +3,7 @@ package editor.interactive;
 import editor.EditorConstant;
 import editor.EditorManager;
 import editor.EditorScreen;
+import editor.home.EditorHome;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -49,7 +50,13 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
      */
     public Button createBack(Scene scene){
         Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSITION.getValue(),0.0,150.0,50.0);
-        back.setOnMouseClicked(e -> myEM.changeScene(scene));
+        back.setOnMouseClicked(e -> {
+            myEM.changeScene(scene);
+            if(scene instanceof EditorHome) {
+                EditorHome home = (EditorHome) scene;
+                home.updateScroll();
+            }
+        });
         root.getChildren().add(back);
         return back;
     }

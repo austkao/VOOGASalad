@@ -43,7 +43,7 @@ public class MapHome extends EditorHome {
     }
 
     public void setEditor(File directory){
-        myEditor = new MapEditor(new Group(),em, directory, this);
+        myEditor = new MapEditor(em, directory);
         myEditor.createBack(this);
         em.changeScene(myEditor);
     }

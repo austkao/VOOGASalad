@@ -46,7 +46,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         initializeVBox();
         initializeScroll();
         Text title = createTitle();
-        root.getChildren().addAll(title,myScroll.getScrollPane(),switchView);
+        root.getChildren().addAll(title,switchView);
         consumer = new Consumer() {
             @Override
             public void accept(Object o) {
@@ -58,11 +58,16 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     protected abstract String getDir();
 
     private void initializeScroll() {
-        Path userPath = Paths.get(System.getProperty("user.dir"));
-        File dir = new File(userPath+RESOURCE_PATH+getDir());
-        myScroll = new ScrollablePaneNew(dir,200,150, 520, 600);
+        File dir = Paths.get(em.getGameDirectoryString(), "stages").toFile();
+        myScroll = new ScrollablePaneNew(200,150, 520, 600);
+        for(File file : dir.listFiles()) {
+            if(file.isDirectory()) {
+                myScroll.loadFiles(file);
+            }
+        }
         switchView = getRender().makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,100.0,100.0,30.0);
         switchView.setOnMouseClicked(event -> myScroll.switchView());
+        root.getChildren().add(myScroll.getScrollPane());
     }
     public RenderSystem getRender(){
         return rs;
@@ -113,4 +118,9 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     }
 
     public abstract void createNewObject(String name);
+
+    public void updateScroll() {
+        root.getChildren().remove(myScroll);
+        initializeScroll();
+    }
 }
