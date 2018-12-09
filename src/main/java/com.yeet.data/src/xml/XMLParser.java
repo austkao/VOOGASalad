@@ -2,6 +2,7 @@ package xml;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,7 +40,6 @@ public class XMLParser implements Parser {
         NodeList elemNodes = xmlDocument.getElementsByTagName(element);
         for(int i = 0; i < elemNodes.getLength(); i++) {
             Element elem = (Element) elemNodes.item(i);
-            System.out.println(elem.getTagName());
             NamedNodeMap elemAttributes = elem.getAttributes();
             for (int j = 0; j < elemAttributes.getLength(); j++) {
                 Node attributeNode = elemAttributes.item(j);

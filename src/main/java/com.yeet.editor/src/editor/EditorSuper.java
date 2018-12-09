@@ -102,4 +102,8 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     public Text createTitle() {
         return myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
     }
+
+    public RenderSystem getRS(){
+        return myRS;
+    }
 }

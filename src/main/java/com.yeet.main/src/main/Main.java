@@ -18,7 +18,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import messenger.external.CreateGameEvent;
-import messenger.external.Event;
 import messenger.external.EventBusFactory;
 import player.external.Player;
 import renderer.external.RenderSystem;
@@ -54,7 +53,12 @@ public class Main extends Application {
     private Scene homeScene;
     private MainConstant myMC;
     private EventBus myEB;
-
+    private FilenameFilter filter = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            return name.startsWith("game");
+        }
+    };
 
     public static void main(String[] args){
         launch(args);
@@ -79,9 +83,8 @@ public class Main extends Application {
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
         //set up systems
-        myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
-        myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
-        myRenderSystem = new RenderSystem(myPlainFont,myEmphasisFont);
+
+        myRenderSystem = new RenderSystem();
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
         myDataSystem = new DataSystem();
         myConsole = new Console();
@@ -90,9 +93,17 @@ public class Main extends Application {
         EventBusFactory.getEventBus().register(myPlayer);
         EventBusFactory.getEventBus().register(myConsole);
         //display setup
+
         myPopup = createErrorPopup();
+        ImageView displayFiller = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("home_splash_filler.png")));
+        displayFiller.setX(80.0);
+        displayFiller.setY(76.0);
+        root.getChildren().add(displayFiller);
         mySplashDisplay = createSplashDisplay();
         root.getChildren().add(mySplashDisplay);
+        Text titleText = myRenderSystem.makeText("Yeet Fighter Game Engine",true,70,Color.WHITE,851.0,63.0);
+        titleText.setWrappingWidth(389.0);
+        root.getChildren().add(titleText);
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
         root.getChildren().add(newButton);
         editButton = myRenderSystem.makeStringButton("Edit Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,311.68,307.21,94.6);
@@ -123,13 +134,6 @@ public class Main extends Application {
         initializeGameEditor(defaultFile);
     }
 
-    FilenameFilter filter = new FilenameFilter() {
-        @Override
-        public boolean accept(File dir, String name) {
-            return name.startsWith("game");
-        }
-    };
-
     private void initializeGameEditor(File gameFile) {
         em.setGameDirectory(gameFile);
         em.setEditorHomeScene();
@@ -139,7 +143,6 @@ public class Main extends Application {
 
     /** Create a {@code DirectoryChooser} and set the active game directory if it is valid*/
     private void setDirectory(File directory){
-        System.out.println(directory.getPath());
         try {
             if(directory!=null && checkDirectory(directory)){
                 Image splash = new Image(String.format("%s%s",directory.toURI(),"splash.png"));

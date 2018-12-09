@@ -3,10 +3,7 @@ package renderer.external;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -71,7 +68,7 @@ public class RenderSystem implements Renderer{
      *  @param width The width of the button
      *  @param height The height of the button */
     public Button makeStringButton(String text, Color buttonColor, Boolean emphasis, Color textColor, Double fontSize, Double x, Double y, Double width, Double height){
-        Font font;
+        Font font = new Font(1.0);
         if(emphasis){
             font = myEmphasisFont;
         }
@@ -80,7 +77,9 @@ public class RenderSystem implements Renderer{
         }
         Button button = new Button(text);
         //BUTTON_FORMAT: Color buttonColor, String fontName, Double borderRadius, Double fontSize
-        button.setStyle(String.format(BUTTON_FORMAT,toRGBCode(buttonColor),font.getName(),height,fontSize));
+        button.setStyle(String.format(BUTTON_FORMAT,
+                toRGBCode(buttonColor),
+                font.getName(),height,fontSize));
         button.setTextFill(textColor);
         button.setLayoutX(x);
         button.setLayoutY(y);
@@ -90,6 +89,30 @@ public class RenderSystem implements Renderer{
         button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
         button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize,1.0,1.0)));
         return button;
+    }
+    public Font getPlainFont(){
+        return myPlainFont;
+    }
+
+    public void buttonHoverEffect(ToggleButton button){
+        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15, 1.1,1.1)));
+        button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15,1.0,1.0)));
+    }
+
+    public void styleButton(ToggleButton button){
+        button.setStyle(String.format(BUTTON_FORMAT,
+                toRGBCode(Color.BLACK),
+                this.getPlainFont().getName(),20,15));
+    }
+    public void buttonHoverEffect(Button button){
+        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15, 1.1,1.1)));
+        button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15,1.0,1.0)));
+    }
+
+    public void styleButton(Button button){
+        button.setStyle(String.format(BUTTON_FORMAT,
+                toRGBCode(Color.BLACK),
+                this.getPlainFont().getName(),15,15));
     }
 
     /** Creates a button using an image
@@ -174,8 +197,8 @@ public class RenderSystem implements Renderer{
      * @param y The y position of the {@code Slider}
      * @param w The width of the {@code Slider}
      */
-    public SliderBox makeSlider(String text, Consumer<Double> fieldSetter, Double x, Double y, Double w){
-        return new SliderBox(text, myPlainFont, fieldSetter, x, y, w);
+    public SliderBox makeSlider(String text, Double startVal,Consumer<Double> fieldSetter, Double x, Double y, Double w){
+        return new SliderBox(text, myPlainFont, startVal,fieldSetter, x, y, w);
     }
 
     /** Creates a {@code FileChooser} for a specific file type

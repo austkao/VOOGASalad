@@ -16,6 +16,7 @@ public class SpriteAnimation extends Transition {
     private final Double offsetY;
     private final Double width;
     private final Double height;
+    private Double direction;
 
     private int lastIndex;
 
@@ -47,12 +48,25 @@ public class SpriteAnimation extends Transition {
     @Override
     protected void interpolate(double frac) {
         final int index = Math.min((int) Math.floor(frac * count), count - 1);
+        mySprite.setScaleX(direction);
         if (index != lastIndex) {
             final Double x = (index % columns) * width  + offsetX;
             final Double y = (index / columns) * height + offsetY;
             mySprite.setViewport(x,y,width,height);
             lastIndex = index;
         }
+    }
+
+    @Override
+    public void play(){
+        direction = mySprite.getScaleX();
+        /*System.out.println("Sprite direction at beginning: "+direction);
+        this.setOnFinished(event -> {
+            mySprite.defaultViewport();
+            mySprite.setScaleX(direction);
+            System.out.println("Sprite direction at end: "+mySprite.getScaleX());
+        });*/
+        super.play();
     }
 
     public int getCount(){

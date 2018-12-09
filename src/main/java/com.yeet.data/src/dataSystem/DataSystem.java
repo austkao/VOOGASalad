@@ -14,18 +14,11 @@ import java.nio.file.Paths;
 
 public class DataSystem {
     private EventBus myEB;
-    private FilenameFilter filter;
     private FilePath myFP;
 
     public DataSystem() {
         myEB = EventBusFactory.getEventBus();
         myEB.register(this);
-        filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.startsWith("game");
-            }
-        };
     }
 
     @Subscribe

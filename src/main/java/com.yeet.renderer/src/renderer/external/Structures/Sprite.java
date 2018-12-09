@@ -10,18 +10,28 @@ import javafx.scene.image.ImageView;
 public class Sprite extends ImageView {
 
     private Image mySpriteSheet;
+    private Rectangle2D myDefaultViewport;
     private Rectangle2D myViewport;
 
-    /** Creates a new {@code Sprite} assuming no offset
+    /** Creates a new {@code Sprite} assuming no offset */
+    public Sprite(Image image,Double width, Double height){
+        this(image, 0.0, 0.0, width, height);
+    }
+
+
+    /** Creates a new {@code Sprite}
      *  @param image The spritesheet for the {@code Sprite}
+     *  @param offsetX The X offset of the first frame
+     *  @param offsetY The Y offset of the first frame
      *  @param width The width of the first frame
      *  @param height The height of the first frame
      */
-    public Sprite(Image image,Double width, Double height){
+    public Sprite(Image image, Double offsetX, Double offsetY, Double width, Double height){
         super(image);
         mySpriteSheet = image;
         if(width>0 && height>0){
-            myViewport = new Rectangle2D(0,0,width,height);
+            myDefaultViewport =  new Rectangle2D(offsetX,offsetY,width,height);
+            myViewport = new Rectangle2D(offsetX,offsetY,width,height);
         }
         else{
             System.out.println("Negative values not allowed for width and height! Setting to default values.");
@@ -48,6 +58,11 @@ public class Sprite extends ImageView {
     public void setViewport(Double offsetX, Double offsetY){
         myViewport = new Rectangle2D(offsetX,offsetY,this.getViewport().getWidth(),this.getViewport().getHeight());
         this.setViewport(myViewport);
+    }
+
+    /** Resets the {@code Sprite} to the originally defined viewport */
+    public void defaultViewport(){
+        this.setViewport(myDefaultViewport);
     }
 }
 

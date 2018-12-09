@@ -22,7 +22,7 @@ public class SliderBox extends HBox {
     private Consumer myFieldSetter;
 
     /** Default constructor */
-    public SliderBox(String text, Font font, Consumer<Double> fieldSetter, Double x, Double y, Double w){
+    public SliderBox(String text, Font font, Double startVal, Consumer<Double> fieldSetter, Double x, Double y, Double w){
         super();
         this.setAlignment(Pos.CENTER);
         this.setLayoutX(x);
@@ -31,15 +31,21 @@ public class SliderBox extends HBox {
         mySlider =  new Slider();
         mySlider.setShowTickMarks(false);
         mySlider.setShowTickLabels(false);
-        mySlider.setValue(SLIDER_DEFAULT);
-        myValue = SLIDER_DEFAULT;
-        mySlider.setPrefSize(w, SLIDER_HEIGHT);
+        mySlider.setValue(startVal);
+        myValue = startVal;
+        this.setMinSize(w, SLIDER_HEIGHT);
+        //this.setPrefSize(w, SLIDER_HEIGHT);
+        this.setAlignment(Pos.CENTER_LEFT);
+
+        this.setMaxSize(w, SLIDER_HEIGHT);
+
         Label name = new Label(text);
         name.setFont(font);
         name.setLabelFor(mySlider);
-        mySliderLabel = new Label(String.valueOf(SLIDER_DEFAULT));
+        mySliderLabel = new Label(String.valueOf(startVal));
         mySliderLabel.setLabelFor(mySlider);
         mySliderLabel.setFont(font);
+        mySlider.setOnMouseDragged(event -> mySliderLabel.setText(String.valueOf(Math.round(mySlider.getValue() * 10.0) / 10.0)));
         mySlider.setOnMouseReleased(event -> setNewValue(mySlider.getValue()));
         this.getChildren().addAll(name,mySlider,mySliderLabel);
     }
@@ -54,5 +60,9 @@ public class SliderBox extends HBox {
         myFieldSetter.accept(Math.round(value * 10.0) / 10.0);
         mySliderLabel.setText(String.valueOf(Math.round(value * 10.0) / 10.0));
         myValue = Math.round(value * 10.0) / 10.0;
+    }
+
+    public Slider getSlider(){
+        return mySlider;
     }
 }

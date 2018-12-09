@@ -33,6 +33,13 @@ public class CombatSystem {
 
     }
 
+    /** Returns the {@code PlayerState} of the player specified
+     *  @param id The player to retrieve the state for
+     */
+    public PlayerState getPlayerState(int id){
+        return playerManager.getPlayerByID(id).getPlayerState();
+    }
+
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
         int id = event.getInitiatorID();

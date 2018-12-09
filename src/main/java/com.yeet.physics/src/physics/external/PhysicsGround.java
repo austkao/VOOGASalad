@@ -10,4 +10,14 @@ public class PhysicsGround extends PhysicsObject {
     public boolean isPhysicsGround(){
         return true;
     }
+
+    @Override
+    public PhysicsVector getXVelocity() {
+        return null;
+    }
+
+    @Override
+    public PhysicsVector getYVelocity() {
+        return null;
+    }
 }

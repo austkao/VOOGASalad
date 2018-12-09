@@ -19,4 +19,9 @@ public class MoveEvent extends CombatActionEvent{
     public void onFailure() {
 
     }
+
+    @Override
+    public String getName(){
+        return "Move Event: Player "+initiatorID+" attempts to move";
+    }
 }

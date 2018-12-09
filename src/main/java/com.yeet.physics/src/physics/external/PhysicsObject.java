@@ -23,12 +23,18 @@ public abstract class PhysicsObject {
         this.myCoordinateBody = new CoordinateBody(start, dims);
         this.myDirection = 0; // start facing right
         this.id = id;
+        this.isGrounded = false;
     }
 
     public void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
-        AccelerationCalculator ACalc = new AccelerationCalculator(force, myAcceleration, myVelocity, myMass);
+        AccelerationCalculator ACalc = new AccelerationCalculator(force, myVelocity, myMass);
         this.myAcceleration = ACalc.updateAcceleration();
         this.myVelocity = ACalc.updateVelocity();
+        if (id == 1) {
+            //System.out.println("CURRENT VELOCITY: ");
+            //System.out.println(myVelocity.getMagnitude());
+            //System.out.println(myVelocity.getDirection());
+        }
     }
 
     public double getMass() {
@@ -62,10 +68,6 @@ public abstract class PhysicsObject {
         return false;
     }
 
-    public boolean isGrounded() { return isGrounded; }
-
-    public void setGrounded(boolean bool) { isGrounded = bool; }
-
     public void addCurrentForce(PhysicsVector force) {
         currentForces.add(force);
     }
@@ -87,4 +89,16 @@ public abstract class PhysicsObject {
     }
 
     int getId(){return this.id;}
+
+    public abstract PhysicsVector getXVelocity();
+
+    public abstract PhysicsVector getYVelocity();
+
+    public void setGrounded(boolean b){
+        this.isGrounded = b;
+    }
+
+    public boolean isGrounded(){
+        return this.isGrounded;
+    }
 }
