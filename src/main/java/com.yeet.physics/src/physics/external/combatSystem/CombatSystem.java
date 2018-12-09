@@ -55,6 +55,7 @@ public class CombatSystem {
         if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);
         }
+
     }
 
     @Subscribe
@@ -139,7 +140,6 @@ public class CombatSystem {
         }
     }
 
-//    @Subscribe
 
 
 }

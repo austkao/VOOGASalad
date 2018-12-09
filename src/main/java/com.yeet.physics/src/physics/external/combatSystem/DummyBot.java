@@ -2,7 +2,6 @@ package physics.external.combatSystem;
 
 import messenger.external.*;
 
-import java.util.Random;
 
 public class DummyBot extends Bot{
 
@@ -19,19 +18,15 @@ public class DummyBot extends Bot{
 
     @Override
     public void step() {
+        transition();
+    }
+
+    @Override
+    public void transition() {
         PlayerState currentState = this.getPlayerState();
         int row = map.get(currentState);
         PlayerState nextState = getNextState(matrix[row]);
         takeActionBasedOnNextState(nextState);
     }
-
-    @Override
-    public void transition() {
-
-    }
-
-
-
-
 
 }

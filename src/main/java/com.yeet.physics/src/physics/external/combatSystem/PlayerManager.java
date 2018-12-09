@@ -45,7 +45,7 @@ public class PlayerManager {
     public void setBots(List<Integer> botsID, PhysicsSystem physicsSystem){
         for(int id: botsID){
 //            getPlayerByID(id).setIsBot(true);
-            playerMap.put(id, new NormalBot(physicsSystem));
+            playerMap.put(id, new HardBot(physicsSystem));
         }
     }
 
@@ -86,6 +86,15 @@ public class PlayerManager {
             playerMap.get(id).setNumOfLives(numOfLives);
         }
     }
+
+//    public void sendEventToBots(CombatActionEvent combatActionEvent){
+//        for(Player player: playerMap.values()){
+//            if(player.isBot()){
+////                System.out.println("Receive events.");
+//                ((Bot)player).receiveEvent(combatActionEvent);
+//            }
+//        }
+//    }
 
     // check if the id passed in exists in the map
     private boolean checkIDValid(int id){

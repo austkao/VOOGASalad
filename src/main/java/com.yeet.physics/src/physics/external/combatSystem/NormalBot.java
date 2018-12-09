@@ -1,6 +1,5 @@
 package physics.external.combatSystem;
 
-import com.google.common.eventbus.Subscribe;
 import messenger.external.*;
 import physics.external.PhysicsSystem;
 
@@ -20,9 +19,8 @@ import java.util.*;
  */
 
 public class NormalBot extends Bot {
-    Queue<CombatActionEvent> queue = new LinkedList<>();
-    private PhysicsSystem physicsSystem;
-    private static final double DETECTION_RADIUS = 1.0;
+    protected PhysicsSystem physicsSystem;
+    protected static final double DETECTION_RADIUS = 1.0;
 
     Double[][] matrix = {{0.1,0.1,0.7,0.1},
                          {0.1,0.1,0.8,0.0},
@@ -62,15 +60,7 @@ public class NormalBot extends Bot {
         takeActionBasedOnNextState(nextState);
     }
 
-    @Subscribe
-    public void onCombatActionEvent(CombatActionEvent combatActionEvent){
-        switch (combatActionEvent.getInputPlayerState()){
-            case MOVING: case CROUCH: case SINGLE_JUMP: case ATTACKING:
-                queue.offer(combatActionEvent);
-        }
-    }
-
-    private void moveCloserToTarget(Player target, Map<Integer, Point2D> positions){
+    protected void moveCloserToTarget(Player target, Map<Integer, Point2D> positions){
         Point2D selfPos = positions.get(this.id);
         Point2D targetPos = positions.get(target.id);
 

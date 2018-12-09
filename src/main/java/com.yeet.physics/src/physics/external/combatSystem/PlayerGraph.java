@@ -49,12 +49,16 @@ public class PlayerGraph {
             queue.offer(positionMap.get(adj.id));
         }
 
-
-
         // get the closest neighbor
         Point2D closest = queue.peek();
-//        System.out.println("Closest:" + closest);
         return closest;
+    }
+
+    /* true if target is on the left of self */
+    public boolean getFacingDirection(int self, int target){
+        Point2D selfPos = positionMap.get(self);
+        Point2D targetPos = positionMap.get(target);
+        return targetPos.getX()<selfPos.getX();
     }
 
     public Player findPlayerByPosition(Point2D pos){
