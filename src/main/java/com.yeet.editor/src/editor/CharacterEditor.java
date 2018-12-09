@@ -287,7 +287,20 @@ public class CharacterEditor extends EditorSuper{
             setImageView(spriteSheet,sprites.toURI().toString());
         }
         //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
-        currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
+
+        TextInputDialog text = new TextInputDialog("");
+        text.setTitle("Enter X Offset of initial frame");
+        double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
+        text.setTitle("Enter Y Offset");
+        double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
+        text.setTitle("Enter Width");
+        double width = Double.parseDouble(text.showAndWait().orElse("0"));
+        text.setTitle("Enter Height");
+        double height = Double.parseDouble(text.showAndWait().orElse("0"));
+
+
+        //currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
+        currentSprite = myRS.makeSprite(spriteSheet.getImage(), offsetX, offsetY, width, height);
         currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
         currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
 
@@ -356,7 +369,7 @@ public class CharacterEditor extends EditorSuper{
             return;
         }
     }
-    
+
     /**
      * User selects background, and it is applied to level.
      */
@@ -392,7 +405,7 @@ public class CharacterEditor extends EditorSuper{
     private SpriteAnimation getNewAnimation(){
         TextInputDialog text = new TextInputDialog("");
         text.setTitle("Enter Time In seconds");
-        int time = Integer.parseInt(text.showAndWait().orElse("0"));
+        double time = Double.parseDouble(text.showAndWait().orElse("0"));
         text.setTitle("Enter Frame Count");
         int count = Integer.parseInt(text.showAndWait().orElse("0"));
         text.setTitle("Enter Number of Columns");
