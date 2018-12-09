@@ -150,11 +150,10 @@ public class CharacterEditor extends EditorSuper {
     public CharacterEditor(EditorManager em, InputEditor editor, File characterDirectory, boolean isEdit) {
         this(em, editor);
         myDirectory = characterDirectory;
+        isSaved = isEdit;
         if(isEdit) {
             File characterProperties = Paths.get(characterDirectory.getPath(), "characterproperties.xml").toFile();
             loadCharacterData(characterProperties);
-        } else {
-
         }
     }
 
@@ -208,9 +207,9 @@ public class CharacterEditor extends EditorSuper {
     }
     private void makeSliders(){
         mySliders = new VBox(10);
-        healthSlider = myRS.makeSlider("health",50.0,consumer,0.0,0.0,200.0);
-        attackSlider = myRS.makeSlider("attack",50.0,consumer,0.0,0.0,200.0);
-        defenseSlider = myRS.makeSlider("defense",50.0,consumer,0.0,0.0,200.0);
+        healthSlider = myRS.makeSlider("health",50.0,consumer,0.0,0.0,400.0);
+        attackSlider = myRS.makeSlider("attack",50.0,consumer,0.0,0.0,400.0);
+        defenseSlider = myRS.makeSlider("defense",50.0,consumer,0.0,0.0,400.0);
 
         mySliders.getChildren().addAll(healthSlider,attackSlider,defenseSlider);
         mySliders.setLayoutX(950.0);

@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.paint.Color;
+import messenger.external.CreateStageEvent;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -18,28 +19,33 @@ public class CharacterHome extends EditorHome {
 
     public CharacterHome(EditorManager em){
         super(new Group(), em);
-        setInputEditor();
-        setEditor();
+        //setInputEditor();
+        //setEditor();
         Button input = getRender().makeStringButton("Edit Inputs",Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
         getMyBox().getChildren().add(input);
         input.setOnMouseClicked(e-> em.changeScene(inputEditor));
         myScroll = initializeScroll("characters");
+        buttonNew.setOnMouseClicked(e -> nameNewObject("Create Character", "Character Name:"));
         buttonDelete.setOnMouseClicked(e -> deleteCharacter(myScroll.getSelectedItem()));
+        buttonEdit.setOnMouseClicked(e -> initializeEditor(myScroll.getSelectedItem(), null));
     }
 
     private void setInputEditor(){
-        inputEditor = new InputEditor(em);
-        inputEditor.createBack(this);
+
     }
 
-    public void setEditor(){
-        myEditor = new CharacterEditor(em, new InputEditor(em));
+    public void setEditor(File directory, boolean isEdit){
+        inputEditor = new InputEditor(em);
+        inputEditor.createBack(this);
+        myEditor = new CharacterEditor(em, inputEditor, directory, isEdit);
         myEditor.createBack(this);
+        em.changeScene(myEditor);
     }
 
     @Override
     public void createNewObject(String name) {
-        em.changeScene(myEditor);
+        File characterDirectory = Paths.get(em.getGameDirectoryString(), "characters", name).toFile();
+        setEditor(characterDirectory, false);
     }
 
     public void initializeEditor(ButtonBase bb, File directory) {
@@ -47,15 +53,16 @@ public class CharacterHome extends EditorHome {
         if(bb != null) {
             String characterName = bb.getText();
             File characterDirectory = Paths.get(em.getGameDirectoryString(), "characters", characterName).toFile();
-            //setEditor(characterDirectory, true);
+            System.out.println(characterDirectory.getPath());
+            setEditor(characterDirectory, true);
             return;
         } else if(directory != null) {
-            //setEditor(directory, false);
+            setEditor(directory, false);
             return;
         }
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setHeaderText("No Map Selected");
-        errorAlert.setContentText("Please select a map to edit first");
+        errorAlert.setHeaderText("No Character Selected");
+        errorAlert.setContentText("Please select a character to edit first");
         errorAlert.showAndWait();
     }
 
@@ -74,5 +81,10 @@ public class CharacterHome extends EditorHome {
 
     public String getDir(){
         return PORTRAITS;
+    }
+
+    @Override
+    public void setEditor() {
+
     }
 }

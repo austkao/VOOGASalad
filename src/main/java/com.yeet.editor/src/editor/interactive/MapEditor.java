@@ -60,7 +60,6 @@ public class MapEditor extends EditorSuper {
     private ResourceBundle myTags;
     private File myStageDirectory;
     private File backgroundFile;
-    private Text saved;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -115,7 +114,7 @@ public class MapEditor extends EditorSuper {
             MapSettings s = new MapSettings();
             s.setScene();
         });
-        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 600.0, 700.0);
+
         root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, settings);
         backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
     }

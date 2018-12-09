@@ -39,6 +39,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     protected RenderSystem myRS;
     protected EditorConstant myEC;
     protected boolean isSaved;
+    protected Text saved;
 
     public EditorSuper(Group root, EditorManager em){
         super(root);
@@ -48,6 +49,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         Text t = createTitle();
         root.getChildren().add(t);
         isSaved = true;
+        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 600.0, 700.0);
     }
 
     /**
@@ -109,6 +111,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     }
 
     public abstract String toString();
+    //public abstract
 
     public Text createTitle() {
         return myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);

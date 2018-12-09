@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 /**
  * @author ob29
  */
-public class GameplayEditor extends EditorSuper {
+public class GameSettingsEditor extends EditorSuper {
     private static String[] DEFAULT_GAME_MODES = new String[]{"SSBB","Street Fighter"};
     private Consumer<Double> consumerG;
     private Consumer<Double> consumerF;
@@ -26,7 +26,7 @@ public class GameplayEditor extends EditorSuper {
 
 
 
-    public GameplayEditor(Group root, EditorManager em) {
+    public GameSettingsEditor(Group root, EditorManager em) {
         super(root,em);
         consumerG = (x) -> System.out.println(x);
         //consumerG.accept(x);
@@ -44,8 +44,6 @@ public class GameplayEditor extends EditorSuper {
         vb2.setLayoutY(100.0);
         root.getChildren().addAll(vb1,vb2);
     }
-
-
 
     public VBox makeVBox1(){
         VBox vbox = new VBox(20.0);
@@ -73,7 +71,7 @@ public class GameplayEditor extends EditorSuper {
     }
 
     public String toString(){
-        return "GameplayEditor";
+        return "GameSettingsEditor";
     }
 
 

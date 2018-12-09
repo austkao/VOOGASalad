@@ -1,7 +1,7 @@
 package editor.home;
 
 import editor.EditorManager;
-import editor.interactive.GameplayEditor;
+import editor.interactive.GameSettingsEditor;
 import javafx.scene.Group;
 
 public class GameplayHome extends EditorHome {
@@ -14,7 +14,7 @@ public class GameplayHome extends EditorHome {
 
     @Override
     public void setEditor() {
-        myEditor = new GameplayEditor(new Group(),em);
+        myEditor = new GameSettingsEditor(new Group(),em);
         myEditor.createBack(this);
     }
 
