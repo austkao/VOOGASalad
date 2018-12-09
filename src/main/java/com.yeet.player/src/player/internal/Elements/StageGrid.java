@@ -25,7 +25,6 @@ public class StageGrid extends TilePane {
     private XMLParser myParser;
 
     private HashMap<String,ArrayList<String>> myBackgroundMap;
-    private HashMap<String, ImageView> myImageMap;
 
     public StageGrid(File directory, BiConsumer<String, ImageView> biConsumer, Consumer<String> consumer){
         super();
