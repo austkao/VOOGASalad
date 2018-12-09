@@ -63,16 +63,10 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         root.getChildren().add(save);
     }
 
-    public HashMap<String, ArrayList<String>> loadXMLFile(String tag) {
+    public HashMap<String, ArrayList<String>> loadXMLFile(String tag, File xmlFile) {
         try {
-            FileChooser loadFileChooser = myRS.makeFileChooser("xml");
-            loadFileChooser.setTitle("Save File As");
-            Path filePath = Paths.get(System.getProperty("user.dir"));
-            File defaultFile = new File(filePath+RESOURCE_PATH);
-            loadFileChooser.setInitialDirectory(defaultFile);
-            File file = loadFileChooser.showOpenDialog(new Stage());
-            if(file != null) {
-                XMLParser parser = new XMLParser(file);
+            if(xmlFile != null) {
+                XMLParser parser = new XMLParser(xmlFile);
                 return parser.parseFileForElement(tag);
             } else {
                 throw new IOException("Cannot load file");

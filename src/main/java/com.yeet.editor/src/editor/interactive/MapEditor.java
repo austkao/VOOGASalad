@@ -46,8 +46,6 @@ public class MapEditor extends EditorSuper {
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources/";
     private static final String TAG_PATH = "tags";
     private static final String ALL_MAPS = "allmaps/";
-    private static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
-    private static final int DEFAULT_PLAIN_FONTSIZE = 12;
     private static final String DEFAULT_BGM = "BGM.mp3";
 
     private Consumer consumer;
@@ -102,10 +100,6 @@ public class MapEditor extends EditorSuper {
         saveFile.setOnMouseClicked(e -> createSaveFile());
         saveFile.setOnMouseClicked(e -> snapShot(level,ALL_MAPS));
 
-        Button loadFile = myRS.makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
-                30.0,25.0, 75.0, 200.0, 50.0);
-        loadFile.setOnMouseClicked(e -> loadMapFile());
-        Font myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
         Label musicLabel = new Label("Background Music");
         musicLabel.setLayoutX(250);
         musicLabel.setLayoutY(650);
@@ -117,7 +111,12 @@ public class MapEditor extends EditorSuper {
             MapSettings s = new MapSettings();
             s.setScene();
         });
-        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, settings);
+        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, settings);
+    }
+
+    public MapEditor(Group root, EditorManager em, File xmlFile) {
+        this(root, em);
+        loadMapFile(xmlFile);
     }
 
     private void initializeScrollPane(){
@@ -248,9 +247,9 @@ public class MapEditor extends EditorSuper {
         }
     }
 
-    private void loadMapFile() {
+    private void loadMapFile(File xmlFile) {
         try {
-            HashMap<String, ArrayList<String>> data = loadXMLFile("map");
+            HashMap<String, ArrayList<String>> data = loadXMLFile("map", xmlFile);
             ArrayList<String> xPos = data.get("x");
             ArrayList<String> yPos = data.get("y");
             ArrayList<String> image = data.get("image");

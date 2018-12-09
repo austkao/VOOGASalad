@@ -28,11 +28,10 @@ public class ScrollablePaneNew extends Pane {
     private ToggleGroup tgGrid;
 
 
-
     public ScrollablePaneNew(File dir,double x, double y){
-
         this(x,y);
         loadFiles(dir);
+
 
     }
 
@@ -82,8 +81,8 @@ public class ScrollablePaneNew extends Pane {
 
 
 
-    public void addItem(Image image){
-        ScrollItem si= new ScrollItem(image,new Text("Hi my name is Hi my name is Hi my name is SLim SHady"));
+    public void addItem(Image image, String title){
+        ScrollItem si= new ScrollItem(image,new Text(title));
         tgNormal.getToggles().add(si.getButton());
         items.add(si);
         normalView.getChildren().add(items.get(items.size()-1).getButton());
@@ -138,7 +137,8 @@ public class ScrollablePaneNew extends Pane {
         for(File imgFile : dir.listFiles()) {
             if(imgFile.toString().endsWith(".png")){
                 Image itemImage = new Image(imgFile.toURI().toString());
-                addItem(itemImage);
+                String imageName = imgFile.getName().replace(".png","");
+                addItem(itemImage, imageName);
             }
         }
     }
@@ -151,4 +151,12 @@ public class ScrollablePaneNew extends Pane {
         return scrollPane;
     }
 
+    public ButtonBase getSelectedItem() {
+        for (Scrollable s : items) {
+            if (s.getButton().isSelected()) {
+                return s.getButton();
+            }
+        }
+        return null;
+    }
 }
