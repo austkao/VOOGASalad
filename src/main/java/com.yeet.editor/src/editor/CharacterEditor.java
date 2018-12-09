@@ -289,13 +289,13 @@ public class CharacterEditor extends EditorSuper{
         //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
 
         TextInputDialog text = new TextInputDialog("");
-        text.setContentText("Enter X Offset of initial frame");
+        resetText("Enter X Offset of initial frame", text);
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setContentText("Enter Y Offset");
+        resetText("Enter Y Offset", text);
         double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setContentText("Enter Width");
+        resetText("Enter Width", text);
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setContentText("Enter Height");
+        resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
 
         //currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
@@ -404,26 +404,30 @@ public class CharacterEditor extends EditorSuper{
         animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power));
     }
 
+    private void resetText (String mesasge, TextInputDialog text){
+        text.setContentText(mesasge);
+        text.getEditor().setText("");
+    }
+
     private SpriteAnimation getNewAnimation(){
-        TextInputDialog text = new TextInputDialog("");
-        text.setContentText("Enter Time In seconds");
+        TextInputDialog text = new TextInputDialog();
+        resetText("Enter Time In seconds", text);
         double time = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setContentText("Enter Frame Count");
+        resetText("Enter Frame Count", text);
         int count = Integer.parseInt(text.showAndWait().orElse("0"));
-        text.setContentText("Enter Number of Columns");
+        resetText("Enter Number of Columns", text);
         int columns = Integer.parseInt(text.showAndWait().orElse("0"));
-        text.setContentText("Enter X Offset");
+        resetText("Enter X Offset", text);
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setContentText("Enter Y Offset");
+        resetText("Enter Y Offset", text);
         double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setContentText("Enter Width");
+        resetText("Enter Width", text);
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setContentText("Enter Height");
+        resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
         SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
                 offsetX, offsetY, width, height);
         myAnimation.setCycleCount(Animation.INDEFINITE);
-
         return myAnimation;
     }
     private void selectAnimationFromScroll(ScrollableItem b){
