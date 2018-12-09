@@ -16,11 +16,11 @@ public class Player {
 
     protected int id;
     private String name;
-    private int health;
+    private double health = 100.0;
     private int numOfLives;
     private int powerLevel;
-    private int attackDamage;
-    private float attackSpeed;
+    private int score;
+    private double attackDamage = 10.0;
     private List<Player> isAttackingTargets;
     private List<List<Integer>> hitboxes;
     private Player beingAttackedBy;
@@ -63,6 +63,32 @@ public class Player {
         target.setBeingAttackedBy(this);
         target.playerState = PlayerState.BEING_ATTACKED;
         target.freeTargets();
+    }
+
+    public double reduceHealth(double amt){
+        this.health -= amt;
+        return this.health;
+    }
+
+    public double getHealth(){
+        return health;
+    }
+
+    public int getNumOfLives(){
+        return numOfLives;
+    }
+
+    public int loseLife(){
+        this.numOfLives -= 1;
+        return this.numOfLives;
+    }
+
+    public void setNumOfLives(int numOfLives){
+        this.numOfLives = numOfLives;
+    }
+
+    public double getAttackDamage(){
+        return this.attackDamage;
     }
 
     public void setIsBot(boolean isBot){

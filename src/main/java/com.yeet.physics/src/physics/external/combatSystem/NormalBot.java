@@ -22,13 +22,19 @@ import java.util.*;
 
 public class NormalBot extends Bot {
     Queue<CombatActionEvent> queue = new LinkedList<>();
-    Queue<Integer> opponents = new PriorityQueue<>();
-    PhysicsSystem physicsSystem;
+    private PhysicsSystem physicsSystem;
+    private static final double DETECTION_RADIUS = 30.0;
+//    private PlayerGraph playerGraph;
 
     Double[][] matrix = {{},
                          {},
                          {},
                          {}};
+
+    Double[][] aggro = {{},
+            {},
+            {},
+            {}};
 
     public NormalBot(){
         super();
@@ -36,26 +42,27 @@ public class NormalBot extends Bot {
         setPlayerState(PlayerState.MOVING);
     }
 
-    public NormalBot(HashMap<Integer, Point2D> playerMap, PhysicsSystem physicsSystem){
+    public NormalBot(PhysicsSystem physicsSystem){
+        super();
+        setTransitionMatrix(matrix);
+        setPlayerState(PlayerState.MOVING);
         this.physicsSystem = physicsSystem;
-
-    }
-
-    private void updatePositions(){
-        Map<Integer, Point2D> positions = physicsSystem.getPositionsMap();
-
-        for(int id: positions.keySet()){
-            if(id==this.id){
-
-            }
-            else{
-
-            }
-        }
     }
 
     @Override
     public void step() {
+        //update positions
+        Map<Integer, Point2D> positions = physicsSystem.getPositionsMap();
+        playerGraph.updatePositionMap(positions);
+
+        if(playerGraph.hasEnenmyNearBy(this.id, DETECTION_RADIUS)){
+
+        }
+        else{
+
+        }
+
+//        Player nearest = playerGraph.getNearestNeighbor(this.id);
 
     }
 
@@ -77,7 +84,11 @@ public class NormalBot extends Bot {
         }
     }
 
-    private void recordPlayerMovement(CombatActionEvent combatActionEvent){
+    private void moveCloserToTarget(){
+        // first decrease the horizontal distance difference
 
+        // second
     }
+
+
 }
