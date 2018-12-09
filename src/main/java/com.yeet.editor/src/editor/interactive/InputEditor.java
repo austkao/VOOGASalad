@@ -131,6 +131,7 @@ public class InputEditor extends EditorSuper {
     public List<HashMap<String,String>> getBindings(){
         bindings.clear();
         for(int i = 0; i < DEFAULT_NUM_TABS; i++) {
+            bindings.add(new HashMap<>());
             for (Scrollable s : myScrolls.get(i).getItems()) {
                 String move = s.getButton().getText();
                 Text keyText = (Text) s.getButton().getGraphic();

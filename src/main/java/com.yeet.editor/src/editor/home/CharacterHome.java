@@ -19,7 +19,7 @@ public class CharacterHome extends EditorHome {
 
     public CharacterHome(EditorManager em){
         super(new Group(), em);
-        //setInputEditor();
+        setInputEditor();
         //setEditor();
         Button input = getRender().makeStringButton("Edit Inputs",Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
         getMyBox().getChildren().add(input);
@@ -31,12 +31,12 @@ public class CharacterHome extends EditorHome {
     }
 
     private void setInputEditor(){
-
+        inputEditor = new InputEditor(em);
+        inputEditor.createBack(this);
     }
 
     public void setEditor(File directory, boolean isEdit){
-        inputEditor = new InputEditor(em);
-        inputEditor.createBack(this);
+
         myEditor = new CharacterEditor(em, inputEditor, directory, isEdit);
         myEditor.createBack(this);
         em.changeScene(myEditor);
