@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 ;
 
@@ -42,6 +43,7 @@ public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_IMAGE_DIR = "/data/tiles";
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources/";
+    private static final String TAG_PATH = "tags";
     private static final String ALL_MAPS = "allmaps/";
     private static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
     private static final int DEFAULT_PLAIN_FONTSIZE = 12;
@@ -54,6 +56,7 @@ public class MapEditor extends EditorSuper{
     private Group root;
     private String myBackgroundImage;
     private String myBGMFileName;
+    private ResourceBundle myTags;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -113,11 +116,6 @@ public class MapEditor extends EditorSuper{
             MapSettings s = new MapSettings();
             s.setScene();
         });
-
-
-
-
-
         root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, settings);
     }
 

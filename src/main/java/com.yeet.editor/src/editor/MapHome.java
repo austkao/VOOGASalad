@@ -15,7 +15,6 @@ public class MapHome extends EditorHome{
     public MapHome(Group root, EditorManager em){
         super(root,em);
         setEditor();
-
     }
     public String toString(){
         return "Map Home";
