@@ -77,15 +77,10 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         }
     }
 
-    public void generateSave(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
+    public void generateSave(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data, File xmlFile) {
         try {
-            FileChooser fileChooser = myRS.makeFileChooser("xml");
-            fileChooser.setTitle("Save File As");
-            File defaultFile = myEM.getGameDirectory();
-            fileChooser.setInitialDirectory(defaultFile);
-            File file = fileChooser.showSaveDialog(new Stage());
-            if(file != null) {
-                new XMLSaveBuilder(structure, data, file);
+            if(xmlFile != null) {
+                new XMLSaveBuilder(structure, data, xmlFile);
             } else {
                 throw new IOException("Invalid save location");
             }

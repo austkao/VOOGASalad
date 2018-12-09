@@ -557,7 +557,7 @@ public class CharacterEditor extends EditorSuper {
         data.put("defense", defenseList);
 
         try {
-            generateSave(structure, data);
+            //generateSave(structure, data);
         } catch (Exception ex) {
             System.out.println("Invalid save");
             //ex.printStackTrace();

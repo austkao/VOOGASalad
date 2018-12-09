@@ -1,6 +1,7 @@
 package editor.interactive;
 
 import editor.EditorManager;
+import editor.home.MapHome;
 import editor.interactive.EditorSuper;
 import editor.MapSettings;
 import javafx.embed.swing.SwingFXUtils;
@@ -17,8 +18,10 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import renderer.external.Scrollable;
 import renderer.external.Structures.*;
 
 import javax.imageio.ImageIO;
@@ -50,12 +53,15 @@ public class MapEditor extends EditorSuper {
 
     private Consumer consumer;
     private Image currentTileFile;
-    private ScrollablePane myScrollablePane;
+    private String myCurrentTileName;
+    private ScrollablePaneNew myScrollablePane;
     private Level level;
     private Group root;
     private String myBackgroundImage;
     private String myBGMFileName;
     private ResourceBundle myTags;
+    private File myStageDirectory;
+    private MapHome myMH;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -68,7 +74,7 @@ public class MapEditor extends EditorSuper {
         myBackgroundImage = DEFAULT_BACKGROUND_IMAGE;
         myBGMFileName = DEFAULT_BGM;
         try {
-            initializeLevel(800, 500, 250, 100,
+            initializeLevel(800, 500, 400, 100,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -80,7 +86,9 @@ public class MapEditor extends EditorSuper {
             }
         };
         initializeScrollPane();
-        currentTileFile = myScrollablePane.getItems().get(0).getImage();
+        ScrollItem si = (ScrollItem) myScrollablePane.getItems().get(0);
+        currentTileFile = si.getImage();
+        myCurrentTileName = si.getButton().getText();
         //getRenderSystem().drawStage(mapPane, level);
         level.setOnMouseClicked(e -> clickProcessTile(e));
         Button addBG = myRS.makeStringButton("Set Background", Color.BLACK,true,Color.WHITE,
@@ -98,7 +106,6 @@ public class MapEditor extends EditorSuper {
         Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
-        saveFile.setOnMouseClicked(e -> snapShot(level,ALL_MAPS));
 
         Label musicLabel = new Label("Background Music");
         musicLabel.setLayoutX(250);
@@ -114,16 +121,19 @@ public class MapEditor extends EditorSuper {
         root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, settings);
     }
 
-    public MapEditor(Group root, EditorManager em, File xmlFile) {
+    public MapEditor(Group root, EditorManager em, File xmlFile, MapHome MH) {
         this(root, em);
-        loadMapFile(xmlFile);
+        File stageProperties = Paths.get(xmlFile.getPath(), "stageproperties.xml").toFile();
+        loadMapFile(stageProperties);
+        myStageDirectory = xmlFile;
+        myMH = MH;
     }
 
     private void initializeScrollPane(){
         File paneFile = new File(myEM.getGameDirectoryString()+DEFAULT_IMAGE_DIR);
-        myScrollablePane = new ScrollablePane(paneFile,50,400.0);
-        for(ScrollableItem b: myScrollablePane.getItems()){
-            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage()));
+        myScrollablePane = new ScrollablePaneNew(paneFile,50,400.0, 300, 600);
+        for(Scrollable b: myScrollablePane.getItems()){
+            b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage(), b.getButton().getText()));
         }
         root.getChildren().add(myScrollablePane.getScrollPane());
     }
@@ -154,8 +164,7 @@ public class MapEditor extends EditorSuper {
      * User selects background, and it is applied to level.
      */
     private void chooseBackground(){
-        Path userPath = Paths.get(System.getProperty("user.dir"));
-        File backgroundFile = new File(userPath+RESOURCE_PATH+"/backgrounds");
+        File backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
         ListView<String> backgroundList = myRS.makeDirectoryFileList(backgroundFile, false);
         Stage edit = new Stage();
         edit.setScene(new Scene(new Group(backgroundList)));
@@ -172,11 +181,13 @@ public class MapEditor extends EditorSuper {
         File tileFile = chooseImage("Choose Tile Image");
         try{
             Image image = new Image(tileFile.toURI().toString());
-            if (image != null)
+            if (image != null) {
                 currentTileFile = image;
-            myScrollablePane.addItem(currentTileFile);
+                myCurrentTileName = tileFile.getName();
+            }
+            myScrollablePane.addItem(new ScrollItem(currentTileFile, new Text()));
             int size = myScrollablePane.getItems().size();
-            myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image));
+            myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image, myCurrentTileName));
         }
         catch (Exception e){
             System.out.println("Invalid image");
@@ -191,11 +202,12 @@ public class MapEditor extends EditorSuper {
     private void clickProcessTile(MouseEvent e){
         int xindex = (int)e.getX()/level.getTileWidth();
         int yindex = (int)e.getY()/level.getTileHeight();
-        level.processTile(xindex, yindex, currentTileFile);
+        level.processTile(xindex, yindex, currentTileFile, myCurrentTileName);
     }
 
-    private void selectTileFromScroll(Image image){
+    private void selectTileFromScroll(Image image, String name){
         currentTileFile = image;
+        myCurrentTileName = name;
     }
 
 
@@ -205,18 +217,14 @@ public class MapEditor extends EditorSuper {
 
     private void snapShot(Node node,String dir) {
         WritableImage img = node.snapshot(new SnapshotParameters(), null);
-        Path userPath = Paths.get(System.getProperty("user.dir"));
-        File directory = new File(userPath+RESOURCE_PATH+dir);
-        int dsize = directory.listFiles().length;
-        File file = new File(directory.getPath()+"/test" + dsize + ".png");
+        File file = Paths.get(myStageDirectory.getPath(), myStageDirectory.getName()+".png").toFile();
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", file);
+            myMH.getScroll().addItem(new ScrollItem(img, new Text(myStageDirectory.getName())));
         } catch (IOException e) {
             // TODO: handle exception here
         }
     }
-
-
 
     private void createSaveFile() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
@@ -225,22 +233,16 @@ public class MapEditor extends EditorSuper {
         structure.put("background", new ArrayList<>(List.of("bgFile")));
         structure.put("music", new ArrayList<>(List.of("mFile")));
         structure.put("position", new ArrayList<>(List.of("id","xPos","yPos")));
-        HashMap<String, String> imageMap = myScrollablePane.getCurrentImages();
         HashMap<String, ArrayList<String>> levelMap = level.createLevelMap();
-        ArrayList<String> temp = new ArrayList<>();
-        for(String s : levelMap.get("image")) {
-            temp.add(imageMap.get(s));
-        }
-        levelMap.get("image").clear();
-        levelMap.get("image").addAll(temp);
         levelMap.put("bgFile", new ArrayList<>(List.of(myBackgroundImage)));
         levelMap.put("mFile", new ArrayList<>(List.of(myBGMFileName)));
         levelMap.put("id", new ArrayList<>(List.of("0","1","2","3")));
         levelMap.put("xPos", new ArrayList<>(List.of("0","1","2","3")));
         levelMap.put("yPos", new ArrayList<>(List.of("0","0","0","0")));
         try {
-            generateSave(structure, levelMap);
-           // snapShot(level.getWindow());
+            File xmlFile = Paths.get(myStageDirectory.getPath(), "stageproperties.xml").toFile();
+            generateSave(structure, levelMap, xmlFile);
+            snapShot(level,ALL_MAPS);
         } catch (Exception ex) {
             System.out.println("Invalid save");
             ex.printStackTrace();
@@ -260,7 +262,7 @@ public class MapEditor extends EditorSuper {
             for(int i = 0; i < xPos.size(); i++) {
                 Path imagePath = Paths.get(tilePath.toString(), image.get(i));
                 File imageFile = new File(imagePath.toString());
-                level.processTile(Integer.parseInt(xPos.get(i)), Integer.parseInt(yPos.get(i)), new Image(imageFile.toURI().toString()));
+                level.processTile(Integer.parseInt(xPos.get(i)), Integer.parseInt(yPos.get(i)), new Image(imageFile.toURI().toString()), image.get(i));
             }
         } catch (Exception ex) {
             System.out.println("Cannot load file");

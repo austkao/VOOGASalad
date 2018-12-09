@@ -32,7 +32,7 @@ public class InputEditor extends EditorSuper {
     public InputEditor(Group root, EditorManager em){
         super(root,em);
         inputTypes = FXCollections.observableArrayList();
-        myScroll = new ScrollablePaneNew(200.0,200.0);
+        myScroll = new ScrollablePaneNew(200.0,200.0, 520, 600);
         myScroll.setMaxHeight(150.0);
         myScroll.setMaxWidth(150.0);
         makeVBox1();
