@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 import messenger.external.*;
 
 import java.io.File;
+import java.net.MalformedURLException;
 
 public class AudioSystem {
 
@@ -25,12 +26,12 @@ public class AudioSystem {
      / This is the subscription to the ActionEvents that are posted by the inputsystem.
      */
     @Subscribe
-    public void playAction(ActionEvent event) {
+    public void playAction(ActionEvent event) throws MalformedURLException {
         //String newPath = path + "/characters/Lucina1/sounds/" + event.getName() +".mp3";
-        //String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
-        String newPath = "/example_character_1/attacks/JAB.mp3";
+        String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
+        //String newPath = "/example_character_1/attacks/JAB.mp3";
 
-        System.out.println(newPath);
+        //System.out.println(newPath);
         myPlayer.playClip(newPath);
     }
 
@@ -38,7 +39,7 @@ public class AudioSystem {
      / Listens for the combat system to play the sound
      */
     @Subscribe
-    public void playAction(SuccessfulEvent event){
+    public void playAction(SuccessfulEvent event) throws MalformedURLException{
         //String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
         String newPath = "/example_character_1/attacks/JAB.mp3";
 
