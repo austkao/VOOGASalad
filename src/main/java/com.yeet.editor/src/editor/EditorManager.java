@@ -1,5 +1,10 @@
 package editor;
 
+import editor.home.CharacterHome;
+import editor.home.EditorHome;
+import editor.home.GameplayHome;
+import editor.home.MapHome;
+import editor.interactive.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -64,13 +69,13 @@ public class EditorManager {
     }
 
     private List<EditorSuper> makeEditors(){
-        List<EditorSuper> editors = new ArrayList<EditorSuper>();
-        Collections.addAll(editors,new MapEditor(new Group(), this),new CharacterEditor(new Group(),this,new InputEditor(new Group(),this)),new GameplayEditor(new Group(),this));
+        List<EditorSuper> editors = new ArrayList<>();
+        Collections.addAll(editors,new MapEditor(this),new CharacterEditor(new Group(),this,new InputEditor(new Group(),this)),new GameplayEditor(new Group(),this));
         return editors;
     }
     private List<EditorHome> makeEditorHomes(){
         List<EditorHome> editors = new ArrayList<>();
-        Collections.addAll(editors,new MapHome(new Group(),this), new CharacterHome(new Group(),this), new GameplayHome(new Group(), this));
+        Collections.addAll(editors,new MapHome(this), new CharacterHome(this), new GameplayHome(this));
         return editors;
     }
 

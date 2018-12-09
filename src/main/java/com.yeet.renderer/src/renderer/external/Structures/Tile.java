@@ -7,13 +7,15 @@ public class Tile extends ImageView{
 
     private int xIndex;
     private int yIndex;
+    private String myImageName;
 
-    public Tile (Image image, int w, int h, int x, int y){
+    public Tile (Image image, int w, int h, int x, int y, String imageName){
         super(image);
         setFitWidth(w);
         setFitHeight(h);
         xIndex = x;
         yIndex = y;
+        myImageName = imageName;
     }
 
     //unused
@@ -22,5 +24,9 @@ public class Tile extends ImageView{
         //setY(y*height);
         xIndex = x;
         yIndex = y;
+    }
+
+    public String getImageName() {
+        return myImageName;
     }
 }

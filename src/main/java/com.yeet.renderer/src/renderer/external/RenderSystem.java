@@ -3,10 +3,7 @@ package renderer.external;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -97,26 +94,17 @@ public class RenderSystem implements Renderer{
         return myPlainFont;
     }
 
-    public void buttonHoverEffect(ToggleButton button){
+    public void buttonHoverEffect(ButtonBase button){
         button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15, 1.1,1.1)));
         button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15,1.0,1.0)));
     }
 
-    public void styleButton(ToggleButton button){
+    public void styleButton(ButtonBase button){
         button.setStyle(String.format(BUTTON_FORMAT,
                 toRGBCode(Color.BLACK),
                 this.getPlainFont().getName(),20,15));
     }
-    public void buttonHoverEffect(Button button){
-        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15, 1.1,1.1)));
-        button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15,1.0,1.0)));
-    }
 
-    public void styleButton(Button button){
-        button.setStyle(String.format(BUTTON_FORMAT,
-                toRGBCode(Color.BLACK),
-                this.getPlainFont().getName(),15,15));
-    }
 
     /** Creates a button using an image
      *  @param image The {@code ImageView} that will be used as the button
