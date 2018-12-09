@@ -126,6 +126,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
 
     public void updateScroll(String directory) {
         myRoot.getChildren().remove(myScroll);
-        initializeScroll(directory);
+        myScroll = initializeScroll(directory);
+        myRoot.getChildren().add(myScroll);
     }
 }

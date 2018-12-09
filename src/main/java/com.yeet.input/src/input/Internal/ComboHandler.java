@@ -73,6 +73,9 @@ public class ComboHandler {
 
 
     private String parseComboTree(Node root,  List<KeyInputEvent> q){
+        if(q.isEmpty()){
+            return null;
+        }
         if(root.isAtEnd()){
             return root.getChildren().get(0).getKey(); //Returns the combo name (this is a leaf node);
         }
