@@ -19,7 +19,7 @@ public class InputEditor extends EditorSuper {
     private static final int DEFAULT_NUM_TABS = 4;
 
     private List<TextArea> userInputs;
-    private List<ObservableList<String>> inputTypes;
+    private List<ObservableList> inputTypes;
     private List<ScrollablePaneNew> myScrolls;
     private List<HashMap<String,String>> bindings;
     private TabPane tabs;
@@ -44,7 +44,13 @@ public class InputEditor extends EditorSuper {
 //        Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,20.0,650.0,100.0,150.0,50.0);
 //        remove.setOnMouseClicked(e ->
 //                myScroll.removeItem());//TODO: REMOVE FROM INPUTTYPES AS WELL
-        root.getChildren().addAll(tabs);
+        Button test = myRS.makeStringButton("show bindings",Color.BLACK,true,Color.WHITE,20.0,650.0,80.0,150.0,50.0);
+        test.setOnMouseClicked(e -> {
+                    getBindings();
+                    System.out.println(bindings);
+                });
+
+        root.getChildren().addAll(tabs,test);
     }
 
 
@@ -71,7 +77,8 @@ public class InputEditor extends EditorSuper {
         remove.setOnMouseClicked(e ->
                 myScrolls.get(currentTabId-1).removeItem());//TODO: REMOVE FROM INPUTTYPES AS WELL
 
-
+        ObservableList l = FXCollections.observableArrayList();
+        inputTypes.add(l);
         p.getChildren().addAll(remove,makeVBox());
         return p;
     }
@@ -87,8 +94,8 @@ public class InputEditor extends EditorSuper {
             userInputs.get(currentTabId-1).clear();
         }else {
             userInputs.get(currentTabId-1).clear();
-            //inputTypes.add(text);
             InputItem testItem = new InputItem(new Text(text));
+            inputTypes.get(currentTabId-1).add(text);
             myScrolls.get(currentTabId-1).addItem(testItem);
         }
     }
@@ -117,19 +124,22 @@ public class InputEditor extends EditorSuper {
     }
 
 
-//    public Set<String> getInputTypes(){
-//        return new HashSet<>(inputTypes);
-//    }
+    public List<ObservableList> getInputTypes(){
+        return inputTypes;
+    }
 
-//    public Map<String,String> getBindings(){
-//        for(Scrollable s:myScroll.getItems()){
-//            String move = s.getButton().getText();
-//            Text keyText = (Text) s.getButton().getGraphic();
-//            String key = keyText.getText();
-//            bindings.put(move,key);
-//        }
-//        return bindings;
-//    }
+    public List<HashMap<String,String>> getBindings(){
+        for(int i = 0; i < DEFAULT_NUM_TABS; i++) {
+            bindings.add(new HashMap<>());
+            for (Scrollable s : myScrolls.get(i).getItems()) {
+                String move = s.getButton().getText();
+                Text keyText = (Text) s.getButton().getGraphic();
+                String key = keyText.getText();
+                bindings.get(i).put(move, key);
+            }
+        }
+        return bindings;
+    }
 
     private TextArea createUserCommandLine() {
         TextArea t = new TextArea();
