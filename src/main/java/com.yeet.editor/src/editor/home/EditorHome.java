@@ -1,5 +1,6 @@
 package editor.home;
 
+import com.google.common.eventbus.EventBus;
 import editor.EditorConstant;
 import editor.EditorManager;
 import editor.EditorScreen;
@@ -7,10 +8,13 @@ import editor.interactive.EditorSuper;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import messenger.external.DeleteDirectoryEvent;
+import messenger.external.EventBusFactory;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.ScrollablePaneNew;
 import renderer.external.Structures.TextBox;
@@ -31,18 +35,20 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     protected Button buttonEdit;
     protected Button buttonDelete;
 
-    private Group root;
+    private Group myRoot;
     protected EditorManager em;
     protected EditorSuper myEditor;
     protected EditorConstant myEC;
     protected Stage popupStage;
     private Consumer consumer;
+    protected EventBus myEB;
 
     public EditorHome(Group root, EditorManager em) {
         super(root);
-        this.root = root;
+        myRoot = root;
         this.em = em;
         rs = new RenderSystem();
+        myEB = EventBusFactory.getEventBus();
         initializeVBox();
         initializeScroll();
         Text title = createTitle();
@@ -67,7 +73,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         }
         switchView = getRender().makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,100.0,100.0,30.0);
         switchView.setOnMouseClicked(event -> myScroll.switchView());
-        root.getChildren().add(myScroll.getScrollPane());
+        myRoot.getChildren().add(myScroll.getScrollPane());
     }
     public RenderSystem getRender(){
         return rs;
@@ -85,7 +91,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         myBox.getChildren().addAll(buttonNew, buttonEdit, buttonDelete, buttonBack);
         myBox.setLayoutX(800);
         myBox.setLayoutY(200);
-        root.getChildren().add(myBox);
+        myRoot.getChildren().add(myBox);
     }
 
     public VBox getMyBox(){
@@ -103,7 +109,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         return buttonBack;
     }
 
-    public void nameNewObject(String title, String label) {
+    protected void nameNewObject(String title, String label) {
         popupStage = new Stage();
         popupStage.setTitle(title);
         TextBox stageName = rs.makeTextField(consumer, "", 100.0,20.0,200.0,30.0, rs.getPlainFont());
@@ -117,10 +123,11 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         popupStage.show();
     }
 
-    public abstract void createNewObject(String name);
+    protected abstract void createNewObject(String name);
+    protected abstract void deleteDirectory(ButtonBase bb);
 
     public void updateScroll() {
-        root.getChildren().remove(myScroll);
+        myRoot.getChildren().remove(myScroll);
         initializeScroll();
     }
 }

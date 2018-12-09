@@ -3,11 +3,12 @@ package editor.home;
 import editor.EditorManager;
 import editor.interactive.GameplayEditor;
 import javafx.scene.Group;
+import javafx.scene.control.ButtonBase;
 
 public class GameplayHome extends EditorHome {
 
-    public GameplayHome(Group root, EditorManager em){
-        super(root,em);
+    public GameplayHome(EditorManager em){
+        super(new Group(), em);
         setEditor();
     }
 
@@ -19,6 +20,11 @@ public class GameplayHome extends EditorHome {
 
     @Override
     public void createNewObject(String name) {
+
+    }
+
+    @Override
+    protected void deleteDirectory(ButtonBase bb) {
 
     }
 
