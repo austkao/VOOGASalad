@@ -38,14 +38,8 @@ public class InputEditor extends EditorSuper {
         tabs = new TabPane();
         tabs.getTabs().addAll(makeTabs());
         tabs.setTabMinWidth(100.0);
-//        myScroll = new ScrollablePaneNew(200.0,200.0);
-//        myScroll.setMaxHeight(150.0);
-//        myScroll.setMaxWidth(150.0);
-//        makeVBox1();
-//        setRequirements();
-//        Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,20.0,650.0,100.0,150.0,50.0);
-//        remove.setOnMouseClicked(e ->
-//                myScroll.removeItem());//TODO: REMOVE FROM INPUTTYPES AS WELL
+        setRequirements();
+        
         Button test = myRS.makeStringButton("show bindings",Color.BLACK,true,Color.WHITE,20.0,650.0,80.0,150.0,50.0);
         test.setOnMouseClicked(e -> {
                     getBindings();
@@ -54,6 +48,7 @@ public class InputEditor extends EditorSuper {
 
         root.getChildren().addAll(tabs,test);
     }
+
 
 
     private List<Tab> makeTabs(){
@@ -68,33 +63,14 @@ public class InputEditor extends EditorSuper {
             tablist.add(t);
         }
         return tablist;
-//=======
-//        myScroll = new ScrollablePaneNew(200.0,200.0, 520, 600);
-//        myScroll.setMaxHeight(150.0);
-//        myScroll.setMaxWidth(150.0);
-//        makeVBox1();
-//        userInput.setOnKeyPressed(e ->{
-//            if(e.getCode() == KeyCode.ENTER){
-//                addItemtoScroll();
-//            } });
-//        v.setLayoutX(100.0);
-//        v.setLayoutY(50.0);
-//        //setRequirements();
-//        Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,20.0,600.0,300.0,150.0,50.0);
-//        remove.setOnMouseClicked(e -> myScroll.removeItem());
-//        root.getChildren().addAll(remove);
-//>>>>>>> DataProcessor:src/main/java/com.yeet.editor/src/editor/interactive/InputEditor.java
+
     }
 
     private Pane generateContent(){
         Pane p = new Pane();
-
-
-        //setRequirements();
         Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,20.0,650.0,100.0,150.0,50.0);
         remove.setOnMouseClicked(e ->
                 myScrolls.get(currentTabId-1).removeItem());//TODO: REMOVE FROM INPUTTYPES AS WELL
-
         ObservableList l = FXCollections.observableArrayList();
         inputTypes.add(l);
         p.getChildren().addAll(remove,makeVBox());
@@ -118,16 +94,19 @@ public class InputEditor extends EditorSuper {
         }
     }
 
-//    private void setRequirements(){
-////        inputTypes.add("UP");
-////        inputTypes.add("DOWN");
-////        inputTypes.add("LEFT");
-////        inputTypes.add("RIGHT");
-//        myScroll.addItem(new InputItem(new Text("UP")));
-//        myScroll.addItem(new InputItem(new Text("DOWN")));
-//        myScroll.addItem(new InputItem(new Text("LEFT")));
-//        myScroll.addItem(new InputItem(new Text("RIGHT")));
-//    }
+    private void setRequirements(){
+        for(int i = 0; i < DEFAULT_NUM_TABS; i++){
+            inputTypes.get(i).add("UP");
+            inputTypes.get(i).add("DOWN");
+            inputTypes.get(i).add("LEFT");
+            inputTypes.get(i).add("RIGHT");
+            myScrolls.get(i).addItem(new InputItem(new Text("UP")));
+            myScrolls.get(i).addItem(new InputItem(new Text("DOWN")));
+            myScrolls.get(i).addItem(new InputItem(new Text("LEFT")));
+            myScrolls.get(i).addItem(new InputItem(new Text("RIGHT")));
+        }
+
+    }
 
     private VBox makeVBox(){
         VBox v = new VBox(20.0);
@@ -147,8 +126,8 @@ public class InputEditor extends EditorSuper {
     }
 
     public List<HashMap<String,String>> getBindings(){
+        bindings.clear();
         for(int i = 0; i < DEFAULT_NUM_TABS; i++) {
-            bindings.add(new HashMap<>());
             for (Scrollable s : myScrolls.get(i).getItems()) {
                 String move = s.getButton().getText();
                 Text keyText = (Text) s.getButton().getGraphic();
