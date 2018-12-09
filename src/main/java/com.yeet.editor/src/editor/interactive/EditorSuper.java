@@ -1,5 +1,8 @@
-package editor;
+package editor.interactive;
 
+import editor.EditorConstant;
+import editor.EditorManager;
+import editor.EditorScreen;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

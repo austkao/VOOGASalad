@@ -1,5 +1,8 @@
-package editor;
+package editor.interactive;
 
+import editor.EditorManager;
+import editor.interactive.EditorSuper;
+import editor.MapSettings;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -14,13 +17,11 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import renderer.external.Structures.*;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -39,7 +40,7 @@ import java.util.function.Consumer;
  * @author ak457
  */
 
-public class MapEditor extends EditorSuper{
+public class MapEditor extends EditorSuper {
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_IMAGE_DIR = "/data/tiles";
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources/";
@@ -63,7 +64,7 @@ public class MapEditor extends EditorSuper{
      * @param root
      * @param em
      */
-    public MapEditor(Group root,EditorManager em){
+    public MapEditor(Group root, EditorManager em){
         super(root,em);
         this.root = root;
         myBackgroundImage = DEFAULT_BACKGROUND_IMAGE;

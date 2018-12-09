@@ -1,16 +1,15 @@
 package editor;
 
+import editor.home.EditorHome;
+import editor.interactive.EditorSuper;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import javafx.scene.control.Button;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

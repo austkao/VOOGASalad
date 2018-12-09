@@ -1,9 +1,9 @@
-package editor;
+package editor.interactive;
 
+import editor.EditorManager;
+import editor.interactive.EditorSuper;
 import javafx.collections.FXCollections;
-import javafx.collections.ModifiableObservableListBase;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;

@@ -1,5 +1,7 @@
-package editor;
+package editor.interactive;
 
+import editor.EditorManager;
+import editor.interactive.InputEditor;
 import javafx.animation.Animation;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -30,7 +32,7 @@ import java.util.function.Consumer;
  * @author rr202
  */
 
-public class CharacterEditor extends EditorSuper{
+public class CharacterEditor extends EditorSuper {
     private static final String DEFAULT_PORTRAIT = "lucinaglasses.png";
     private static final String HIT_TEXT = "HITBOX";
     private static final String HURT_TEXT = "HURTBOX";

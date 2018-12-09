@@ -1,5 +1,10 @@
 package editor;
 
+import editor.home.CharacterHome;
+import editor.home.EditorHome;
+import editor.home.GameplayHome;
+import editor.home.MapHome;
+import editor.interactive.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

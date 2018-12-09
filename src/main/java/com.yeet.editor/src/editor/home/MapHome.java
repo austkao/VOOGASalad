@@ -1,15 +1,10 @@
-package editor;
+package editor.home;
 
+import editor.EditorManager;
+import editor.interactive.MapEditor;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.paint.Color;
-import renderer.external.Structures.ScrollablePaneNew;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-public class MapHome extends EditorHome{
+public class MapHome extends EditorHome {
     private static final String ALL_MAPS = "allmaps/";
 
     public MapHome(Group root, EditorManager em){
