@@ -15,6 +15,7 @@ import messenger.external.*;
 import physics.external.PhysicsSystem;
 import physics.external.combatSystem.CombatSystem;
 import player.internal.Elements.PlayerMarker;
+import player.internal.Elements.ScreenTimer;
 import player.internal.GameLoop;
 import player.internal.SceneSwitch;
 import player.internal.Screen;
@@ -26,10 +27,7 @@ import xml.XMLParser;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 /** Displays a stage and visualizes character combat animation
@@ -41,7 +39,7 @@ public class CombatScreen extends Screen {
     private EventBus myMessageBus;
 
     private SceneSwitch prevScene;
-    private BiConsumer<Integer, List<Integer>> nextScene;
+    private BiConsumer<Integer, Queue<Integer>> nextScene;
 
     private InputSystem myInputSystem;
     private CombatSystem myCombatSystem;
@@ -68,7 +66,9 @@ public class CombatScreen extends Screen {
 
     private ArrayList<ImageView> myTiles;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, List<Integer>> nextScene) {
+    private ScreenTimer myTimer;
+
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, Queue<Integer>> nextScene) {
         super(root, renderer);
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
@@ -86,7 +86,7 @@ public class CombatScreen extends Screen {
         super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
     }
 
-    public void setupCombatScene(HashMap<Integer, String> characterNames, HashMap<Integer, Color> characterColors, List<Integer> botList, String stageName){
+    public void setupCombatScene(HashMap<Integer, String> characterNames, HashMap<Integer, Color> characterColors, String gameMode, Integer typeValue, List<Integer> botList, String stageName){
         myParser = new XMLParser(new File(myGameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myBackgroundMap = myParser.parseFileForElement("background");
         myMusicMap = myParser.parseFileForElement("music");
@@ -150,14 +150,29 @@ public class CombatScreen extends Screen {
         myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         myBGMPlayer.play();
-        myMessageBus.post(new GameStartEvent(botList));
+        myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
+        //ui elements
+        if(gameMode.equalsIgnoreCase("TIME")){
+            myTimer = new ScreenTimer(typeValue,super.getMyRenderer().makeText("",true,70,Color.WHITE,0.0,0.0),(time)->myMessageBus.post(new TimeUpEvent()));
+            myTimer.setLayoutX(969.0);
+            myTimer.setLayoutY(34.0);
+            super.getMyRoot().getChildren().add(myTimer);
+        }
+        else{
+            myTimer = new ScreenTimer(typeValue,super.getMyRenderer().makeText("",true,70,Color.WHITE,0.0,0.0),(time)->doNothing());
+        }
+    }
+
+    private void doNothing() {
     }
 
     public void startLoop(){
+        myTimer.play();
         myGameLoop.startLoop();
     }
 
     public void stopLoop(){
+        myTimer.pause();
         //TODO: stops game loop
     }
 

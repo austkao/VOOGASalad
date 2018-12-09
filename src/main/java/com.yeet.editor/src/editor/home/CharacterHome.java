@@ -1,7 +1,8 @@
 package editor.home;
 
-import editor.interactive.CharacterEditor;
+
 import editor.EditorManager;
+import editor.interactive.CharacterEditor;
 import editor.interactive.InputEditor;
 import javafx.scene.Group;
 import javafx.scene.control.Button;

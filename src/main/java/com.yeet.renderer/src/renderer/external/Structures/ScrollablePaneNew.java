@@ -14,7 +14,6 @@ import renderer.external.Scrollable;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ScrollablePaneNew extends Pane {

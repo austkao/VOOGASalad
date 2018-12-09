@@ -287,13 +287,13 @@ public class CharacterEditor extends EditorSuper {
         //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
 
         TextInputDialog text = new TextInputDialog("");
-        text.setTitle("Enter X Offset of initial frame");
+        resetText("Enter X Offset of initial frame", text);
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Y Offset");
+        resetText("Enter Y Offset", text);
         double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Width");
+        resetText("Enter Width", text);
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Height");
+        resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
 
         //currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
@@ -304,6 +304,8 @@ public class CharacterEditor extends EditorSuper {
         mySpritePane.getChildren().add(currentSprite);
 
 
+        //idea of anchor came form here:
+        //https://coderanch.com/t/689100/java/rectangle-dragging-image
         AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
         currentSprite.setOnMousePressed(e -> anchor.set(startSelection(e, anchor.get())));
         currentSprite.setOnMouseDragged(e -> dragSelection(e, anchor.get()));
@@ -340,7 +342,6 @@ public class CharacterEditor extends EditorSuper {
         }
 
         anchor = new Point2D(e.getX(), e.getY());
-
         return anchor;
     }
 
@@ -382,7 +383,7 @@ public class CharacterEditor extends EditorSuper {
             return;
         }
         File image = chooseImage("Choose thumbnail for animation");
-        if (image == null){
+        if (testNull(image, "No valid image provided")){
             return;
         }
         ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
@@ -392,7 +393,7 @@ public class CharacterEditor extends EditorSuper {
         SpriteAnimation myAnimation = getNewAnimation();
 
         TextInputDialog text = new TextInputDialog("");
-        text.setTitle("Enter Attack Power");
+        text.setContentText("Enter Attack Power");
         int power = Integer.parseInt(text.showAndWait().orElse("0"));
 
         scrollToAnimation.put(animPic, myAnimation);
@@ -400,26 +401,30 @@ public class CharacterEditor extends EditorSuper {
         animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power));
     }
 
+    private void resetText (String mesasge, TextInputDialog text){
+        text.setContentText(mesasge);
+        text.getEditor().setText("");
+    }
+
     private SpriteAnimation getNewAnimation(){
-        TextInputDialog text = new TextInputDialog("");
-        text.setTitle("Enter Time In seconds");
+        TextInputDialog text = new TextInputDialog();
+        resetText("Enter Time In seconds", text);
         double time = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Frame Count");
+        resetText("Enter Frame Count", text);
         int count = Integer.parseInt(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Number of Columns");
+        resetText("Enter Number of Columns", text);
         int columns = Integer.parseInt(text.showAndWait().orElse("0"));
-        text.setTitle("Enter X Offset");
+        resetText("Enter X Offset", text);
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Y Offset");
+        resetText("Enter Y Offset", text);
         double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Width");
+        resetText("Enter Width", text);
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Height");
+        resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
         SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
                 offsetX, offsetY, width, height);
         myAnimation.setCycleCount(Animation.INDEFINITE);
-
         return myAnimation;
     }
     private void selectAnimationFromScroll(ScrollableItem b){
@@ -438,18 +443,18 @@ public class CharacterEditor extends EditorSuper {
 
     private String showAlertInputOptions(int num){
 
-        Set<String> options = inputEditor.getInputTypes();
+        //Set<String> options = inputEditor.getInputTypes();
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Enter input #" + num);
 
         boolean disabled = false;
 
-        for (String option: options){
-            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().add(optionButton);
-            dialog.getDialogPane().lookupButton(optionButton).setDisable(disabled);
-        }
+//        for (String option: options){
+//            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
+//            dialog.getDialogPane().getButtonTypes().add(optionButton);
+//            dialog.getDialogPane().lookupButton(optionButton).setDisable(disabled);
+//        }
 
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 
@@ -480,62 +485,7 @@ public class CharacterEditor extends EditorSuper {
         return combo;
     }
 
-    private void startRectangle(MouseEvent e){
 
-        e.setDragDetect(true);
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        if (hitOrHurt.getState().equals(HIT_TEXT)){
-            mySpritePane.getChildren().remove(frame.getHitBox());
-            frame.setHitBox(new Rectangle());
-            frame.getHitBox().setX(e.getX());
-            frame.getHitBox().setY(e.getY());
-        }
-        else{
-            mySpritePane.getChildren().remove(frame.getHurtBox());
-            frame.setHurtBox(new Rectangle());
-            frame.getHurtBox().setX(e.getX());
-            frame.getHurtBox().setY(e.getY());
-        }
-    }
-
-    private void finishRectangle(MouseEvent e){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return;
-        }
-        double x2 = e.getX();
-        double y2 = e.getY();
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-
-
-        if (hitOrHurt.getState().equals(HIT_TEXT)){
-            mySpritePane.getChildren().remove(frame.getHitBox());
-            double x1 = frame.getHitBox().getX();
-            double y1 = frame.getHitBox().getY();
-            double width = x2 - x1;
-            double height = y2 - y1;
-
-
-            frame.setHitBox(new Rectangle(width, height, Color.TRANSPARENT));
-            frame.getHitBox().setStroke(Color.RED);
-            frame.getHitBox().setStrokeWidth(5);
-            mySpritePane.getChildren().add(frame.getHitBox());
-            frame.getHitBox().relocate(x1, y1);
-        }
-        else{
-            mySpritePane.getChildren().remove(frame.getHurtBox());
-            double x1 = frame.getHurtBox().getX();
-            double y1 = frame.getHurtBox().getY();
-            double width = x2 - x1;
-            double height = y2 - y1;
-
-            frame.setHurtBox(new Rectangle(width, height, Color.TRANSPARENT));
-            frame.getHurtBox().setStroke(Color.BLUE);
-            frame.getHurtBox().setStrokeWidth(5);
-            mySpritePane.getChildren().add(frame.getHurtBox());
-            frame.getHurtBox().relocate(x1, y1);
-        }
-
-    }
 
     public String toString(){
         return "CharacterEditor";

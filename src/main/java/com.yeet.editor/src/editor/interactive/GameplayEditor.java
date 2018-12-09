@@ -1,14 +1,16 @@
 package editor.interactive;
 
+
 import editor.EditorManager;
-import editor.interactive.EditorSuper;
 import javafx.scene.Group;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import renderer.external.Structures.SliderBox;
 import renderer.external.Structures.SwitchButton;
 import renderer.external.Structures.TextBox;
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 

@@ -10,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
-
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -21,6 +20,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import renderer.external.Structures.Level;
+import renderer.external.Structures.ScrollableItem;
+import renderer.external.Structures.ScrollablePane;
+
 import renderer.external.Scrollable;
 import renderer.external.Structures.*;
 
@@ -35,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+
 ;
 
 /**

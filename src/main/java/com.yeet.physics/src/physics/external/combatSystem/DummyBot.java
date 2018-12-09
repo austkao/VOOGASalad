@@ -3,6 +3,8 @@ package physics.external.combatSystem;
 import messenger.external.*;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DummyBot extends Bot{
 
@@ -58,6 +60,16 @@ public class DummyBot extends Bot{
             }
         }
         return states[stateIndex];
+    }
+
+    public void start(){
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                step();
+            }
+        }, 1000, 100);
     }
 
     private void moveRandomly(){

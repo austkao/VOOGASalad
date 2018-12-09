@@ -15,6 +15,11 @@ public abstract class Bot extends Player{
     protected static EventBus eventBus = EventBusFactory.getEventBus();
     protected final int NUM_OF_STATES = states.length;
     Double[][] transitionMatrix;
+    PlayerGraph playerGraph;
+
+    protected Bot(){
+        setIsBot(true);
+    }
 
     static{
         map = new HashMap<>();
@@ -33,6 +38,11 @@ public abstract class Bot extends Player{
         }
         this.transitionMatrix = transitionMatrix;
     }
+
+    public void setPlayerGraph(PlayerGraph playerGraph){
+        this.playerGraph = playerGraph;
+    }
+
 
     /* implement this method to define the rule of transitioning
         from initial state to a new state */
