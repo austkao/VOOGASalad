@@ -1,19 +1,22 @@
 package physics.external.combatSystem;
 
 import messenger.external.CombatActionEvent;
+import messenger.external.GameOverEvent;
 import physics.external.PhysicsSystem;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PlayerManager {
     private static final int INITIAL_ID = 0;
     Map<Integer, Player> playerMap;
     int numOfPlayers;
+    int numOfAlivePlayers;
+    Queue<Integer> ranking;
+    int winnerID;
 
     public PlayerManager(int numOfPlayers){
         playerMap = new HashMap<>();
+        ranking = new LinkedList<>();
         this.numOfPlayers = numOfPlayers;
         for(int id = INITIAL_ID; id < numOfPlayers; id++){
             playerMap.put(id, new Player(id));
@@ -43,6 +46,44 @@ public class PlayerManager {
         for(int id: botsID){
 //            getPlayerByID(id).setIsBot(true);
             playerMap.put(id, new DummyBot());
+        }
+    }
+
+    public int getAlivePlayers(){
+        for(int id: playerMap.keySet()){
+            if(playerMap.get(id).getNumOfLives()>=1){
+                return id;
+            }
+        }
+        return 0;
+    }
+
+    public boolean hurt(int beingAttacked, int attacker){
+        Player playerBeingAttacked = getPlayerByID(beingAttacked);
+        Player playerAttacking = getPlayerByID(attacker);
+        double health = playerBeingAttacked.reduceHealth(playerAttacking.getAttackDamage());
+
+        if(health<=0.0){
+            int remainingLife = playerBeingAttacked.loseLife();
+            if(remainingLife<=0){
+                ranking.offer(beingAttacked);
+                if(--numOfAlivePlayers == 1){
+                    winnerID = attacker;
+                    ranking.offer(attacker);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Queue<Integer> getRanking(){
+        return ranking;
+    }
+
+    public void setNumOfLives(int numOfLives){
+        for(int id: playerMap.keySet()){
+            playerMap.get(id).setNumOfLives(numOfLives);
         }
     }
 

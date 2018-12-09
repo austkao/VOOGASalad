@@ -101,12 +101,11 @@ public class CombatSystem {
             Player playerBeingAttacked = playerManager.getPlayerByID(list.get(0));
             Player playerAttacking = playerManager.getPlayerByID(list.get(1));
             playerAttacking.addAttackingTargets(playerBeingAttacked);
-            double health = playerBeingAttacked.reduceHealth(playerAttacking.getAttackDamage());
-            //TODO: do something when the player's health drops to below 0.0
-            if(health<=0.0){
-
+            boolean result = playerManager.hurt(list.get(0), list.get(1));
+            if(result){
+                eventBus.post(new GameOverEvent(playerManager.winnerID, playerManager.getRanking()));
             }
-            playersBeingRekt.put(playerBeingAttacked.id, health);
+            playersBeingRekt.put(playerBeingAttacked.id, playerManager.getPlayerByID(list.get(0)).getHealth());
         }
         eventBus.post(new GetRektEvent(playersBeingRekt));
     }
@@ -121,6 +120,16 @@ public class CombatSystem {
         botList = gameStartEvent.getBots();
         playerManager = new PlayerManager(playerMap.size());
         playerManager.setBots(botList, physicsSystem);
+        String type = gameStartEvent.getGameType().toLowerCase();
+        if(type.equals("stock")){
+            int life = gameStartEvent.getTypeValue();
+            playerManager.setNumOfLives(life);
+        }
+        else{
+            // timed
+        }
+
+
         PlayerGraph graph = new PlayerGraph(playerManager, physicsSystem.getPositionsMap());
         for(int id: botList){
             ((Bot)playerManager.getPlayerByID(id)).setPlayerGraph(graph);

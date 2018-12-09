@@ -19,6 +19,7 @@ public class Player {
     private double health = 100.0;
     private int numOfLives;
     private int powerLevel;
+    private int score;
     private double attackDamage = 10.0;
     private List<Player> isAttackingTargets;
     private List<List<Integer>> hitboxes;
@@ -67,6 +68,23 @@ public class Player {
     public double reduceHealth(double amt){
         this.health -= amt;
         return this.health;
+    }
+
+    public double getHealth(){
+        return health;
+    }
+
+    public int getNumOfLives(){
+        return numOfLives;
+    }
+
+    public int loseLife(){
+        this.numOfLives -= 1;
+        return this.numOfLives;
+    }
+
+    public void setNumOfLives(int numOfLives){
+        this.numOfLives = numOfLives;
     }
 
     public double getAttackDamage(){
