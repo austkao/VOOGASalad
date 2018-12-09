@@ -67,7 +67,9 @@ public class ScrollablePaneNew extends Pane {
                 currentH = new HBox(3);
             }
             currentH.getChildren().add(items.get(i).getImageButton());
-            tgGrid.getToggles().add(items.get(i).getImageButton());
+            if(!tgGrid.getToggles().contains(items.get(i).getImageButton())){
+                tgGrid.getToggles().add(items.get(i).getImageButton());
+            }
         }
         hboxes.add(currentH);
         gridView.getChildren().addAll(hboxes);
@@ -137,6 +139,7 @@ public class ScrollablePaneNew extends Pane {
                 addItem(itemImage, imageName);
             }
         }
+        buildGridView();
     }
 
     public ObservableList<Scrollable> getItems() {
