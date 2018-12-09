@@ -15,6 +15,7 @@ import messenger.external.*;
 import physics.external.PhysicsSystem;
 import physics.external.combatSystem.CombatSystem;
 import player.internal.Elements.PlayerMarker;
+import player.internal.Elements.ScreenTimer;
 import player.internal.GameLoop;
 import player.internal.SceneSwitch;
 import player.internal.Screen;
@@ -67,6 +68,8 @@ public class CombatScreen extends Screen {
     private HashMap<String, ArrayList<String>> mySpawnMap;
 
     private ArrayList<ImageView> myTiles;
+
+    private ScreenTimer myTimer;
 
     public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, List<Integer>> nextScene) {
         super(root, renderer);
@@ -151,13 +154,28 @@ public class CombatScreen extends Screen {
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         myBGMPlayer.play();
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
+        //ui elements
+        if(gameMode.equalsIgnoreCase("TIME")){
+            myTimer = new ScreenTimer(typeValue,super.getMyRenderer().makeText("",true,70,Color.WHITE,0.0,0.0),(time)->myMessageBus.post(new TimeUpEvent()));
+            myTimer.setLayoutX(969.0);
+            myTimer.setLayoutY(34.0);
+            super.getMyRoot().getChildren().add(myTimer);
+        }
+        else{
+            myTimer = new ScreenTimer(typeValue,super.getMyRenderer().makeText("",true,70,Color.WHITE,0.0,0.0),(time)->doNothing());
+        }
+    }
+
+    private void doNothing() {
     }
 
     public void startLoop(){
+        myTimer.play();
         myGameLoop.startLoop();
     }
 
     public void stopLoop(){
+        myTimer.pause();
         //TODO: stops game loop
     }
 
