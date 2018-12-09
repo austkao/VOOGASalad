@@ -37,10 +37,12 @@ public class ScreenTimer extends VBox {
         return timeText.getText();
     }
 
+    /** Plays the {@code TimeTransition}*/
     public void play(){
         myTimeTransition.play();
     }
 
+    /** Pauses the {@code TimeTransition}*/
     public void pause(){
         myTimeTransition.pause();
     }

@@ -5,6 +5,9 @@ import javafx.animation.Transition;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+/** Custom {@code Transition} used for changing a {@code Text} to reflect a timer's value
+ *  @author bpx
+ */
 public class TimeTransition extends Transition {
 
     private Text targetText;
@@ -26,6 +29,9 @@ public class TimeTransition extends Transition {
         targetText.setText(millisToString((int)timeLeft));
     }
 
+    /** Helper method to convert milliseconds into a human-friendly string
+     *  @param milliseconds The raw milliseconds time
+     */
     private String millisToString(int milliseconds){
         int minutes = milliseconds/60000;
         int seconds = (milliseconds-(minutes*60000))/1000;
