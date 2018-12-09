@@ -306,6 +306,8 @@ public class CharacterEditor extends EditorSuper{
         mySpritePane.getChildren().add(currentSprite);
 
 
+        //idea of anchor came form here:
+        //https://coderanch.com/t/689100/java/rectangle-dragging-image
         AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
         currentSprite.setOnMousePressed(e -> anchor.set(startSelection(e, anchor.get())));
         currentSprite.setOnMouseDragged(e -> dragSelection(e, anchor.get()));
