@@ -42,7 +42,7 @@ public class PlayerManager {
     public void setBots(List<Integer> botsID, PhysicsSystem physicsSystem){
         for(int id: botsID){
 //            getPlayerByID(id).setIsBot(true);
-            playerMap.put(id, new NormalBot(physicsSystem));
+            playerMap.put(id, new DummyBot());
         }
     }
 
