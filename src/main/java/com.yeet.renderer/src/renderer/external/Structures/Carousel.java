@@ -20,6 +20,14 @@ public class Carousel extends HBox {
     public static final int INACTIVE = 30;
     public static final String FORMAT_FONT = "-fx-font-family: '%s'; -fx-font-size: %s; -fx-text-fill: %s;";
 
+    private Color myMainColor;
+    private Color mySecondaryColor;
+
+    private Polygon myLeftArrow;
+    private Polygon myRightArrow;
+
+    private List<String> myContent;
+    private Text myLabel;
     private int index;
 
     /** Create a new Carousel with the specified parameters
@@ -39,67 +47,94 @@ public class Carousel extends HBox {
         this.setPrefWidth(w);
         this.setPrefHeight(h);
         this.setAlignment(Pos.CENTER);
-        Polygon leftArrow = new Polygon();
-        leftArrow.getPoints().setAll(0.0,h/3,
+        this.myContent = content;
+        myMainColor = mainColor;
+        mySecondaryColor = secondaryColor;
+        myLeftArrow = new Polygon();
+        myLeftArrow.getPoints().setAll(0.0,h/3,
                                     2*h/3,0.0,
                                     2*h/3,2*h/3);
-        leftArrow.setFill(Color.GRAY);
-        leftArrow.setOpacity(INACTIVE);
-        leftArrow.setStroke(Color.BLACK);
-        this.getChildren().add(leftArrow);
+        formatArrow(myLeftArrow, Color.TRANSPARENT, INACTIVE);
+        myLeftArrow.setStroke(Color.TRANSPARENT);
+        this.getChildren().add(myLeftArrow);
         HBox textbox = new HBox();
-        textbox.setStyle("-fx-background-color: "+toRGBCode(mainColor)+";" +
-                "-fx-border-color: black");
+        textbox.setStyle("-fx-background-color: "+toRGBCode(myMainColor));
         index = 0;
-        Text label = new Text(content.get(index));
+        Text label = new Text(myContent.get(index));
+        this.myLabel = label;
         //FORMAT_FONT: String fontName, Double fontSize, Color textColor
-        label.setStyle(String.format(FORMAT_FONT,font.getName(),font.getSize(),toRGBCode(secondaryColor)));
-        label.setFill(secondaryColor);
+        myLabel.setStyle(String.format(FORMAT_FONT,font.getName(),font.getSize(),toRGBCode(mySecondaryColor)));
+        myLabel.setFill(mySecondaryColor);
         textbox.setMinWidth(w);
         textbox.setFillHeight(true);
-        textbox.getChildren().add(label);
+        textbox.getChildren().add(myLabel);
         textbox.setAlignment(Pos.CENTER);
         this.getChildren().add(textbox);
-        Polygon rightArrow = new Polygon();
-        rightArrow.getPoints().setAll(0.0,2*h/3,
+        myRightArrow = new Polygon();
+        myRightArrow.getPoints().setAll(0.0,2*h/3,
                                     0.0,0.0,
                                     2*h/3,h/3);
-        if(content.size()>1){
-            rightArrow.setFill(mainColor);
+        initialArrowCheck(myRightArrow);
+        myRightArrow.setStroke(Color.BLACK);
+        this.getChildren().add(myRightArrow);
+        myLeftArrow.setOnMousePressed(event -> leftArrowClicked());
+        myRightArrow.setOnMousePressed(event -> rightArrowClicked());
+    }
+
+    private void initialArrowCheck(Polygon rightArrow) {
+        if(myContent.size()>1){
+            rightArrow.setFill(myMainColor);
+            rightArrow.setStroke(Color.BLACK);
         }
         else{
-            rightArrow.setFill(Color.GRAY);
-            rightArrow.setOpacity(INACTIVE);
+            formatArrow(rightArrow, Color.TRANSPARENT, INACTIVE);
+            rightArrow.setStroke(Color.TRANSPARENT);
         }
-        rightArrow.setStroke(Color.BLACK);
-        this.getChildren().add(rightArrow);
-        leftArrow.setOnMousePressed(event -> {
-            if(index>0){
-                index--;
-                label.setText(content.get(index));
-            }
-            if(index==0){
-                leftArrow.setFill(Color.GRAY);
-                leftArrow.setOpacity(INACTIVE);
-            }
-            if(index<content.size()-1){
-                rightArrow.setFill(mainColor);
-                rightArrow.setOpacity(100);
-            }
-        });
-        rightArrow.setOnMousePressed(event -> {
-            if(index<content.size()-1){
-                index++;
-                label.setText(content.get(index));
-            }
-            if(index==content.size()-1){
-                rightArrow.setFill(Color.GRAY);
-                rightArrow.setOpacity(INACTIVE);
-            }
-            if(index>0){
-                leftArrow.setFill(mainColor);
-                leftArrow.setOpacity(100);
-            }
-        });
+    }
+
+    private void rightArrowClicked() {
+        if(index<myContent.size()-1){
+            index++;
+            myLabel.setText(myContent.get(index));
+        }
+        if(index==myContent.size()-1){
+            formatArrow(myRightArrow, Color.TRANSPARENT, INACTIVE);
+            myRightArrow.setStroke(Color.TRANSPARENT);
+        }
+        if(index>0){
+            formatArrow(myLeftArrow, myMainColor, 100);
+            myLeftArrow.setStroke(Color.BLACK);
+        }
+    }
+
+    private void leftArrowClicked() {
+        if(index>0){
+            index--;
+            myLabel.setText(myContent.get(index));
+        }
+        if(index==0){
+            formatArrow(myLeftArrow, Color.TRANSPARENT, INACTIVE);
+            myLeftArrow.setStroke(Color.TRANSPARENT);
+        }
+        if(index<myContent.size()-1){
+            formatArrow(myRightArrow, myMainColor, 100);
+            myRightArrow.setStroke(Color.BLACK);
+        }
+    }
+
+    public String getValue(){
+        return myLabel.getText();
+    }
+
+    public void setContent(List<String> newcontent){
+        myContent = newcontent;
+        index = 0;
+        myLabel.setText(newcontent.get(0));
+        leftArrowClicked();
+    }
+
+    private void formatArrow(Polygon leftArrow, Color gray, int inactive) {
+        leftArrow.setFill(gray);
+        leftArrow.setOpacity(inactive);
     }
 }

@@ -35,6 +35,8 @@ public class CharacterSelectScreen extends Screen {
     private boolean isReady;
     private ImageView myReadyBar;
 
+    private MenuTopper myMenuTopper;
+
     private CharacterGrid myCharGrid;
 
     private CharacterChooseDisplay display1;
@@ -75,7 +77,7 @@ public class CharacterSelectScreen extends Screen {
         bg.setFitWidth(1280);
         bg.setFitHeight(800);
         bg.setOpacity(0.52);
-        HBox menuBlock = new MenuTopper(30.0,previousScene);
+        myMenuTopper = new MenuTopper(super.getMyRenderer().makeText("",true,5,Color.BLACK,0.0,0.),30.0,previousScene);
         myCharGrid = new CharacterGrid(myDirectory,CHAR_PER_ROW, super.getMyRenderer().makeText("",true,15,Color.WHITE,0.0,0.0), this::setCharacter);
         Rectangle spacer = new Rectangle(1280,10,Color.TRANSPARENT);
         HBox charBox = new HBox(10);
@@ -94,7 +96,7 @@ public class CharacterSelectScreen extends Screen {
         myCharacterChooserList.add(display3);
         myCharacterChooserList.add(display4);
         super.getMyRoot().getChildren().addAll(bg,holder,button1,button2,button3,button4);
-        holder.getChildren().addAll(menuBlock,myCharGrid,spacer,charBox);
+        holder.getChildren().addAll(myMenuTopper,myCharGrid,spacer,charBox);
         charBox.getChildren().addAll(display1,display2,display3,display4);
         this.setOnKeyPressed(event -> handleInput(event.getCode()));
     }
@@ -119,22 +121,22 @@ public class CharacterSelectScreen extends Screen {
      */
     private void setCharacter(String player, String charName){
         if(player.equalsIgnoreCase("P1")){
-            display1.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+            display1.setPortrait(new Image(myDirectory.toURI()+"/characters/"+charName+"/portrait.png"));
             display1.setCharacterName(charName);
             myCharacterMap.put(0,charName);
         }
         else if(player.equalsIgnoreCase("P2")){
-            display2.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+            display2.setPortrait(new Image(myDirectory.toURI()+"/characters/"+charName+"/portrait.png"));
             display2.setCharacterName(charName);
             myCharacterMap.put(1,charName);
         }
         else if(player.equalsIgnoreCase("P3")){
-            display3.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+            display3.setPortrait(new Image(myDirectory.toURI()+"/characters/"+charName+"/portrait.png"));
             display3.setCharacterName(charName);
             myCharacterMap.put(2,charName);
         }
         else if(player.equalsIgnoreCase("P4")){
-            display4.setPortrait(new Image(myDirectory.toURI()+"\\characters\\"+charName+"\\portrait.png"));
+            display4.setPortrait(new Image(myDirectory.toURI()+"/characters/"+charName+"/portrait.png"));
             display4.setCharacterName(charName);
             myCharacterMap.put(3,charName);
         }
@@ -164,7 +166,6 @@ public class CharacterSelectScreen extends Screen {
 
     /** Checks if there are enough players to start a match */
     private boolean checkPlayerCount(){
-        System.out.println(getPlayerCount());
         return(getPlayerCount()>1);
     }
 
@@ -270,5 +271,13 @@ public class CharacterSelectScreen extends Screen {
             result.add(newccd);
         }
         return result;
+    }
+
+    public String getGamemode(){
+        return myMenuTopper.getGameMode();
+    }
+
+    public Integer getTypeValue(){
+        return myMenuTopper.getTypeValue();
     }
 }

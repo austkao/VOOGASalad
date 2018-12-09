@@ -1,11 +1,15 @@
 package editor;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -14,8 +18,8 @@ import javafx.stage.Stage;
 import renderer.external.Structures.Level;
 import renderer.external.Structures.ScrollableItem;
 import renderer.external.Structures.ScrollablePane;
-import renderer.external.Structures.TextBox;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
+;
+
 /**
  * @author ob29
  * @author rr202
@@ -35,6 +41,8 @@ import java.util.function.Consumer;
 public class MapEditor extends EditorSuper{
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_IMAGE_DIR = "/data/tiles";
+    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources/";
+    private static final String ALL_MAPS = "allmaps/";
     private static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
     private static final int DEFAULT_PLAIN_FONTSIZE = 12;
     private static final String DEFAULT_BGM = "BGM.mp3";
@@ -46,7 +54,6 @@ public class MapEditor extends EditorSuper{
     private Group root;
     private String myBackgroundImage;
     private String myBGMFileName;
-    private TextBox myBGM;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -89,6 +96,7 @@ public class MapEditor extends EditorSuper{
         Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 150.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
+        saveFile.setOnMouseClicked(e -> snapShot(level,ALL_MAPS));
 
         Button loadFile = myRS.makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
                 30.0,25.0, 75.0, 200.0, 50.0);
@@ -97,11 +105,20 @@ public class MapEditor extends EditorSuper{
         Label musicLabel = new Label("Background Music");
         musicLabel.setLayoutX(250);
         musicLabel.setLayoutY(650);
-        myBGM = myRS.makeTextField(consumer, myBGMFileName, 350.0, 660.0, 400.0, 30.0, myPlainFont);
-        Button myBGMButton = myRS.makeStringButton("Set Background Music", Color.BLACK,true,Color.WHITE,
-                20.0,800.0,650.0,300.0,50.0);
-        myBGMButton.setOnMouseClicked(e -> chooseBGM());
-        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, myBGM, myBGMButton, musicLabel);
+
+
+        Button settings = myRS.makeStringButton("Map Settings", Color.CRIMSON, true, Color.WHITE,
+                30.0,25.0, 200.0, 200.0, 50.0);
+        settings.setOnMouseClicked(e -> {
+            MapSettings s = new MapSettings();
+            s.setScene();
+        });
+
+
+
+
+
+        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, loadFile, settings);
     }
 
     private void initializeScrollPane(){
@@ -139,7 +156,8 @@ public class MapEditor extends EditorSuper{
      * User selects background, and it is applied to level.
      */
     private void chooseBackground(){
-        File backgroundFile = new File(myEM.getGameDirectoryString()+"/data/background");
+        Path userPath = Paths.get(System.getProperty("user.dir"));
+        File backgroundFile = new File(userPath+RESOURCE_PATH+"/backgrounds");
         ListView<String> backgroundList = myRS.makeDirectoryFileList(backgroundFile, false);
         Stage edit = new Stage();
         edit.setScene(new Scene(new Group(backgroundList)));
@@ -150,18 +168,7 @@ public class MapEditor extends EditorSuper{
         edit.show();
     }
 
-    private void chooseBGM(){
-        File musicFile = new File(myEM.getGameDirectoryString()+"/data/bgm");
-        ListView<String> musicList = myRS.makeDirectoryFileList(musicFile, false);
-        Stage edit = new Stage();
-        edit.setScene(new Scene(new Group(musicList)));
-        musicList.setOnMouseClicked(e -> {
-            myBGMFileName = musicList.getSelectionModel().getSelectedItem();
-            myBGM.setText(myBGMFileName);
-            edit.close();
-        });
-        edit.show();
-    }
+
 
     private void chooseTileImage(){
         File tileFile = chooseImage("Choose Tile Image");
@@ -198,18 +205,19 @@ public class MapEditor extends EditorSuper{
         return "MapEditor";
     }
 
-//    private void snapShot(Pane pane) {
-//        WritableImage image = pane.snapshot(new SnapshotParameters(), null);
-//
-//        // TODO: probably use a file chooser here
-//        File file = new File("chart.png");
-//
-//        try {
-//            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-//        } catch (IOException e) {
-//            // TODO: handle exception here
-//        }
-//    }
+    private void snapShot(Node node,String dir) {
+        WritableImage img = node.snapshot(new SnapshotParameters(), null);
+        Path userPath = Paths.get(System.getProperty("user.dir"));
+        File directory = new File(userPath+RESOURCE_PATH+dir);
+        int dsize = directory.listFiles().length;
+        File file = new File(directory.getPath()+"/test" + dsize + ".png");
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", file);
+        } catch (IOException e) {
+            // TODO: handle exception here
+        }
+    }
+
 
 
     private void createSaveFile() {
@@ -234,6 +242,7 @@ public class MapEditor extends EditorSuper{
         levelMap.put("yPos", new ArrayList<>(List.of("0","0","0","0")));
         try {
             generateSave(structure, levelMap);
+           // snapShot(level.getWindow());
         } catch (Exception ex) {
             System.out.println("Invalid save");
             ex.printStackTrace();

@@ -18,7 +18,7 @@ public class ComboNode implements Node {
 
     @Override
     public String getKey(){
-        return "";
+        return tag;
     }
 
     @Override

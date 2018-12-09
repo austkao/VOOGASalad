@@ -58,8 +58,19 @@ public class XMLParser implements Parser {
         if(attributeMap.containsKey(attributeTag)) {
             return attributeMap.get(attributeTag);
         } else {
-            return  new ArrayList<>();
+            return new ArrayList<>();
         }
+    }
+
+    public HashMap<String, String> parseFileForValueMap(String element) {
+        HashMap<String, ArrayList<String>> attributeMap = parseFileForElement(element);
+        HashMap<String, String> valueMap = new HashMap<>();
+        for(String attribute : attributeMap.keySet()) {
+            for(String value : attributeMap.get(attribute)) {
+                valueMap.put(value, attribute);
+            }
+        }
+        return valueMap;
     }
 
     private boolean determineFileValidity() {

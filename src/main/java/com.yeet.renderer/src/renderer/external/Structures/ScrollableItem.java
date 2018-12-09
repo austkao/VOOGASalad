@@ -7,10 +7,7 @@ import javafx.scene.text.Font;
 import renderer.external.RenderSystem;
 
 public class ScrollableItem {
-    public static final String DEFAULT_EMPHASIS_FONT = "AlegreyaSansSC-Black.ttf";
-    public static final int DEFAULT_EMPHASIS_FONTSIZE = 50;
-    public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
-    public static final int DEFAULT_PLAIN_FONTSIZE = 25;
+
     private static final double TILE_WIDTH = 128;
 
 
@@ -23,9 +20,8 @@ public class ScrollableItem {
 
     public ScrollableItem(Image image, double x, double y){
         this.image = image;
-        myEmphasisFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_EMPHASIS_FONT),DEFAULT_EMPHASIS_FONTSIZE);
-        myPlainFont = Font.loadFont(this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLAIN_FONT),DEFAULT_PLAIN_FONTSIZE);
-        rs = new RenderSystem(myPlainFont,myEmphasisFont);
+
+        rs = new RenderSystem();
         button = rs.makeImageButton(image,x,y,128.0,128.0);
         button.setBackground(Background.EMPTY); //toggle background
 
