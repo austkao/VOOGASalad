@@ -49,7 +49,7 @@ public class InputTester extends Application {
         KeyInputEvent test3 = new KeyInputEvent(KeyCode.I);
         myMessageBus.post(test3);
 
-        GameStartEvent start1 = new GameStartEvent(new ArrayList<Integer>());
+        GameStartEvent start1 = new GameStartEvent("",0,new ArrayList<Integer>());
         myMessageBus.post(start1);
         //KeyInputEvent test3 = new KeyInputEvent(KeyCode.S);
         //myMessageBus.post(test3);

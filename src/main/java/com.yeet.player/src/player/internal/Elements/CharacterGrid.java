@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import xml.XMLParser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,7 +62,10 @@ public class CharacterGrid extends VBox {
                     ImageView portrait = new ImageView(new Image(String.format("%s/%s",files.get((charactersPerRow*(i))+j).toURI(),"portrait.png")));
                     portrait.setPreserveRatio(true);
                     portrait.setFitWidth(132);
-                    portrait.setViewport(new Rectangle2D(95,106, THUMB_WIDTH, THUMB_HEIGHT));
+                    XMLParser characterPropertiesParser = new XMLParser(new File(directory.getPath()+"/characters/"+files.get((charactersPerRow*(i))+j).getName()+"/characterproperties.xml"));
+                    double x = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","x").get(0));
+                    double y = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","y").get(0));
+                    portrait.setViewport(new Rectangle2D(x,y, THUMB_WIDTH, THUMB_HEIGHT));
                     myImageMap.put(portrait,files.get((charactersPerRow*(i))+j).getName());
                     Text label = new Text(files.get((charactersPerRow*(i))+j).getName());
                     label.setFont(text.getFont());
