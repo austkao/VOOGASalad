@@ -61,6 +61,7 @@ public class CombatScreen extends Screen {
     private HashMap<Integer, Rectangle2D> myTileMap;
     private HashMap<Integer, Sprite> mySpriteMap;
     private HashMap<Integer, HashMap<String,SpriteAnimation>> myAnimationMap;
+    private HashMap<Integer, HealthDisplay> myHealthMap;
 
     private HashMap<String, ArrayList<String>> myBackgroundMap;
     private HashMap<String,ArrayList<String>> myMusicMap;
@@ -85,6 +86,7 @@ public class CombatScreen extends Screen {
         myTileMap = new HashMap<>();
         mySpriteMap = new HashMap<>();
         myAnimationMap = new HashMap<>();
+        myHealthMap = new HashMap<>();
         myTiles = new ArrayList<>();
         super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
     }
@@ -152,6 +154,7 @@ public class CombatScreen extends Screen {
                 healthPortrait.setViewport(new javafx.geometry.Rectangle2D(x,y,size,size));
                 HealthDisplay healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
                 healthDisplayContainer.getChildren().add(healthDisplay);
+                myHealthMap.put((int)characterNames.keySet().toArray()[i],healthDisplay);
             }
         }
         //set up combat systems
@@ -241,5 +244,12 @@ public class CombatScreen extends Screen {
                     nextScene.accept(gameOverEvent.getWinnerID(),gameOverEvent.getRankList());
                 }
         );
+    }
+
+    @Subscribe
+    public void onRekt(GetRektEvent getRektEvent){
+        for(int i : getRektEvent.getPeopleBeingRekt().keySet()){
+            myHealthMap.get(i).setHealth((int)Math.round(getRektEvent.getPeopleBeingRekt().get(i)));
+        }
     }
 }
