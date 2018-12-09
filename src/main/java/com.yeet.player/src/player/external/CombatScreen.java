@@ -105,7 +105,7 @@ public class CombatScreen extends Screen {
         healthDisplayContainer.setLayoutY(646.0);
         super.getMyRoot().getChildren().addAll(background);
         for(int i=0; i<myStageMap.get("x").size();i++){
-            ImageView tile = new ImageView(new Image(myGameDirectory.toURI()+"/data/tiles/"+myStageMap.get("image").get(i)));
+            ImageView tile = new ImageView(new Image(myGameDirectory.toURI()+"/data/tiles/"+myStageMap.get("image").get(i)+".png"));
             tile.setFitHeight(TILE_SIZE);
             tile.setFitWidth(TILE_SIZE);
             tile.setLayoutX(Integer.parseInt(myStageMap.get("x").get(i))* TILE_SIZE);

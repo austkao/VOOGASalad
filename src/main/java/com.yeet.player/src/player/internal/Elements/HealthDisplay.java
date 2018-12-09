@@ -59,7 +59,6 @@ public class HealthDisplay  extends StackPane {
         percentageSymbol.setStrokeWidth(2.0);
         percentageSymbol.setEffect(ds);
         HBox textContainer = new HBox(percentageText,percentageSymbol);
-        textContainer.setStyle("-fx-border-color: blue");
         textContainer.setMinSize(DISPLAY_WIDTH- PORTRAIT_SIZE,PORTRAIT_SIZE);
         textContainer.setMaxSize(DISPLAY_WIDTH,PORTRAIT_SIZE);
         textContainer.setAlignment(Pos.CENTER);
@@ -70,13 +69,11 @@ public class HealthDisplay  extends StackPane {
         bottomAlignedContainer.setPrefSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);
         bottomAlignedContainer.setMaxSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);
         bottomAlignedContainer.setAlignment(Pos.BOTTOM_CENTER);
-        bottomAlignedContainer.setStyle("-fx-border-color: black");
         StackPane nameContainer = new StackPane();
         nameContainer.setMinSize(DISPLAY_WIDTH,34.48);
         nameContainer.setPrefSize(DISPLAY_WIDTH,34.48);
         nameContainer.setMaxSize(DISPLAY_WIDTH,34.48);
         nameContainer.setAlignment(Pos.CENTER_LEFT);
-        nameContainer.setStyle("-fx-border-color: red");
         Polygon namePolygon = new Polygon();
         namePolygon.getPoints().addAll(0.0, POLYGON_HEIGHT,42.5,0.0, DISPLAY_WIDTH,9.5);
         namePolygon.setFill(polygonColor);

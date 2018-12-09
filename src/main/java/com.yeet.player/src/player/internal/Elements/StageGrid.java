@@ -25,6 +25,7 @@ public class StageGrid extends TilePane {
     private XMLParser myParser;
 
     private HashMap<String,ArrayList<String>> myBackgroundMap;
+    private HashMap<String, ImageView> myImageMap;
 
     public StageGrid(File directory, BiConsumer<String, ImageView> biConsumer, Consumer<String> consumer){
         super();
@@ -48,6 +49,7 @@ public class StageGrid extends TilePane {
         double h = gridHeight/(float)rowCount;
         double d = Math.min(w,h);
         for(int i = 0; i < stageCount; i++) {
+            ImageView stagePreview = new ImageView(new Image(files.get(i).toURI()+files.get(i).getName()+".png"));
             StackPane imageHolder = new StackPane();
             imageHolder.setMinSize(w-SPACING,h-SPACING);
             imageHolder.setPrefSize(w-SPACING,h-SPACING);
@@ -65,7 +67,7 @@ public class StageGrid extends TilePane {
             this.getChildren().add(imageHolder);
             int index = i;
             imageView.setOnMouseEntered(event -> {
-                biConsumer.accept(files.get(index).getName(), imageView);
+                biConsumer.accept(files.get(index).getName(), stagePreview);
                 imageView.setScaleX(1.1);
                 imageView.setScaleY(1.1);
             });
