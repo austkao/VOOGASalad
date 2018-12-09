@@ -3,8 +3,6 @@ package physics.external.combatSystem;
 import messenger.external.*;
 
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class DummyBot extends Bot{
 
@@ -22,23 +20,9 @@ public class DummyBot extends Bot{
     @Override
     public void step() {
         PlayerState currentState = this.getPlayerState();
-
         int row = map.get(currentState);
         PlayerState nextState = getNextState(matrix[row]);
-        switch (nextState){
-            case MOVING:
-                moveRandomly();
-                break;
-            case SINGLE_JUMP:
-                eventBus.post(new JumpEvent(id));
-                break;
-            case ATTACKING:
-                eventBus.post(new AttackEvent(id, AttackEvent.WEAK_TYPE));
-                break;
-            case CROUCH:
-                eventBus.post(new CrouchEvent(id));
-                break;
-        }
+        takeActionBasedOnNextState(nextState);
     }
 
     @Override
@@ -46,39 +30,8 @@ public class DummyBot extends Bot{
 
     }
 
-    @Override
-    protected PlayerState getNextState(Double[] distribution) {
-        Random random = new Random();
-        double prob = random.nextDouble();
-        double cumulated = 0.0;
-        int stateIndex = NUM_OF_STATES;
-        for(int i = 0; i < distribution.length; i++){
-            cumulated += distribution[i];
-            if(prob<=cumulated){
-                stateIndex = i;
-                break;
-            }
-        }
-        return states[stateIndex];
-    }
 
-    public void start(){
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                step();
-            }
-        }, 1000, 100);
-    }
 
-    private void moveRandomly(){
-        if(Math.random() < 0.5) {
-            eventBus.post(new MoveEvent(id, true));
-        }
-        else{
-            eventBus.post(new MoveEvent(id, false));
-        }
-    }
+
 
 }

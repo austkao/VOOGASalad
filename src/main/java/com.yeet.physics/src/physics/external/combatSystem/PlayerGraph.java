@@ -28,7 +28,7 @@ public class PlayerGraph {
         }
     }
 
-    public boolean hasEnenmyNearBy(int id, double distance){
+    public boolean hasEnemyNearBy(int id, double distance){
         Point2D closest = getNearestNeighbor(id);
         Player self = playerManager.getPlayerByID(id);
         Point2D selfPos = positionMap.get(self.id);
@@ -49,15 +49,21 @@ public class PlayerGraph {
             queue.offer(positionMap.get(adj.id));
         }
 
+
+
         // get the closest neighbor
         Point2D closest = queue.peek();
+//        System.out.println("Closest:" + closest);
         return closest;
-//        for(int i: positionMap.keySet()){
-//            if(positionMap.get(i).equals(closest)){
-//                return playerManager.getPlayerByID(i);
-//            }
-//        }
-//        return playerManager.getPlayerByID(id);
+    }
+
+    public Player findPlayerByPosition(Point2D pos){
+        for(int i: positionMap.keySet()){
+            if(positionMap.get(i).equals(pos)){
+                return playerManager.getPlayerByID(i);
+            }
+        }
+        return playerManager.getPlayerByID(0);
     }
 
 

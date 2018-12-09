@@ -135,7 +135,7 @@ public class CombatSystem {
             ((Bot)playerManager.getPlayerByID(id)).setPlayerGraph(graph);
         }
         for(int id: botList){
-            ((DummyBot)playerManager.getPlayerByID(id)).start();
+            ((NormalBot)playerManager.getPlayerByID(id)).start();
         }
     }
 
