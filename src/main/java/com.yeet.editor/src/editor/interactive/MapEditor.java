@@ -13,6 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -50,7 +51,6 @@ public class MapEditor extends EditorSuper {
     private static final String ALL_MAPS = "allmaps/";
     private static final String DEFAULT_BGM = "BGM.mp3";
 
-    private Consumer consumer;
     private Image currentTileFile;
     private String myCurrentTileName;
     private ScrollablePaneNew myScrollablePane;
@@ -60,6 +60,7 @@ public class MapEditor extends EditorSuper {
     private ResourceBundle myTags;
     private File myStageDirectory;
     private File backgroundFile;
+    private HBox myButtons;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -70,52 +71,20 @@ public class MapEditor extends EditorSuper {
         myBackgroundImage = DEFAULT_BACKGROUND_IMAGE;
         myBGMFileName = DEFAULT_BGM;
         try {
-            initializeLevel(800, 500, 400, 100,
+            initializeLevel(880, 550, 330, 120,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        consumer = new Consumer() {
-            @Override
-            public void accept(Object o) {
-                o = o;
-            }
-        };
+
         initializeScrollPane();
         ScrollItem si = (ScrollItem) myScrollablePane.getItems().get(0);
         currentTileFile = si.getImage();
         myCurrentTileName = si.getButton().getText();
         //getRenderSystem().drawStage(mapPane, level);
         level.setOnMouseClicked(e -> clickProcessTile(e));
-        Button addBG = myRS.makeStringButton("Set Background", Color.BLACK,true,Color.WHITE,
-                20.0,800.0,700.0,200.0,50.0);
-        addBG.setOnMouseClicked(e -> chooseBackground());
-
-        Button resetGrid = myRS.makeStringButton("Reset Grid", Color.LAVENDER, true, Color.WHITE,
-                30.0,25.0, 300.0, 200.0, 50.0);
-        resetGrid.setOnMouseClicked(e -> level.resetGrid());
-
-        Button chooseTile = myRS.makeStringButton("Choose Tile", Color.CRIMSON, true, Color.WHITE,
-                30.0,25.0, 375.0, 200.0, 50.0);
-        chooseTile.setOnMouseClicked(e -> chooseTileImage());
-
-        Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
-                30.0,25.0, 150.0, 200.0, 50.0);
-        saveFile.setOnMouseClicked(e -> createSaveFile());
-
-        Label musicLabel = new Label("Background Music");
-        musicLabel.setLayoutX(250);
-        musicLabel.setLayoutY(650);
-
-
-        Button settings = myRS.makeStringButton("Map Settings", Color.CRIMSON, true, Color.WHITE,
-                30.0,25.0, 200.0, 200.0, 50.0);
-        settings.setOnMouseClicked(e -> {
-            MapSettings s = new MapSettings();
-            s.setScene();
-        });
-
-        root.getChildren().addAll(addBG, resetGrid, chooseTile, saveFile, settings);
+        initializeButtons();
+        root.getChildren().add(myButtons);
         backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
     }
 
@@ -131,11 +100,39 @@ public class MapEditor extends EditorSuper {
 
     private void initializeScrollPane(){
         File paneFile = new File(myEM.getGameDirectoryString()+DEFAULT_IMAGE_DIR);
-        myScrollablePane = new ScrollablePaneNew(paneFile,50,400.0, 300, 600);
+        myScrollablePane = new ScrollablePaneNew(paneFile,15,120.0, 300, 600);
         for(Scrollable b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage(), b.getButton().getText()));
         }
         root.getChildren().add(myScrollablePane.getScrollPane());
+    }
+
+    private void initializeButtons(){
+        myButtons = new HBox(5);
+        Button addBG = myRS.makeStringButton("Set Background", Color.CRIMSON,true,Color.WHITE,
+                20.0,0.0,0.0,200.0,50.0);
+        addBG.setOnMouseClicked(e -> chooseBackground());
+
+        Button resetGrid = myRS.makeStringButton("Reset Grid", Color.CRIMSON, true, Color.WHITE,
+                20.0,0.0, 0.0, 200.0, 50.0);
+        resetGrid.setOnMouseClicked(e -> level.resetGrid());
+
+        Button chooseTile = myRS.makeStringButton("Choose Tile", Color.CRIMSON, true, Color.WHITE,
+                20.0,0.0, 0.0, 200.0, 50.0);
+        chooseTile.setOnMouseClicked(e -> chooseTileImage());
+
+        Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
+                20.0,0.0, 0.0, 200.0, 50.0);
+        saveFile.setOnMouseClicked(e -> createSaveFile());
+        Button settings = myRS.makeStringButton("Map Settings", Color.CRIMSON, true, Color.WHITE,
+                20.0,0.0, 0.0, 200.0, 50.0);
+        settings.setOnMouseClicked(e -> {
+            MapSettings s = new MapSettings();
+            s.setScene();
+        });
+        myButtons.getChildren().addAll(saveFile,settings,resetGrid,addBG,chooseTile);
+        myButtons.setLayoutX(60.0);
+        myButtons.setLayoutY(50.0);
     }
 
     /**
