@@ -32,8 +32,6 @@ import java.util.Map;
 
 public abstract class EditorSuper extends Scene implements EditorScreen {
 
-    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
-
     protected Group root;
     protected EditorManager myEM;
     protected RenderSystem myRS;
@@ -68,7 +66,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
                     home.updateScroll("characters");
                 }
             } else {
-                System.out.println("Add error alert here.");
+                myRS.createErrorAlert("Not Allowed to Go Back", "Please save your changes first");
             }
         });
         root.getChildren().add(back);

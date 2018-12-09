@@ -3,10 +3,7 @@ package dataSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.event.Event;
-import messenger.external.CreateGameEvent;
-import messenger.external.CreateStageEvent;
-import messenger.external.DeleteDirectoryEvent;
-import messenger.external.EventBusFactory;
+import messenger.external.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +19,7 @@ public class DataSystem {
 
     @Subscribe
     public void createInitialGameFiles(CreateGameEvent event) {
-        File defaultFile = event.getGameDirectory();
+        File defaultFile = event.getDirectory();
         defaultFile.mkdir();
         createDirectory(defaultFile.getPath() + myFP.STAGEPATH.getPath());
         createDirectory(defaultFile.getPath() + myFP.CHARACTERPATH.getPath());
@@ -39,7 +36,7 @@ public class DataSystem {
 
     @Subscribe
     public void createStageFiles(CreateStageEvent event) {
-        File gameStageDirectory = event.getStageDirectory();
+        File gameStageDirectory = event.getDirectory();
         gameStageDirectory.mkdir();
         File stageProperties = new File(gameStageDirectory.getPath()+myFP.STAGEPROPERTIES.getPath());
         try {
@@ -50,10 +47,23 @@ public class DataSystem {
     }
 
     @Subscribe
+    public void createCharacterFiles(CreateCharacterEvent event) {
+        File characterDirectory = event.getDirectory();
+        characterDirectory.mkdir();
+        createDirectory(characterDirectory.getPath()+ myFP.ATTACK.getPath());
+        createDirectory(characterDirectory.getPath()+ myFP.SOUND.getPath());
+        createDirectory(characterDirectory.getPath()+ myFP.SPRITE.getPath());
+        createFile(characterDirectory.getPath() + myFP.CHARACTERPROPERTIES.getPath());
+        createFile(characterDirectory.getPath() + myFP.ATTACKPROPERTIES.getPath());
+        createFile(characterDirectory.getPath() + myFP.SOUNDPROPERTIES.getPath());
+        createFile(characterDirectory.getPath() + myFP.SPRITEPROPERTIES.getPath());
+        createFile(characterDirectory.getPath() + myFP.ANIMATIONPROPERTIES.getPath());
+    }
+
+    @Subscribe
     public void deleteDirectory(DeleteDirectoryEvent event) {
         File directory = event.getDirectory();
         while(directory.exists()) {
-            System.out.println("Entered loop");
             deleteFile(directory);
         }
     }
@@ -61,6 +71,15 @@ public class DataSystem {
     private void createDirectory(String path) {
         File directory = new File(path);
         directory.mkdir();
+    }
+
+    private void createFile(String path) {
+        File file = new File(path);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+
+        }
     }
 
     private void deleteFile(File file) {

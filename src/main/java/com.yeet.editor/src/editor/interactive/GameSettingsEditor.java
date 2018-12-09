@@ -54,7 +54,7 @@ public class GameSettingsEditor extends EditorSuper {
 
 
     public String toString(){
-        return "GameSettingsEditor";
+        return "Game Settings Editor";
     }
 
 

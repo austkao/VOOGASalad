@@ -52,10 +52,7 @@ public class MapHome extends EditorHome {
             setEditor(directory, false);
             return;
         }
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setHeaderText("No Map Selected");
-        errorAlert.setContentText("Please select a map to edit first");
-        errorAlert.showAndWait();
+        rs.createErrorAlert("No Map Selected", "Please select a map to edit first");
     }
 
     @Override

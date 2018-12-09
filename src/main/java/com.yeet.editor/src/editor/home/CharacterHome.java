@@ -4,11 +4,10 @@ import editor.EditorManager;
 import editor.interactive.CharacterEditor;
 import editor.interactive.InputEditor;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.paint.Color;
-import messenger.external.CreateStageEvent;
+import messenger.external.CreateCharacterEvent;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -19,7 +18,7 @@ public class CharacterHome extends EditorHome {
 
     public CharacterHome(EditorManager em){
         super(new Group(), em);
-        //setInputEditor();
+        setInputEditor();
         //setEditor();
         Button input = getRender().makeStringButton("Edit Inputs",Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
         getMyBox().getChildren().add(input);
@@ -31,12 +30,11 @@ public class CharacterHome extends EditorHome {
     }
 
     private void setInputEditor(){
-
+        inputEditor = new InputEditor(em);
+        inputEditor.createBack(this);
     }
 
     public void setEditor(File directory, boolean isEdit){
-        inputEditor = new InputEditor(em);
-        inputEditor.createBack(this);
         myEditor = new CharacterEditor(em, inputEditor, directory, isEdit);
         myEditor.createBack(this);
         em.changeScene(myEditor);
@@ -45,6 +43,7 @@ public class CharacterHome extends EditorHome {
     @Override
     public void createNewObject(String name) {
         File characterDirectory = Paths.get(em.getGameDirectoryString(), "characters", name).toFile();
+        myEB.post(new CreateCharacterEvent("Create Character", characterDirectory));
         setEditor(characterDirectory, false);
     }
 
@@ -60,10 +59,7 @@ public class CharacterHome extends EditorHome {
             setEditor(directory, false);
             return;
         }
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setHeaderText("No Character Selected");
-        errorAlert.setContentText("Please select a character to edit first");
-        errorAlert.showAndWait();
+        rs.createErrorAlert("No Character Selected", "Please select a character to edit first");
     }
 
     private void deleteCharacter(ButtonBase bb) {
