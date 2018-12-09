@@ -1,6 +1,7 @@
 package renderer.external.Structures;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -14,10 +15,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import renderer.external.RenderSystem;
+import renderer.external.Scrollable;
 
 
-
-public class ScrollItem {
+public class ScrollItem implements Scrollable {
 
     private ToggleButton button;
     private ToggleButton imageButton;
@@ -30,26 +31,40 @@ public class ScrollItem {
         rs = new RenderSystem();
         this.image = image;
         this.imageView = new ImageView(image);
-        initializeButton(image,desc);
+        initializeButton(desc);
         initializeImageButton();
-
-
-        //button.setBackground(Background.EMPTY); //toggle background
     }
-    private void initializeButton(Image image, Text desc){
+
+
+    public void initializeButton(Text desc){
         imageView.setPreserveRatio(true);
-        //imageView.setFitWidth(100);
         imageView.setFitHeight(100);
         button = new ToggleButton(desc.getText(),imageView);
         button.setTextFill(Color.WHITE);
         button.wrapTextProperty().setValue(true);
-        rs.styleButton(button);
-        rs.buttonHoverEffect(button);
-        button.selectedProperty().addListener((p, ov, nv) -> {
-            selectEffect(button);
-        });
+        applyStyleAndEffect(button);
+    }
 
-        //button.setOnMouseClicked(e -> selectEffect(button));
+    @Override
+    public void setNodeGraphic(Node key, String text) {
+
+    }
+
+    private void initializeImageButton(){
+        imageButton = new ToggleButton();
+        ImageView copy = new ImageView(image);
+        copy.setPreserveRatio(true);
+        copy.setFitHeight(100);
+        imageButton.setGraphic(copy);
+        applyStyleAndEffect(imageButton);
+    }
+
+    private void applyStyleAndEffect(ToggleButton t){
+        rs.styleButton(t);
+        rs.buttonHoverEffect(t);
+        t.selectedProperty().addListener((p, ov, nv) -> {
+            selectEffect(t);
+        });
     }
 
     private void selectEffect(ToggleButton b){
@@ -60,19 +75,6 @@ public class ScrollItem {
         }else{
             b.setEffect(null);
         }
-    }
-    private void initializeImageButton(){
-        imageButton = new ToggleButton();
-        ImageView copy = new ImageView(image);
-        copy.setPreserveRatio(true);
-        //imageView.setFitWidth(100);
-        copy.setFitHeight(100);
-        imageButton.setGraphic(copy);
-        rs.styleButton(imageButton);
-        rs.buttonHoverEffect(imageButton);
-        imageButton.selectedProperty().addListener((p, ov, nv) -> {
-            selectEffect(imageButton);
-        });
     }
 
     public ToggleButton getButton() {

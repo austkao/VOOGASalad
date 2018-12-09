@@ -300,13 +300,13 @@ public class CharacterEditor extends EditorSuper {
         text.setTitle("Enter Height");
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
 
-
         //currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
         currentSprite = myRS.makeSprite(spriteSheet.getImage(), offsetX, offsetY, width, height);
         currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
         currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
 
         mySpritePane.getChildren().add(currentSprite);
+
 
         AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
         currentSprite.setOnMousePressed(e -> anchor.set(startSelection(e, anchor.get())));
