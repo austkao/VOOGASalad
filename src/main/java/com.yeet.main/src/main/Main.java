@@ -28,10 +28,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Main extends Application {
-    public static final String DEFAULT_EMPHASIS_FONT = "AlegreyaSansSC-Black.ttf";
-    public static final int DEFAULT_EMPHASIS_FONTSIZE = 50;
-    public static final String DEFAULT_PLAIN_FONT = "OpenSans-Regular.ttf";
-    public static final int DEFAULT_PLAIN_FONTSIZE = 25;
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
     private static final String DEFAULT_GAME_DIRECTORY = "/src/main/java/com.yeet.main/resources/defaultgame";
 

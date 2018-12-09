@@ -51,12 +51,12 @@ public enum PlayerState {
         public PlayerState changeStatesOnEvent(CombatActionEvent event){
             switch (event.getInputPlayerState()){
                 // player fails to jump if he already completes a double jump
-                case SINGLE_JUMP:
+                case SINGLE_JUMP: case DOUBLE_JUMP:
                     event.onFailure();
                     return DOUBLE_JUMP;
             }
             event.onSuccess();
-            return INITIAL;
+            return DOUBLE_JUMP;
         }
     },
 
