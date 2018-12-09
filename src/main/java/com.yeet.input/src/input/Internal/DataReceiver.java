@@ -37,13 +37,13 @@ public class DataReceiver {
 
     }
 
-    public Map<String, ArrayList<String>> getCombos(){
+    public List<Map<String, ArrayList<String>>> getCombos(){
         List<Map<String, ArrayList<String>>> allCombos = new ArrayList<>();
         for(int i = 0; i<numPlayers; i++){
             allCombos.add(myParser.parseFileForElement("combo"+ Integer.toString(i))); //Collect the keyInputs for ALL of the players
         }
         comboKeys = myParser.parseFileForElement("combo");
-        return comboKeys;
+        return allCombos;
     }
 
 }
