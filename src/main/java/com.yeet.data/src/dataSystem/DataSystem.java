@@ -6,6 +6,7 @@ import dataSubsystem.GameFileSetup;
 import javafx.event.Event;
 import messenger.external.CreateGameEvent;
 import messenger.external.CreateStageEvent;
+import messenger.external.DeleteDirectoryEvent;
 import messenger.external.EventBusFactory;
 
 import java.io.File;
@@ -50,6 +51,11 @@ public class DataSystem {
         } catch (IOException e) {
             System.out.println("Could not create stage file");
         }
+    }
+
+    @Subscribe
+    public void deleteDirectory(DeleteDirectoryEvent event) {
+        event.getDirectory().delete();
     }
 
     private void createDirectory(String path) {
