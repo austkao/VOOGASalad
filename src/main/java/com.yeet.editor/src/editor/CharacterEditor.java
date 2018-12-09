@@ -344,7 +344,6 @@ public class CharacterEditor extends EditorSuper{
         }
 
         anchor = new Point2D(e.getX(), e.getY());
-
         return anchor;
     }
 
@@ -386,7 +385,7 @@ public class CharacterEditor extends EditorSuper{
             return;
         }
         File image = chooseImage("Choose thumbnail for animation");
-        if (image == null){
+        if (testNull(image, "No valid image provided")){
             return;
         }
         ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
@@ -488,62 +487,7 @@ public class CharacterEditor extends EditorSuper{
         return combo;
     }
 
-    private void startRectangle(MouseEvent e){
 
-        e.setDragDetect(true);
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        if (hitOrHurt.getState().equals(HIT_TEXT)){
-            mySpritePane.getChildren().remove(frame.getHitBox());
-            frame.setHitBox(new Rectangle());
-            frame.getHitBox().setX(e.getX());
-            frame.getHitBox().setY(e.getY());
-        }
-        else{
-            mySpritePane.getChildren().remove(frame.getHurtBox());
-            frame.setHurtBox(new Rectangle());
-            frame.getHurtBox().setX(e.getX());
-            frame.getHurtBox().setY(e.getY());
-        }
-    }
-
-    private void finishRectangle(MouseEvent e){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return;
-        }
-        double x2 = e.getX();
-        double y2 = e.getY();
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-
-
-        if (hitOrHurt.getState().equals(HIT_TEXT)){
-            mySpritePane.getChildren().remove(frame.getHitBox());
-            double x1 = frame.getHitBox().getX();
-            double y1 = frame.getHitBox().getY();
-            double width = x2 - x1;
-            double height = y2 - y1;
-
-
-            frame.setHitBox(new Rectangle(width, height, Color.TRANSPARENT));
-            frame.getHitBox().setStroke(Color.RED);
-            frame.getHitBox().setStrokeWidth(5);
-            mySpritePane.getChildren().add(frame.getHitBox());
-            frame.getHitBox().relocate(x1, y1);
-        }
-        else{
-            mySpritePane.getChildren().remove(frame.getHurtBox());
-            double x1 = frame.getHurtBox().getX();
-            double y1 = frame.getHurtBox().getY();
-            double width = x2 - x1;
-            double height = y2 - y1;
-
-            frame.setHurtBox(new Rectangle(width, height, Color.TRANSPARENT));
-            frame.getHurtBox().setStroke(Color.BLUE);
-            frame.getHurtBox().setStrokeWidth(5);
-            mySpritePane.getChildren().add(frame.getHurtBox());
-            frame.getHurtBox().relocate(x1, y1);
-        }
-
-    }
 
     public String toString(){
         return "CharacterEditor";
