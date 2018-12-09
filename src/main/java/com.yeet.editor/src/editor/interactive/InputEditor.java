@@ -39,7 +39,7 @@ public class InputEditor extends EditorSuper {
         tabs.getTabs().addAll(makeTabs());
         tabs.setTabMinWidth(100.0);
         setRequirements();
-        
+
         Button test = myRS.makeStringButton("show bindings",Color.BLACK,true,Color.WHITE,20.0,650.0,80.0,150.0,50.0);
         test.setOnMouseClicked(e -> {
                     getBindings();
