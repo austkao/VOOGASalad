@@ -1,27 +1,11 @@
-package editor;
+package editor.home;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import editor.interactive.CharacterEditor;
+import editor.EditorManager;
+import editor.interactive.InputEditor;
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import renderer.external.Structures.ScrollablePaneNew;
-import renderer.external.Structures.SwitchButton;
-import renderer.external.Structures.TextBox;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class CharacterHome extends EditorHome {
     private static final String PORTRAITS = "portraits/";

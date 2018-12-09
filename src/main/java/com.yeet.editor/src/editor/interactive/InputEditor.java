@@ -1,5 +1,7 @@
-package editor;
+package editor.interactive;
 
+import editor.EditorManager;
+import editor.interactive.EditorSuper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
@@ -66,6 +68,22 @@ public class InputEditor extends EditorSuper {
             tablist.add(t);
         }
         return tablist;
+//=======
+//        myScroll = new ScrollablePaneNew(200.0,200.0, 520, 600);
+//        myScroll.setMaxHeight(150.0);
+//        myScroll.setMaxWidth(150.0);
+//        makeVBox1();
+//        userInput.setOnKeyPressed(e ->{
+//            if(e.getCode() == KeyCode.ENTER){
+//                addItemtoScroll();
+//            } });
+//        v.setLayoutX(100.0);
+//        v.setLayoutY(50.0);
+//        //setRequirements();
+//        Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,20.0,600.0,300.0,150.0,50.0);
+//        remove.setOnMouseClicked(e -> myScroll.removeItem());
+//        root.getChildren().addAll(remove);
+//>>>>>>> DataProcessor:src/main/java/com.yeet.editor/src/editor/interactive/InputEditor.java
     }
 
     private Pane generateContent(){
@@ -113,7 +131,7 @@ public class InputEditor extends EditorSuper {
 
     private VBox makeVBox(){
         VBox v = new VBox(20.0);
-        ScrollablePaneNew sp = new ScrollablePaneNew(200.0,200.0);
+        ScrollablePaneNew sp = new ScrollablePaneNew(200.0,200.0,300.0,500.0);
         sp.setMaxHeight(150.0);
         sp.setMaxWidth(150.0);
         myScrolls.add(sp);

@@ -1,5 +1,8 @@
-package editor;
+package editor.interactive;
 
+import editor.EditorConstant;
+import editor.EditorManager;
+import editor.EditorScreen;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,30 +25,32 @@ import java.util.HashMap;
  * @author ob29
  */
 
-public abstract class EditorSuper extends Scene{
+public abstract class EditorSuper extends Scene implements EditorScreen {
 
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
     protected Group root;
     protected EditorManager myEM;
     protected RenderSystem myRS;
+    protected EditorConstant myEC;
 
     public EditorSuper(Group root, EditorManager em){
         super(root);
         this.root = root;
         myEM = em;
         myRS = new RenderSystem();
-        Text t = myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
+        Text t = createTitle();
         root.getChildren().add(t);
     }
 
     /**
      * Creates back button to the editor landing page
      */
-    public void createBack(Scene scene){
-        Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,1000.0,0.0,150.0,50.0);
+    public Button createBack(Scene scene){
+        Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSITION.getValue(),0.0,150.0,50.0);
         back.setOnMouseClicked(e -> myEM.changeScene(scene));
         root.getChildren().add(back);
+        return back;
     }
 
     /**
@@ -58,16 +63,10 @@ public abstract class EditorSuper extends Scene{
         root.getChildren().add(save);
     }
 
-    public HashMap<String, ArrayList<String>> loadXMLFile(String tag) {
+    public HashMap<String, ArrayList<String>> loadXMLFile(String tag, File xmlFile) {
         try {
-            FileChooser loadFileChooser = myRS.makeFileChooser("xml");
-            loadFileChooser.setTitle("Save File As");
-            Path filePath = Paths.get(System.getProperty("user.dir"));
-            File defaultFile = new File(filePath+RESOURCE_PATH);
-            loadFileChooser.setInitialDirectory(defaultFile);
-            File file = loadFileChooser.showOpenDialog(new Stage());
-            if(file != null) {
-                XMLParser parser = new XMLParser(file);
+            if(xmlFile != null) {
+                XMLParser parser = new XMLParser(xmlFile);
                 return parser.parseFileForElement(tag);
             } else {
                 throw new IOException("Cannot load file");
@@ -78,15 +77,10 @@ public abstract class EditorSuper extends Scene{
         }
     }
 
-    public void generateSave(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
+    public void generateSave(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data, File xmlFile) {
         try {
-            FileChooser fileChooser = myRS.makeFileChooser("xml");
-            fileChooser.setTitle("Save File As");
-            File defaultFile = myEM.getGameDirectory();
-            fileChooser.setInitialDirectory(defaultFile);
-            File file = fileChooser.showSaveDialog(new Stage());
-            if(file != null) {
-                new XMLSaveBuilder(structure, data, file);
+            if(xmlFile != null) {
+                new XMLSaveBuilder(structure, data, xmlFile);
             } else {
                 throw new IOException("Invalid save location");
             }
@@ -94,6 +88,13 @@ public abstract class EditorSuper extends Scene{
             System.out.println("An error occurred during the save process");
         }
     }
+
+    public abstract String toString();
+
+    public Text createTitle() {
+        return myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
+    }
+
     public RenderSystem getRS(){
         return myRS;
     }

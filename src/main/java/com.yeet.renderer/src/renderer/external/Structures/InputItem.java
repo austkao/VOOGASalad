@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -86,6 +87,11 @@ public class InputItem implements Scrollable {
 
     @Override
     public ToggleButton getImageButton() {
+        return null;
+    }
+
+    @Override
+    public Image getImage() {
         return null;
     }
 }

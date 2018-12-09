@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 
 public interface Scrollable {
@@ -16,7 +17,7 @@ public interface Scrollable {
 
     public ToggleButton getImageButton();
 
-
+    Image getImage();
 
 
 }

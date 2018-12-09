@@ -1,5 +1,7 @@
-package editor;
+package editor.interactive;
 
+import editor.EditorManager;
+import editor.interactive.InputEditor;
 import javafx.animation.Animation;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -30,7 +32,7 @@ import java.util.function.Consumer;
  * @author rr202
  */
 
-public class CharacterEditor extends EditorSuper{
+public class CharacterEditor extends EditorSuper {
     private static final String DEFAULT_PORTRAIT = "lucinaglasses.png";
     private static final String HIT_TEXT = "HITBOX";
     private static final String HURT_TEXT = "HURTBOX";
@@ -153,10 +155,6 @@ public class CharacterEditor extends EditorSuper{
                 30.0,25.0, 150.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
 
-        Button loadFile = myRS.makeStringButton("Load File", Color.CRIMSON, true, Color.WHITE,
-                30.0,25.0, 75.0, 200.0, 50.0);
-        loadFile.setOnMouseClicked(e ->loadCharacterData());
-
         Button getSpriteSheet = myRS.makeStringButton("Import Sprite Sheet", Color.FORESTGREEN, true,
                 Color.WHITE, 20.0, 600.0, 25.0, 200.0, 50.0);
         getSpriteSheet.setOnMouseClicked(e -> chooseSpriteSheet());
@@ -194,7 +192,7 @@ public class CharacterEditor extends EditorSuper{
         //hitOrHurt = myRS.makeSwitchButtons(options, true, Color.BLACK,
         //        Color.FLORALWHITE, 5.0,400.0, 400.0, 50.0, 15.0 );
 
-        root.getChildren().addAll(addPortrait, saveFile, loadFile, getSpriteSheet, setAnimation, playAnimation,
+        root.getChildren().addAll(addPortrait, saveFile, getSpriteSheet, setAnimation, playAnimation,
                 setInputCombo, stepForward, stepBackward, frameText, hitOrHurt );
     }
     private void makeSliders(){
@@ -509,27 +507,12 @@ public class CharacterEditor extends EditorSuper{
         data.put("defense", defenseList);
 
         try {
-            generateSave(structure, data);
+            //generateSave(structure, data);
         } catch (Exception ex) {
             System.out.println("Invalid save");
             //ex.printStackTrace();
         }
     }
-    private void loadCharacterData() {
-        try {
-            HashMap<String, ArrayList<String>> data = loadXMLFile("character");
-            ArrayList<String> health = data.get("health");
-            ArrayList<String> attack = data.get("attack");
-            ArrayList<String> defense = data.get("defense");
-            healthSlider.setNewValue(Double.parseDouble(health.get(0)));
-            attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
-            defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
-        } catch (Exception ex) {
-            System.out.println("Cannot load file");
-        }
-    }
-
-
 
     /**
      * general method for choosing an image

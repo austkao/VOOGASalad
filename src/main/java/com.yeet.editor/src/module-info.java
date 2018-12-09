@@ -9,4 +9,5 @@ module com.yeet.editor {
     requires javafx.controls;
     requires javafx.swing;
     requires java.desktop;
+    requires com.google.common;
 }

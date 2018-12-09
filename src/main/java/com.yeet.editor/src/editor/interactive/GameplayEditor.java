@@ -1,13 +1,10 @@
-package editor;
+package editor.interactive;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import editor.EditorManager;
+import editor.interactive.EditorSuper;
 import javafx.scene.Group;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import renderer.external.Structures.SliderBox;
 import renderer.external.Structures.SwitchButton;
 import renderer.external.Structures.TextBox;
@@ -18,7 +15,7 @@ import java.util.function.Consumer;
 /**
  * @author ob29
  */
-public class GameplayEditor extends EditorSuper{
+public class GameplayEditor extends EditorSuper {
     private static String[] DEFAULT_GAME_MODES = new String[]{"SSBB","Street Fighter"};
     private Consumer<Double> consumerG;
     private Consumer<Double> consumerF;

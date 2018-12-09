@@ -94,12 +94,12 @@ public class Level extends GridPane{
      * @param y
      * @param tileImage
      */
-    public void processTile(int x, int y, Image tileImage){
+    public void processTile(int x, int y, Image tileImage, String tileName){
         if (y >= grid.length || x >= grid[0].length){
             return;
         }
         if (!isTile(x, y)){
-            grid[y][x] = new Tile(tileImage, TILE_WIDTH, TILE_HEIGHT, x, y);
+            grid[y][x] = new Tile(tileImage, TILE_WIDTH, TILE_HEIGHT, x, y, tileName);
             add(grid[y][x], x, y);
         }
         else{
@@ -146,7 +146,7 @@ public class Level extends GridPane{
                 if(isTile(i,j)) {
                     levelMap.get("x").add(Integer.toString(i));
                     levelMap.get("y").add(Integer.toString(j));
-                    levelMap.get("image").add(grid[j][i].getImage().toString());
+                    levelMap.get("image").add(grid[j][i].getImageName());
                 }
             }
         }
