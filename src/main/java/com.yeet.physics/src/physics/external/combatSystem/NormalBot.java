@@ -5,6 +5,7 @@ import messenger.external.CombatActionEvent;
 import messenger.external.PlayerState;
 import physics.external.PhysicsSystem;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 
 /*
@@ -22,12 +23,18 @@ import java.util.*;
 public class NormalBot extends Bot {
     Queue<CombatActionEvent> queue = new LinkedList<>();
     private PhysicsSystem physicsSystem;
+    private static final double DETECTION_RADIUS = 30.0;
 //    private PlayerGraph playerGraph;
 
     Double[][] matrix = {{},
                          {},
                          {},
                          {}};
+
+    Double[][] aggro = {{},
+            {},
+            {},
+            {}};
 
     public NormalBot(){
         super();
@@ -42,19 +49,26 @@ public class NormalBot extends Bot {
         this.physicsSystem = physicsSystem;
     }
 
-
     @Override
     public void step() {
         //update positions
-        playerGraph.updatePositionMap(physicsSystem.getPositionsMap());
+        Map<Integer, Point2D> positions = physicsSystem.getPositionsMap();
+        playerGraph.updatePositionMap(positions);
 
-        Player nearest = playerGraph.getNearestNeighbor(this.id);
+        if(playerGraph.hasEnenmyNearBy(this.id, DETECTION_RADIUS)){
+
+        }
+        else{
+
+        }
+
+//        Player nearest = playerGraph.getNearestNeighbor(this.id);
 
     }
 
     @Override
     public void transition() {
-        
+
     }
 
     @Override
@@ -70,7 +84,11 @@ public class NormalBot extends Bot {
         }
     }
 
-    private void recordPlayerMovement(CombatActionEvent combatActionEvent){
+    private void moveCloserToTarget(){
+        // first decrease the horizontal distance difference
 
+        // second
     }
+
+
 }

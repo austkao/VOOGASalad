@@ -102,6 +102,10 @@ public class CombatSystem {
             Player playerAttacking = playerManager.getPlayerByID(list.get(1));
             playerAttacking.addAttackingTargets(playerBeingAttacked);
             double health = playerBeingAttacked.reduceHealth(playerAttacking.getAttackDamage());
+            //TODO: do something when the player's health drops to below 0.0
+            if(health<=0.0){
+
+            }
             playersBeingRekt.put(playerBeingAttacked.id, health);
         }
         eventBus.post(new GetRektEvent(playersBeingRekt));
@@ -109,8 +113,6 @@ public class CombatSystem {
 
     @Subscribe
     public void onJumpSuccessfulEvent(JumpSuccessfulEvent event){
-//        System.out.println("Jump.");
-        System.out.println(playerManager.getPlayerByID(event.getInitiatorID()).getPlayerState());
         physicsSystem.jump(event.getInitiatorID());
     }
 

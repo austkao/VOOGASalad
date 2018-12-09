@@ -6,6 +6,7 @@ import java.util.*;
 
 public class PlayerGraph {
 
+
     Map<Player, Set<Player>> graph;
     private PlayerManager playerManager;
     private Map<Integer, Point2D> positionMap;
@@ -27,15 +28,18 @@ public class PlayerGraph {
         }
     }
 
-    public boolean hasEnenmyNearBy(){
-        return true;
+    public boolean hasEnenmyNearBy(int id, double distance){
+        Point2D closest = getNearestNeighbor(id);
+        Player self = playerManager.getPlayerByID(id);
+        Point2D selfPos = positionMap.get(self.id);
+        return selfPos.distance(closest) <= distance;
     }
 
     public void updatePositionMap(Map<Integer, Point2D> positionMap){
         this.positionMap = positionMap;
     }
 
-    public Player getNearestNeighbor(int id){
+    public Point2D getNearestNeighbor(int id){
         Player self = playerManager.getPlayerByID(id);
         Point2D selfPos = positionMap.get(self.id);
         // order points in ascending order of distance from selfPos
@@ -47,12 +51,13 @@ public class PlayerGraph {
 
         // get the closest neighbor
         Point2D closest = queue.peek();
-        for(int i: positionMap.keySet()){
-            if(positionMap.get(i).equals(closest)){
-                return playerManager.getPlayerByID(i);
-            }
-        }
-        return playerManager.getPlayerByID(id);
+        return closest;
+//        for(int i: positionMap.keySet()){
+//            if(positionMap.get(i).equals(closest)){
+//                return playerManager.getPlayerByID(i);
+//            }
+//        }
+//        return playerManager.getPlayerByID(id);
     }
 
 
