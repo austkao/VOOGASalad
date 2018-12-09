@@ -25,8 +25,8 @@ public class MapHome extends EditorHome {
         return "Map Home";
     }
 
-    public void setEditor(File directory, boolean isNew){
-        myEditor = new MapEditor(em, directory, isNew);
+    public void setEditor(File directory, boolean isEdit){
+        myEditor = new MapEditor(em, directory, isEdit);
         myEditor.createBack(this);
         em.changeScene(myEditor);
     }
@@ -44,10 +44,10 @@ public class MapHome extends EditorHome {
         if(bb != null) {
             String stageName = bb.getText();
             File stageDirectory = Paths.get(em.getGameDirectoryString(), "stages", stageName).toFile();
-            setEditor(stageDirectory, false);
+            setEditor(stageDirectory, true);
             return;
         } else if(directory != null) {
-            setEditor(directory, true);
+            setEditor(directory, false);
             return;
         }
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);

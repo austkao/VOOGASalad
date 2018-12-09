@@ -4,6 +4,7 @@ import editor.EditorManager;
 import editor.interactive.CharacterEditor;
 import editor.interactive.InputEditor;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.paint.Color;
@@ -27,18 +28,35 @@ public class CharacterHome extends EditorHome {
     }
 
     private void setInputEditor(){
-        inputEditor = new InputEditor(new Group(), em);
+        inputEditor = new InputEditor(em);
         inputEditor.createBack(this);
     }
 
     public void setEditor(){
-        myEditor = new CharacterEditor(new Group(),em, inputEditor);
+        myEditor = new CharacterEditor(em, new InputEditor(em));
         myEditor.createBack(this);
     }
 
     @Override
     public void createNewObject(String name) {
+        em.changeScene(myEditor);
+    }
 
+    public void initializeEditor(ButtonBase bb, File directory) {
+        //System.out.println(directory.getPath());
+        if(bb != null) {
+            String characterName = bb.getText();
+            File characterDirectory = Paths.get(em.getGameDirectoryString(), "characters", characterName).toFile();
+            //setEditor(characterDirectory, true);
+            return;
+        } else if(directory != null) {
+            //setEditor(directory, false);
+            return;
+        }
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setHeaderText("No Map Selected");
+        errorAlert.setContentText("Please select a map to edit first");
+        errorAlert.showAndWait();
     }
 
     private void deleteCharacter(ButtonBase bb) {
