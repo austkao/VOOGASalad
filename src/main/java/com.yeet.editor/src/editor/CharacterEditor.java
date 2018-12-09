@@ -289,13 +289,13 @@ public class CharacterEditor extends EditorSuper{
         //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
 
         TextInputDialog text = new TextInputDialog("");
-        text.setTitle("Enter X Offset of initial frame");
+        text.setContentText("Enter X Offset of initial frame");
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Y Offset");
+        text.setContentText("Enter Y Offset");
         double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Width");
+        text.setContentText("Enter Width");
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Height");
+        text.setContentText("Enter Height");
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
 
         //currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
@@ -394,7 +394,7 @@ public class CharacterEditor extends EditorSuper{
         SpriteAnimation myAnimation = getNewAnimation();
 
         TextInputDialog text = new TextInputDialog("");
-        text.setTitle("Enter Attack Power");
+        text.setContentText("Enter Attack Power");
         int power = Integer.parseInt(text.showAndWait().orElse("0"));
 
         scrollToAnimation.put(animPic, myAnimation);
@@ -404,19 +404,19 @@ public class CharacterEditor extends EditorSuper{
 
     private SpriteAnimation getNewAnimation(){
         TextInputDialog text = new TextInputDialog("");
-        text.setTitle("Enter Time In seconds");
+        text.setContentText("Enter Time In seconds");
         double time = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Frame Count");
+        text.setContentText("Enter Frame Count");
         int count = Integer.parseInt(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Number of Columns");
+        text.setContentText("Enter Number of Columns");
         int columns = Integer.parseInt(text.showAndWait().orElse("0"));
-        text.setTitle("Enter X Offset");
+        text.setContentText("Enter X Offset");
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Y Offset");
+        text.setContentText("Enter Y Offset");
         double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Width");
+        text.setContentText("Enter Width");
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
-        text.setTitle("Enter Height");
+        text.setContentText("Enter Height");
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
         SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
                 offsetX, offsetY, width, height);
