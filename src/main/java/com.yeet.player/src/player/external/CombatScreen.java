@@ -248,6 +248,7 @@ public class CombatScreen extends Screen {
 
     @Subscribe
     public void onRekt(GetRektEvent getRektEvent){
+        //TODO add other functionality when hit happens
         for(int i : getRektEvent.getPeopleBeingRekt().keySet()){
             myHealthMap.get(i).setHealth((int)Math.round(getRektEvent.getPeopleBeingRekt().get(i)));
         }
