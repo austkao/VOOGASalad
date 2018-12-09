@@ -166,7 +166,6 @@ public class CharacterSelectScreen extends Screen {
 
     /** Checks if there are enough players to start a match */
     private boolean checkPlayerCount(){
-        System.out.println(getPlayerCount());
         return(getPlayerCount()>1);
     }
 
