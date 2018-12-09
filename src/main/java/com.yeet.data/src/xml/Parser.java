@@ -27,6 +27,14 @@ public interface Parser {
      */
     ArrayList parseFileForAttribute(String element, String attribute);
     /**
+     * Parse the file for the information contained within a certain element, but with the values as the keys
+     * @param element represents some category or object that file encapsulates
+     * @return a HashMap containing the wanted information.
+     * The keys of the HashMap will be all of the values that the properties store
+     * The values of the HashMap should be the name of the properties the file stores.
+     */
+    HashMap parseFileForValueMap(String element);
+    /**
      * Create a new Document to work from when parsing a file
      * @return A Document that encapsulates all of the file information
      */
