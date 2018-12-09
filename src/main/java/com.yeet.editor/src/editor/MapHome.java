@@ -1,8 +1,10 @@
 package editor;
 
+import editor.home.EditorHome;
+import editor.interactive.MapEditor;
 import javafx.scene.Group;
 
-public class MapHome extends EditorHome{
+public class MapHome extends EditorHome {
     private static final String ALL_MAPS = "allmaps/";
 
     public MapHome(Group root, EditorManager em){

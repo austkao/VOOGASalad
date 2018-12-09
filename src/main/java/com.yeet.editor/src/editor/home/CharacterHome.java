@@ -1,5 +1,9 @@
-package editor;
+package editor.home;
 
+
+import editor.EditorManager;
+import editor.interactive.CharacterEditor;
+import editor.interactive.InputEditor;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;

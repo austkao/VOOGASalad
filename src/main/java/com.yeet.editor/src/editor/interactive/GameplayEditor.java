@@ -1,5 +1,7 @@
-package editor;
+package editor.interactive;
 
+
+import editor.EditorManager;
 import javafx.scene.Group;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -15,15 +17,13 @@ import java.util.function.Consumer;
 /**
  * @author ob29
  */
-public class GameplayEditor extends EditorSuper{
+public class GameplayEditor extends EditorSuper {
     private static String[] DEFAULT_GAME_MODES = new String[]{"SSBB","Street Fighter"};
     private Consumer<Double> consumerG;
     private Consumer<Double> consumerF;
     private Consumer consumer;
     //private Double Gravity
-//    private ObservableList<String> inputTypes;
-//    private ListView<String> inputDisplay;
-//    private TextArea userInput;
+
 
 
     public GameplayEditor(Group root, EditorManager em) {
@@ -45,12 +45,7 @@ public class GameplayEditor extends EditorSuper{
         root.getChildren().addAll(vb1,vb2);
     }
 
-//    public TextArea createUserCommandLine() {
-//        TextArea input = new TextArea();
-//        input.setPrefWidth(200);
-//        input.setPrefHeight(50);
-//        return input;
-//    }
+
 
     public VBox makeVBox1(){
         VBox vbox = new VBox(20.0);
@@ -59,31 +54,11 @@ public class GameplayEditor extends EditorSuper{
         List<String> options = Arrays.asList(DEFAULT_GAME_MODES);
         SwitchButton sb = myRS.makeSwitchButtons(options,false, Color.WHITE, Color.BLACK,
                 8.0,200.0,200.0,400.0,50.0);
-//        userInput = createUserCommandLine();
-//        inputDisplay = new ListView<>();
-//        inputDisplay.setMaxHeight(200.0);
-//        userInput.setOnKeyPressed(e ->{
-//            if(e.getCode() == KeyCode.ENTER){
-//                addInputItem();
-//            } });
+
         vbox.getChildren().addAll(splashField,mainBGMField,sb);//userInput,inputDisplay);
         return vbox;
     }
 
-//    private void addInputItem(){
-//        String text = userInput.getText();
-//        if(text.indexOf(" ") >= 0 || text.indexOf("_") >= 0 || inputTypes.contains(text)){
-//            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-//            errorAlert.setHeaderText("Input not valid");
-//            errorAlert.setContentText("Blank spaces, underscores, and repeat inputs are invalid");
-//            errorAlert.showAndWait();
-//            userInput.clear();
-//        }else {
-//            userInput.clear();
-//            inputTypes.add(text);
-//            inputDisplay.setItems(inputTypes);
-//        }
-//    }
 
     public VBox makeVBox2(){
         VBox vbox = new VBox(10.0);
@@ -102,8 +77,5 @@ public class GameplayEditor extends EditorSuper{
     }
 
 
-//    public Set<String> getInputTypes(){
-//        Set<String> ret = new HashSet<>(inputTypes);
-//        return ret;
-//    }
+
 }

@@ -4,12 +4,13 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import renderer.external.Scrollable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,36 +18,35 @@ import java.util.List;
 
 public class ScrollablePaneNew extends Pane {
 
-    private ObservableList<ScrollItem> items;
+    private ObservableList<Scrollable> items;
     private ScrollPane scrollPane;
     private VBox normalView;
     private VBox gridView;
     private boolean gridFlag = true;
-    private Button activeItem;
     private ToggleGroup tgNormal;
     private ToggleGroup tgGrid;
 
+    public ScrollablePaneNew(File dir,double x, double y, double width, double height){
+        this(x,y, width, height);
+        loadFiles(dir);
+    }
 
-
-    public ScrollablePaneNew(File dir,double x, double y){
+    public ScrollablePaneNew(double x, double y, double width, double height){
         tgNormal = new ToggleGroup();
         tgGrid = new ToggleGroup();
-
         scrollPane = new ScrollPane();
         normalView = new VBox(8);
         gridView = new VBox(5);
         items = FXCollections.observableArrayList();
-        initializeScrollPane(x,y);
-        loadFiles(dir);
+        initializeScrollPane(x,y, width, height);
         buildNormalView();
         buildGridView();
         switchView();
-
     }
 
-    private void initializeScrollPane(double x, double y){
+    private void initializeScrollPane(double x, double y, double width, double height){
         scrollPane.setBackground(Background.EMPTY);
-        scrollPane.setPrefSize(520, 600);
+        scrollPane.setPrefSize(width, height);
         scrollPane.setFitToWidth(true);
         scrollPane.setLayoutX(x);
         scrollPane.setLayoutY(y);
@@ -75,12 +75,21 @@ public class ScrollablePaneNew extends Pane {
 
 
 
-    public void addItem(Image image){
-        ScrollItem si= new ScrollItem(image,new Text("Hi my name is Hi my name is Hi my name is SLim SHady"));
+
+
+    public void addItem(Image image, String title){
+        ScrollItem si= new ScrollItem(image,new Text(title));
         tgNormal.getToggles().add(si.getButton());
         items.add(si);
         normalView.getChildren().add(items.get(items.size()-1).getButton());
     }
+
+    public void addItem(Scrollable item){
+        items.add(item);
+        tgNormal.getToggles().add((ToggleButton)item.getButton());
+        normalView.getChildren().add(items.get(items.size()-1).getButton());
+    }
+
 
     public void switchView(){
         if(gridFlag){
@@ -97,19 +106,40 @@ public class ScrollablePaneNew extends Pane {
 
 
     public void removeItem(){
-
+        final List<Scrollable> removalCandidates = new ArrayList<>();
+        for(Scrollable s:items){
+            if (s.getButton().isSelected()) {
+                removalCandidates.add(s);
+            }
+        }
+        items.removeAll(removalCandidates);
+        normalView.getChildren().remove(removalCandidates.get(0).getButton());
     }
+
+    public void modifyItem(Text t){ //TODO allow for changing titles
+        final List<Scrollable> modifyCandidates = new ArrayList<>();
+        for(Scrollable s:items){
+            if (s.getButton().isSelected()) {
+                modifyCandidates.add(s);
+            }
+        }
+
+        modifyCandidates.get(0).setNodeGraphic(t,"");
+    }
+
+
 
     public void loadFiles(File dir){
         for(File imgFile : dir.listFiles()) {
             if(imgFile.toString().endsWith(".png")){
                 Image itemImage = new Image(imgFile.toURI().toString());
-                addItem(itemImage);
+                String imageName = imgFile.getName().replace(".png","");
+                addItem(itemImage, imageName);
             }
         }
     }
 
-    public ObservableList<ScrollItem> getItems() {
+    public ObservableList<Scrollable> getItems() {
         return items;
     }
 
@@ -117,4 +147,20 @@ public class ScrollablePaneNew extends Pane {
         return scrollPane;
     }
 
+    public ButtonBase getSelectedItem() {
+        for (Scrollable s : items) {
+            if (s.getButton().isSelected()) {
+                return s.getButton();
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<String> getItemList() {
+        ArrayList<String> itemList = new ArrayList<>();
+        for(Scrollable item : this.getItems()) {
+            itemList.add(item.getButton().getText());
+        }
+        return itemList;
+    }
 }

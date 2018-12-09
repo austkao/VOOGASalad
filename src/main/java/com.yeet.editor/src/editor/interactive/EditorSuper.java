@@ -1,5 +1,8 @@
-package editor;
+package editor.interactive;
 
+import editor.EditorConstant;
+import editor.EditorManager;
+import editor.EditorScreen;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -61,16 +64,10 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         root.getChildren().add(save);
     }
 
-    public HashMap<String, ArrayList<String>> loadXMLFile(String tag) {
+    public HashMap<String, ArrayList<String>> loadXMLFile(String tag, File xmlFile) {
         try {
-            FileChooser loadFileChooser = myRS.makeFileChooser("xml");
-            loadFileChooser.setTitle("Save File As");
-            Path filePath = Paths.get(System.getProperty("user.dir"));
-            File defaultFile = new File(filePath+RESOURCE_PATH);
-            loadFileChooser.setInitialDirectory(defaultFile);
-            File file = loadFileChooser.showOpenDialog(new Stage());
-            if(file != null) {
-                XMLParser parser = new XMLParser(file);
+            if(xmlFile != null) {
+                XMLParser parser = new XMLParser(xmlFile);
                 return parser.parseFileForElement(tag);
             } else {
                 throw new IOException("Cannot load file");
@@ -81,15 +78,10 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         }
     }
 
-    public void generateSave(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data) {
+    public void generateSave(HashMap<String, ArrayList<String>> structure, HashMap<String, ArrayList<String>> data, File xmlFile) {
         try {
-            FileChooser fileChooser = myRS.makeFileChooser("xml");
-            fileChooser.setTitle("Save File As");
-            File defaultFile = myEM.getGameDirectory();
-            fileChooser.setInitialDirectory(defaultFile);
-            File file = fileChooser.showSaveDialog(new Stage());
-            if(file != null) {
-                new XMLSaveBuilder(structure, data, file);
+            if(xmlFile != null) {
+                new XMLSaveBuilder(structure, data, xmlFile);
             } else {
                 throw new IOException("Invalid save location");
             }
