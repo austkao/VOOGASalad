@@ -1,7 +1,6 @@
 package editor.interactive;
 
 import editor.EditorManager;
-import editor.interactive.EditorSuper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
@@ -14,13 +13,17 @@ import javafx.scene.text.Text;
 import renderer.external.Scrollable;
 import renderer.external.Structures.InputItem;
 import renderer.external.Structures.ScrollablePaneNew;
-
-import java.util.*;
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeSet;
 
 public class InputEditor extends EditorSuper {
     private static final int DEFAULT_NUM_TABS = 4;
 
-    private List<TextArea> userInputs;
+    private List<TextField> userInputs;
     private List<ObservableList> inputTypes;
     private List<ScrollablePaneNew> myScrolls;
     private List<HashMap<String,String>> bindings;
@@ -28,10 +31,10 @@ public class InputEditor extends EditorSuper {
     private int currentTabId;
 
 
-    public InputEditor(Group root, EditorManager em){
-        super(root,em);
+    public InputEditor(EditorManager em){
+        super(new Group(), em);
         currentTabId = 1;
-        bindings = new ArrayList<HashMap<String,String>>();
+        bindings = new ArrayList<>();
         userInputs = new ArrayList<>();
         inputTypes = FXCollections.observableArrayList();
         myScrolls = new ArrayList<>();
@@ -160,8 +163,8 @@ public class InputEditor extends EditorSuper {
         return bindings;
     }
 
-    private TextArea createUserCommandLine() {
-        TextArea t = new TextArea();
+    private TextField createUserCommandLine() {
+        TextField t = new TextField();
         t.setPrefWidth(200);
         t.setPrefHeight(50);
         t.setOnKeyPressed(e ->{
@@ -180,9 +183,25 @@ public class InputEditor extends EditorSuper {
 
     private void createSaveFile() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        //structure.put("input")
-        for(ScrollablePaneNew sp : myScrolls) {
-            
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        TreeSet<String> moves = new TreeSet<>();
+        for(HashMap<String, String> bindingsMap : getBindings()) {
+            if(bindingsMap.isEmpty()) {
+                continue;
+            }
+            for(String move : bindingsMap.keySet()) {
+                move.replace("\n","").replace("\r","");
+                String key = bindingsMap.get(move);
+                key.replace("\n","").replace("\r","");
+                moves.add(move);
+                data.putIfAbsent(move, new ArrayList<>());
+                data.get(move).add(key);
+                System.out.println(move);
+                System.out.println(bindingsMap.get(move));
+            }
         }
+        structure.put("input", new ArrayList<>(moves));
+        File save = Paths.get(myEM.getGameDirectoryString(), "inputsetuptest.xml").toFile();
+        generateSave(structure, data, save);
     }
 }
