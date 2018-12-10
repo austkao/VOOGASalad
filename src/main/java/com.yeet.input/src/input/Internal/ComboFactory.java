@@ -7,10 +7,10 @@ import java.util.Map;
 
 public class ComboFactory {
 
-    private List<Map<String, ArrayList<String>>> myCombos;
+    private List<Map<String, String>> myCombos;
     //private Node Tree;
     private int counter;
-    public ComboFactory(List<Map<String, ArrayList<String>>> combos){
+    public ComboFactory(List<Map<String, String>> combos){
         myCombos = combos;
         //Tree = new ComboNode("START");
         counter = 0;
@@ -41,7 +41,7 @@ public class ComboFactory {
 
     private void addChildLoop(Node root, List<String> comboList, String combo){
         if(comboList.size() == 0){
-            root.addChild(new LeafNode(myCombos.get(counter).get(combo).get(0)));
+            root.addChild(new LeafNode(myCombos.get(counter).get(combo)));
             //System.out.println(root.getChildren().get(0).getKey());
             return;
         }
