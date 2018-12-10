@@ -3,6 +3,13 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a collision between two physicsObjects
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class Collision extends Interaction {
 
     private List<PhysicsObject> colliders;

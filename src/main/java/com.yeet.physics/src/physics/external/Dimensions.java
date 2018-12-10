@@ -4,6 +4,13 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the dimensions of an object
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class Dimensions {
 
     private List<Double> dims;

@@ -1,5 +1,12 @@
 package physics.external;
 
+/**
+ * Represents the specific sides that are intersecting during a collision
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class Intersection {
 
 

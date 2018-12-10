@@ -4,6 +4,12 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a square using four lines (would be needed if extended to 3-D
+ *
+ * @author jrf36
+ */
+
 public class Square extends Shape {
 
     private List<Line> path;

@@ -5,15 +5,19 @@ import messenger.external.AttackIntersectEvent;
 import messenger.external.EventBusFactory;
 import messenger.external.GroundIntersectEvent;
 import messenger.external.PositionsUpdateEvent;
-
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static java.lang.Math.PI;
 
+/**
+ * Main class of Physics that is used to start a physics environment
+ *
+ * @author skm44
+ * @author jrf36
+ */
 
 public class PhysicsSystem {
 
@@ -54,8 +58,8 @@ public class PhysicsSystem {
         applyForces();
         updatePositions();
         GroundIntersectEvent groundedPlayers = new GroundIntersectEvent(groundCollisions);
-        if (groundedPlayers.getGroundedPlayers().size() > 0) {
-            myMessageBus.post(groundCollisions);
+        if (groundCollisions.size() > 0) {
+            myMessageBus.post(groundedPlayers);
         }
         AttackIntersectEvent attackPlayers = new AttackIntersectEvent(attackCollisions);
         if (attackPlayers.getAttackPlayers().size() > 0) {
@@ -66,11 +70,11 @@ public class PhysicsSystem {
 
     public void addPhysicsObject(int type, double mass, double XCoordinate, double YCoordinate, double XDimension, double YDimension) { // type 0: player, type 1: attack, type 2: ground
         if (type == 0) {
-            gameObjects.put(playerId, new PhysicsBody(playerId, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
+            gameObjects.put(playerId, new PhysicsBody(playerId, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension), new CoordinateBody(new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension))));
             playerCharacteristics.add(new PlayerCharacteristics(playerId, DEFAULT_STRENGTH, DEFAULT_JUMP_HEIGHT, DEFAULT_MOVEMENT_SPEED));
             playerId++;
         } else {
-            gameObjects.put(groundId, new PhysicsGround(groundId, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
+            gameObjects.put(groundId, new PhysicsGround(groundId, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension), new CoordinateGround(new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension))));
             groundId++;
         }
     }
@@ -139,7 +143,9 @@ public class PhysicsSystem {
         }
         Coordinate playerLocation = gameObjects.get(id).getMyCoordinateBody().getPos();
         Coordinate attackLocation = new Coordinate(playerLocation.getX() + direction * DEFAULT_ATTACK_SPACE,playerLocation.getY() + DEFAULT_ATTACK_SPACE);
-        PhysicsAttack attack = new PhysicsMelee(attackId, id, parentDirection, gameObjects.get(id).getMass(), attackLocation, new Dimensions(40, 20));
+        double XCoordinate = attackLocation.getX();
+        double YCoordinate = attackLocation.getY();
+        PhysicsAttack attack = new PhysicsMelee(attackId, id, parentDirection, gameObjects.get(id).getMass(), attackLocation, new Dimensions(40, 20), new CoordinateGround(new Coordinate(XCoordinate,YCoordinate), new Dimensions(40,20)));
         gameObjects.put(attackId, attack);
         attackId++;
     }

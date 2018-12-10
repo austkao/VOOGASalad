@@ -1,5 +1,11 @@
 package physics.external;
 
+/**
+ * Class that is applied to any vector (velocity, acceleration, force), and has a magnitude and direction
+ *
+ * @author skm44
+ */
+
 public class PhysicsVector {
     protected double magnitude;
     protected double direction; // IN RADIANS

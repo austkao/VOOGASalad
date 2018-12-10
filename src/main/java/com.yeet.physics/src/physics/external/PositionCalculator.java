@@ -2,6 +2,13 @@ package physics.external;
 
 import java.util.Map;
 
+/**
+ * Calculates new position of a physicsObject based on its velocity
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class PositionCalculator {
 
     public static final double timeOfFrame = 0.016666666;
