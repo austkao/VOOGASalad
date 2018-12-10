@@ -71,7 +71,7 @@ public class Player {
             myBGMPlayer.play();
         });
         mySettingsScreen = new SettingsScreen(new Group(),myRenderer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myEditorLink.accept(mySettingsScreen));
-        mySoundsSettingsScreen = new SoundsSettingsScreen(new Group(),myRenderer);
+        mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,()->myStage.setScene(mySettingsScreen));
         myControlsSettingsScreen = new ControlsSettingsScreen(new Group(),myRenderer);
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()-> {
             myBGMPlayer.stop();

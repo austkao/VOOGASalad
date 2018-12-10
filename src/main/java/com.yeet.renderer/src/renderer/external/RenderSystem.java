@@ -83,7 +83,9 @@ public class RenderSystem implements Renderer{
         button.setTextFill(textColor);
         button.setLayoutX(x);
         button.setLayoutY(y);
+        button.setMinSize(width,height);
         button.setPrefSize(width,height);
+        button.setMaxSize(width,height);
         Font finalFont = font;
         //BUTTON_SCALE: Double xScale, Double yScale
         button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
