@@ -126,6 +126,7 @@ public class AudioSystem {
     @Subscribe
     public void changeFXVolume(FXVolumeEvent newVol){
         fxvol = newVol.getVolume();
+        ko.setVolume(newVol.getVolume());
     }
 
     @Subscribe
