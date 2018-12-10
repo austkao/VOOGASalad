@@ -162,21 +162,19 @@ public class InputEditor extends EditorSuper {
 
     private void createSaveFile() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        structure.put("players", new ArrayList<>(List.of("numPlayers")));
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         TreeSet<String> moves = new TreeSet<>();
         bindings = getBindings();
-        for(HashMap<String, String> bindingsMap : getBindings()) {
-            if(bindingsMap.isEmpty()) {
-                continue;
-            }
+        for(int i = 0; i < bindings.size(); i++) {
+            HashMap<String, String> bindingsMap = bindings.get(i);
             for(String move : bindingsMap.keySet()) {
-                move.replace("\n","").replace("\r","");
                 String key = bindingsMap.get(move);
-                key.replace("\n","").replace("\r","");
                 moves.add(move);
                 data.putIfAbsent(move, new ArrayList<>());
                 data.get(move).add(key);
             }
+            structure.put("input"+i, new ArrayList<>(moves));
         }
         structure.put("input", new ArrayList<>(moves));
         File save = Paths.get(myEM.getGameDirectoryString(), "inputsetuptest.xml").toFile();
