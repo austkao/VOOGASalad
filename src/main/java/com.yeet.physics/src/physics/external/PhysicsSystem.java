@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import messenger.external.AttackIntersectEvent;
 import messenger.external.EventBusFactory;
 import messenger.external.GroundIntersectEvent;
+import messenger.external.PositionsUpdateEvent;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class PhysicsSystem {
         if (attackPlayers.getAttackPlayers().size() > 0) {
             myMessageBus.post(attackCollisions);
         }
-
+        myMessageBus.post(new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()));
     }
 
     public void addPhysicsObject(int type, double mass, double XCoordinate, double YCoordinate, double XDimension, double YDimension) { // type 0: player, type 1: attack, type 2: ground
