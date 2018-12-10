@@ -31,7 +31,10 @@ import xml.XMLParser;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 /** Displays a stage and visualizes character combat animation
@@ -132,8 +135,8 @@ public class CombatScreen extends Screen {
                 PlayerMarker marker = new PlayerMarker(characterColors.get(characterNames.keySet().toArray()[i]),sprite);
                 super.getMyRoot().getChildren().addAll(marker,sprite);
                 //set up animations for the sprite
-                XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/sprites/animationproperties.xml"));
-                HashMap<String, ArrayList<String>> animationInfo = animationPropertiesParser.parseFileForElement("animation");
+                XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/attacks/attackproperties.xml"));
+                HashMap<String, ArrayList<String>> animationInfo = animationPropertiesParser.parseFileForElement("attack");
                 myAnimationMap.put(i,new HashMap<>());
                 for(int j = 0; j<animationInfo.get("name").size(); j++){
                     Duration duration = Duration.seconds(Double.parseDouble(animationInfo.get("duration").get(j)));
