@@ -25,8 +25,8 @@ public class CharacterHome extends EditorHome {
         input.setOnMouseClicked(e-> em.changeScene(inputEditor));
         myScroll = initializeScroll("characters");
         buttonNew.setOnMouseClicked(e -> nameNewObject("Create Character", "Character Name:"));
-        buttonDelete.setOnMouseClicked(e -> deleteCharacter(myScroll.getSelectedItem()));
-        buttonEdit.setOnMouseClicked(e -> initializeEditor(myScroll.getSelectedItem(), null));
+        buttonDelete.setOnMouseClicked(e -> deleteCharacter(myScroll.getSelectedItem().getButton()));
+        buttonEdit.setOnMouseClicked(e -> initializeEditor(myScroll.getSelectedItem().getButton(), null));
     }
 
     private void setInputEditor(){

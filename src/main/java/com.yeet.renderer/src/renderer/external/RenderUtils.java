@@ -1,6 +1,7 @@
 package renderer.external;
 
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
@@ -21,5 +22,12 @@ public class RenderUtils {
         Rectangle2D rect = new Rectangle2D(x, y, newMeasure, newMeasure);
         imageView.setViewport(rect);
         imageView.setSmooth(true);
+    }
+
+    public static void throwErrorAlert(String header, String content){
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setHeaderText(header);
+        errorAlert.setContentText(content);
+        errorAlert.showAndWait();
     }
 }

@@ -36,7 +36,7 @@ public class ScrollItem implements Scrollable {
         button = new ToggleButton(desc.getText(),imageView);
         button.setTextFill(Color.WHITE);
         button.wrapTextProperty().setValue(true);
-        applyStyleAndEffect(button);
+        rs.applyStyleAndEffect(button);
     }
 
     @Override
@@ -50,26 +50,10 @@ public class ScrollItem implements Scrollable {
         copy.setPreserveRatio(true);
         copy.setFitHeight(100);
         imageButton.setGraphic(copy);
-        applyStyleAndEffect(imageButton);
+        rs.applyStyleAndEffect(imageButton);
     }
 
-    private void applyStyleAndEffect(ToggleButton t){
-        rs.styleButton(t);
-        rs.buttonHoverEffect(t);
-        t.selectedProperty().addListener((p, ov, nv) -> {
-            selectEffect(t);
-        });
-    }
 
-    private void selectEffect(ToggleButton b){
-        if(b.isSelected()){
-            DropShadow drop = new DropShadow(12.0,Color.BLUE);
-            drop.setHeight(30.0);
-            b.setEffect(drop);
-        }else{
-            b.setEffect(null);
-        }
-    }
 
     public ToggleButton getButton() {
         return button;
