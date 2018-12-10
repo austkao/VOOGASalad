@@ -4,6 +4,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.event.Event;
 import messenger.external.*;
+import org.w3c.dom.Document;
+import xml.XMLParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +52,13 @@ public class DataSystem {
     }
 
     @Subscribe
+    public void overwriteGameFile(File xmlFile) {
+        XMLParser parser = new XMLParser(xmlFile);
+        Document xmlDoc = parser.createDocument(xmlFile);
+
+    }
+
+    @Subscribe
     public void createCharacterFiles(CreateCharacterEvent event) {
         File characterDirectory = event.getDirectory();
         characterDirectory.mkdir();
@@ -60,7 +69,6 @@ public class DataSystem {
         createFile(characterDirectory.getPath() + myFP.ATTACKPROPERTIES.getPath());
         createFile(characterDirectory.getPath() + myFP.SOUNDPROPERTIES.getPath());
         createFile(characterDirectory.getPath() + myFP.SPRITEPROPERTIES.getPath());
-        createFile(characterDirectory.getPath() + myFP.ANIMATIONPROPERTIES.getPath());
     }
 
     @Subscribe
