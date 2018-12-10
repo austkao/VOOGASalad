@@ -166,7 +166,7 @@ public class CombatScreen extends Screen {
         myPhysicsSystem = new PhysicsSystem();
         myGameLoop = new GameLoop(myPhysicsSystem,this);
         myMessageBus.register(myPhysicsSystem);
-        myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem);
+        myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem, myGameDirectory, characterNames);
         myMessageBus.register(myCombatSystem);
         //music and audio
         myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));

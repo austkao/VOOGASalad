@@ -4,9 +4,13 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.*;
 import physics.external.PhysicsSystem;
+import xml.XMLParser;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +24,9 @@ public class CombatSystem {
     private PhysicsSystem physicsSystem;
     private List<Integer> botList;
     private HashMap<Integer, Point2D> playerMap;
+    private XMLParser xmlParser;
+    private File gameDir;
+
 
     public CombatSystem(Player bot){
         eventBus = EventBusFactory.getEventBus();
@@ -27,7 +34,12 @@ public class CombatSystem {
         playerManager = new PlayerManager(1);
     }
 
-    public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem){
+    public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem, File gameDir, Map<Integer, String> characterNames){
+        xmlParser = new XMLParser(Paths.get(gameDir.getPath(), "characters","Lucina1","attacks","attackproperties.xml").toFile());
+        HashMap<String, ArrayList<String>> map = xmlParser.parseFileForElement("attack");
+        System.out.println(characterNames);
+        System.out.println(map);
+
         eventBus = EventBusFactory.getEventBus();
         this.playerMap = playerMap;
 //        playerManager = new PlayerManager(playerMap.keySet().size());
