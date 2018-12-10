@@ -9,10 +9,10 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import messenger.external.*;
+import messenger.external.ReplayUtils.Recorder;
 import physics.external.PhysicsSystem;
 import physics.external.combatSystem.CombatSystem;
 import player.internal.Elements.HealthDisplay;
@@ -42,6 +42,7 @@ public class CombatScreen extends Screen {
 
     public static final double TILE_SIZE = 40.0;
     private EventBus myMessageBus;
+    private Recorder myRecorder;
 
     private SceneSwitch prevScene;
     private BiConsumer<Integer, ArrayList<Integer>> nextScene;
@@ -54,10 +55,6 @@ public class CombatScreen extends Screen {
     private XMLParser myParser;
 
     private File myGameDirectory;
-
-    private String myStageName;
-
-    private MediaPlayer myBGMPlayer;
 
     private HashMap<Integer, Point2D> myCharacterMap;
     private HashMap<Integer, Rectangle2D> myTileMap;
@@ -247,7 +244,6 @@ public class CombatScreen extends Screen {
     public synchronized void endCombat(GameOverEvent gameOverEvent){
         Platform.runLater(
                 () -> {
-                    myBGMPlayer.stop();
                     myGameLoop.stopLoop();
                     nextScene.accept(gameOverEvent.getWinnerID(),gameOverEvent.getRankList());
                 }

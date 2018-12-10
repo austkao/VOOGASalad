@@ -55,37 +55,37 @@ public class Recorder {
     /** Saves the active replay to disk using serialization. Saves to project directory if recording directory is null,
      *  or specified directory if recording directory has been set.
      */
-    public void save(){
+    public void save() throws SaveReplayFailedException{
         // Serialization
         try
         {
             //Saving of object in a file
             FileOutputStream file;
+            File replayDirectory;
             if(myDirectory==null){
-                file = new FileOutputStream("replay.yeet");
+                replayDirectory = new File("replays");
+                replayDirectory.mkdir();
             }
             else{
-                File targetFile = new File(myDirectory,createFileName());
-                int copy = 1;
-                while(!targetFile.createNewFile()){
-                    targetFile = new File(myDirectory,targetFile.getName()+"("+copy+")");
-                    copy++;
-                }
-                file = new FileOutputStream(targetFile);
+                replayDirectory = myDirectory;
             }
-
+            //Save file using automatically generated name, add (1), (2), etc. if file name taken
+            File targetFile = new File(replayDirectory,createFileName());
+            int copy = 1;
+            while(!targetFile.createNewFile()){
+                targetFile = new File(myDirectory,targetFile.getName()+"("+copy+")");
+                copy++;
+            }
+            file = new FileOutputStream(targetFile);
             ObjectOutputStream out = new ObjectOutputStream(file);
-
             // Method for serialization of object
             out.writeObject(myActiveReplay);
-
             out.close();
             file.close();
-
         }
-        catch(IOException ex)
+        catch(Exception ex)
         {
-            System.out.println("IOException is caught");
+            throw new SaveReplayFailedException();
         }
     }
 
@@ -110,11 +110,15 @@ public class Recorder {
         }
     }
 
+    /** Creates a file name for the replay file based on current system date and time */
     private String createFileName(){
         String timestamp = ReplayUtilities.getCurrentTimeUsingCalendar();
         return("replay_"+timestamp+".yeet");
     }
 
+    /** Promiscuously listens for all {@code Event} objects passing through the target {@code EventBus},
+     *  but only records them if in recording mode.
+     */
     @Subscribe
     public void getEvent(Event event){
         if(isRecording){

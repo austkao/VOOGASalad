@@ -65,7 +65,6 @@ public class Player {
             myStage.setScene(myMainMenuScreen);
             myMessageBus.post(new MenuStartEvent());
         });
-        System.out.println(myDirectory.toURI()+"background.png");
         Image backgroundImage = new Image(myDirectory.toURI()+"background.png");
         mySettingsScreen = new SettingsScreen(new Group(),myRenderer, backgroundImage,mySEPlayer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myEditorLink.accept(mySettingsScreen));
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, backgroundImage,mySEPlayer,()-> {
