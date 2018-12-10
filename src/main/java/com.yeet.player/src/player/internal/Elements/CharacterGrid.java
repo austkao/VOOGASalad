@@ -59,7 +59,7 @@ public class CharacterGrid extends VBox {
                     break;
                 }
                 else{
-                    ImageView portrait = new ImageView(new Image(String.format("%s/%s",files.get((charactersPerRow*(i))+j).toURI(),"portrait.png")));
+                    ImageView portrait = new ImageView(new Image(String.format("%s%s",files.get((charactersPerRow*(i))+j).toURI(),files.get((charactersPerRow*(i))+j).getName())+".png"));
                     portrait.setPreserveRatio(true);
                     portrait.setFitWidth(132);
                     XMLParser characterPropertiesParser = new XMLParser(new File(directory.getPath()+"/characters/"+files.get((charactersPerRow*(i))+j).getName()+"/characterproperties.xml"));
