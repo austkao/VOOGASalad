@@ -64,26 +64,46 @@ public class CoordinateBody {
 
         Rectangle2D object = c.getHitBox();
 
-        boolean below = object.getY() <= (this.getHitBox().getY() + this.getDims().getSizeY());
-        boolean above = (object.getY() + object.getHeight()) >= this.getHitBox().getY();
-        boolean left = (object.getX() + object.getWidth()) >= this.getHitBox().getX();
-        boolean right = object.getX() <= (this.getHitBox().getX() + this.getDims().getSizeX());
+        // check which side of the ground body is located
+        boolean below = object.getMinY() <= this.getHitBox().getMaxY();
+        boolean above = object.getMaxY() >= this.getHitBox().getMinY();
+        boolean left = object.getMaxX() >= this.getHitBox().getMinX();
+        boolean right = object.getMinX() <= this.getHitBox().getMaxX();
 
-        // Checking which side of the brick the bouncer is hitting
-        boolean aboveHit = object.getY() < this.getHitBox().getY();
-        boolean belowHit = object.getY() + object.getHeight() > this.getHitBox().getY() + this.getDims().getSizeY();
-        boolean leftHit = object.getX() < this.getHitBox().getX();
-        boolean rightHit = object.getX() + object.getWidth() > this.getHitBox().getX() + this.getDims().getSizeX();
+        //
+        boolean bottomLeft = (left && below);
+        boolean bottomRight = (right && below);
+        boolean topLeft = (left && above);
+        boolean topRight = (right && above);
+
+        boolean upperLeftShallowIntersect = (object.getMaxY() - this.getHitBox().getMinY()) < (object.getMaxX() - this.getHitBox().getMinX());
+        boolean upperRightShallowIntersect = (object.getMaxY() - this.getHitBox().getMinY()) < (this.getHitBox().getMaxX() - object.getMinX());
+        boolean upperLeftDeepIntersect = (object.getMaxY() - this.getHitBox().getMinY()) > (object.getMaxX() - this.getHitBox().getMinX());
+        boolean upperRightDeepIntersect = (object.getMaxY() - this.getHitBox().getMinY()) > (this.getHitBox().getMaxX() - object.getMinX());
+
+        boolean lowerLeftShallowIntersect = (this.getHitBox().getMaxY() - object.getMinY()) < (object.getMaxX() - this.getHitBox().getMinX());
+        boolean lowerRightShallowIntersect = (this.getHitBox().getMaxY() - object.getMinY()) < (this.getHitBox().getMaxX() - object.getMinX());
+        boolean lowerLeftDeepIntersect = (this.getHitBox().getMaxY() - object.getMinY()) > (object.getMaxX() - this.getHitBox().getMinX());
+        boolean lowerRightDeepIntersect = (this.getHitBox().getMaxY() - object.getMinY()) > (this.getHitBox().getMaxX() - object.getMinX());
+
+        // Find which way the body will be stopped from
+        boolean aboveHit = ((topLeft && upperLeftShallowIntersect) || (topRight && upperRightShallowIntersect) || (above && !below && !left && !right));
+        boolean belowHit = ((bottomLeft && lowerLeftShallowIntersect) || (bottomRight && lowerRightShallowIntersect) || (!above && below && !left && !right));
+        boolean leftHit = ((topLeft && upperLeftDeepIntersect) || (bottomLeft && lowerLeftDeepIntersect) || (!above && !below && left && !right));
+        boolean rightHit = ((topRight && upperRightDeepIntersect) || (bottomRight && lowerRightDeepIntersect) || (!above && !below && !left && right));
 
         if(below && above && left && right) {
+            if (belowHit) {
+                    return new Intersection(new Side("BOTTOM"));
+            }
+            if (leftHit) {
+                    return new Intersection(new Side("LEFT"));
+            }
+            if (rightHit) {
+                    return new Intersection(new Side("RIGHT"));
+            }
             if (aboveHit) {
-                return new Intersection(new Side("TOP"));
-            } else if (belowHit) {
-                return new Intersection(new Side("BOTTOM"));
-            } else if (leftHit) {
-                return new Intersection(new Side("LEFT"));
-            } else if (rightHit) {
-                return new Intersection(new Side("RIGHT"));
+                    return new Intersection(new Side("TOP"));
             }
         }
         return new Intersection(new Side("NONE"));

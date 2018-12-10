@@ -2,6 +2,7 @@ package physics.external;
 
 import java.util.*;
 
+import static java.lang.Math.PI;
 import static physics.external.PassiveForceHandler.DEFAULT_GRAVITY_ACCELERATION;
 
 public class CollisionHandler {
@@ -22,15 +23,14 @@ public class CollisionHandler {
         Iterator<Collision> collisionIterator = collisions.iterator();
         Set<PhysicsObject> groundCols = new HashSet<>();
         this.myCollisions = new ArrayList<>();
-        //Filter collisions so that only one ground collides with one body
+        //Filter so that only receive single versions of body and ground/attack collisions
         while(collisionIterator.hasNext()){
             Collision col = collisionIterator.next();
-
             PhysicsObject one = col.getCollider1();
-            if(one.getId() == 1){
+            PhysicsObject two = col.getCollider2();
+            if(one.getId() == 1 && two.getId() > 100){
                 System.out.println(col.getSide().getMySide());
             }
-            PhysicsObject two = col.getCollider2();
             if (one.isPhysicsBody() && two.isPhysicsGround()) {
                 filterGroundCollisions(groundCols, one, col);
             } else if (one.isPhysicsBody() && two.isPhysicsAttack()) {
@@ -75,10 +75,9 @@ public class CollisionHandler {
             if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){
                 double bodyVelocity = one.getYVelocity().getMagnitude();
                 double bodyMass = one.getMass();
-                PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame)), -Math.PI/2);
+                double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
+                PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) + gravityMag), -PI/2);
                 one.addCurrentForce(upwardForce);
-                PhysicsVector gravityOpposition = new PhysicsVector(Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION), -Math.PI/2);
-                one.addCurrentForce(gravityOpposition);
                 if(Math.abs(one.getXVelocity().getMagnitude()) > 10) { //Should we apply kinetic friction?
                     PhysicsVector friction;
                     if(one.getXVelocity().getMagnitude() > 0) {
@@ -93,6 +92,26 @@ public class CollisionHandler {
                     staticFriction = new PhysicsVector(-bodyMass*bodyVelocity/timeOfFrame, 0);
                     one.addCurrentForce(staticFriction);
                 }
+                groundCollisions.add(one.getId());
+            } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("TOP")){
+                double bodyVelocity = one.getYVelocity().getMagnitude();
+                double bodyMass = one.getMass();
+                double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
+                PhysicsVector downwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) - gravityMag), -PI/2);
+                one.addCurrentForce(downwardForce);
+                groundCollisions.add(one.getId());
+
+            } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("LEFT")){
+                double bodyVelocity = Math.abs(one.getXVelocity().getMagnitude());
+                double bodyMass = one.getMass();
+                PhysicsVector rightwardForce = new PhysicsVector(bodyMass*bodyVelocity/(timeOfFrame), PI);
+                one.addCurrentForce(rightwardForce);
+                groundCollisions.add(one.getId());
+            } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("RIGHT")){
+                double bodyVelocity = Math.abs(one.getXVelocity().getMagnitude());
+                double bodyMass = one.getMass();
+                PhysicsVector leftwardForce = new PhysicsVector(bodyMass*bodyVelocity/(timeOfFrame), 0);
+                one.addCurrentForce(leftwardForce);
                 groundCollisions.add(one.getId());
             }
         }
