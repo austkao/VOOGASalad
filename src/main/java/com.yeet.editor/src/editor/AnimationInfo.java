@@ -29,7 +29,13 @@ public class AnimationInfo {
         this.name = name;
     }
 
-    public void setCurrentFrame(int f){currentFrame = f;}
+    public void setCurrentFrame(int f){
+        if (f > totalFrames){
+            System.out.println("Frame set out of range");
+            return;
+        }
+        currentFrame = f;
+    }
     public int getCurrentFrame(){return currentFrame;}
     public void setHitBox(Rectangle r){
         hitBoxes.put(currentFrame, r);

@@ -29,7 +29,7 @@ import java.nio.file.Paths;
 
 public class Main extends Application {
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
-    private static final String DEFAULT_GAME_DIRECTORY = "/src/main/java/com.yeet.main/resources/defaultgame";
+    private static final String DEFAULT_GAME_DIRECTORY = "/src/main/java/com.yeet.main/resources/game0";
 
 
     private Stage myStage;
@@ -62,6 +62,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         myEB = EventBusFactory.getEventBus();
         myDirectory = new File(System.getProperty("user.dir")+DEFAULT_GAME_DIRECTORY);
+
         //create window
         myStage = primaryStage;
         primaryStage.setWidth(myMC.STAGEWIDTH.getValue());
