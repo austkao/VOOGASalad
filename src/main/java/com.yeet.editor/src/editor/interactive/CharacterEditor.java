@@ -424,7 +424,7 @@ public class CharacterEditor extends EditorSuper {
         }
         return combo;
     }
-    
+
     public String toString(){
         return "Character Editor";
     }
@@ -507,6 +507,29 @@ public class CharacterEditor extends EditorSuper {
         img.setImage(new Image(portraitURL));
     }
 
+
+    private void loadCharacterData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> data = parser.parseFileForElement("character");
+            ArrayList<String> health = data.get("health");
+            ArrayList<String> attack = data.get("attack");
+            ArrayList<String> defense = data.get("defense");
+            healthSlider.setNewValue(Double.parseDouble(health.get(0)));
+            attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
+            defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
+
+    private void createSaveFile() {
+        saveCharacterProperties();
+        saveAttackProperties();
+        saveSpriteProperties();
+        isSaved = true;
+        root.getChildren().add(saved);
+    }
     private void saveCharacterProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> characterAttributes = new ArrayList<>(List.of("health","attack","defense"));
@@ -530,7 +553,6 @@ public class CharacterEditor extends EditorSuper {
             System.out.println("Invalid save");
         }
     }
-
     private void saveAttackProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> attackAttributes = new ArrayList<>(List.of("duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
@@ -578,7 +600,6 @@ public class CharacterEditor extends EditorSuper {
             System.out.println("Invalid save");
         }
     }
-
     private void saveSpriteProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> spriteAttributes = new ArrayList<>(List.of("offsetX", "offsetY", "width", "height"));
@@ -599,6 +620,7 @@ public class CharacterEditor extends EditorSuper {
             System.out.println("Invalid save");
         }
     }
+
     private void resetText (String message, TextInputDialog text){
         text.setContentText(message);
         text.getEditor().setText("");
