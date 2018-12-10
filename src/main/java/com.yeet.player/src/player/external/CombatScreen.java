@@ -1,6 +1,5 @@
 package player.external;
 
-import audio.external.AudioSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
@@ -10,7 +9,6 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -31,7 +29,10 @@ import xml.XMLParser;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 /** Displays a stage and visualizes character combat animation
@@ -132,8 +133,8 @@ public class CombatScreen extends Screen {
                 PlayerMarker marker = new PlayerMarker(characterColors.get(characterNames.keySet().toArray()[i]),sprite);
                 super.getMyRoot().getChildren().addAll(marker,sprite);
                 //set up animations for the sprite
-                XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/sprites/animationproperties.xml"));
-                HashMap<String, ArrayList<String>> animationInfo = animationPropertiesParser.parseFileForElement("animation");
+                XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/attacks/attackproperties.xml"));
+                HashMap<String, ArrayList<String>> animationInfo = animationPropertiesParser.parseFileForElement("attack");
                 myAnimationMap.put(i,new HashMap<>());
                 for(int j = 0; j<animationInfo.get("name").size(); j++){
                     Duration duration = Duration.seconds(Double.parseDouble(animationInfo.get("duration").get(j)));
@@ -153,7 +154,13 @@ public class CombatScreen extends Screen {
                 double size = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","size").get(0));
                 ImageView healthPortrait = new ImageView(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/"+characterNames.get(characterNames.keySet().toArray()[i])+".png"));
                 healthPortrait.setViewport(new javafx.geometry.Rectangle2D(x,y,size,size));
-                HealthDisplay healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
+                HealthDisplay healthDisplay;
+                if(gameMode.equalsIgnoreCase("TIME")){
+                    healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
+                }
+                else{
+                    healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),typeValue,healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
+                }
                 healthDisplayContainer.getChildren().add(healthDisplay);
                 myHealthMap.put((int)characterNames.keySet().toArray()[i],healthDisplay);
             }
@@ -161,18 +168,12 @@ public class CombatScreen extends Screen {
         //set up combat systems
         myInputSystem = new InputSystem(myGameDirectory);
         myMessageBus.register(myInputSystem);
-        AudioSystem myAudioSystem = new AudioSystem(myGameDirectory);
-        myMessageBus.register(myAudioSystem);
         myPhysicsSystem = new PhysicsSystem();
         myGameLoop = new GameLoop(myPhysicsSystem,this);
         myMessageBus.register(myPhysicsSystem);
         myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem, myGameDirectory, characterNames);
         myMessageBus.register(myCombatSystem);
         //music and audio
-        myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
-        myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        myBGMPlayer.setVolume(0.05);
-        myBGMPlayer.play();
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
         //ui elements
         super.getMyRoot().getChildren().add(healthDisplayContainer);

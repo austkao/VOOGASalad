@@ -52,7 +52,7 @@ public class Console {
         if (event.equalsIgnoreCase("test")) {
             myEventBus.post(new TestSuccesfulEvent());
         }
-        else if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")){
+        else if(event.matches("gameover [0-3] \\([0-3]{2,4}\\)")){
             int winnerID = Integer.parseInt(event.substring(9,10));
 //            LinkedList<Integer> rankList = new LinkedList<>();
             String[] rawRankList = event.split("[()]")[1].split("");

@@ -8,12 +8,10 @@ import java.net.URL;
 
 public class Player {
 
-    public void playClip(String path) throws MalformedURLException {
+    public void playClip(String path, double volume) throws MalformedURLException {
         File file = new File(path);
         AudioClip clip = new AudioClip(file.toURI().toURL().toString());
-        clip.play(1);
-
-
+        clip.play(volume);
     }
 
 

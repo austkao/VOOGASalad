@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -83,7 +84,9 @@ public class RenderSystem implements Renderer{
         button.setTextFill(textColor);
         button.setLayoutX(x);
         button.setLayoutY(y);
+        button.setMinSize(width,height);
         button.setPrefSize(width,height);
+        button.setMaxSize(width,height);
         Font finalFont = font;
         //BUTTON_SCALE: Double xScale, Double yScale
         button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
@@ -94,6 +97,11 @@ public class RenderSystem implements Renderer{
         return myPlainFont;
     }
 
+    public Font getEmphasisFont(){
+        return myEmphasisFont;
+    }
+
+
     public void buttonHoverEffect(ButtonBase button){
         button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15, 1.1,1.1)));
         button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.BLACK),this.getPlainFont().getName(),20,15,1.0,1.0)));
@@ -103,6 +111,24 @@ public class RenderSystem implements Renderer{
         button.setStyle(String.format(BUTTON_FORMAT,
                 toRGBCode(Color.BLACK),
                 this.getPlainFont().getName(),20,15));
+    }
+
+    public void applyStyleAndEffect(ToggleButton t){
+        styleButton(t);
+        buttonHoverEffect(t);
+        t.selectedProperty().addListener((p, ov, nv) -> {
+            selectEffect(t);
+        });
+    }
+
+    private void selectEffect(ToggleButton b){
+        if(b.isSelected()){
+            DropShadow drop = new DropShadow(12.0,Color.BLUE);
+            drop.setHeight(30.0);
+            b.setEffect(drop);
+        }else{
+            b.setEffect(null);
+        }
     }
 
 
