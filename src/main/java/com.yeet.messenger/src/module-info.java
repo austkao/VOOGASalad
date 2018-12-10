@@ -4,4 +4,5 @@ module com.yeet.messenger {
     requires java.sql;
     requires java.desktop;
     exports messenger.external;
+    exports messenger.external.ReplayUtils;
 }
