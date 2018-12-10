@@ -9,12 +9,12 @@ import java.util.Map;
 public class AnimationInfo {
     private int currentFrame;
     private int totalFrames;
-    private int attackPower;
+    double attackPower;
     private Map<Integer, Rectangle> hitBoxes;
     private Map<Integer, Rectangle> hurtBoxes;
     private List<String> input;
 
-    public AnimationInfo(int total, List<String> inputString, int power) {
+    public AnimationInfo(int total, List<String> inputString, double power) {
         input = inputString;
         currentFrame = -1;
         totalFrames = total;
@@ -52,6 +52,11 @@ public class AnimationInfo {
             return "Animation Not Set";
         }
         String ret = "Frame "+currentFrame+"/"+totalFrames + "\ninput: ";
+        return ret + getInputAsString();
+
+    }
+    public String getInputAsString(){
+        String ret = "";
         for (int i = 0 ; i < input.size(); i++){
             if (i < input.size() - 1){
                 ret += input.get(i)+"-";
@@ -64,4 +69,7 @@ public class AnimationInfo {
     }
     public void setInput(List<String> in){ input = in;}
     public List<String> getInput(){return input;}
+
+    public double getAttackPower(){return attackPower;}
+    public int getTotalFrames(){return totalFrames;}
 }

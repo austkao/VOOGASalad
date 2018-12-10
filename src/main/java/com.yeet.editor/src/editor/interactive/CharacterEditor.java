@@ -246,6 +246,7 @@ public class CharacterEditor extends EditorSuper {
         mySpritePane.getChildren().remove(currentSprite);
         File sprites = chooseImage("Choose Sprite Sheet");
 
+        /*
         TextInputDialog text = new TextInputDialog("");
         resetText("Enter X Offset of initial frame", text);
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
@@ -255,8 +256,10 @@ public class CharacterEditor extends EditorSuper {
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
         resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
-
         initializeSpriteSheet(sprites, offsetX, offsetY, width, height);
+        */
+
+        initializeSpriteSheet(sprites, 6, 14, 60, 60);
     }
     private void initializeSpriteSheet(File sprites, double offsetX, double offsetY, double width, double height) {
         if (testNull(sprites, "File not valid")){
@@ -361,6 +364,7 @@ public class CharacterEditor extends EditorSuper {
         animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power));
     }
     private SpriteAnimation promptForAnimation(){
+        /*
         TextInputDialog text = new TextInputDialog();
         resetText("Enter Time In seconds", text);
         double time = Double.parseDouble(text.showAndWait().orElse("0"));
@@ -378,6 +382,10 @@ public class CharacterEditor extends EditorSuper {
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
         SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
                 offsetX, offsetY, width, height);
+        */
+
+        SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(2), 11, 11,
+                6.0, 640.0, 61.0, 60.0);
         return myAnimation;
     }
 
@@ -492,7 +500,7 @@ public class CharacterEditor extends EditorSuper {
         data.put("y", new ArrayList<>(List.of(Double.toString(portrait.getY()))));
         data.put("size", new ArrayList<>(List.of(Double.toString(portrait.getFitWidth()))));
         try {
-            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "characterproperties.xml").toFile();
+            File xmlFile = Paths.get(myDirectory.getPath(), "characterproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
         } catch (Exception ex) {
             System.out.println("Invalid save");
@@ -501,13 +509,46 @@ public class CharacterEditor extends EditorSuper {
 
     private void saveAttackProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        ArrayList<String> attackAttributes = new ArrayList<>(List.of("name","duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
+        ArrayList<String> attackAttributes = new ArrayList<>(List.of("duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
         structure.put("attack", attackAttributes);
-        ArrayList<String> frameAttributes = new ArrayList<>(List.of("name","number","hitXPos","hitYPos","hurtXPos","hurtYPos"));
+        ArrayList<String> frameAttributes = new ArrayList<>(List.of("number","hitXPos","hitYPos","hitWidth","hitHeight","hurtXPos","hurtYPos","hurtWidth","hurtHeight"));
         structure.put("frame", frameAttributes);
         HashMap<String, ArrayList<String>> data = new HashMap<>();
+        for(String s : attackAttributes) {
+            data.putIfAbsent(s, new ArrayList<>());
+        }
+        for(String s: frameAttributes) {
+            data.putIfAbsent(s, new ArrayList<>());
+        }
+        for(SpriteAnimation ani : animationFrame.keySet()) {
+            AnimationInfo aniInfo = animationFrame.get(ani);
+            //data.get("name").add("Hi");
+            data.get("duration").add(ani.getCycleDuration().toSeconds() +"");
+            data.get("count").add(aniInfo.getTotalFrames()+"");
+            data.get("columns").add(ani.getColumns() + "");
+            data.get("offsetX").add(ani.getOffsetX()+"");
+            data.get("offsetY").add(ani.getOffsetY()+"");
+            data.get("width").add(ani.getWidth()+"");
+            data.get("height").add(ani.getHeight()+"");
+            data.get("attackPower").add(aniInfo.getAttackPower()+"");
+            data.get("inputCombo").add(aniInfo.getInputAsString());
+            for(int i = 1; i <= aniInfo.getTotalFrames(); i++){
+                aniInfo.setCurrentFrame(i);
+                Rectangle hitBox = aniInfo.getHitBox();
+                Rectangle hurtBox = aniInfo.getHurtBox();
+                data.get("number").add(Integer.toString(i));
+                data.get("hitXPos").add(hitBox.getX()+"");
+                data.get("hitYPos").add(hitBox.getY()+"");
+                data.get("hurtXPos").add(hurtBox.getX()+"");
+                data.get("hurtYPos").add(hurtBox.getY()+"");
+                data.get("hitWidth").add(hitBox.getWidth()+"");
+                data.get("hitHeight").add(hitBox.getHeight()+"");
+                data.get("hurtWidth").add(hurtBox.getWidth()+"");
+                data.get("hurtHeight").add(hurtBox.getHeight()+"");
+            }
+        }
         try {
-            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "characterproperties.xml").toFile();
+            File xmlFile = Paths.get(myDirectory.getPath(), "attacks","attackproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
         } catch (Exception ex) {
             System.out.println("Invalid save");
@@ -519,16 +560,16 @@ public class CharacterEditor extends EditorSuper {
         ArrayList<String> spriteAttributes = new ArrayList<>(List.of("offsetX", "offsetY", "width", "height"));
         structure.put("sprite", spriteAttributes);
         HashMap<String, ArrayList<String>> data = new HashMap<>();
-        ArrayList<String> offsetX = new ArrayList<>(List.of(Double.toString(currentSprite.getViewport().getMinX())));
-        ArrayList<String> offsetY = new ArrayList<>(List.of(Double.toString(currentSprite.getViewport().getMinY())));
-        ArrayList<String> width = new ArrayList<>(List.of(Double.toString(currentSprite.getViewport().getWidth())));
-        ArrayList<String> height = new ArrayList<>(List.of(Double.toString(currentSprite.getViewport().getHeight())));
+        ArrayList<String> offsetX = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getMinX())));
+        ArrayList<String> offsetY = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getMinY())));
+        ArrayList<String> width = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getWidth())));
+        ArrayList<String> height = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getHeight())));
         data.put("offsetX", offsetX);
         data.put("offsetY", offsetY);
         data.put("width", width);
         data.put("height", height);
         try {
-            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "sprites", "spriteproperties.xml").toFile();
+            File xmlFile = Paths.get(myDirectory.getPath(), "sprites", "spriteproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
         } catch (Exception ex) {
             System.out.println("Invalid save");
