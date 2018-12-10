@@ -150,7 +150,7 @@ public class CombatScreen extends Screen {
                 double x = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","x").get(0));
                 double y = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","y").get(0));
                 double size = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","size").get(0));
-                ImageView healthPortrait = new ImageView(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/portrait.png"));
+                ImageView healthPortrait = new ImageView(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/"+characterNames.get(characterNames.keySet().toArray()[i])+".png"));
                 healthPortrait.setViewport(new javafx.geometry.Rectangle2D(x,y,size,size));
                 HealthDisplay healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
                 healthDisplayContainer.getChildren().add(healthDisplay);
