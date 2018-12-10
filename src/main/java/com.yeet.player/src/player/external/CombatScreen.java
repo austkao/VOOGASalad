@@ -1,6 +1,5 @@
 package player.external;
 
-import audio.external.AudioSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
@@ -10,7 +9,6 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -31,7 +29,10 @@ import xml.XMLParser;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 /** Displays a stage and visualizes character combat animation
@@ -161,18 +162,12 @@ public class CombatScreen extends Screen {
         //set up combat systems
         myInputSystem = new InputSystem(myGameDirectory);
         myMessageBus.register(myInputSystem);
-        AudioSystem myAudioSystem = new AudioSystem(myGameDirectory);
-        myMessageBus.register(myAudioSystem);
         myPhysicsSystem = new PhysicsSystem();
         myGameLoop = new GameLoop(myPhysicsSystem,this);
         myMessageBus.register(myPhysicsSystem);
         myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem);
         myMessageBus.register(myCombatSystem);
         //music and audio
-        myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
-        myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        myBGMPlayer.setVolume(0.05);
-        myBGMPlayer.play();
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
         //ui elements
         super.getMyRoot().getChildren().add(healthDisplayContainer);
