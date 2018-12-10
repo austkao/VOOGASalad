@@ -1,5 +1,6 @@
 package editor.interactive;
 
+import editor.AnimationInfo;
 import editor.EditorManager;
 import javafx.animation.Animation;
 import javafx.geometry.Point2D;
@@ -40,9 +41,7 @@ public class CharacterEditor extends EditorSuper {
     private static final String HURT_TEXT = "HURTBOX";
 
     private ImageView portrait;
-
     private ImageView spriteSheet;
-
     private Sprite currentSprite;
 
     //Animation variables
@@ -62,63 +61,7 @@ public class CharacterEditor extends EditorSuper {
     private File myDirectory;
     private InputEditor inputEditor;
 
-    static class AnimationInfo {
-        int currentFrame;
-        int totalFrames;
-        int attackPower;
-        Map<Integer, Rectangle> hitBoxes;
-        Map<Integer, Rectangle> hurtBoxes;
-        List<String> input;
 
-        AnimationInfo(int total, List<String> inputString, int power) {
-            input = inputString;
-            currentFrame = -1;
-            totalFrames = total;
-            hitBoxes = new HashMap<>();
-            hurtBoxes = new HashMap<>();
-            for (int i = 1; i <= totalFrames; i++){
-                hitBoxes.putIfAbsent(i, new Rectangle());
-                hurtBoxes.putIfAbsent(i, new Rectangle());
-            }
-            attackPower = power;
-        }
-
-        void setHitBox(Rectangle r){
-            hitBoxes.put(currentFrame, r);
-        }
-        void setHurtBox(Rectangle r){
-            hurtBoxes.put(currentFrame, r);
-        }
-        Rectangle getHitBox(){
-            return hitBoxes.get(currentFrame);
-        }
-        Rectangle getHurtBox(){
-            return hurtBoxes.get(currentFrame);
-        }
-        void advance(int add){
-            currentFrame = Math.floorMod((currentFrame + add),totalFrames);
-            if (currentFrame == 0){
-                currentFrame = totalFrames;
-            }
-        }
-        public String toString(){
-            if (currentFrame == -1 || totalFrames == -1){
-                return "Animation Not Set";
-            }
-            String ret = "Frame "+currentFrame+"/"+totalFrames + "\ninput: ";
-            for (int i = 0 ; i < input.size(); i++){
-                if (i < input.size() - 1){
-                    ret += input.get(i)+"-";
-                }
-                else{
-                    ret += input.get(i);
-                }
-            }
-            return ret;
-        }
-        void setInput(List<String> in){ input = in;}
-        List<String> getInput(){return input;}
-    }
 
     public CharacterEditor(EditorManager em, InputEditor editor){
         super(new Group(),em);
@@ -171,7 +114,7 @@ public class CharacterEditor extends EditorSuper {
 
         Button setAnimation = myRS.makeStringButton("Set Sprite Animation", Color.ORCHID, true,
                 Color.WHITE, 20.0, 500.0, 100.0, 200.0, 50.0);
-        setAnimation.setOnMouseClicked(e -> makeSpriteAnimation());
+        setAnimation.setOnMouseClicked(e -> makeNewSpriteAnimation());
 
         Button setInputCombo = myRS.makeStringButton("Set Input Combo", Color.CORNFLOWERBLUE, true,
                 Color.WHITE, 20.0, 725.0, 100.0, 200.0, 50.0);
@@ -216,7 +159,6 @@ public class CharacterEditor extends EditorSuper {
         mySliders.setLayoutY(200.0);
         root.getChildren().add(mySliders);
     }
-
     private void initializeSpritePane(){
         mySpritePane = new Pane();
         mySpritePane.setLayoutX(600);
@@ -228,6 +170,18 @@ public class CharacterEditor extends EditorSuper {
     private void initializeScrollPane(){
         animationList = new ScrollablePane(50.0,300.0);
         root.getChildren().add(animationList.getScrollPane());
+    }
+    private void selectAnimationFromScroll(ScrollableItem b){
+        if (currentAnimation != null){
+            currentAnimation.stop();
+            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
+            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
+        }
+        currentAnimation = scrollToAnimation.get(b);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
+        frame.setCurrentFrame(1);
+        stepForwardAnimation();
+        //stepBackAnimation();
     }
     private ImageView initializeImageView(int width, int height, int x, int y){
         ImageView picture = new ImageView();
@@ -250,7 +204,7 @@ public class CharacterEditor extends EditorSuper {
         if (currentAnimation.getStatus().equals(Animation.Status.RUNNING)){
             currentAnimation.jumpTo(new Duration(0));
             currentAnimation.stop();
-            frame.currentFrame = 1;
+            frame.setCurrentFrame(1);
             frameText.setText(frame.toString());
             mySpritePane.getChildren().add(frame.getHitBox());
             mySpritePane.getChildren().add(frame.getHurtBox());
@@ -291,10 +245,6 @@ public class CharacterEditor extends EditorSuper {
     private void chooseSpriteSheet(){
         mySpritePane.getChildren().remove(currentSprite);
         File sprites = chooseImage("Choose Sprite Sheet");
-        if (sprites !=  null){
-            setImageView(spriteSheet,sprites.toURI().toString());
-        }
-        //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
 
         TextInputDialog text = new TextInputDialog("");
         resetText("Enter X Offset of initial frame", text);
@@ -306,7 +256,13 @@ public class CharacterEditor extends EditorSuper {
         resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
 
-        //currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
+        initializeSpriteSheet(sprites, offsetX, offsetY, width, height);
+    }
+    private void initializeSpriteSheet(File sprites, double offsetX, double offsetY, double width, double height) {
+        if (testNull(sprites, "File not valid")){
+            return;
+        }
+        setImageView(spriteSheet,sprites.toURI().toString());
         currentSprite = myRS.makeSprite(spriteSheet.getImage(), offsetX, offsetY, width, height);
         currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
         currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
@@ -354,7 +310,6 @@ public class CharacterEditor extends EditorSuper {
         anchor = new Point2D(e.getX(), e.getY());
         return anchor;
     }
-
     private void dragSelection(MouseEvent e, Point2D anchor){
         if (testNull(currentAnimation, "Animation Not Set")){
             return;
@@ -373,50 +328,39 @@ public class CharacterEditor extends EditorSuper {
         selection.setY(Math.min(anchor.getY(), e.getY()));
     }
 
-    private void finishSelection(MouseEvent e, Point2D anchor){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return;
-        }
-    }
-
     /**
      * User selects background, and it is applied to level.
      */
     private void choosePortrait(){
         File portraitFile = chooseImage("Choose Portrait File");
-        if (portraitFile != null)
+        if (!testNull(portraitFile, "File not valid"))
             setImageView(portrait, portraitFile.toURI().toString());
     }
 
-    private void makeSpriteAnimation(){
-        if (testNull(spriteSheet.getImage(), "Sprite Sheet Not Set")){
-            return;
-        }
+    private void makeNewSpriteAnimation(){
         File image = chooseImage("Choose thumbnail for animation");
         if (testNull(image, "No valid image provided")){
             return;
         }
-        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
-
         List<String> inputString = getCombo();
-
-        SpriteAnimation myAnimation = getNewAnimation();
-
         TextInputDialog text = new TextInputDialog("");
         text.setContentText("Enter Attack Power");
         int power = Integer.parseInt(text.showAndWait().orElse("0"));
 
+        SpriteAnimation myAnimation = promptForAnimation();
+        initializeSpriteAnimation(image, inputString, power, myAnimation);
+    }
+    private void initializeSpriteAnimation(File image, List<String> inputString, int power, SpriteAnimation myAnimation) {
+        if (testNull(spriteSheet.getImage(), "Sprite Sheet Not Set")){
+            return;
+        }
+        myAnimation.setCycleCount(Animation.INDEFINITE);
+        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
         scrollToAnimation.put(animPic, myAnimation);
         animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
         animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power));
     }
-
-    private void resetText (String mesasge, TextInputDialog text){
-        text.setContentText(mesasge);
-        text.getEditor().setText("");
-    }
-
-    private SpriteAnimation getNewAnimation(){
+    private SpriteAnimation promptForAnimation(){
         TextInputDialog text = new TextInputDialog();
         resetText("Enter Time In seconds", text);
         double time = Double.parseDouble(text.showAndWait().orElse("0"));
@@ -434,47 +378,26 @@ public class CharacterEditor extends EditorSuper {
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
         SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
                 offsetX, offsetY, width, height);
-        myAnimation.setCycleCount(Animation.INDEFINITE);
         return myAnimation;
-    }
-    private void selectAnimationFromScroll(ScrollableItem b){
-        if (currentAnimation != null){
-            currentAnimation.stop();
-            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
-            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
-        }
-
-        currentAnimation = scrollToAnimation.get(b);
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        frame.currentFrame = 1;
-        stepForwardAnimation();
-        stepBackAnimation();
     }
 
     private String showAlertInputOptions(int num){
-
         //Set<String> options = inputEditor.getInputTypes();
-
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Enter input #" + num);
-
-        boolean disabled = false;
 
 //        for (String option: options){
 //            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
 //            dialog.getDialogPane().getButtonTypes().add(optionButton);
-//            dialog.getDialogPane().lookupButton(optionButton).setDisable(disabled);
+//            dialog.getDialogPane().lookupButton(optionButton).setDisable(false);
 //        }
 
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-
         ButtonType input = dialog.showAndWait().orElse(ButtonType.CLOSE);
-
         if (input == ButtonType.CLOSE){
             return "";
         }
         return input.getText();
-
     }
     private void setInputCombo(){
         if (testNull(currentAnimation, "Animation not selected")){
@@ -494,9 +417,7 @@ public class CharacterEditor extends EditorSuper {
         }
         return combo;
     }
-
-
-
+    
     public String toString(){
         return "Character Editor";
     }
@@ -568,5 +489,10 @@ public class CharacterEditor extends EditorSuper {
     }
     private void setImageView(ImageView img, String portraitURL){
         img.setImage(new Image(portraitURL));
+    }
+
+    private void resetText (String message, TextInputDialog text){
+        text.setContentText(message);
+        text.getEditor().setText("");
     }
 }
