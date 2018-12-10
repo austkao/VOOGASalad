@@ -139,7 +139,7 @@ public class PhysicsSystem {
         }
         Coordinate playerLocation = gameObjects.get(id).getMyCoordinateBody().getPos();
         Coordinate attackLocation = new Coordinate(playerLocation.getX() + direction * DEFAULT_ATTACK_SPACE,playerLocation.getY() + DEFAULT_ATTACK_SPACE);
-        PhysicsAttack attack = new PhysicsAttack(attackId, id, parentDirection, gameObjects.get(id).getMass(), attackLocation, new Dimensions(40, 20));
+        PhysicsAttack attack = new PhysicsMelee(attackId, id, parentDirection, gameObjects.get(id).getMass(), attackLocation, new Dimensions(40, 20));
         gameObjects.put(attackId, attack);
         attackId++;
     }

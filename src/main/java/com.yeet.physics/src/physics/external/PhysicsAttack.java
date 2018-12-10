@@ -3,6 +3,7 @@ package physics.external;
 public abstract class PhysicsAttack extends PhysicsObject {
 
     private int myParentID;
+    private int knockForce;
 
     PhysicsAttack(int id, int parentID, double direction, double mass, Coordinate start, Dimensions dims) {
         super(id, mass, start, dims);
@@ -16,5 +17,13 @@ public abstract class PhysicsAttack extends PhysicsObject {
     @Override
     public boolean isPhysicsAttack() {
         return true;
+    }
+
+    public int getKnockForce() {
+        return knockForce;
+    }
+
+    public void setKnockForce(int knockForce) {
+        this.knockForce = knockForce;
     }
 }
