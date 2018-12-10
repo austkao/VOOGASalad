@@ -42,6 +42,11 @@ public class CharacterEditor extends EditorSuper {
     private static final String HIT_TEXT = "HITBOX";
     private static final String HURT_TEXT = "HURTBOX";
 
+    private static final int BOX_STROKE = 5;
+    private static final Color HITBOX_COLOR = Color.RED;
+    private static final Color HURTBOX_COLOR = Color.BLUE;
+    private static final Color BOX_FILL = null;
+
     private ImageView portrait;
     private Image spriteSheet;
     private Sprite currentSprite;
@@ -93,7 +98,7 @@ public class CharacterEditor extends EditorSuper {
         myDirectory = characterDirectory;
         isSaved = isEdit;
         if(isEdit) {
-            loadCharacterData(characterDirectory);
+            loadFiles(characterDirectory);
         }
     }
 
@@ -168,13 +173,16 @@ public class CharacterEditor extends EditorSuper {
     }
     private void selectNewAnimationFromScroll(Scrollable b){
         if (currentAnimation != null){
+            currentAnimation.jumpTo(new Duration(0));
             currentAnimation.stop();
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
         }
-        currentAnimation = nameToAnimation.get(b.getButton().toString());
+        currentAnimation = nameToAnimation.get(b.getButton().getText());
         AnimationInfo frame = animationFrame.get(currentAnimation);
         frame.setCurrentFrame(1);
+        currentAnimation.jumpTo(new Duration(0));
+        currentAnimation.stop();;
         stepForwardAnimation();
     }
     private ImageView initializeImageView(int width, int height, int x, int y){
@@ -213,7 +221,7 @@ public class CharacterEditor extends EditorSuper {
         mySpritePane.getChildren().remove(frame.getHurtBox());
         //currentAnimation.setRate(adjust*Math.abs(currentAnimation.getRate()));
         currentAnimation.playFrom(currentAnimation.getCurrentTime().add(
-                new Duration(currentAnimation.getCycleDuration().toMillis()*adjust / currentAnimation.getCount())));
+                new Duration(currentAnimation.getCycleDuration().toMillis()*adjust / frame.getTotalFrames())));
         currentAnimation.pause();
         frame.advance(adjust);
         frameText.setText(frame.toString());
@@ -289,18 +297,18 @@ public class CharacterEditor extends EditorSuper {
         Rectangle newBox = new Rectangle();
         newBox.setX(e.getX());
         newBox.setY(e.getY());
-        newBox.setFill(null);
-        newBox.setStrokeWidth(5);
+        newBox.setFill(BOX_FILL);
+        newBox.setStrokeWidth(BOX_STROKE);
         mySpritePane.getChildren().add(newBox);
 
         if (hitOrHurt.getState().equals(HIT_TEXT)){
             mySpritePane.getChildren().remove(frame.getHitBox());
-            newBox.setStroke(Color.RED);
+            newBox.setStroke(HITBOX_COLOR);
             frame.setHitBox(newBox);
         }
         else{
             mySpritePane.getChildren().remove(frame.getHurtBox());
-            newBox.setStroke(Color.BLUE);
+            newBox.setStroke(HURTBOX_COLOR);
             frame.setHurtBox(newBox);
         }
 
@@ -346,22 +354,6 @@ public class CharacterEditor extends EditorSuper {
         int power = Integer.parseInt(text.showAndWait().orElse("0"));
 
         List<String> inputString = getCombo();
-
-        SpriteAnimation myAnimation = promptForAnimation();
-        initializeSpriteAnimation(inputString, power, myAnimation, name);
-    }
-    private void initializeSpriteAnimation(List<String> inputString, double power, SpriteAnimation myAnimation, String name) {
-
-        myAnimation.setCycleCount(Animation.INDEFINITE);
-
-        ScrollItem animText = new ScrollItem(new WritableImage(1, 1), new Text(name));
-        newAnimationList.addItem(animText);
-        nameToAnimation.put(name, myAnimation);
-        animText.getButton().setOnMouseClicked(e -> selectNewAnimationFromScroll(animText));
-
-        animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power, name));
-    }
-    private SpriteAnimation promptForAnimation(){
         /*
         TextInputDialog text = new TextInputDialog();
         resetText("Enter Time In seconds", text);
@@ -384,8 +376,19 @@ public class CharacterEditor extends EditorSuper {
 
         SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(2), 11, 11,
                 6.0, 640.0, 61.0, 60.0);
-        return myAnimation;
+        initializeSpriteAnimation(inputString, power, myAnimation, name);
     }
+    private void initializeSpriteAnimation(List<String> inputString, double power, SpriteAnimation myAnimation, String name) {
+        myAnimation.setCycleCount(Animation.INDEFINITE);
+
+        ScrollItem animText = new ScrollItem(new WritableImage(1, 1), new Text(name));
+        newAnimationList.addItem(animText);
+        nameToAnimation.put(name, myAnimation);
+        animText.getButton().setOnMouseClicked(e -> selectNewAnimationFromScroll(animText));
+
+        animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power, name));
+    }
+
 
     private String showAlertInputOptions(int num){
         //Set<String> options = inputEditor.getInputTypes();
@@ -431,10 +434,10 @@ public class CharacterEditor extends EditorSuper {
     private void loadFiles(File directory) {
         File characterProperties = Paths.get(directory.getPath(), "characterproperties.xml").toFile();
         loadCharacterData(characterProperties);
-        File attackProperties = Paths.get(directory.getPath(), "attacks","attackproperties.xml").toFile();
-        loadAttacksData(attackProperties);
         File spriteProperties = Paths.get(directory.getPath(), "sprites","spriteproperties.xml").toFile();
         loadSpriteData(spriteProperties);
+        File attackProperties = Paths.get(directory.getPath(), "attacks","attackproperties.xml").toFile();
+        loadAttacksData(attackProperties);
     }
 
     private void loadCharacterData(File file) {
@@ -454,8 +457,6 @@ public class CharacterEditor extends EditorSuper {
 
             File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
             setImageView(portrait, portraitFile.toURI().toString());
-            File spriteSheetFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
-            spriteSheet = new Image(spriteSheetFile.toURI().toString());
 
         } catch (Exception ex) {
             System.out.println("Cannot load Character Information");
@@ -472,23 +473,25 @@ public class CharacterEditor extends EditorSuper {
 
 
             List<String> inputs = attacks.get("inputCombo");
-            List<String> powers = attacks.get("attackPowers");
+            List<String> powers = attacks.get("attackPower");
             List<String> names = attacks.get("name");
 
             for (int i = 0; i < numAttacks; i++){
                 SpriteAnimation newAnim = createSpriteAnimationFromData(attacks, i);
                 initializeSpriteAnimation(Arrays.asList(inputs.get(i).split("-")),
                         Double.parseDouble(powers.get(i)), newAnim, names.get(i));
+
+
             }
             for (int i = 0; i < numFrames; i++){
                 setUpAnimationInfo(frames, i);
             }
 
         } catch (Exception ex) {
-            System.out.println("Cannot load file");
+            System.out.println("Cannot load attacks file");
+            ex.printStackTrace();
         }
     }
-
     private void setUpAnimationInfo(HashMap<String, ArrayList<String>> frames, int index) {
         String  fname = frames.get("fname").get(index);
         int    frameNumber    = Integer.parseInt(frames.get("number").get(index));
@@ -506,7 +509,13 @@ public class CharacterEditor extends EditorSuper {
 
         frameInfo.setCurrentFrame(frameNumber);
         frameInfo.setHitBox(new Rectangle(hix, hiy, hiw, hih));
+        frameInfo.getHitBox().setStrokeWidth(BOX_STROKE);
+        frameInfo.getHitBox().setStroke(HITBOX_COLOR);
+        frameInfo.getHitBox().setFill(BOX_FILL);
         frameInfo.setHurtBox(new Rectangle(hux, huy, huw, huh));
+        frameInfo.getHurtBox().setStrokeWidth(BOX_STROKE);
+        frameInfo.getHurtBox().setStroke(HURTBOX_COLOR);
+        frameInfo.getHurtBox().setFill(BOX_FILL);
     }
     private SpriteAnimation createSpriteAnimationFromData(HashMap<String, ArrayList<String>> attacks, int index) {
         Duration duration = Duration.seconds(Double.parseDouble(attacks.get("duration").get(index)));
@@ -528,6 +537,10 @@ public class CharacterEditor extends EditorSuper {
             double w = Double.parseDouble(sprites.get("width").get(0));
             double x = Double.parseDouble(sprites.get("offsetX").get(0));
             double y = Double.parseDouble(sprites.get("offsetY").get(0));
+
+
+            File spriteSheetFile = Paths.get(myDirectory.getPath(), "sprites","spritesheet" + ".png").toFile();
+            initializeSpriteSheet(spriteSheetFile, x, y, w, h);
 
         } catch (Exception ex) {
             System.out.println("Cannot load Sprite file");
@@ -560,7 +573,7 @@ public class CharacterEditor extends EditorSuper {
             File xmlFile = Paths.get(myDirectory.getPath(), "characterproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
         } catch (Exception ex) {
-            System.out.println("Invalid save");
+            System.out.println("Invalid character save");
         }
 
         try {
@@ -571,7 +584,7 @@ public class CharacterEditor extends EditorSuper {
         }
 
         try {
-            File file = Paths.get(myDirectory.getPath(), "spritesheet" + ".png").toFile();
+            File file = Paths.get(myDirectory.getPath(), "sprites", "spritesheet" + ".png").toFile();
             ImageIO.write(SwingFXUtils.fromFXImage(spriteSheet, null), "png", file);
         } catch (Exception ex){
             System.out.println("Could not save Sprite Sheet");
@@ -622,7 +635,7 @@ public class CharacterEditor extends EditorSuper {
             File xmlFile = Paths.get(myDirectory.getPath(), "attacks","attackproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
         } catch (Exception ex) {
-            System.out.println("Invalid save");
+            System.out.println("Invalid attacks save");
         }
     }
     private void saveSpriteProperties() {
@@ -642,7 +655,7 @@ public class CharacterEditor extends EditorSuper {
             File xmlFile = Paths.get(myDirectory.getPath(), "sprites", "spriteproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
         } catch (Exception ex) {
-            System.out.println("Invalid save");
+            System.out.println("Invalid sprite save");
         }
     }
 
