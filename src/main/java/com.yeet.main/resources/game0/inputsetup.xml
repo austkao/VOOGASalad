@@ -2,12 +2,7 @@
 <VOOGASalad author="yeet">
     <players numPlayers = "2"></players>
     <input LEFT = "P" DOWN = "L" UP = "O" RIGHT = "I" ></input>
-    <input A = "LEFT" S = "DOWN" W = "JUMP" D = "RIGHT" B = "SPECIAL"></input>
-
-    <combo SMASH = "AB" SHORYUKEN = "ABC"></combo>
-
-    <input P = "RIGHT" L = "DOWN" O = "JUMP" I = "LEFT" ></input>
-    <combo OL = "SMASH" POI = "FIREBALL"></combo>
+    <input LEFT=""
 
 </VOOGASalad>
 
