@@ -35,14 +35,14 @@ public class InputTester extends Application {
         KeyInputEvent test4 = new KeyInputEvent(KeyCode.A);
         myMessageBus.post(test4);
 
-        //KeyInputEvent test5 = new KeyInputEvent(KeyCode.D);
-        //myMessageBus.post(test5);
-        //KeyInputEvent test = new KeyInputEvent(KeyCode.P);
-        //myMessageBus.post(test);
+        KeyInputEvent test5 = new KeyInputEvent(KeyCode.B);
+        myMessageBus.post(test5);
+        KeyInputEvent test = new KeyInputEvent(KeyCode.P);
+        myMessageBus.post(test);
 
 
         var start1 = new MenuStartEvent();
-        myMessageBus.post(start1);
+        //myMessageBus.post(start1);
 
         GameOverEvent over = new GameOverEvent(0, new ArrayList<Integer>());
         //myMessageBus.post(over);

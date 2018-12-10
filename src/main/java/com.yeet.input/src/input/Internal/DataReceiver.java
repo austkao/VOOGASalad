@@ -14,7 +14,8 @@ import java.util.Map;
  */
 public class DataReceiver {
 
-    XMLParser myParser;
+    XMLParser myParserInput;
+    XMLParser myParserCombo;
     //Holds our key mappings. All of the values will be an arraylist of size 1
     private Map<String, ArrayList<String>> inputKeys;
     private Map<String, ArrayList<String>> comboKeys;
@@ -22,32 +23,40 @@ public class DataReceiver {
 
     public DataReceiver(File GameDir) {
 
-        myParser = new XMLParser(new File(GameDir.getPath() + "/inputsetup.xml"));
-        var x = myParser.parseFileForAttribute("players", "players");
+        myParserCombo = new XMLParser(new File(GameDir.getPath() + "/combosetup.xml"));
+        myParserInput = new XMLParser(new File(GameDir.getPath() + "/inputsetup.xml"));
+        var x = myParserInput.parseFileForAttribute("players", "numPlayers");
         numPlayers = Integer.parseInt(x.get(0));
     }
 
     public List<Map<String, String>> getKeys(){
-        List<Map<String, String>> allInputs = new ArrayList<>();
+        List<Map<String, String>> allPlayerInputs = new ArrayList<>();
+        HashMap<String, ArrayList<String>> allInputs = myParserInput.parseFileForElement("input");
         for(int i = 0; i<numPlayers; i++){
-            Map<String, String> inputMap = reverse(myParser.parseFileForElement("input"+Integer.toString(i)));
-            allInputs.add(inputMap); //Collect the keyInputs for ALL of the players
+            Map<String, String> playerInputs = new HashMap<>();
+            for(String key : allInputs.keySet()){
+                playerInputs.put(allInputs.get(key).get(i), key);
+            }
 
+            allPlayerInputs.add(playerInputs);
         }
-        //inputKeys = myParser.parseFileForElement("input");
-        return allInputs;
+        //inputKeys = myParserInput.parseFileForElement("input");
+        return allPlayerInputs;
 
     }
 
     public List<Map<String, String>> getCombos(){
-        List<Map<String, String>> allCombos = new ArrayList<>();
+        List<Map<String, String>> allPlayerCombos = new ArrayList<>();
+        HashMap<String, ArrayList<String>> allCombos = myParserCombo.parseFileForElement("input");
+        System.out.println(allCombos);
         for(int i = 0; i<numPlayers; i++){
-            Map<String, String> comboMap = reverse(myParser.parseFileForElement("combo"+Integer.toString(i)));
-            allCombos.add(comboMap); //Collect the keyInputs for ALL of the players
+            Map<String, String> playerCombos = new HashMap<>();
+            for(String key : allCombos.keySet()){
+                playerCombos.put(allCombos.get(key).get(i), key);
+            }
+            allPlayerCombos.add(playerCombos);
         }
-
-        comboKeys = myParser.parseFileForElement("combo");
-        return allCombos;
+        return allPlayerCombos;
     }
 
     /**
