@@ -1,5 +1,12 @@
 package physics.external;
 
+/**
+ * Concrete class of PhysicsObject representing a player
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class PhysicsBody extends PhysicsObject {
 
     

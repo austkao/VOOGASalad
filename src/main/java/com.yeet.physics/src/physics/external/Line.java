@@ -4,6 +4,12 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
 
+/**
+ * Represents a line between two points (would be needed if extended to 3-D)
+ *
+ * @author jrf36
+ */
+
 public class Line {
 
     private Point2D.Double first;

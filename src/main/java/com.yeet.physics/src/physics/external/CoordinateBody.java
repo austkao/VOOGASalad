@@ -3,6 +3,13 @@ package physics.external;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+/**
+ * The hit box for each object - made up of a Coordinate and dimensions
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class CoordinateBody {
 
 

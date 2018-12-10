@@ -5,15 +5,19 @@ import messenger.external.AttackIntersectEvent;
 import messenger.external.EventBusFactory;
 import messenger.external.GroundIntersectEvent;
 import messenger.external.PositionsUpdateEvent;
-
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static java.lang.Math.PI;
 
+/**
+ * Main class of Physics that is used to start a physics environment
+ *
+ * @author skm44
+ * @author jrf36
+ */
 
 public class PhysicsSystem {
 

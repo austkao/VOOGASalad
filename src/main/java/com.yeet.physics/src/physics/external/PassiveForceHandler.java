@@ -4,6 +4,13 @@ import java.util.Map;
 
 import static java.lang.Math.PI;
 
+/**
+ * Applies passive force of gravity
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class PassiveForceHandler {
 
     public static final double DEFAULT_GRAVITY_ACCELERATION = 1800;

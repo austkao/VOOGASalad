@@ -1,5 +1,12 @@
 package physics.external;
 
+/**
+ * Concrete class of PhysicsObject representing a ground
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class PhysicsGround extends PhysicsObject {
 
     private double frictionCoef;

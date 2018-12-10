@@ -1,5 +1,12 @@
 package physics.external;
 
+/**
+ * Concrete class of PhysicsAttack representing a close-range melee attack
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class PhysicsMelee extends PhysicsAttack {
 
     PhysicsMelee(int id, int parentID, double direction, double mass, Coordinate start, Dimensions dims) {

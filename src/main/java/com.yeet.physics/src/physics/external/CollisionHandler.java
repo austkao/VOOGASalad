@@ -5,6 +5,13 @@ import java.util.*;
 import static java.lang.Math.PI;
 import static physics.external.PassiveForceHandler.DEFAULT_GRAVITY_ACCELERATION;
 
+/**
+ * Uses output of collisionDetector to filter out significant collisions and apply the correct resulting forces
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 2000000;

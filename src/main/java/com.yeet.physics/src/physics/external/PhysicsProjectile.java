@@ -1,5 +1,12 @@
 package physics.external;
 
+/**
+ * Concrete class of PhysicsAttack representing a moving projectile attack
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class PhysicsProjectile extends PhysicsAttack {
 
     PhysicsProjectile(int id, int parentID, double direction, double mass, Coordinate start, Dimensions dims) {

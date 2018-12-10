@@ -5,6 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Finds all collisions between any two physics objects
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class
 
 CollisionDetector {

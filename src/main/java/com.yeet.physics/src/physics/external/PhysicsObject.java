@@ -3,6 +3,13 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class of an object affected by physics forces
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public abstract class PhysicsObject {
 
     protected double myMass;

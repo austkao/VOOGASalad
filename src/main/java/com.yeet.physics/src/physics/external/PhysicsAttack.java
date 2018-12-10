@@ -1,5 +1,12 @@
 package physics.external;
 
+/**
+ * Abstract class representing a general attack
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public abstract class PhysicsAttack extends PhysicsObject {
 
     private int myParentID;

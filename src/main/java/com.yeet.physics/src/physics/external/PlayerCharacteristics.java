@@ -1,5 +1,12 @@
 package physics.external;
 
+/**
+ * Supplementary class for PhysicsBodies that provide stats of player
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class PlayerCharacteristics {
 
     private int ID;
