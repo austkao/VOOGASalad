@@ -122,13 +122,16 @@ public class MapEditor extends EditorSuper {
         Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 20.0,0.0, 0.0, 200.0, 50.0);
         saveFile.setOnMouseClicked(e -> createSaveFile());
+        Button input = myRS.makeStringButton("go to input", Color.CRIMSON, true, Color.WHITE,
+                20.0,0.0, 0.0, 200.0, 50.0);
+        input.setOnMouseClicked(e -> myEM.goToInput(this));
         Button settings = myRS.makeStringButton("Map Settings", Color.CRIMSON, true, Color.WHITE,
                 20.0,0.0, 0.0, 200.0, 50.0);
         settings.setOnMouseClicked(e -> {
             MapSettings s = new MapSettings();
             s.setScene();
         });
-        myButtons.getChildren().addAll(saveFile,settings,resetGrid,addBG,chooseTile);
+        myButtons.getChildren().addAll(saveFile,settings,resetGrid,addBG,chooseTile,input);
         myButtons.setLayoutX(60.0);
         myButtons.setLayoutY(50.0);
     }

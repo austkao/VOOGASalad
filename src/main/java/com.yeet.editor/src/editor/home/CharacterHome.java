@@ -35,6 +35,7 @@ public class CharacterHome extends EditorHome {
     }
 
     public void setEditor(File directory, boolean isEdit){
+
         myEditor = new CharacterEditor(em, inputEditor, directory, isEdit);
         myEditor.createBack(this);
         em.changeScene(myEditor);
