@@ -1,5 +1,6 @@
 package player.external;
 
+import audio.external.AudioSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
@@ -160,6 +161,8 @@ public class CombatScreen extends Screen {
         //set up combat systems
         myInputSystem = new InputSystem(myGameDirectory);
         myMessageBus.register(myInputSystem);
+        AudioSystem myAudioSystem = new AudioSystem(myGameDirectory);
+        myMessageBus.register(myAudioSystem);
         myPhysicsSystem = new PhysicsSystem();
         myGameLoop = new GameLoop(myPhysicsSystem,this);
         myMessageBus.register(myPhysicsSystem);
@@ -168,6 +171,7 @@ public class CombatScreen extends Screen {
         //music and audio
         myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        myBGMPlayer.setVolume(0.05);
         myBGMPlayer.play();
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
         //ui elements
