@@ -60,7 +60,6 @@ public class DataSystem {
         createFile(characterDirectory.getPath() + myFP.ATTACKPROPERTIES.getPath());
         createFile(characterDirectory.getPath() + myFP.SOUNDPROPERTIES.getPath());
         createFile(characterDirectory.getPath() + myFP.SPRITEPROPERTIES.getPath());
-        createFile(characterDirectory.getPath() + myFP.ANIMATIONPROPERTIES.getPath());
     }
 
     @Subscribe
