@@ -1,13 +1,17 @@
 package physics.external.combatSystem;
 
+import com.google.common.eventbus.EventBus;
 import messenger.external.CombatActionEvent;
+import messenger.external.EventBusFactory;
 import messenger.external.GameOverEvent;
+import messenger.external.PlayerDeathEvent;
 import physics.external.PhysicsSystem;
 
 import java.util.*;
 
 public class PlayerManager {
     private static final int INITIAL_ID = 0;
+    EventBus eventBus = EventBusFactory.getEventBus();
     Map<Integer, Player> playerMap;
     int numOfPlayers;
     int numOfAlivePlayers;
@@ -65,6 +69,7 @@ public class PlayerManager {
 
         if(health<=0.0){
             int remainingLife = playerBeingAttacked.loseLife();
+            eventBus.post(new PlayerDeathEvent(beingAttacked, remainingLife));
             if(remainingLife<=0){
                 ranking.offer(beingAttacked);
                 if(--numOfAlivePlayers == 1){

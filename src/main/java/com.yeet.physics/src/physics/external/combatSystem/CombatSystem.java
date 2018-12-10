@@ -140,6 +140,9 @@ public class CombatSystem {
         }
     }
 
+    @Subscribe
+    public void onTimeUpEvent(TimeUpEvent timeUpEvent){
 
+    }
 
 }
