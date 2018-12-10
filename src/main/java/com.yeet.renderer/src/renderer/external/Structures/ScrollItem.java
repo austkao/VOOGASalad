@@ -29,7 +29,7 @@ public class ScrollItem implements Scrollable {
         this.imageView2 = new ImageView(image);
         imageView1.setPreserveRatio(true);
         imageView2.setPreserveRatio(true);
-        resize(200);
+        resize(100);
         initializeButton(desc);
         initializeImageButton();
     }
