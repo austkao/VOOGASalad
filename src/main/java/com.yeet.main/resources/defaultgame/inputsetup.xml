@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VOOGASalad author="yeet">
-    <players players = "2"></players>
+    <players numPlayers = "2"></players>
     <input0 JAB = "A" DOWN = "S" UP = "W" RIGHT = "D" SPECIAL = "B"></input0>
     <input1 LEFT = "P" DOWN = "L" UP = "O" RIGHT = "I" ></input1>
 
