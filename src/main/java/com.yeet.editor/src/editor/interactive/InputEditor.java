@@ -160,6 +160,18 @@ public class InputEditor extends EditorSuper {
         return inputTypes;
     }
 
+
+    public Set<String> getMoveSet() {
+        Set<String> moves = new HashSet<>();
+        bindings = getBindings();
+        for (int i = 0; i < bindings.size(); i++) {
+            HashMap<String, String> bindingsMap = bindings.get(i);
+            for (String move : bindingsMap.keySet()) {
+                moves.add(move);
+            }
+        }
+        return moves;
+    }
     public List<HashMap<String,String>> getBindings(){
         bindings.clear();
         for(int i = 0; i < numTabs; i++) {
