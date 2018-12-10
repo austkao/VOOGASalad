@@ -498,7 +498,7 @@ public class CharacterEditor extends EditorSuper {
 
 
     public String toString(){
-        return "CharacterEditor";
+        return "Character Editor";
     }
 
     private void loadCharacterData(File file) {
@@ -533,6 +533,8 @@ public class CharacterEditor extends EditorSuper {
         try {
             File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "characterproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
+            isSaved = true;
+            root.getChildren().add(saved);
         } catch (Exception ex) {
             System.out.println("Invalid save");
         }
@@ -545,6 +547,10 @@ public class CharacterEditor extends EditorSuper {
     private File chooseImage(String message){
         FileChooser fileChooser = myRS.makeFileChooser("image");
         fileChooser.setTitle(message);
+        if(isSaved) {
+            isSaved = false;
+            root.getChildren().remove(saved);
+        }
         return fileChooser.showOpenDialog(getWindow());
     }
     /*

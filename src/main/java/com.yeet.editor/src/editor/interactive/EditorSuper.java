@@ -4,26 +4,19 @@ import editor.EditorConstant;
 import editor.EditorManager;
 import editor.EditorScreen;
 import editor.home.CharacterHome;
-import editor.home.EditorHome;
 import editor.home.MapHome;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import xml.XMLParser;
 import xml.XMLSaveBuilder;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Editor super class
@@ -31,8 +24,6 @@ import java.util.Map;
  */
 
 public abstract class EditorSuper extends Scene implements EditorScreen {
-
-    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
 
     protected Group root;
     protected EditorManager myEM;
@@ -68,7 +59,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
                     home.updateScroll("characters");
                 }
             } else {
-                System.out.println("Add error alert here.");
+                myRS.createErrorAlert("Not Allowed to Go Back", "Please save your changes first");
             }
         });
         root.getChildren().add(back);
@@ -111,13 +102,8 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     }
 
     public abstract String toString();
-    //public abstract
 
     public Text createTitle() {
         return myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
-    }
-
-    public RenderSystem getRS(){
-        return myRS;
     }
 }

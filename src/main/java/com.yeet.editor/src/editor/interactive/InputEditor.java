@@ -164,6 +164,7 @@ public class InputEditor extends EditorSuper {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         TreeSet<String> moves = new TreeSet<>();
+        bindings = getBindings();
         for(HashMap<String, String> bindingsMap : getBindings()) {
             if(bindingsMap.isEmpty()) {
                 continue;
@@ -175,8 +176,6 @@ public class InputEditor extends EditorSuper {
                 moves.add(move);
                 data.putIfAbsent(move, new ArrayList<>());
                 data.get(move).add(key);
-                System.out.println(move);
-                System.out.println(bindingsMap.get(move));
             }
         }
         structure.put("input", new ArrayList<>(moves));

@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -46,7 +45,6 @@ import java.util.function.Consumer;
 public class MapEditor extends EditorSuper {
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_IMAGE_DIR = "/data/tiles";
-    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources/";
     private static final String TAG_PATH = "tags";
     private static final String ALL_MAPS = "allmaps/";
     private static final String DEFAULT_BGM = "BGM.mp3";
@@ -216,7 +214,7 @@ public class MapEditor extends EditorSuper {
 
 
     public String toString(){
-        return "MapEditor";
+        return "Map Editor";
     }
 
     private void snapShot(Node node,String dir) {
