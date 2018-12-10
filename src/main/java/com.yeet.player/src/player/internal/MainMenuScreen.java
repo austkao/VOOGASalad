@@ -29,6 +29,7 @@ public class MainMenuScreen extends Screen {
     public static final int MESSAGEBAR_MSG_FONTSIZE = 30;
     public static final double MESSAGEBAR_X = 174.0;
     public static final double MESSAGEBAR_Y = 676.0;
+
     private MediaPlayer selectSE;
     private MessageBar myMessageBar;
 
@@ -80,5 +81,9 @@ public class MainMenuScreen extends Screen {
         });
         button.setOnMousePressed(clickHandler);
         return button;
+    }
+
+    public void setSelectVolume(Double volume){
+        selectSE.setVolume(volume);
     }
 }
