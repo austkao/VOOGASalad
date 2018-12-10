@@ -73,11 +73,10 @@ public class CollisionHandler {
             }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){
+
                 double bodyVelocity = one.getYVelocity().getMagnitude();
                 double bodyMass = one.getMass();
-                double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
-                PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) + gravityMag), -PI/2);
-                one.addCurrentForce(upwardForce);
+                applyGravity(one, bodyVelocity, bodyMass);
                 if(Math.abs(one.getXVelocity().getMagnitude()) > 10) { //Should we apply kinetic friction?
                     PhysicsVector friction;
                     if(one.getXVelocity().getMagnitude() > 0) {
@@ -93,6 +92,7 @@ public class CollisionHandler {
                     one.addCurrentForce(staticFriction);
                 }
                 groundCollisions.add(one.getId());
+
             } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("TOP")){
                 double bodyVelocity = one.getYVelocity().getMagnitude();
                 double bodyMass = one.getMass();
@@ -115,6 +115,13 @@ public class CollisionHandler {
                 groundCollisions.add(one.getId());
             }
         }
+    }
+
+
+    public void applyGravity(PhysicsObject one, double bodyVelocity, double bodyMass){
+        double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
+        PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) + gravityMag), -PI/2);
+        one.addCurrentForce(upwardForce);
     }
 
     public List<Integer> getGroundCollisions() {
