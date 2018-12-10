@@ -27,9 +27,10 @@ public class AttackEvent extends CombatActionEvent{
         this.type = type;
     }
 
+
     @Override
     public void onSuccess() {
-        eventBus.post(new AttackSuccessfulEvent(initiatorID));
+        eventBus.post(new AttackSuccessfulEvent(initiatorID, type));
     }
 
     @Override

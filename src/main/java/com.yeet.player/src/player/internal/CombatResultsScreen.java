@@ -13,6 +13,8 @@ import javafx.scene.text.Text;
 import player.internal.Elements.CharacterChooseDisplay;
 import renderer.external.Renderer;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -65,8 +67,22 @@ public class CombatResultsScreen extends Screen {
      *  @param playerRank The corresponding ranks of each character for the combat
      *  @param characterChooseList The list of {@code CharacterChooseDisplay} objects to display
      */
-    public void setWinner(List<String> allPlayers, Queue<Integer> playerRank, List<CharacterChooseDisplay> characterChooseList){
-        int winnerID = playerRank.peek();
+    public void setWinner(List<String> allPlayers, ArrayList<Integer> playerRank, List<CharacterChooseDisplay> characterChooseList){
+        LinkedList<Integer> rankList = new LinkedList<>();
+        for(int i: playerRank){
+            rankList.addLast(i);
+        }
+
+        // find winner id
+        int winnerID = -1;
+        for(int i = 0; i < playerRank.size(); i++){
+            if(playerRank.get(i)==1){
+                winnerID = i;
+                break;
+            }
+        }
+
+//        int winnerID = rankList.peek();
         if(winnerID!=-1){
             winnerBannerText.setText(allPlayers.get(winnerID));
             this.playerList = allPlayers;
@@ -79,18 +95,18 @@ public class CombatResultsScreen extends Screen {
                 awardContainer.setPrefSize(display.getPrefWidth(),display.getPrefHeight());
                 awardContainer.setAlignment(Pos.CENTER);
                 ImageView awardImage;
-                if(playerRank.peek()==1){
+                if(rankList.peek()==1){
                     awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("rank1_icon.png")));
                 }
-                else if(playerRank.peek()==2){
+                else if(rankList.peek()==2){
                     awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("rank2_icon.png")));
                     displayContainer.getChildren().add(new Rectangle(display.getPrefWidth(), RANK_Y_DROP,Color.TRANSPARENT));
                 }
-                else if(playerRank.peek()==3){
+                else if(rankList.peek()==3){
                     awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("rank3_icon.png")));
                     displayContainer.getChildren().add(new Rectangle(display.getPrefWidth(), RANK_Y_DROP *2, Color.TRANSPARENT));
                 }
-                else if(playerRank.peek()==4){
+                else if(rankList.peek()==4){
                     awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("rank4_icon.png")));
                     displayContainer.getChildren().add(new Rectangle(display.getPrefWidth(), RANK_Y_DROP *3,Color.TRANSPARENT));
                 }
@@ -98,7 +114,7 @@ public class CombatResultsScreen extends Screen {
                     awardImage = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("empty.png")));
                     displayContainer.getChildren().add(new Rectangle(display.getPrefWidth(), RANK_Y_DROP *4,Color.TRANSPARENT));
                 }
-                playerRank.remove();
+                rankList.remove();
                 awardImage.setFitHeight(awardContainer.getPrefWidth()/2);
                 awardImage.setFitWidth(awardContainer.getPrefWidth()/2);
                 awardContainer.getChildren().addAll(awardImage);
