@@ -9,6 +9,11 @@ import physics.external.PhysicsSystem;
 
 import java.util.*;
 
+/*
+    Responsible for any interaction with player-related data
+    @author xp19
+ */
+
 public class PlayerManager {
     private static final int INITIAL_ID = 0;
     EventBus eventBus = EventBusFactory.getEventBus();

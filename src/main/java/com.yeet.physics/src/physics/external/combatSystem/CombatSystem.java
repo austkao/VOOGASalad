@@ -17,6 +17,12 @@ import java.util.Map;
 
 import static java.lang.Math.PI;
 
+/*
+    Responsible for processing CombatActionEvent posted to the message bus
+    and parsing XML to send hitbox and hurtbox related data to physics system
+    @author xp19
+ */
+
 public class CombatSystem {
 
     EventBus eventBus;

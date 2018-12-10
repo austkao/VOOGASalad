@@ -1,11 +1,17 @@
 package physics.external.combatSystem;
 
-
 import java.awt.geom.Point2D;
 import java.util.*;
 
-public class PlayerGraph {
+/*
+    Primarily designed for AI implementation.
+    Perform any necessary calculations that is needed by bots to make informed
+    decisions about what step to take next. (eg. who is the nearest player? is there
+    any opponent nearby)
+    @author xp19
+ */
 
+public class PlayerGraph {
 
     Map<Player, Set<Player>> graph;
     private PlayerManager playerManager;

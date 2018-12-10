@@ -1,5 +1,11 @@
 package messenger.external;
 
+/*
+    A state machine that determines whether a inputted combat action event is
+    valid or not.
+    @author xp19
+ */
+
 public enum PlayerState {
 
     /* the default player state when the player is not taking any action */
