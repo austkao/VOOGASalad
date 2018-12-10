@@ -12,8 +12,8 @@ public abstract class PhysicsAttack extends PhysicsObject {
     private int myParentID;
     private int knockForce;
 
-    PhysicsAttack(int id, int parentID, double direction, double mass, Coordinate start, Dimensions dims) {
-        super(id, mass, start, dims);
+    PhysicsAttack(int id, int parentID, double direction, double mass, Coordinate start, Dimensions dims, CoordinateObject cord) {
+        super(id, mass, start, dims, cord);
         this.myParentID = parentID;
         this.myDirection = direction;
     }

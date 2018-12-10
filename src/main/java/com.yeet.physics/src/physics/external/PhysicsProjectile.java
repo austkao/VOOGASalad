@@ -9,8 +9,8 @@ package physics.external;
 
 public class PhysicsProjectile extends PhysicsAttack {
 
-    PhysicsProjectile(int id, int parentID, double direction, double mass, Coordinate start, Dimensions dims) {
-        super(id, parentID, direction, mass, start, dims);
+    PhysicsProjectile(int id, int parentID, double direction, double mass, Coordinate start, Dimensions dims, CoordinateObject cord) {
+        super(id, parentID, direction, mass, start, dims, cord);
     }
 
     @Override

@@ -11,13 +11,13 @@ public class PhysicsGround extends PhysicsObject {
 
     private double frictionCoef;
 
-    PhysicsGround(int id, double mass, Coordinate start, Dimensions dims) {
-        super(id, mass, start, dims);
+    PhysicsGround(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord) {
+        super(id, mass, start, dims, cord);
         this.frictionCoef = .5;
     }
 
-    PhysicsGround(int id, double mass, Coordinate start, Dimensions dims, double frictionCoef) {
-        super(id, mass, start, dims);
+    PhysicsGround(int id, double mass, Coordinate start, Dimensions dims, double frictionCoef, CoordinateObject cord) {
+        super(id, mass, start, dims, cord);
         this.frictionCoef = frictionCoef;
     }
 

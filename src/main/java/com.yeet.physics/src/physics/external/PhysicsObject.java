@@ -14,7 +14,7 @@ public abstract class PhysicsObject {
 
     protected double myMass;
     protected List<PhysicsVector> currentForces = new ArrayList<>();
-    protected CoordinateBody myCoordinateBody;
+    protected CoordinateObject myCoordinateBody;
     protected double myDirection; //0: right, PI: left
     protected PhysicsVector myAcceleration;
     protected PhysicsVector myVelocity;
@@ -22,9 +22,9 @@ public abstract class PhysicsObject {
     protected Dimensions hurtBoxDimensions;
     protected int id;
 
-    public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
+    public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord) {
         this.myMass = mass;
-        this.myCoordinateBody = new CoordinateBody(start, dims);
+        this.myCoordinateBody = cord;
         this.myMass = mass;
         this.myAcceleration = new PhysicsVector(0, 0);
         this.myVelocity = new PhysicsVector(0, 0);
@@ -57,7 +57,7 @@ public abstract class PhysicsObject {
         this.myVelocity = velocity;
     }
 
-    public CoordinateBody getMyCoordinateBody() {
+    public CoordinateObject getMyCoordinateBody() {
         return myCoordinateBody;
     }
     public boolean isPhysicsAttack() {
