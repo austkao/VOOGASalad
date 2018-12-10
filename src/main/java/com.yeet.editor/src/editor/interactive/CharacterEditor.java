@@ -517,27 +517,11 @@ public class CharacterEditor extends EditorSuper {
     }
 
     private void createSaveFile() {
-        HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        ArrayList<String> characterAttributes = new ArrayList<>();
-        characterAttributes.add("health");
-        characterAttributes.add("attack");
-        characterAttributes.add("defense");
-        structure.put("character", characterAttributes);
-        HashMap<String, ArrayList<String>> data = new HashMap<>();
-        ArrayList<String> healthList = new ArrayList<>(List.of(Double.toString(healthSlider.getValue())));
-        ArrayList<String> attackList = new ArrayList<>(List.of(Double.toString(attackSlider.getValue())));
-        ArrayList<String> defenseList = new ArrayList<>(List.of(Double.toString(defenseSlider.getValue())));
-        data.put("health", healthList);
-        data.put("attack", attackList);
-        data.put("defense", defenseList);
-        try {
-            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "characterproperties.xml").toFile();
-            generateSave(structure, data, xmlFile);
-            isSaved = true;
-            root.getChildren().add(saved);
-        } catch (Exception ex) {
-            System.out.println("Invalid save");
-        }
+        saveCharacterProperties();
+        saveAttackProperties();
+        saveSpriteProperties();
+        isSaved = true;
+        root.getChildren().add(saved);
     }
 
     /**
@@ -568,5 +552,65 @@ public class CharacterEditor extends EditorSuper {
     }
     private void setImageView(ImageView img, String portraitURL){
         img.setImage(new Image(portraitURL));
+    }
+
+    private void saveCharacterProperties() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        ArrayList<String> characterAttributes = new ArrayList<>(List.of("health","attack","defense"));
+        structure.put("character", characterAttributes);
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        ArrayList<String> healthList = new ArrayList<>(List.of(Double.toString(healthSlider.getValue())));
+        ArrayList<String> attackList = new ArrayList<>(List.of(Double.toString(attackSlider.getValue())));
+        ArrayList<String> defenseList = new ArrayList<>(List.of(Double.toString(defenseSlider.getValue())));
+        data.put("health", healthList);
+        data.put("attack", attackList);
+        data.put("defense", defenseList);
+        //structure.put("thumbnail", new ArrayList<>(List.of("xThumb","yThumb","w","h")));
+        structure.put("portrait", new ArrayList<>(List.of("x","y","size")));
+        data.put("x", new ArrayList<>(List.of(Double.toString(portrait.getX()))));
+        data.put("y", new ArrayList<>(List.of(Double.toString(portrait.getY()))));
+        data.put("size", new ArrayList<>(List.of(Double.toString(portrait.getFitWidth()))));
+        try {
+            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "characterproperties.xml").toFile();
+            generateSave(structure, data, xmlFile);
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+        }
+    }
+
+    private void saveAttackProperties() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        ArrayList<String> attackAttributes = new ArrayList<>(List.of("name","duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
+        structure.put("attack", attackAttributes);
+        ArrayList<String> frameAttributes = new ArrayList<>(List.of("name","number","hitXPos","hitYPos","hurtXPos","hurtYPos"));
+        structure.put("frame", frameAttributes);
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        try {
+            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "characterproperties.xml").toFile();
+            generateSave(structure, data, xmlFile);
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+        }
+    }
+
+    private void saveSpriteProperties() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        ArrayList<String> spriteAttributes = new ArrayList<>(List.of("offsetX","offsetY","width","height"));
+        structure.put("sprite", spriteAttributes);
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        ArrayList<String> offsetX = new ArrayList<>(List.of(Double.toString(currentSprite.getViewport().getMinX())));
+        ArrayList<String> offsetY = new ArrayList<>(List.of(Double.toString(currentSprite.getViewport().getMinY())));
+        ArrayList<String> width = new ArrayList<>(List.of(Double.toString(currentSprite.getViewport().getWidth())));
+        ArrayList<String> height = new ArrayList<>(List.of(Double.toString(currentSprite.getViewport().getHeight())));
+        data.put("offsetX",offsetX);
+        data.put("offsetY",offsetY);
+        data.put("width",width);
+        data.put("height",height);
+        try {
+            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "sprites", "spriteproperties.xml").toFile();
+            generateSave(structure, data, xmlFile);
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+        }
     }
 }
