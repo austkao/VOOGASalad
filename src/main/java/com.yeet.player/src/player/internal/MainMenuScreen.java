@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import player.internal.Elements.MessageBar;
 import renderer.external.Renderer;
 
+import java.io.File;
+
 /** Central hub for access to all game functionality
  *  @author bpx
  */
@@ -30,13 +32,14 @@ public class MainMenuScreen extends Screen {
     private MediaPlayer selectSE;
     private MessageBar myMessageBar;
 
-    public MainMenuScreen(Group root, Renderer renderer, MediaPlayer sePlayer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch) {
+    public MainMenuScreen(Group root, Renderer renderer, File gameDirectory, MediaPlayer sePlayer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(DEFAULT_TITLE,true, MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(DEFAULT_MSG,false, MESSAGEBAR_MSG_FONTSIZE, Color.BLACK,0.0,0.0),
                 MESSAGEBAR_X, MESSAGEBAR_Y);
         selectSE = sePlayer;
-        ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("mainmenu_bg.png")));
+        System.out.println(gameDirectory.toURI()+"/background.png");
+        ImageView background = new ImageView(new Image(gameDirectory.toURI()+"/background.png"));
         background.setFitHeight(800.0);
         background.setFitWidth(1280.0);
         ImageView smashButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("smash_button.png"))), SMASH_TITLE, SMASH_MSG,880.0,523.0,74.0,85.0, myMessageBar, event -> {

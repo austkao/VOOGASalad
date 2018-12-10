@@ -65,7 +65,7 @@ public class Player {
             myMessageBus.post(new MenuStartEvent());
         });
         mySettingsScreen = new SettingsScreen(new Group(),myRenderer, mySEPlayer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myEditorLink.accept(mySettingsScreen));
-        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, mySEPlayer,()-> {
+        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, myDirectory,mySEPlayer,()-> {
             myMessageBus.post(new ExitMenuEvent());
             myMessageBus.post(new FightStartEvent()); // FightStartEvent is the character select screen!
             myStage.setScene(myCharacterSelectScreen);
