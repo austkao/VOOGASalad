@@ -39,7 +39,6 @@ public class ComboHandler {
         int cnt = 0;
         for(Node playerTree : comboTrees){
             String possibleCombo = parseComboTree(playerTree, new ArrayList<>(q));
-            System.out.println(comboTrees.size());
             if(possibleCombo != null && !possibleCombo.equals("")){
                 var arr = new ArrayList();
                 arr.add(possibleCombo);
