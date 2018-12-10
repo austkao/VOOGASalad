@@ -1,5 +1,6 @@
 package editor.interactive;
 
+import editor.AnimationInfo;
 import editor.EditorManager;
 import javafx.animation.Animation;
 import javafx.geometry.Point2D;
@@ -40,9 +41,7 @@ public class CharacterEditor extends EditorSuper {
     private static final String HURT_TEXT = "HURTBOX";
 
     private ImageView portrait;
-
     private ImageView spriteSheet;
-
     private Sprite currentSprite;
 
     //Animation variables
@@ -62,63 +61,7 @@ public class CharacterEditor extends EditorSuper {
     private File myDirectory;
     private InputEditor inputEditor;
 
-    static class AnimationInfo {
-        int currentFrame;
-        int totalFrames;
-        int attackPower;
-        Map<Integer, Rectangle> hitBoxes;
-        Map<Integer, Rectangle> hurtBoxes;
-        List<String> input;
 
-        AnimationInfo(int total, List<String> inputString, int power) {
-            input = inputString;
-            currentFrame = -1;
-            totalFrames = total;
-            hitBoxes = new HashMap<>();
-            hurtBoxes = new HashMap<>();
-            for (int i = 1; i <= totalFrames; i++){
-                hitBoxes.putIfAbsent(i, new Rectangle());
-                hurtBoxes.putIfAbsent(i, new Rectangle());
-            }
-            attackPower = power;
-        }
-
-        void setHitBox(Rectangle r){
-            hitBoxes.put(currentFrame, r);
-        }
-        void setHurtBox(Rectangle r){
-            hurtBoxes.put(currentFrame, r);
-        }
-        Rectangle getHitBox(){
-            return hitBoxes.get(currentFrame);
-        }
-        Rectangle getHurtBox(){
-            return hurtBoxes.get(currentFrame);
-        }
-        void advance(int add){
-            currentFrame = Math.floorMod((currentFrame + add),totalFrames);
-            if (currentFrame == 0){
-                currentFrame = totalFrames;
-            }
-        }
-        public String toString(){
-            if (currentFrame == -1 || totalFrames == -1){
-                return "Animation Not Set";
-            }
-            String ret = "Frame "+currentFrame+"/"+totalFrames + "\ninput: ";
-            for (int i = 0 ; i < input.size(); i++){
-                if (i < input.size() - 1){
-                    ret += input.get(i)+"-";
-                }
-                else{
-                    ret += input.get(i);
-                }
-            }
-            return ret;
-        }
-        void setInput(List<String> in){ input = in;}
-        List<String> getInput(){return input;}
-    }
 
     public CharacterEditor(EditorManager em, InputEditor editor){
         super(new Group(),em);
@@ -152,8 +95,7 @@ public class CharacterEditor extends EditorSuper {
         myDirectory = characterDirectory;
         isSaved = isEdit;
         if(isEdit) {
-            File characterProperties = Paths.get(characterDirectory.getPath(), "characterproperties.xml").toFile();
-            loadCharacterData(characterProperties);
+            loadCharacterData(characterDirectory);
         }
     }
 
@@ -171,7 +113,7 @@ public class CharacterEditor extends EditorSuper {
 
         Button setAnimation = myRS.makeStringButton("Set Sprite Animation", Color.ORCHID, true,
                 Color.WHITE, 20.0, 500.0, 100.0, 200.0, 50.0);
-        setAnimation.setOnMouseClicked(e -> makeSpriteAnimation());
+        setAnimation.setOnMouseClicked(e -> makeNewSpriteAnimation());
 
         Button setInputCombo = myRS.makeStringButton("Set Input Combo", Color.CORNFLOWERBLUE, true,
                 Color.WHITE, 20.0, 725.0, 100.0, 200.0, 50.0);
@@ -216,7 +158,6 @@ public class CharacterEditor extends EditorSuper {
         mySliders.setLayoutY(200.0);
         root.getChildren().add(mySliders);
     }
-
     private void initializeSpritePane(){
         mySpritePane = new Pane();
         mySpritePane.setLayoutX(600);
@@ -228,6 +169,18 @@ public class CharacterEditor extends EditorSuper {
     private void initializeScrollPane(){
         animationList = new ScrollablePane(50.0,300.0);
         root.getChildren().add(animationList.getScrollPane());
+    }
+    private void selectAnimationFromScroll(ScrollableItem b){
+        if (currentAnimation != null){
+            currentAnimation.stop();
+            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
+            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
+        }
+        currentAnimation = scrollToAnimation.get(b);
+        AnimationInfo frame = animationFrame.get(currentAnimation);
+        frame.setCurrentFrame(1);
+        stepForwardAnimation();
+        //stepBackAnimation();
     }
     private ImageView initializeImageView(int width, int height, int x, int y){
         ImageView picture = new ImageView();
@@ -250,7 +203,7 @@ public class CharacterEditor extends EditorSuper {
         if (currentAnimation.getStatus().equals(Animation.Status.RUNNING)){
             currentAnimation.jumpTo(new Duration(0));
             currentAnimation.stop();
-            frame.currentFrame = 1;
+            frame.setCurrentFrame(1);
             frameText.setText(frame.toString());
             mySpritePane.getChildren().add(frame.getHitBox());
             mySpritePane.getChildren().add(frame.getHurtBox());
@@ -291,11 +244,8 @@ public class CharacterEditor extends EditorSuper {
     private void chooseSpriteSheet(){
         mySpritePane.getChildren().remove(currentSprite);
         File sprites = chooseImage("Choose Sprite Sheet");
-        if (sprites !=  null){
-            setImageView(spriteSheet,sprites.toURI().toString());
-        }
-        //Sprite mySprite = myRS.makeSpriteAnimation(spriteSheet.getImage(), 0.0, 0.0, 110.0, 55.0);
 
+        /*
         TextInputDialog text = new TextInputDialog("");
         resetText("Enter X Offset of initial frame", text);
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
@@ -305,8 +255,16 @@ public class CharacterEditor extends EditorSuper {
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
         resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
+        initializeSpriteSheet(sprites, offsetX, offsetY, width, height);
+        */
 
-        //currentSprite = myRS.makeSprite(spriteSheet.getImage(), 6.0, 14.0, 60.0, 60.0);
+        initializeSpriteSheet(sprites, 6, 14, 60, 60);
+    }
+    private void initializeSpriteSheet(File sprites, double offsetX, double offsetY, double width, double height) {
+        if (testNull(sprites, "File not valid")){
+            return;
+        }
+        setImageView(spriteSheet,sprites.toURI().toString());
         currentSprite = myRS.makeSprite(spriteSheet.getImage(), offsetX, offsetY, width, height);
         currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
         currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
@@ -354,7 +312,6 @@ public class CharacterEditor extends EditorSuper {
         anchor = new Point2D(e.getX(), e.getY());
         return anchor;
     }
-
     private void dragSelection(MouseEvent e, Point2D anchor){
         if (testNull(currentAnimation, "Animation Not Set")){
             return;
@@ -373,50 +330,40 @@ public class CharacterEditor extends EditorSuper {
         selection.setY(Math.min(anchor.getY(), e.getY()));
     }
 
-    private void finishSelection(MouseEvent e, Point2D anchor){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return;
-        }
-    }
-
     /**
      * User selects background, and it is applied to level.
      */
     private void choosePortrait(){
         File portraitFile = chooseImage("Choose Portrait File");
-        if (portraitFile != null)
+        if (!testNull(portraitFile, "File not valid"))
             setImageView(portrait, portraitFile.toURI().toString());
     }
 
-    private void makeSpriteAnimation(){
-        if (testNull(spriteSheet.getImage(), "Sprite Sheet Not Set")){
-            return;
-        }
+    private void makeNewSpriteAnimation(){
         File image = chooseImage("Choose thumbnail for animation");
         if (testNull(image, "No valid image provided")){
             return;
         }
-        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
-
         List<String> inputString = getCombo();
-
-        SpriteAnimation myAnimation = getNewAnimation();
-
         TextInputDialog text = new TextInputDialog("");
         text.setContentText("Enter Attack Power");
         int power = Integer.parseInt(text.showAndWait().orElse("0"));
 
+        SpriteAnimation myAnimation = promptForAnimation();
+        initializeSpriteAnimation(image, inputString, power, myAnimation);
+    }
+    private void initializeSpriteAnimation(File image, List<String> inputString, int power, SpriteAnimation myAnimation) {
+        if (testNull(spriteSheet.getImage(), "Sprite Sheet Not Set")){
+            return;
+        }
+        myAnimation.setCycleCount(Animation.INDEFINITE);
+        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
         scrollToAnimation.put(animPic, myAnimation);
         animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
         animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power));
     }
-
-    private void resetText (String mesasge, TextInputDialog text){
-        text.setContentText(mesasge);
-        text.getEditor().setText("");
-    }
-
-    private SpriteAnimation getNewAnimation(){
+    private SpriteAnimation promptForAnimation(){
+        /*
         TextInputDialog text = new TextInputDialog();
         resetText("Enter Time In seconds", text);
         double time = Double.parseDouble(text.showAndWait().orElse("0"));
@@ -434,47 +381,30 @@ public class CharacterEditor extends EditorSuper {
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
         SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
                 offsetX, offsetY, width, height);
-        myAnimation.setCycleCount(Animation.INDEFINITE);
-        return myAnimation;
-    }
-    private void selectAnimationFromScroll(ScrollableItem b){
-        if (currentAnimation != null){
-            currentAnimation.stop();
-            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
-            mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
-        }
+        */
 
-        currentAnimation = scrollToAnimation.get(b);
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        frame.currentFrame = 1;
-        stepForwardAnimation();
-        stepBackAnimation();
+        SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(2), 11, 11,
+                6.0, 640.0, 61.0, 60.0);
+        return myAnimation;
     }
 
     private String showAlertInputOptions(int num){
-
         //Set<String> options = inputEditor.getInputTypes();
-
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Enter input #" + num);
-
-        boolean disabled = false;
 
 //        for (String option: options){
 //            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
 //            dialog.getDialogPane().getButtonTypes().add(optionButton);
-//            dialog.getDialogPane().lookupButton(optionButton).setDisable(disabled);
+//            dialog.getDialogPane().lookupButton(optionButton).setDisable(false);
 //        }
 
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-
         ButtonType input = dialog.showAndWait().orElse(ButtonType.CLOSE);
-
         if (input == ButtonType.CLOSE){
             return "";
         }
         return input.getText();
-
     }
     private void setInputCombo(){
         if (testNull(currentAnimation, "Animation not selected")){
@@ -494,11 +424,16 @@ public class CharacterEditor extends EditorSuper {
         }
         return combo;
     }
-
-
-
+    
     public String toString(){
         return "Character Editor";
+    }
+
+    private void loadFiles(File directory) {
+        File characterProperties = Paths.get(directory.getPath(), "characterproperties.xml").toFile();
+        loadCharacterData(characterProperties);
+        File attackProperties = Paths.get(directory.getPath(), "attacks","attackproperties.xml").toFile();
+        File spriteProperties = Paths.get(directory.getPath(), "sprites","spriteproperties.xml").toFile();
     }
 
     private void loadCharacterData(File file) {
@@ -511,33 +446,35 @@ public class CharacterEditor extends EditorSuper {
             healthSlider.setNewValue(Double.parseDouble(health.get(0)));
             attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
             defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
+            HashMap<String, ArrayList<String>> portrait = parser.parseFileForElement("portrait");
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
+    private void loadAttacksData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> attacks = parser.parseFileForElement("attack");
+            HashMap<String, ArrayList<String>> frames = parser.parseFileForElement("frame");
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
+    private void loadSpriteData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> sprites = parser.parseFileForElement("sprite");
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
     }
 
     private void createSaveFile() {
-        HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        ArrayList<String> characterAttributes = new ArrayList<>();
-        characterAttributes.add("health");
-        characterAttributes.add("attack");
-        characterAttributes.add("defense");
-        structure.put("character", characterAttributes);
-        HashMap<String, ArrayList<String>> data = new HashMap<>();
-        ArrayList<String> healthList = new ArrayList<>(List.of(Double.toString(healthSlider.getValue())));
-        ArrayList<String> attackList = new ArrayList<>(List.of(Double.toString(attackSlider.getValue())));
-        ArrayList<String> defenseList = new ArrayList<>(List.of(Double.toString(defenseSlider.getValue())));
-        data.put("health", healthList);
-        data.put("attack", attackList);
-        data.put("defense", defenseList);
-        try {
-            File xmlFile = Paths.get(myEM.getGameDirectoryString(), "characters", "characterproperties.xml").toFile();
-            generateSave(structure, data, xmlFile);
-            isSaved = true;
-            root.getChildren().add(saved);
-        } catch (Exception ex) {
-            System.out.println("Invalid save");
-        }
+        saveCharacterProperties();
+        saveAttackProperties();
+        saveSpriteProperties();
+        isSaved = true;
+        root.getChildren().add(saved);
     }
 
     /**
@@ -568,5 +505,102 @@ public class CharacterEditor extends EditorSuper {
     }
     private void setImageView(ImageView img, String portraitURL){
         img.setImage(new Image(portraitURL));
+    }
+
+    private void saveCharacterProperties() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        ArrayList<String> characterAttributes = new ArrayList<>(List.of("health","attack","defense"));
+        structure.put("character", characterAttributes);
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        ArrayList<String> healthList = new ArrayList<>(List.of(Double.toString(healthSlider.getValue())));
+        ArrayList<String> attackList = new ArrayList<>(List.of(Double.toString(attackSlider.getValue())));
+        ArrayList<String> defenseList = new ArrayList<>(List.of(Double.toString(defenseSlider.getValue())));
+        data.put("health", healthList);
+        data.put("attack", attackList);
+        data.put("defense", defenseList);
+        //structure.put("thumbnail", new ArrayList<>(List.of("xThumb","yThumb","w","h")));
+        structure.put("portrait", new ArrayList<>(List.of("x","y","size")));
+        data.put("x", new ArrayList<>(List.of(Double.toString(portrait.getX()))));
+        data.put("y", new ArrayList<>(List.of(Double.toString(portrait.getY()))));
+        data.put("size", new ArrayList<>(List.of(Double.toString(portrait.getFitWidth()))));
+        try {
+            File xmlFile = Paths.get(myDirectory.getPath(), "characterproperties.xml").toFile();
+            generateSave(structure, data, xmlFile);
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+        }
+    }
+
+    private void saveAttackProperties() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        ArrayList<String> attackAttributes = new ArrayList<>(List.of("duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
+        structure.put("attack", attackAttributes);
+        ArrayList<String> frameAttributes = new ArrayList<>(List.of("number","hitXPos","hitYPos","hitWidth","hitHeight","hurtXPos","hurtYPos","hurtWidth","hurtHeight"));
+        structure.put("frame", frameAttributes);
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        for(String s : attackAttributes) {
+            data.putIfAbsent(s, new ArrayList<>());
+        }
+        for(String s: frameAttributes) {
+            data.putIfAbsent(s, new ArrayList<>());
+        }
+        for(SpriteAnimation ani : animationFrame.keySet()) {
+            AnimationInfo aniInfo = animationFrame.get(ani);
+            //data.get("name").add("Hi");
+            data.get("duration").add(ani.getCycleDuration().toSeconds() +"");
+            data.get("count").add(aniInfo.getTotalFrames()+"");
+            data.get("columns").add(ani.getColumns() + "");
+            data.get("offsetX").add(ani.getOffsetX()+"");
+            data.get("offsetY").add(ani.getOffsetY()+"");
+            data.get("width").add(ani.getWidth()+"");
+            data.get("height").add(ani.getHeight()+"");
+            data.get("attackPower").add(aniInfo.getAttackPower()+"");
+            data.get("inputCombo").add(aniInfo.getInputAsString());
+            for(int i = 1; i <= aniInfo.getTotalFrames(); i++){
+                aniInfo.setCurrentFrame(i);
+                Rectangle hitBox = aniInfo.getHitBox();
+                Rectangle hurtBox = aniInfo.getHurtBox();
+                data.get("number").add(Integer.toString(i));
+                data.get("hitXPos").add(hitBox.getX()+"");
+                data.get("hitYPos").add(hitBox.getY()+"");
+                data.get("hurtXPos").add(hurtBox.getX()+"");
+                data.get("hurtYPos").add(hurtBox.getY()+"");
+                data.get("hitWidth").add(hitBox.getWidth()+"");
+                data.get("hitHeight").add(hitBox.getHeight()+"");
+                data.get("hurtWidth").add(hurtBox.getWidth()+"");
+                data.get("hurtHeight").add(hurtBox.getHeight()+"");
+            }
+        }
+        try {
+            File xmlFile = Paths.get(myDirectory.getPath(), "attacks","attackproperties.xml").toFile();
+            generateSave(structure, data, xmlFile);
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+        }
+    }
+
+    private void saveSpriteProperties() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        ArrayList<String> spriteAttributes = new ArrayList<>(List.of("offsetX", "offsetY", "width", "height"));
+        structure.put("sprite", spriteAttributes);
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        ArrayList<String> offsetX = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getMinX())));
+        ArrayList<String> offsetY = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getMinY())));
+        ArrayList<String> width = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getWidth())));
+        ArrayList<String> height = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getHeight())));
+        data.put("offsetX", offsetX);
+        data.put("offsetY", offsetY);
+        data.put("width", width);
+        data.put("height", height);
+        try {
+            File xmlFile = Paths.get(myDirectory.getPath(), "sprites", "spriteproperties.xml").toFile();
+            generateSave(structure, data, xmlFile);
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+        }
+    }
+    private void resetText (String message, TextInputDialog text){
+        text.setContentText(message);
+        text.getEditor().setText("");
     }
 }

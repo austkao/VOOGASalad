@@ -38,8 +38,6 @@ public class Main extends Application {
     private RenderSystem myRenderSystem;
     private Player myPlayer;
     private DataSystem myDataSystem;
-    private Font myEmphasisFont;
-    private Font myPlainFont;
     private EditorManager em;
     private DirectoryChooser myDirectoryChooser;
     private File myDirectory;
