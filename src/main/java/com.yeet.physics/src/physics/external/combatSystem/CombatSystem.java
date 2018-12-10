@@ -55,23 +55,38 @@ public class CombatSystem {
             characterStats.put(id, stats);
         }
 
-        xmlParser = new XMLParser(Paths.get(gameDir.getPath(), "characters","Lucina1","attacks","attackproperties.xml").toFile());
-        HashMap<String, ArrayList<String>> map = xmlParser.parseFileForElement("attack");
-        System.out.println(characterNames);
-        System.out.println(map);
-
         eventBus = EventBusFactory.getEventBus();
         this.playerMap = playerMap;
 //        playerManager = new PlayerManager(playerMap.keySet().size());
         this.physicsSystem = physicsSystem;
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
+//            System.out.println("MIN X: " + playerMap.get(i).getX());
             physicsSystem.addPhysicsObject(0, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60);
         }
         // register tiles to physics engine
         for(int i=0;i < tileMap.keySet().size(); i++){
             physicsSystem.addPhysicsObject(2,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
         }
+
+        // get hit boxes and hurt boxes information
+        for(int id: characterNames.keySet()){
+            String name = characterNames.get(id);
+            xmlParser = new XMLParser(Paths.get(gameDir.getPath(), "characters", name, "attacks", "attackproperties.xml").toFile());
+            HashMap<String, ArrayList<String>> map = xmlParser.parseFileForElement("frame");
+
+            // set hitbox
+            physicsSystem.setHitBox(0, id,
+                    Double.parseDouble(map.get("hitXPos").get(0)), Double.parseDouble(map.get("hitYPos").get(0)),
+                    Double.parseDouble(map.get("hitWidth").get(0)), Double.parseDouble(map.get("hitHeight").get(0)));
+            // set hurtbox
+            physicsSystem.setHitBox(1, id,
+                    Double.parseDouble(map.get("hurtXPos").get(0)), Double.parseDouble(map.get("hurtYPos").get(0)),
+                    Double.parseDouble(map.get("hurtWidth").get(0)), Double.parseDouble(map.get("hurtHeight").get(0)));
+        }
+
+
+
     }
 
     /** Returns the {@code PlayerState} of the player specified

@@ -12,6 +12,7 @@ public abstract class PhysicsObject {
     protected PhysicsVector myAcceleration;
     protected PhysicsVector myVelocity;
     protected boolean isGrounded;
+    protected Dimensions hurtBoxDimensions;
     protected int id;
 
     public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
@@ -24,6 +25,7 @@ public abstract class PhysicsObject {
         this.myDirection = 0; // start facing right
         this.id = id;
         this.isGrounded = false;
+        this.hurtBoxDimensions = new Dimensions(40, 20);
     }
 
     public void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
@@ -89,11 +91,15 @@ public abstract class PhysicsObject {
 
     public abstract PhysicsVector getYVelocity();
 
-    public void setGrounded(boolean b){
-        this.isGrounded = b;
+    public int getParentID() {
+        return 0;
     }
 
-    public boolean isGrounded(){
-        return this.isGrounded;
+    public Dimensions getHurtBoxDimensions() {
+        return this.hurtBoxDimensions;
+    }
+
+    public void setHurtBoxDimensions(Dimensions dims) {
+        this.hurtBoxDimensions = dims;
     }
 }

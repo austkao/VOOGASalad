@@ -19,10 +19,10 @@ public class PhysicsSystem {
 
     public static final double DEFAULT_MASS = 50;
     public static final double DEFAULT_STRENGTH = 20;
-    public static final double DEFAULT_JUMP_HEIGHT = 20000;
+    public static final double DEFAULT_JUMP_HEIGHT = 50000;
     public static final double DEFAULT_MOVEMENT_SPEED = 5000;
     public static final double DEFAULT_ATTACK_SPACE = 10;
-    public static final double TERMINAL_VELOCITY = 400;
+    public static final double TERMINAL_VELOCITY = 200;
 
     private int playerId;
     private int groundId;
@@ -47,16 +47,12 @@ public class PhysicsSystem {
         passHandler.update();
         CollisionDetector detector = new CollisionDetector(gameObjects);
         List<Collision> collisions = new ArrayList<>(detector.detectCollisions(gameObjects));
-        //MovementHandler movHandler = new MovementHandler(gameObjects);
-        //movHandler.update(); //How does this work with subscribe?
         CollisionHandler collHandler = new CollisionHandler(collisions);
         collHandler.update();
         List<Integer> groundCollisions = collHandler.getGroundCollisions();
         List<List<Integer>> attackCollisions = collHandler.getAttackCollisions();
         applyForces();
         updatePositions();
-        //PositionsUpdateEvent newPos = new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()); //Parameter is hashmap with integer as key and Point2D as value
-        //myMessageBus.post(newPos);
         GroundIntersectEvent groundedPlayers = new GroundIntersectEvent(groundCollisions);
         if (groundedPlayers.getGroundedPlayers().size() > 0) {
             myMessageBus.post(groundCollisions);
@@ -69,27 +65,21 @@ public class PhysicsSystem {
     }
 
     public void addPhysicsObject(int type, double mass, double XCoordinate, double YCoordinate, double XDimension, double YDimension) { // type 0: player, type 1: attack, type 2: ground
-        int id;
         if (type == 0) {
-            id = playerId;
-            gameObjects.put(id, new PhysicsBody(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
+            gameObjects.put(playerId, new PhysicsBody(playerId, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
+            playerCharacteristics.add(new PlayerCharacteristics(playerId, DEFAULT_STRENGTH, DEFAULT_JUMP_HEIGHT, DEFAULT_MOVEMENT_SPEED));
             playerId++;
-        } else if (type == 1) {
-            id = attackId;
-            gameObjects.put(id, new PhysicsAttack(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
-            attackId++;
         } else {
-            id = groundId;
-            gameObjects.put(id, new PhysicsGround(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
+            gameObjects.put(groundId, new PhysicsGround(groundId, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)));
             groundId++;
         }
-        playerCharacteristics.add(new PlayerCharacteristics(id, DEFAULT_STRENGTH, DEFAULT_JUMP_HEIGHT, DEFAULT_MOVEMENT_SPEED));
     }
 
     public void applyForces() {
         for (PhysicsObject o : gameObjects.values()) {
+            List<PhysicsVector> currentForces = new ArrayList<>(o.getCurrentForces());
             if (!o.isPhysicsGround()) {
-                NetVectorCalculator calc = new NetVectorCalculator(o.getCurrentForces());
+                NetVectorCalculator calc = new NetVectorCalculator(currentForces);
                 o.applyForce(calc.getNetVector());
                 o.clearCurrentForces();
             }
@@ -142,16 +132,24 @@ public class PhysicsSystem {
     }
 
     public void attack(int id) {
-        int direction;
-        if (gameObjects.get(id).getDirection() == 0) {
-            direction = 1;
-        } else {
+        int direction = 1;
+        double parentDirection = gameObjects.get(id).getDirection();
+        if (parentDirection != 0) {
             direction = -1;
         }
         Coordinate playerLocation = gameObjects.get(id).getMyCoordinateBody().getPos();
         Coordinate attackLocation = new Coordinate(playerLocation.getX() + direction * DEFAULT_ATTACK_SPACE,playerLocation.getY() + DEFAULT_ATTACK_SPACE);
-        PhysicsAttack attack = new PhysicsAttack(attackId, gameObjects.get(id).getMass(), attackLocation, new Dimensions(20, 10));
+        PhysicsAttack attack = new PhysicsMelee(attackId, id, parentDirection, gameObjects.get(id).getMass(), attackLocation, new Dimensions(40, 20));
         gameObjects.put(attackId, attack);
         attackId++;
+    }
+
+    public void setHitBox(int type, int id, double XPosition, double YPosition, double XDimension, double YDimension) { // 0: Hitbox, 1: Hurtbox
+        Dimensions newDims = new Dimensions(XDimension, YDimension);
+        if (type == 0) {
+            gameObjects.get(id).getMyCoordinateBody().setDims(newDims);
+        } else if (type ==1) {
+            gameObjects.get(id).setHurtBoxDimensions(newDims);
+        }
     }
 }
