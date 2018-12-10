@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -53,8 +54,9 @@ public class Console {
         }
         else if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")){
             int winnerID = Integer.parseInt(event.substring(9,10));
-            LinkedList<Integer> rankList = new LinkedList<>();
+//            LinkedList<Integer> rankList = new LinkedList<>();
             String[] rawRankList = event.split("[()]")[1].split("");
+            ArrayList<Integer> rankList = new ArrayList<>();
             for(String s : rawRankList){
                 rankList.add(Integer.parseInt(s));
             }
