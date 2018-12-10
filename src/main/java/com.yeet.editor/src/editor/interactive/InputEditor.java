@@ -64,7 +64,7 @@ public class InputEditor extends EditorSuper {
     private void showBindings(Text t){
         getBindings();
         String res = "";
-        for(int i = 0; i < DEFAULT_NUM_TABS; i++){
+        for(int i = 0; i < numTabs; i++){
             String map = bindings.get(i).toString();
             res += "Player " + Integer.toString(i+1) +  " " + map + "\n";
         }
