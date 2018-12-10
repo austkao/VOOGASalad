@@ -143,4 +143,13 @@ public class PhysicsSystem {
         gameObjects.put(attackId, attack);
         attackId++;
     }
+
+    public void setHitBox(int type, int id, double XPosition, double YPosition, double XDimension, double YDimension) { // 0: Hitbox, 1: Hurtbox
+        Dimensions newDims = new Dimensions(XDimension, YDimension);
+        if (type == 0) {
+            gameObjects.get(id).getMyCoordinateBody().setDims(newDims);
+        } else if (type ==1) {
+            gameObjects.get(id).setHurtBoxDimensions(newDims);
+        }
+    }
 }
