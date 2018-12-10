@@ -9,7 +9,6 @@ public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 2000000;
     public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
-    public static final double frictionCoefficient = .5;
 
     private List<Collision> myCollisions;
     private List<Integer> groundCollisions = new ArrayList<>();
@@ -73,16 +72,17 @@ public class CollisionHandler {
             }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){
-
+                PhysicsGround ground = (PhysicsGround)two;
                 double bodyVelocity = one.getYVelocity().getMagnitude();
                 double bodyMass = one.getMass();
-                applyGravity(one, bodyVelocity, bodyMass);
+                applyReactiveForce(one, bodyVelocity, bodyMass);
+
                 if(Math.abs(one.getXVelocity().getMagnitude()) > 10) { //Should we apply kinetic friction?
                     PhysicsVector friction;
                     if(one.getXVelocity().getMagnitude() > 0) {
-                        friction = new PhysicsVector((int) -one.getMass() * DEFAULT_GRAVITY_ACCELERATION * frictionCoefficient, 0);
+                        friction = new PhysicsVector((int) -one.getMass() * DEFAULT_GRAVITY_ACCELERATION * ground.getFrictionCoef(), 0);
                     }else{
-                        friction = new PhysicsVector((int) one.getMass() * DEFAULT_GRAVITY_ACCELERATION * frictionCoefficient, 0);
+                        friction = new PhysicsVector((int) one.getMass() * DEFAULT_GRAVITY_ACCELERATION * ground.getFrictionCoef(), 0);
                     }
                     one.addCurrentForce(friction);
                 }else{
@@ -118,7 +118,7 @@ public class CollisionHandler {
     }
 
 
-    public void applyGravity(PhysicsObject one, double bodyVelocity, double bodyMass){
+    public void applyReactiveForce(PhysicsObject one, double bodyVelocity, double bodyMass){
         double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
         PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) + gravityMag), -PI/2);
         one.addCurrentForce(upwardForce);
