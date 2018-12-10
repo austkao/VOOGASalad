@@ -40,11 +40,23 @@ public class AudioSystem {
      */
     @Subscribe
     public void playAction(SuccessfulEvent event) throws MalformedURLException{
-        //String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
-        String newPath = "/example_character_1/attacks/JAB.mp3";
+        System.out.println("AYE");
+        String newPath;
+        if(event instanceof AttackSuccessfulEvent){
+            newPath = path + "/characters/Lucina1/sounds/" + "ATTACK.mp3";
+        }
+        else if(event instanceof JumpSuccessfulEvent){
+            newPath = path + "/characters/Lucina1/sounds/" + "JUMP.wav";
+        }
+        else{
+            newPath = path + "/characters/Lucina1/sounds/" + "WALKING.wav";
+        }
+
 
         System.out.println(newPath);
         myPlayer.playClip(newPath);
+
+        //myMessageBus.post(new SuccessfulSoundEvent(1));
     }
 
     @Subscribe

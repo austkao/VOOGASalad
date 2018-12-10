@@ -79,7 +79,7 @@ public class InputSystem {
             else if(action.equals("RIGHT")){
                 keyEvent = new MoveEvent(player, false);
             }
-            else if (action.equals("UP'")){
+            else if (action.equals("JUMP")){
                 keyEvent =  new JumpEvent(player);
             }
             else if (action.equals("DOWN")){
@@ -91,8 +91,8 @@ public class InputSystem {
             myMessageBus.post(keyEvent);
 
             //TESTING: Also post an action event
-            ActionEvent ae = new ActionEvent(action, "Attack");
-            myMessageBus.post(ae);
+            //ActionEvent ae = new ActionEvent(action, "Attack");
+            //myMessageBus.post(ae);
         }
 
     }
