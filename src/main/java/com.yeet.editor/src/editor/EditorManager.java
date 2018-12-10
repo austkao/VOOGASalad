@@ -2,7 +2,7 @@ package editor;
 
 import editor.home.CharacterHome;
 import editor.home.EditorHome;
-import editor.home.GameplayHome;
+import editor.home.GameModeHome;
 import editor.home.MapHome;
 import editor.interactive.*;
 import javafx.scene.Group;
@@ -70,12 +70,12 @@ public class EditorManager {
 
     private List<EditorSuper> makeEditors(){
         List<EditorSuper> editors = new ArrayList<>();
-        Collections.addAll(editors,new MapEditor(this),new CharacterEditor(this, new InputEditor(this)),new GameSettingsEditor(new Group(),this));
+        Collections.addAll(editors,new MapEditor(this),new CharacterEditor(this, new InputEditor(this)),new GameModeEditor(new Group(),this));
         return editors;
     }
     private List<EditorHome> makeEditorHomes(){
         List<EditorHome> editors = new ArrayList<>();
-        Collections.addAll(editors,new MapHome(this), new CharacterHome(this), new GameplayHome(this));
+        Collections.addAll(editors,new MapHome(this), new CharacterHome(this), new GameModeHome(this));
         return editors;
     }
 

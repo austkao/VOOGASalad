@@ -16,7 +16,10 @@ public enum FilePath {
     ATTACKPROPERTIES("/attacks/attackproperties.xml"),
     SOUNDPROPERTIES("/sounds/soundproperties.xml"),
     ANIMATIONPROPERTIES("/sprites/animationproperties.xml"),
-    SPRITEPROPERTIES("/sprites/spriteproperties.xml");
+    SPRITEPROPERTIES("/sprites/spriteproperties.xml"),
+    MODE("/modes"),
+    TIME("/modes/time"),
+    STOCK("/modes/stock");
 
     private String myPath;
 

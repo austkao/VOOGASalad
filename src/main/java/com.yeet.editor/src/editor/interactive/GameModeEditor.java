@@ -19,23 +19,21 @@ import java.util.function.Consumer;
 /**
  * @author ob29
  */
-public class GameSettingsEditor extends EditorSuper {
+public class GameModeEditor extends EditorSuper {
     private static String[] DEFAULT_GAME_MODES = new String[]{"SSBB","Street Fighter"};
     private static final String DEFAULT_SPLASH = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/lucinaglasses.png";
     //private Double Gravity
     private Image splashScreen;
     private File splashFile;
 
-    public GameSettingsEditor(Group root, EditorManager em) {
+    public GameModeEditor(Group root, EditorManager em) {
         super(root,em);
 
         //ImageView splash = new Image(new File())
-
-
-
         VBox vb1 = makeVBox1();
         vb1.setLayoutX(100.0);
         vb1.setLayoutY(100.0);
+        //List of values: min
 
         root.getChildren().addAll(vb1);
     }

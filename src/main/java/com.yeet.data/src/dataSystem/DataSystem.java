@@ -27,6 +27,9 @@ public class DataSystem {
         createDirectory(defaultFile.getPath() + myFP.BACKGROUNDPATH.getPath());
         createDirectory(defaultFile.getPath() + myFP.BGMPATH.getPath());
         createDirectory(defaultFile.getPath() + myFP.TILEPATH.getPath());
+        createDirectory(defaultFile.getPath() + myFP.MODE.getPath());
+        createDirectory(defaultFile.getPath() + myFP.TIME.getPath());
+        createDirectory(defaultFile.getPath() + myFP.STOCK.getPath());
     }
 
     @Subscribe
