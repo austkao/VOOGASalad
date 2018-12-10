@@ -3,8 +3,8 @@ package physics.external;
 public class PhysicsBody extends PhysicsObject {
 
     
-    public PhysicsBody(int id, double mass, Coordinate start, Dimensions dims){
-        super(id, mass, start, dims);
+    public PhysicsBody(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord){
+        super(id, mass, start, dims, cord);
     }
 
     @Override

@@ -62,7 +62,7 @@ public class CoordinateBody extends CoordinateObject{
     OUTPUT: T or F depending on weather or not this body intersects with the one passed into the parameter
      */
     @Override
-    public Intersection intersects(CoordinateBody c){
+    public Intersection intersects(CoordinateObject c){
 
         Rectangle2D object = c.getHitBox();
 

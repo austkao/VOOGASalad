@@ -6,7 +6,7 @@ import java.util.List;
     public abstract class CoordinateObject {
 
 
-        private Dimensions dims;
+        Dimensions dims;
         private Rectangle2D hitBox;
 
         private List<SubRectangle> subRects;
@@ -24,7 +24,7 @@ import java.util.List;
 
         public abstract void update(Coordinate newPos);
 
-        public abstract Intersection intersects(physics.external.CoordinateBody c);
+        public abstract Intersection intersects(CoordinateObject c);
 
         public Coordinate getPos(){
             return this.pos;
