@@ -15,7 +15,6 @@ public enum FilePath {
     CHARACTERPROPERTIES("/characterproperties.xml"),
     ATTACKPROPERTIES("/attacks/attackproperties.xml"),
     SOUNDPROPERTIES("/sounds/soundproperties.xml"),
-    ANIMATIONPROPERTIES("/sprites/animationproperties.xml"),
     SPRITEPROPERTIES("/sprites/spriteproperties.xml"),
     MODE("/modes"),
     TIME("/modes/time"),

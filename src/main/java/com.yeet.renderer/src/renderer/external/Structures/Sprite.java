@@ -64,5 +64,9 @@ public class Sprite extends ImageView {
     public void defaultViewport(){
         this.setViewport(myDefaultViewport);
     }
+
+    public Rectangle2D getDefaultViewport() {
+        return myDefaultViewport;
+    }
 }
 
