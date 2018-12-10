@@ -9,7 +9,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import messenger.external.*;
-import messenger.external.ReplayUtils.ReplayUtilities;
 import player.internal.*;
 import renderer.external.Renderer;
 
@@ -52,14 +51,14 @@ public class Player {
         mySEPlayer = new MediaPlayer(new Media(new File(SELECT_SE).toURI().toString()));
         //create loading screen
         myLoadingScreen = new LoadingScreen(new Group(),myRenderer);
-        AudioSystem myAudioSystem = new AudioSystem(gameDirectory);
-        myMessageBus.register(myAudioSystem);
     }
 
     /** Gives control of the {@code Stage} to the {@code Player} and begins sub-screen loading*/
     public void start(){
         originalScene = myStage.getScene();
         myStage.setScene(myLoadingScreen);
+        AudioSystem myAudioSystem = new AudioSystem(myDirectory);
+        myMessageBus.register(myAudioSystem);
         //pre-load all other screens
         mySplashScreen = new SplashScreen(new Group(), myRenderer, myDirectory, () -> {
             myStage.setScene(myMainMenuScreen);
@@ -108,7 +107,6 @@ public class Player {
         });
         //finished loading
         myStage.setScene(mySplashScreen);
-        System.out.println(ReplayUtilities.getCurrentTimeUsingCalendar());
     }
 
     /** Sets the location of the active game directory to load files from

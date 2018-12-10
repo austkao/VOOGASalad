@@ -3,6 +3,7 @@ package audio.external;
 import audio.Internal.Player;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import messenger.external.*;
@@ -21,6 +22,7 @@ public class AudioSystem {
     private double bgmvol;
     private double menuvol;
     private double fightvol;
+    private AudioClip ko;
     private MediaPlayer menuMP;
     private MediaPlayer bgmMP;
     private MediaPlayer voiceMP;
@@ -33,6 +35,7 @@ public class AudioSystem {
         fightvol = 1;
         GameDir = GameDirectory;
         setRootPath();
+        ko = new AudioClip(GameDirectory.toURI()+"/ko.mp3");
         myMessageBus = EventBusFactory.getEventBus();
         myPlayer= new Player();
     }
@@ -123,6 +126,11 @@ public class AudioSystem {
     @Subscribe
     public void changeFXVolume(FXVolumeEvent newVol){
         fxvol = newVol.getVolume();
+    }
+
+    @Subscribe
+    public void playerDeath(PlayerDeathEvent death){
+        ko.play();
     }
 
     /**

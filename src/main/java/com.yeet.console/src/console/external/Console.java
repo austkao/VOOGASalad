@@ -78,7 +78,7 @@ public class Console {
     @Subscribe
     public  void printEvent(Event event){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        if(!"PositionsUpdateEvent".equals(event.getName())){
+        if(!"PositionsUpdateEvent".equals(event.getName()) && !"GroundIntersectingEvent".equalsIgnoreCase(event.getName())){
             System.out.println("["+timestamp+"]"+" Console: "+event.getName());
         }
     }
