@@ -32,6 +32,7 @@ public class EditorManager {
     private Scene homeScene;
     private File gameDirectory;
     private RenderSystem rs;
+    private EditorSuper mySettingsEditor;
 
     public EditorManager(Stage stage, Scene scene, File directory){
         myStage = stage;
@@ -43,6 +44,7 @@ public class EditorManager {
         rs = new RenderSystem();
 
         myScene = makeMyScene();
+        mySettingsEditor.createBack(myScene);
     }
 
     private Scene makeMyScene(){
@@ -62,6 +64,10 @@ public class EditorManager {
             nextEditor.setOnMouseClicked(e -> changeScene(myEditorHomes.get(pos)));
             root.getChildren().add(nextEditor);
         }
+        Button settings = rs.makeStringButton("Game Settings", Color.BLACK, true, Color.WHITE, 30.0, 800.0, 100.0 * 2, 350.0, 50.0);
+        mySettingsEditor = myEditors.get(myEditors.size()-1);
+        settings.setOnMouseClicked(e -> changeScene(mySettingsEditor));
+        root.getChildren().add(settings);
     }
 
     public void setEditorHomeScene(){
@@ -102,7 +108,7 @@ public class EditorManager {
     }
     private List<EditorHome> makeEditorHomes(){
         List<EditorHome> editors = new ArrayList<>();
-        Collections.addAll(editors,new MapHome(this), new CharacterHome(this), new GameModeHome(this));
+        Collections.addAll(editors,new MapHome(this), new CharacterHome(this));//;, new GameModeHome(this));
         return editors;
     }
 

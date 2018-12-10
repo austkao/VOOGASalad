@@ -208,7 +208,10 @@ public class CombatScreen extends Screen {
         return myTileMap;
     }
 
-    public void update(Map<Integer, Point2D> characterMap, Map<Integer, Double> directionsMap){
+    @Subscribe
+    public void update(PositionsUpdateEvent positionsUpdateEvent){
+        Map<Integer, Point2D> characterMap = positionsUpdateEvent.getPositions();
+        Map<Integer, Double> directionsMap = positionsUpdateEvent.getDirections();
         for(int i=0;i<mySpriteMap.keySet().size();i++){
             mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
             mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());

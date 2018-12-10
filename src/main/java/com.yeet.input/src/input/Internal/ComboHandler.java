@@ -12,7 +12,7 @@ public class ComboHandler {
 
     private Map<String, ArrayList<String>> testCombos;
 
-    private List<Map<String, ArrayList<String>>> attackMapping;
+    private List<Map<String, String>> attackMapping;
     private static final double COMBO_THRESHOLD = 250;
     private List<Node> comboTrees;
     private DataReceiver DR;
@@ -58,7 +58,7 @@ public class ComboHandler {
             List<String> output = new ArrayList<>();
             for(KeyInputEvent input:q){
                 if(playerMap.keySet().contains(input.getName())){
-                    output.add(playerMap.get(input.getName()).get(0));
+                    output.add(playerMap.get(input.getName()));
                 }
             }
             parsedInputs.put(cnt, output);

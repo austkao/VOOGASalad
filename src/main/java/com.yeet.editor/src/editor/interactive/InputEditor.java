@@ -10,18 +10,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import renderer.external.RenderUtils;
 import renderer.external.Scrollable;
 import renderer.external.Structures.InputItem;
 import renderer.external.Structures.ScrollablePaneNew;
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class InputEditor extends EditorSuper {
     private static final int DEFAULT_NUM_TABS = 4;
+    private static final String[] DEFAULT_MOVES = {"UP","DOWN","LEFT","RIGHT"};
 
     private List<TextField> userInputs;
     private List<ObservableList> inputTypes;
@@ -43,16 +42,54 @@ public class InputEditor extends EditorSuper {
         tabs = new TabPane();
         tabs.getTabs().addAll(makeTabs());
         tabs.setTabMinWidth(100.0);
-        Button test = myRS.makeStringButton("Show Bindings",Color.BLACK,true,Color.WHITE,20.0,650.0,80.0,150.0,50.0);
+        Button test = myRS.makeStringButton("Show Bindings",Color.BLACK,true,Color.WHITE,18.0,650.0,80.0,150.0,50.0);
         setRequirements();
+        Text t = new Text();
+        t.setFont(myRS.getEmphasisFont());
+        t.setScaleX(.5);
+        t.setScaleY(.5);
         test.setOnMouseClicked(e -> {
-                    getBindings();
-                    System.out.println(bindings);
+                    showBindings(t);
                 });
-        Button save = myRS.makeStringButton("Save",Color.BLACK,true,Color.WHITE,20.0,650.0,200.0,150.0,50.0);
+        Button save = myRS.makeStringButton("Save",Color.BLACK,true,Color.WHITE,18.0,650.0,150.0,150.0,50.0);
         save.setOnMouseClicked(e -> createSaveFile());
-        root.getChildren().addAll(tabs,test, save);
+        Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,18.0,650.0,150.0,150.0,50.0);
+        remove.setOnMouseClicked(e -> removeSelectedItem());
+        VBox v = new VBox(10,test,remove,save,t);
+        v.setLayoutX(420.0);
+        v.setLayoutY(185.0);
+        root.getChildren().addAll(tabs,v);
     }
+
+    private void showBindings(Text t){
+        getBindings();
+        String res = "";
+        for(int i = 0; i < DEFAULT_NUM_TABS; i++){
+            String map = bindings.get(i).toString();
+            res += "Player " + Integer.toString(i+1) +  " " + map + "\n";
+        }
+        t.setText(res);
+
+
+
+    }
+
+    private void removeSelectedItem(){
+        String selected = myScrolls.get(currentTabId-1).getSelectedItem().getButton().getText();
+        userInputs.get(currentTabId-1).clear();
+        if(Arrays.asList(DEFAULT_MOVES).contains(selected)){
+            RenderUtils.throwErrorAlert("Not deletable","Cannot remove a basic move");
+        } else {
+            myScrolls.get(currentTabId-1).removeItem();
+        }
+    }
+
+//    private void throwErrorAlert(String header, String content){
+//        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+//        errorAlert.setHeaderText(header);
+//        errorAlert.setContentText(content);
+//        errorAlert.showAndWait();
+//    }
 
 
 
@@ -77,44 +114,33 @@ public class InputEditor extends EditorSuper {
 
     private Pane generateContent(){
         Pane p = new Pane();
-        Button remove = myRS.makeStringButton("remove input",Color.BLACK,true,Color.WHITE,20.0,650.0,100.0,150.0,50.0);
-        remove.setOnMouseClicked(e ->
-                myScrolls.get(currentTabId-1).removeItem());//TODO: REMOVE FROM INPUTTYPES AS WELL
+
         ObservableList l = FXCollections.observableArrayList();
         inputTypes.add(l);
-        p.getChildren().addAll(remove,makeVBox());
+        p.getChildren().addAll(makeVBox());
         return p;
     }
 
 
     private void addItemtoScroll(){
         String text = userInputs.get(currentTabId-1).getText();
-        if(text.indexOf(" ") >= 0 || text.indexOf("_") >= 0 || inputTypes.contains(text)){
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setHeaderText("Input not valid");
-            errorAlert.setContentText("Blank spaces, underscores, and repeat inputs are invalid");
-            errorAlert.showAndWait();
-            userInputs.get(currentTabId-1).clear();
+        userInputs.get(currentTabId-1).clear();
+        if(text.indexOf(" ") >= 0 || text.indexOf("_") >= 0 || inputTypes.get(currentTabId-1).contains(text.toUpperCase())){
+            RenderUtils.throwErrorAlert("Invalid Input","Blank spaces, underscores, and repeat inputs are invalid");
         }else {
-            userInputs.get(currentTabId-1).clear();
-            InputItem testItem = new InputItem(new Text(text));
-            inputTypes.get(currentTabId-1).add(text);
+            inputTypes.get(currentTabId-1).add(text.toUpperCase());
+            InputItem testItem = new InputItem(new Text(text.toUpperCase()));
             myScrolls.get(currentTabId-1).addItem(testItem);
         }
     }
 
     private void setRequirements(){
         for(int i = 0; i < numTabs; i++){
-            inputTypes.get(i).add("UP");
-            inputTypes.get(i).add("DOWN");
-            inputTypes.get(i).add("LEFT");
-            inputTypes.get(i).add("RIGHT");
-            myScrolls.get(i).addItem(new InputItem(new Text("UP")));
-            myScrolls.get(i).addItem(new InputItem(new Text("DOWN")));
-            myScrolls.get(i).addItem(new InputItem(new Text("LEFT")));
-            myScrolls.get(i).addItem(new InputItem(new Text("RIGHT")));
+            for(int j = 0; j < DEFAULT_MOVES.length; j++){
+                inputTypes.get(i).add(DEFAULT_MOVES[j]);
+                myScrolls.get(i).addItem(new InputItem(new Text(DEFAULT_MOVES[j])));
+            }
         }
-
     }
 
     private VBox makeVBox(){
