@@ -10,6 +10,7 @@ public class GameModeHome extends EditorHome {
         super(new Group(), em);
         setEditor();
         buttonNew.setOnMouseClicked(e -> nameNewObject("Create Mode", "Mode name:"));
+        buttonEdit.setOnMouseClicked(e -> em.changeScene(myEditor));
         myScroll = initializeScroll("modes");
     }
 
