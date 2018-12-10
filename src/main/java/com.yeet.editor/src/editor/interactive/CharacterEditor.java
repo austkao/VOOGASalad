@@ -279,7 +279,6 @@ public class CharacterEditor extends EditorSuper {
         AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
         currentSprite.setOnMousePressed(e -> anchor.set(startSelection(e, anchor.get())));
         currentSprite.setOnMouseDragged(e -> dragSelection(e, anchor.get()));
-        //currentSprite.setOnMouseReleased(e -> finishSelection(e, anchor.get()));
 
         currentAnimation = null;
         animationFrame = new HashMap<>();
@@ -479,8 +478,6 @@ public class CharacterEditor extends EditorSuper {
                 SpriteAnimation newAnim = createSpriteAnimationFromData(attacks, i);
                 initializeSpriteAnimation(Arrays.asList(inputs.get(i).split("-")),
                         Double.parseDouble(powers.get(i)), newAnim, names.get(i));
-
-
             }
             for (int i = 0; i < numFrames; i++){
                 setUpAnimationInfo(frames, i);
@@ -646,6 +643,7 @@ public class CharacterEditor extends EditorSuper {
         ArrayList<String> offsetY = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getMinY())));
         ArrayList<String> width = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getWidth())));
         ArrayList<String> height = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getHeight())));
+
         data.put("offsetX", offsetX);
         data.put("offsetY", offsetY);
         data.put("width", width);

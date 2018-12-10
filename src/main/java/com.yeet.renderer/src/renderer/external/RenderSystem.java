@@ -305,8 +305,9 @@ public class RenderSystem implements Renderer{
      *  @param height The height of the first frame
      */
     public Sprite makeSprite(Image image, Double offsetX, Double offsetY, Double width, Double height){
-        Sprite sprite = new Sprite(image, width, height);
-        sprite.setViewport(offsetX,offsetY);
+        //Sprite sprite = new Sprite(image, width, height);
+        //sprite.setViewport(offsetX,offsetY);
+        Sprite sprite = new Sprite(image, offsetX, offsetY, width, height);
         return sprite;
     }
 
