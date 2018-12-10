@@ -3,13 +3,16 @@ package editor.interactive;
 
 import editor.EditorManager;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import renderer.external.Structures.SwitchButton;
 import renderer.external.Structures.TextBox;
 
+import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -22,20 +25,28 @@ import java.util.function.Consumer;
 public class GameModeEditor extends EditorSuper {
     private static String[] DEFAULT_GAME_MODES = new String[]{"SSBB","Street Fighter"};
     private static final String DEFAULT_SPLASH = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/lucinaglasses.png";
-    //private Double Gravity
     private Image splashScreen;
     private File splashFile;
+    private ImageView splashView;
 
     public GameModeEditor(Group root, EditorManager em) {
         super(root,em);
+        Button pickSplash = myRS.makeStringButton("pick splash",Color.BLACK,true,Color.WHITE,20.0,60.0,100.0,150.0,50.0);
+        pickSplash.setOnMouseClicked(e -> getSplashFile());
 
-        //ImageView splash = new Image(new File())
-        VBox vb1 = makeVBox1();
-        vb1.setLayoutX(100.0);
-        vb1.setLayoutY(100.0);
-        //List of values: min
+        splashView = new ImageView();
 
-        root.getChildren().addAll(vb1);
+        root.getChildren().addAll(pickSplash,splashView);
+    }
+
+    private void getSplashFile(){
+        FileChooser fileChooser = myRS.makeFileChooser("image");
+        splashFile = fileChooser.showOpenDialog(getWindow());
+        splashScreen = new Image(splashFile.toURI().toString());
+        splashView.setImage(splashScreen);
+        splashView.setPreserveRatio(true);
+        splashView.setFitHeight(200.0);
+
     }
 
     public VBox makeVBox1(){
