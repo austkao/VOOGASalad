@@ -67,7 +67,9 @@ public class ScrollablePaneNew extends Pane {
                 currentH = new HBox(3);
             }
             currentH.getChildren().add(items.get(i).getImageButton());
-            tgGrid.getToggles().add(items.get(i).getImageButton());
+            if(!tgGrid.getToggles().contains(items.get(i).getImageButton())){
+                tgGrid.getToggles().add(items.get(i).getImageButton());
+            }
         }
         hboxes.add(currentH);
         gridView.getChildren().addAll(hboxes);
@@ -79,15 +81,20 @@ public class ScrollablePaneNew extends Pane {
 
     public void addItem(Image image, String title){
         ScrollItem si= new ScrollItem(image,new Text(title));
-        tgNormal.getToggles().add(si.getButton());
         items.add(si);
+        tgNormal.getToggles().add(si.getButton());
+        tgGrid.getToggles().add(si.getImageButton());
         normalView.getChildren().add(items.get(items.size()-1).getButton());
+        gridView.getChildren().add(items.get(items.size()-1).getImageButton());
+
     }
 
     public void addItem(Scrollable item){
         items.add(item);
         tgNormal.getToggles().add((ToggleButton)item.getButton());
         normalView.getChildren().add(items.get(items.size()-1).getButton());
+        //tgGrid.getToggles().add((ToggleButton)item.getImageButton());
+        //gridView.getChildren().add(items.get(items.size()-1).getImageButton());
     }
 
 
@@ -114,6 +121,8 @@ public class ScrollablePaneNew extends Pane {
         }
         items.removeAll(removalCandidates);
         normalView.getChildren().remove(removalCandidates.get(0).getButton());
+        gridView.getChildren().remove(removalCandidates.get(0).getImageButton());
+
     }
 
     public void modifyItem(Text t){ //TODO allow for changing titles
@@ -137,6 +146,7 @@ public class ScrollablePaneNew extends Pane {
                 addItem(itemImage, imageName);
             }
         }
+        buildGridView();
     }
 
     public ObservableList<Scrollable> getItems() {
@@ -149,7 +159,7 @@ public class ScrollablePaneNew extends Pane {
 
     public ButtonBase getSelectedItem() {
         for (Scrollable s : items) {
-            if (s.getButton().isSelected()) {
+            if (s.getButton().isSelected() || s.getImageButton().isSelected()) {
                 return s.getButton();
             }
         }

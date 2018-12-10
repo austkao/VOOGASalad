@@ -3,22 +3,18 @@ package editor.interactive;
 import editor.EditorConstant;
 import editor.EditorManager;
 import editor.EditorScreen;
-import editor.home.EditorHome;
+import editor.home.CharacterHome;
+import editor.home.MapHome;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import xml.XMLParser;
 import xml.XMLSaveBuilder;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,13 +25,12 @@ import java.util.HashMap;
 
 public abstract class EditorSuper extends Scene implements EditorScreen {
 
-    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
-
     protected Group root;
     protected EditorManager myEM;
     protected RenderSystem myRS;
     protected EditorConstant myEC;
-    protected boolean isNew;
+    protected boolean isSaved;
+    protected Text saved;
 
     public EditorSuper(Group root, EditorManager em){
         super(root);
@@ -44,7 +39,8 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         myRS = new RenderSystem();
         Text t = createTitle();
         root.getChildren().add(t);
-        isNew = false;
+        isSaved = true;
+        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 600.0, 700.0);
     }
 
     /**
@@ -53,14 +49,17 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     public Button createBack(Scene scene){
         Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSITION.getValue(),0.0,150.0,50.0);
         back.setOnMouseClicked(e -> {
-            if(!isNew) {
+            if(isSaved) {
                 myEM.changeScene(scene);
-                if(scene instanceof EditorHome) {
-                    EditorHome home = (EditorHome) scene;
-                    home.updateScroll();
+                if(scene instanceof MapHome) {
+                    MapHome home = (MapHome) scene;
+                    home.updateScroll("stages");
+                } else if(scene instanceof CharacterHome) {
+                    CharacterHome home = (CharacterHome) scene;
+                    home.updateScroll("characters");
                 }
             } else {
-                System.out.println("Add error alert here.");
+                myRS.createErrorAlert("Not Allowed to Go Back", "Please save your changes first");
             }
         });
         root.getChildren().add(back);
@@ -106,9 +105,5 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
 
     public Text createTitle() {
         return myRS.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
-    }
-
-    public RenderSystem getRS(){
-        return myRS;
     }
 }
