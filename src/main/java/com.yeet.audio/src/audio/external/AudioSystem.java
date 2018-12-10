@@ -66,8 +66,6 @@ public class AudioSystem {
             newPath = path + "/characters/Lucina1/sounds/" + "WALKING.wav";
         }
 
-
-        System.out.println(newPath);
         myPlayer.playClip(newPath, fxvol);
 
         //myMessageBus.post(new SuccessfulSoundEvent(1));
@@ -83,7 +81,6 @@ public class AudioSystem {
 
     @Subscribe
     public void changeBGMVolume(BGMVolumeEvent newVol){
-        System.out.println("changing volume of bgm to "+newVol.getVolume());
         bgmvol = newVol.getVolume();
         menuvol = newVol.getVolume();
         fightvol = newVol.getVolume();
