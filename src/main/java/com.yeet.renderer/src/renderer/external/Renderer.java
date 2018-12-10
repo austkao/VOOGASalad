@@ -80,12 +80,13 @@ public interface Renderer{
 
     /** Creates a {@code Slider} that modifies a field
      * @param text The label text for the slider
+     * @param startVal the starting position of slider
      * @param fieldSetter The lambda that will modify the necessary parameter using the {@code Slider} value
      * @param x The x position of the {@code Slider}
      * @param y The y position of the {@code Slider}
      * @param w The width of the {@code Slider}
      */
-    SliderBox makeSlider(String text, Consumer<Double> fieldSetter, Double x, Double y, Double w);
+    SliderBox makeSlider(String text, Double startVal,Consumer<Double> fieldSetter, Double x, Double y, Double w);
 
     /** Creates a {@code FileChooser} for a specific file type
      *  @param filetype The file type to be accepted, can be "image","audio",or "xml", or "all"

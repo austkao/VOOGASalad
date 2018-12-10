@@ -2,16 +2,16 @@ package audio.Internal;
 
 import javafx.scene.media.AudioClip;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Player {
 
-    public void playClip(String path)  {
-        System.out.println(path);
-        URL resource = getClass().getResource(path);
-        //AudioClip clip = new AudioClip(resource.toString());
-        AudioClip clip2 = new AudioClip(resource.toString());
-        clip2.play(30);
+    public void playClip(String path) throws MalformedURLException {
+        File file = new File(path);
+        AudioClip clip = new AudioClip(file.toURI().toURL().toString());
+        clip.play(1);
 
 
     }

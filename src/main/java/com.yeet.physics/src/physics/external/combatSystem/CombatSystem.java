@@ -9,6 +9,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Math.PI;
 
@@ -18,6 +19,7 @@ public class CombatSystem {
     private PlayerManager playerManager;
     private PhysicsSystem physicsSystem;
     private List<Integer> botList;
+    private HashMap<Integer, Point2D> playerMap;
 
     public CombatSystem(Player bot){
         eventBus = EventBusFactory.getEventBus();
@@ -27,7 +29,8 @@ public class CombatSystem {
 
     public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem){
         eventBus = EventBusFactory.getEventBus();
-        playerManager = new PlayerManager(playerMap.keySet().size());
+        this.playerMap = playerMap;
+//        playerManager = new PlayerManager(playerMap.keySet().size());
         this.physicsSystem = physicsSystem;
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
@@ -49,18 +52,18 @@ public class CombatSystem {
 
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
-        //System.out.println(event.getInputPlayerState());
         int id = event.getInitiatorID();
         if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);
         }
+
     }
 
     @Subscribe
     public void onIdleEvent(IdleEvent idleEvent){
         int id = idleEvent.getId();
         if(playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.SINGLE_JUMP
-                || playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.DOUBLE_JUMP){
+                && playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.DOUBLE_JUMP){
             playerManager.setToInitialStateByID(id);
         }
     }
@@ -95,23 +98,52 @@ public class CombatSystem {
 
     @Subscribe
     public void onAttackIntersectEvent(AttackIntersectEvent event){
+        Map<Integer, Double> playersBeingRekt = new HashMap<>();
         for(List<Integer> list: event.getAttackPlayers()){
             Player playerBeingAttacked = playerManager.getPlayerByID(list.get(0));
             Player playerAttacking = playerManager.getPlayerByID(list.get(1));
             playerAttacking.addAttackingTargets(playerBeingAttacked);
+            boolean result = playerManager.hurt(list.get(0), list.get(1));
+            if(result){
+                eventBus.post(new GameOverEvent(playerManager.winnerID, playerManager.getRanking()));
+            }
+            playersBeingRekt.put(playerBeingAttacked.id, playerManager.getPlayerByID(list.get(0)).getHealth());
         }
+        eventBus.post(new GetRektEvent(playersBeingRekt));
     }
 
     @Subscribe
     public void onJumpSuccessfulEvent(JumpSuccessfulEvent event){
-//        System.out.println("Jump.");
         physicsSystem.jump(event.getInitiatorID());
     }
 
     @Subscribe
     public void onGameStart(GameStartEvent gameStartEvent){
         botList = gameStartEvent.getBots();
-        playerManager.setBots(botList);
+        playerManager = new PlayerManager(playerMap.size());
+        playerManager.setBots(botList, physicsSystem);
+        String type = gameStartEvent.getGameType().toLowerCase();
+        if(type.equals("stock")){
+            int life = gameStartEvent.getTypeValue();
+            playerManager.setNumOfLives(life);
+        }
+        else{
+            // timed
+        }
+
+
+        PlayerGraph graph = new PlayerGraph(playerManager, physicsSystem.getPositionsMap());
+        for(int id: botList){
+            ((Bot)playerManager.getPlayerByID(id)).setPlayerGraph(graph);
+        }
+        for(int id: botList){
+            ((NormalBot)playerManager.getPlayerByID(id)).start();
+        }
+    }
+
+    @Subscribe
+    public void onTimeUpEvent(TimeUpEvent timeUpEvent){
+        eventBus.post(new GameOverEvent(playerManager.winnerID, playerManager.getRanking()));
     }
 
 }
