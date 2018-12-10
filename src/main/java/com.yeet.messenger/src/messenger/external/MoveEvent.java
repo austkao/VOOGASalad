@@ -10,6 +10,10 @@ public class MoveEvent extends CombatActionEvent{
         this.isGoingLeft = isGoingLeft;
     }
 
+    public boolean getDirection(){
+        return isGoingLeft;
+    }
+
     @Override
     public void onSuccess() {
         eventBus.post(new MoveSuccessfulEvent(initiatorID, isGoingLeft));
