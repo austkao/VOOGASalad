@@ -2,16 +2,15 @@ package console.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import messenger.external.Event;
-import messenger.external.EventBusFactory;
-import messenger.external.GameOverEvent;
-import messenger.external.TestSuccesfulEvent;
+import messenger.external.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Console {
 
@@ -55,12 +54,18 @@ public class Console {
         }
         else if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")){
             int winnerID = Integer.parseInt(event.substring(9,10));
-            ArrayList<Integer> rankList = new ArrayList<>();
+//            LinkedList<Integer> rankList = new LinkedList<>();
             String[] rawRankList = event.split("[()]")[1].split("");
+            ArrayList<Integer> rankList = new ArrayList<>();
             for(String s : rawRankList){
                 rankList.add(Integer.parseInt(s));
             }
             myEventBus.post(new GameOverEvent(winnerID,rankList));
+        }
+        else if(event.matches("sethp [0-3] [0-9][0-9]")){
+            HashMap<Integer,Double> healthmap = new HashMap<>();
+            healthmap.put(Integer.parseInt(event.split(" ")[1]), Double.parseDouble(event.split(" ")[2]));
+            myEventBus.post(new GetRektEvent(healthmap));
         }
     }
 

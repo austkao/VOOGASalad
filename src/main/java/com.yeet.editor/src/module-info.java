@@ -7,4 +7,7 @@ module com.yeet.editor {
     requires com.yeet.data;
     requires javafx.graphics;
     requires javafx.controls;
+    requires javafx.swing;
+    requires java.desktop;
+    requires com.google.common;
 }

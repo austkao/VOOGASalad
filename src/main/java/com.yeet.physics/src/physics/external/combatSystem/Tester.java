@@ -1,24 +1,36 @@
 package physics.external.combatSystem;
 
-
-import com.google.common.eventbus.EventBus;
-import messenger.external.EventBusFactory;
+import java.util.*;
 
 public class Tester {
 
     public static void main(String[] args){
 
-        Bot bot = new DummyBot();
-        CombatSystem system = new CombatSystem(bot);
 
-        EventBus eventBus = EventBusFactory.getEventBus();
-        EventBusFactory.getEventBus().register(system);
 
-        for(int i = 0; i < 10; i++){
-            bot.step();
-//            System.out.println(bot.getPlayerState());
+        parse("gameover 0 (4213)");
+
+//        System.out.println(list);
+
+    }
+
+    private static void parse(String event){
+
+        if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")) {
+            int winnerID = Integer.parseInt(event.substring(9, 10));
+//            LinkedList<Integer> rankList = new LinkedList<>();
+            String[] rawRankList = event.split("[()]")[1].split("");
+            ArrayList<Integer> rankList = new ArrayList<>();
+
+            for(int i = 0; i < rawRankList.length; i++){
+                rankList.add(Integer.parseInt(rawRankList[i]));
+            }
+            System.out.println(rankList);
+//            System.out.println(rawRankList);
+//            for (String s : rawRankList) {
+//                rankList.add(Integer.parseInt(s));
+//            }
         }
-
     }
 
 }

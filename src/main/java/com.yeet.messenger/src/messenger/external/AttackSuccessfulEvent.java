@@ -2,8 +2,15 @@ package messenger.external;
 
 public class AttackSuccessfulEvent extends SuccessfulEvent{
 
-    public AttackSuccessfulEvent(int initiatorID){
+    String type;
+
+    public AttackSuccessfulEvent(int initiatorID, String type){
         super(initiatorID);
+        this.type = type;
+    }
+
+    public String getType(){
+        return type;
     }
 
     @Override

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VOOGASalad author="yeet">
     <players players = "2"></players>
-    
-    <input0 R = "JAB" A = "LEFT" S = "DOWN" W = "UP" D = "RIGHT" B = "SPECIAL"></input0>
-    <combo0 AB = "SMASH" ABC = "SHORYUKEN"></combo0>
+    <input0 LEFT = "A" DOWN = "S" JUMP = "W" RIGHT = "D" SPECIAL = "B"></input0>
 
-    <input1 P = "JAB" J = "LEFT" K = "DOWN" I = "UP" L = "RIGHT" ></input1>
-    <combo1 OL = "SMASH" POI = "FIREBALL"></combo1>
+    <combo0 SMASH = "AB" SHORYUKEN = "ABC"></combo0>
+
+    <input1 RIGHT = "L" DOWN = "K" JUMP = "I" LEFT = "J" ></input1>
+    <combo1 SMASH = "OL" FIREBALL = "POI"></combo1>
+
 </VOOGASalad>
 

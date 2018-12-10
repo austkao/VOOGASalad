@@ -71,6 +71,7 @@ public class InputSystem {
     public void postEvent(List<String> s, int player){
         //TRUE if left, FALSE if right
         for(String action : s){
+            //System.out.println(player);
             CombatActionEvent keyEvent;
             if(action.equals("LEFT")){
                 keyEvent = new MoveEvent(player, true);
@@ -78,17 +79,14 @@ public class InputSystem {
             else if(action.equals("RIGHT")){
                 keyEvent = new MoveEvent(player, false);
             }
-            else if (action.equals("UP'")){
+            else if (action.equals("JUMP")){
                 keyEvent =  new JumpEvent(player);
             }
             else if (action.equals("DOWN")){
                 keyEvent = new CrouchEvent(player);
             }
-            else if(action.equals("JAB")){
-                keyEvent = new AttackEvent(player, action);
-            }
             else{
-                keyEvent = new JumpEvent(player);
+                keyEvent = new AttackEvent(player, action);
             }
             myMessageBus.post(keyEvent);
 

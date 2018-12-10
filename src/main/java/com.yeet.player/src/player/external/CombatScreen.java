@@ -1,12 +1,15 @@
 package player.external;
 
+import audio.external.AudioSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -14,7 +17,9 @@ import javafx.util.Duration;
 import messenger.external.*;
 import physics.external.PhysicsSystem;
 import physics.external.combatSystem.CombatSystem;
+import player.internal.Elements.HealthDisplay;
 import player.internal.Elements.PlayerMarker;
+import player.internal.Elements.ScreenTimer;
 import player.internal.GameLoop;
 import player.internal.SceneSwitch;
 import player.internal.Screen;
@@ -26,10 +31,7 @@ import xml.XMLParser;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 /** Displays a stage and visualizes character combat animation
@@ -41,7 +43,7 @@ public class CombatScreen extends Screen {
     private EventBus myMessageBus;
 
     private SceneSwitch prevScene;
-    private BiConsumer<Integer, List<Integer>> nextScene;
+    private BiConsumer<Integer, ArrayList<Integer>> nextScene;
 
     private InputSystem myInputSystem;
     private CombatSystem myCombatSystem;
@@ -60,6 +62,7 @@ public class CombatScreen extends Screen {
     private HashMap<Integer, Rectangle2D> myTileMap;
     private HashMap<Integer, Sprite> mySpriteMap;
     private HashMap<Integer, HashMap<String,SpriteAnimation>> myAnimationMap;
+    private HashMap<Integer, HealthDisplay> myHealthMap;
 
     private HashMap<String, ArrayList<String>> myBackgroundMap;
     private HashMap<String,ArrayList<String>> myMusicMap;
@@ -68,7 +71,9 @@ public class CombatScreen extends Screen {
 
     private ArrayList<ImageView> myTiles;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, List<Integer>> nextScene) {
+    private ScreenTimer myTimer;
+
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, ArrayList<Integer>> nextScene) {
         super(root, renderer);
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
@@ -82,11 +87,12 @@ public class CombatScreen extends Screen {
         myTileMap = new HashMap<>();
         mySpriteMap = new HashMap<>();
         myAnimationMap = new HashMap<>();
+        myHealthMap = new HashMap<>();
         myTiles = new ArrayList<>();
         super.setOnKeyPressed(event->myMessageBus.post(new KeyInputEvent(event.getCode())));
     }
 
-    public void setupCombatScene(HashMap<Integer, String> characterNames, HashMap<Integer, Color> characterColors, List<Integer> botList, String stageName){
+    public void setupCombatScene(HashMap<Integer, String> characterNames, HashMap<Integer, Color> characterColors, String gameMode, Integer typeValue, List<Integer> botList, String stageName){
         myParser = new XMLParser(new File(myGameDirectory.getPath()+"/stages/"+stageName+"/stageproperties.xml"));
         myBackgroundMap = myParser.parseFileForElement("background");
         myMusicMap = myParser.parseFileForElement("music");
@@ -95,9 +101,14 @@ public class CombatScreen extends Screen {
         ImageView background = new ImageView(new Image(myGameDirectory.toURI()+"data/background/"+myBackgroundMap.get("bgFile").get(0)));
         background.setFitWidth(1280.0);
         background.setFitHeight(800.0);
+        HBox healthDisplayContainer = new HBox(95.0);
+        healthDisplayContainer.setPrefSize(1280.0,154.0);
+        healthDisplayContainer.setAlignment(Pos.TOP_CENTER);
+        healthDisplayContainer.setLayoutX(0.0);
+        healthDisplayContainer.setLayoutY(646.0);
         super.getMyRoot().getChildren().addAll(background);
         for(int i=0; i<myStageMap.get("x").size();i++){
-            ImageView tile = new ImageView(new Image(myGameDirectory.toURI()+"/data/tiles/"+myStageMap.get("image").get(i)));
+            ImageView tile = new ImageView(new Image(myGameDirectory.toURI()+"/data/tiles/"+myStageMap.get("image").get(i)+".png"));
             tile.setFitHeight(TILE_SIZE);
             tile.setFitWidth(TILE_SIZE);
             tile.setLayoutX(Integer.parseInt(myStageMap.get("x").get(i))* TILE_SIZE);
@@ -111,14 +122,14 @@ public class CombatScreen extends Screen {
                 //create sprites and set default viewport
                 XMLParser spritePropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/sprites/spriteproperties.xml"));
                 HashMap<String,ArrayList<String>> spriteProperties = spritePropertiesParser.parseFileForElement("sprite");
-                Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get((int)characterNames.keySet().toArray()[i])+"/sprites/spritesheet.png"),
+                Sprite sprite = new Sprite(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/sprites/spritesheet.png"),
                         Double.parseDouble(((spriteProperties.get("offsetX").get(0)))),Double.parseDouble(((spriteProperties.get("offsetY").get(0)))),
                         Double.parseDouble(((spriteProperties.get("width").get(0)))),Double.parseDouble(spriteProperties.get("height").get(0)));
                 sprite.setLayoutX(Integer.parseInt(mySpawnMap.get("xPos").get((int)characterNames.keySet().toArray()[i]))*TILE_SIZE);
                 sprite.setLayoutY(Integer.parseInt(mySpawnMap.get("yPos").get((int)characterNames.keySet().toArray()[i]))*TILE_SIZE);
                 mySpriteMap.put(i,sprite);
                 myCharacterMap.put(i,new Point2D.Double(Integer.parseInt(mySpawnMap.get("xPos").get(i))*TILE_SIZE,Integer.parseInt(mySpawnMap.get("yPos").get(i))*TILE_SIZE));
-                PlayerMarker marker = new PlayerMarker(characterColors.get((int)characterNames.keySet().toArray()[i]),sprite);
+                PlayerMarker marker = new PlayerMarker(characterColors.get(characterNames.keySet().toArray()[i]),sprite);
                 super.getMyRoot().getChildren().addAll(marker,sprite);
                 //set up animations for the sprite
                 XMLParser animationPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/sprites/animationproperties.xml"));
@@ -136,11 +147,22 @@ public class CombatScreen extends Screen {
                     SpriteAnimation animation = new SpriteAnimation(sprite,duration,count,columns,offsetX,offsetY,width,height);
                     myAnimationMap.get(i).put(name,animation);
                 }
+                XMLParser characterPropertiesParser = new XMLParser(new File(myGameDirectory.getPath()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/characterproperties.xml"));
+                double x = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","x").get(0));
+                double y = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","y").get(0));
+                double size = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","size").get(0));
+                ImageView healthPortrait = new ImageView(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/"+characterNames.get(characterNames.keySet().toArray()[i])+".png"));
+                healthPortrait.setViewport(new javafx.geometry.Rectangle2D(x,y,size,size));
+                HealthDisplay healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
+                healthDisplayContainer.getChildren().add(healthDisplay);
+                myHealthMap.put((int)characterNames.keySet().toArray()[i],healthDisplay);
             }
         }
         //set up combat systems
         myInputSystem = new InputSystem(myGameDirectory);
         myMessageBus.register(myInputSystem);
+        AudioSystem myAudioSystem = new AudioSystem(myGameDirectory);
+        myMessageBus.register(myAudioSystem);
         myPhysicsSystem = new PhysicsSystem();
         myGameLoop = new GameLoop(myPhysicsSystem,this);
         myMessageBus.register(myPhysicsSystem);
@@ -149,15 +171,32 @@ public class CombatScreen extends Screen {
         //music and audio
         myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        myBGMPlayer.setVolume(0.05);
         myBGMPlayer.play();
-        myMessageBus.post(new GameStartEvent(botList));
+        myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
+        //ui elements
+        super.getMyRoot().getChildren().add(healthDisplayContainer);
+        if(gameMode.equalsIgnoreCase("TIME")){
+            myTimer = new ScreenTimer(typeValue,super.getMyRenderer().makeText("",true,70,Color.WHITE,0.0,0.0),(time)->myMessageBus.post(new TimeUpEvent()));
+            myTimer.setLayoutX(969.0);
+            myTimer.setLayoutY(34.0);
+            super.getMyRoot().getChildren().add(myTimer);
+        }
+        else{
+            myTimer = new ScreenTimer(typeValue,super.getMyRenderer().makeText("",true,70,Color.WHITE,0.0,0.0),(time)->doNothing());
+        }
+    }
+
+    private void doNothing() {
     }
 
     public void startLoop(){
+        myTimer.play();
         myGameLoop.startLoop();
     }
 
     public void stopLoop(){
+        myTimer.pause();
         //TODO: stops game loop
     }
 
@@ -169,7 +208,10 @@ public class CombatScreen extends Screen {
         return myTileMap;
     }
 
-    public void update(Map<Integer, Point2D> characterMap, Map<Integer, Double> directionsMap){
+    @Subscribe
+    public void update(PositionsUpdateEvent positionsUpdateEvent){
+        Map<Integer, Point2D> characterMap = positionsUpdateEvent.getPositions();
+        Map<Integer, Double> directionsMap = positionsUpdateEvent.getDirections();
         for(int i=0;i<mySpriteMap.keySet().size();i++){
             mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
             mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());
@@ -209,5 +251,13 @@ public class CombatScreen extends Screen {
                     nextScene.accept(gameOverEvent.getWinnerID(),gameOverEvent.getRankList());
                 }
         );
+    }
+
+    @Subscribe
+    public void onRekt(GetRektEvent getRektEvent){
+        //TODO add other functionality when hit happens
+        for(int i : getRektEvent.getPeopleBeingRekt().keySet()){
+            myHealthMap.get(i).setHealth((int)Math.round(getRektEvent.getPeopleBeingRekt().get(i)));
+        }
     }
 }
