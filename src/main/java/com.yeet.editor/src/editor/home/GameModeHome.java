@@ -1,35 +1,31 @@
 package editor.home;
 
 import editor.EditorManager;
-import editor.interactive.GameplayEditor;
+import editor.interactive.GameModeEditor;
 import javafx.scene.Group;
-import javafx.scene.control.ButtonBase;
 
-public class GameplayHome extends EditorHome {
+public class GameModeHome extends EditorHome {
 
-    public GameplayHome(EditorManager em){
+    public GameModeHome(EditorManager em){
         super(new Group(), em);
         setEditor();
+        buttonNew.setOnMouseClicked(e -> nameNewObject("Create Mode", "Mode name:"));
+        myScroll = initializeScroll("modes");
     }
 
     @Override
     public void setEditor() {
-        myEditor = new GameplayEditor(new Group(),em);
+        myEditor = new GameModeEditor(new Group(),em);
         myEditor.createBack(this);
     }
 
     @Override
     public void createNewObject(String name) {
-
-    }
-
-    @Override
-    protected void deleteDirectory(ButtonBase bb) {
-
+        //nameNewObject();
     }
 
     public String toString(){
-        return "Game Home";
+        return "Game Mode Home";
     }
 
     public String getDir(){

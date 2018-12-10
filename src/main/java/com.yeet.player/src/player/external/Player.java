@@ -34,6 +34,9 @@ public class Player {
     private LoadingScreen myLoadingScreen;
     private SplashScreen mySplashScreen;
     private MainMenuScreen myMainMenuScreen;
+    private SettingsScreen mySettingsScreen;
+    private SoundsSettingsScreen mySoundsSettingsScreen;
+    private ControlsSettingsScreen myControlsSettingsScreen;
     private CharacterSelectScreen myCharacterSelectScreen;
     private MatchRulesScreen myMatchRulesScreen;
     private StageSelectScreen myStageSelectScreen;
@@ -66,6 +69,9 @@ public class Player {
             myStage.setScene(myMainMenuScreen);
             myBGMPlayer.play();
         });
+        mySettingsScreen = new SettingsScreen(new Group(),myRenderer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myStage.setScene(myControlsSettingsScreen));
+        mySoundsSettingsScreen = new SoundsSettingsScreen(new Group(),myRenderer);
+        myControlsSettingsScreen = new ControlsSettingsScreen(new Group(),myRenderer);
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()-> {
             myBGMPlayer.stop();
             myFightMusicPlayer.play();
@@ -74,6 +80,8 @@ public class Player {
         },()-> {
             myBGMPlayer.stop();
             myStage.setScene(originalScene);
+        },()-> {
+            myStage.setScene(mySettingsScreen);
         });
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
             myStage.setScene(myMainMenuScreen);

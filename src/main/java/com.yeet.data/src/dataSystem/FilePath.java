@@ -8,7 +8,18 @@ public enum FilePath {
     BACKGROUNDPATH("/data/background"),
     BGMPATH("/data/bgm"),
     TILEPATH("/data/tiles"),
-    STAGEPROPERTIES("/stageproperties.xml");
+    STAGEPROPERTIES("/stageproperties.xml"),
+    ATTACK("/attacks"),
+    SOUND("/sounds"),
+    SPRITE("/sprites"),
+    CHARACTERPROPERTIES("/characterproperties.xml"),
+    ATTACKPROPERTIES("/attacks/attackproperties.xml"),
+    SOUNDPROPERTIES("/sounds/soundproperties.xml"),
+    ANIMATIONPROPERTIES("/sprites/animationproperties.xml"),
+    SPRITEPROPERTIES("/sprites/spriteproperties.xml"),
+    MODE("/modes"),
+    TIME("/modes/time"),
+    STOCK("/modes/stock");
 
     private String myPath;
 

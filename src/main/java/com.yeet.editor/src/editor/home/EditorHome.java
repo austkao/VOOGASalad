@@ -8,7 +8,6 @@ import editor.interactive.EditorSuper;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -18,14 +17,11 @@ import messenger.external.EventBusFactory;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.ScrollablePaneNew;
 import renderer.external.Structures.TextBox;
-
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 public abstract class EditorHome extends Scene implements EditorScreen {
-    private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources/";
 
     protected ScrollablePaneNew myScroll;
     protected VBox myBox;
@@ -35,7 +31,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     protected Button buttonEdit;
     protected Button buttonDelete;
 
-    private Group myRoot;
+    protected Group myRoot;
     protected EditorManager em;
     protected EditorSuper myEditor;
     protected EditorConstant myEC;
@@ -50,9 +46,8 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         rs = new RenderSystem();
         myEB = EventBusFactory.getEventBus();
         initializeVBox();
-        initializeScroll();
         Text title = createTitle();
-        root.getChildren().addAll(title,switchView);
+        root.getChildren().addAll(title);
         consumer = new Consumer() {
             @Override
             public void accept(Object o) {
@@ -63,17 +58,18 @@ public abstract class EditorHome extends Scene implements EditorScreen {
 
     protected abstract String getDir();
 
-    private void initializeScroll() {
-        File dir = Paths.get(em.getGameDirectoryString(), "stages").toFile();
-        myScroll = new ScrollablePaneNew(200,150, 520, 600);
+    protected ScrollablePaneNew initializeScroll(String directory) {
+        File dir = Paths.get(em.getGameDirectoryString(), directory).toFile();
+        ScrollablePaneNew scrollPane = new ScrollablePaneNew(200,150, 520, 600);
         for(File file : dir.listFiles()) {
             if(file.isDirectory()) {
-                myScroll.loadFiles(file);
+                scrollPane.loadFiles(file);
             }
         }
         switchView = getRender().makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,100.0,100.0,30.0);
-        switchView.setOnMouseClicked(event -> myScroll.switchView());
-        myRoot.getChildren().add(myScroll.getScrollPane());
+        switchView.setOnMouseClicked(event -> scrollPane.switchView());
+        myRoot.getChildren().addAll(scrollPane.getScrollPane(), switchView);
+        return scrollPane;
     }
     public RenderSystem getRender(){
         return rs;
@@ -124,10 +120,13 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     }
 
     protected abstract void createNewObject(String name);
-    protected abstract void deleteDirectory(ButtonBase bb);
+    protected void deleteDirectory(File directory) {
+        myEB.post(new DeleteDirectoryEvent("Delete Stage", directory));
+    }
 
-    public void updateScroll() {
+    public void updateScroll(String directory) {
         myRoot.getChildren().remove(myScroll);
-        initializeScroll();
+        myScroll = initializeScroll(directory);
+        myRoot.getChildren().add(myScroll);
     }
 }
