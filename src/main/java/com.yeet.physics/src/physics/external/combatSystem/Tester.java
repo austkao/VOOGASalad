@@ -6,25 +6,31 @@ public class Tester {
 
     public static void main(String[] args){
 
-        Queue<Integer> ranking = new LinkedList();
-        Map<Integer, Integer> map = new TreeMap<>();
-        ranking.offer(0);
-        ranking.offer(3);
-        ranking.offer(1);
-        ranking.offer(2);
-        int rank = 4;
-        while(!ranking.isEmpty()){
-            int id = ranking.remove();
-            map.put(id, rank);
-            rank--;
-        }
-        ArrayList<Integer> list = new ArrayList<>(map.values());
-        for(int i: list){
-            System.out.println(i);
-        }
+
+
+        parse("gameover 0 (4213)");
 
 //        System.out.println(list);
 
+    }
+
+    private static void parse(String event){
+
+        if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")) {
+            int winnerID = Integer.parseInt(event.substring(9, 10));
+//            LinkedList<Integer> rankList = new LinkedList<>();
+            String[] rawRankList = event.split("[()]")[1].split("");
+            ArrayList<Integer> rankList = new ArrayList<>();
+
+            for(int i = 0; i < rawRankList.length; i++){
+                rankList.add(Integer.parseInt(rawRankList[i]));
+            }
+            System.out.println(rankList);
+//            System.out.println(rawRankList);
+//            for (String s : rawRankList) {
+//                rankList.add(Integer.parseInt(s));
+//            }
+        }
     }
 
 }

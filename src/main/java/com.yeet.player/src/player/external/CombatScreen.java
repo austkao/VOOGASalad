@@ -43,7 +43,7 @@ public class CombatScreen extends Screen {
     private EventBus myMessageBus;
 
     private SceneSwitch prevScene;
-    private BiConsumer<Integer, Queue<Integer>> nextScene;
+    private BiConsumer<Integer, ArrayList<Integer>> nextScene;
 
     private InputSystem myInputSystem;
     private CombatSystem myCombatSystem;
@@ -73,7 +73,7 @@ public class CombatScreen extends Screen {
 
     private ScreenTimer myTimer;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, Queue<Integer>> nextScene) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, ArrayList<Integer>> nextScene) {
         super(root, renderer);
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();

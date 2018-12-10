@@ -8,13 +8,10 @@ import messenger.external.PlayerState;
 import physics.external.PhysicsSystem;
 
 import java.awt.geom.Point2D;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 public class HardBot extends NormalBot {
 
-    Queue<CombatActionEvent> pattern;
     Player target;
     boolean inRange = false;
 
@@ -30,7 +27,6 @@ public class HardBot extends NormalBot {
 
     public HardBot(PhysicsSystem physicsSystem){
         super(physicsSystem);
-        pattern = new LinkedList<>();
         eventBus.register(this);
     }
 
@@ -76,16 +72,9 @@ public class HardBot extends NormalBot {
                         // dodge the opponent's attack
                         eventBus.post(new MoveEvent(this.id, direction));
                     }
-                case SINGLE_JUMP:
             }
         }
     }
 
-    private void recordPlayerMoves(CombatActionEvent combatActionEvent){
-        pattern.offer(combatActionEvent);
-        if(pattern.size()>=10){
-
-        }
-    }
 
 }
