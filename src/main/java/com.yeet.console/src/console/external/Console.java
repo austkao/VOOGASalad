@@ -74,6 +74,8 @@ public class Console {
     @Subscribe
     public  void printEvent(Event event){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        System.out.println("["+timestamp+"]"+" Console: "+event.getName());
+        if(!event.getName().equals("PositionsUpdateEvent")){
+            System.out.println("["+timestamp+"]"+" Console: "+event.getName());
+        }
     }
 }

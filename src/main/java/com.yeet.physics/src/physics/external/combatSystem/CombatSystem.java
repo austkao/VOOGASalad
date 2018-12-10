@@ -26,15 +26,35 @@ public class CombatSystem {
     private HashMap<Integer, Point2D> playerMap;
     private XMLParser xmlParser;
     private File gameDir;
+    private HashMap<Integer, ArrayList<Double>> characterStats;
 
 
-    public CombatSystem(Player bot){
-        eventBus = EventBusFactory.getEventBus();
-        bot.id = 1;
-        playerManager = new PlayerManager(1);
-    }
+//    public CombatSystem(Player bot){
+//        eventBus = EventBusFactory.getEventBus();
+//        bot.id = 1;
+//        playerManager = new PlayerManager(1);
+//    }
 
     public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem, File gameDir, Map<Integer, String> characterNames){
+        characterStats = new HashMap<>();
+        // get character stats
+        for(int id: characterNames.keySet()){
+            String name = characterNames.get(id);
+            xmlParser = new XMLParser(Paths.get(gameDir.getPath(), "characters", name, "characterproperties.xml").toFile());
+            HashMap<String, ArrayList<String>> map = xmlParser.parseFileForElement("character");
+            ArrayList<Double> stats = new ArrayList<>();
+            // get attack damage
+            Double damage = Double.parseDouble(map.get("attack").get(0));
+            // get defense
+            Double defense = Double.parseDouble(map.get("defense").get(0));
+            // get health
+            Double health = Double.parseDouble(map.get("health").get(0));
+            stats.add(damage);
+            stats.add(defense);
+            stats.add(health);
+            characterStats.put(id, stats);
+        }
+
         xmlParser = new XMLParser(Paths.get(gameDir.getPath(), "characters","Lucina1","attacks","attackproperties.xml").toFile());
         HashMap<String, ArrayList<String>> map = xmlParser.parseFileForElement("attack");
         System.out.println(characterNames);
@@ -131,7 +151,7 @@ public class CombatSystem {
     @Subscribe
     public void onGameStart(GameStartEvent gameStartEvent){
         botList = gameStartEvent.getBots();
-        playerManager = new PlayerManager(playerMap.size());
+        playerManager = new PlayerManager(playerMap.size(), characterStats);
         playerManager.setBots(botList, physicsSystem);
         String type = gameStartEvent.getGameType().toLowerCase();
         if(type.equals("stock")){
@@ -141,7 +161,6 @@ public class CombatSystem {
         else{
             // timed
         }
-
 
         PlayerGraph graph = new PlayerGraph(playerManager, physicsSystem.getPositionsMap());
         for(int id: botList){
