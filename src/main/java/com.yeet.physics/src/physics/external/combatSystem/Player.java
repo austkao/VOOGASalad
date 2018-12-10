@@ -106,7 +106,9 @@ public class Player {
         }
     }
 
-
+    public boolean isBot(){
+        return isBot;
+    }
 
     @Override
     public String toString(){

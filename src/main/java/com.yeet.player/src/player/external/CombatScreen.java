@@ -1,5 +1,6 @@
 package player.external;
 
+import audio.external.AudioSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
@@ -42,7 +43,7 @@ public class CombatScreen extends Screen {
     private EventBus myMessageBus;
 
     private SceneSwitch prevScene;
-    private BiConsumer<Integer, Queue<Integer>> nextScene;
+    private BiConsumer<Integer, ArrayList<Integer>> nextScene;
 
     private InputSystem myInputSystem;
     private CombatSystem myCombatSystem;
@@ -72,7 +73,7 @@ public class CombatScreen extends Screen {
 
     private ScreenTimer myTimer;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, Queue<Integer>> nextScene) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, ArrayList<Integer>> nextScene) {
         super(root, renderer);
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
@@ -150,7 +151,7 @@ public class CombatScreen extends Screen {
                 double x = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","x").get(0));
                 double y = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","y").get(0));
                 double size = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","size").get(0));
-                ImageView healthPortrait = new ImageView(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/portrait.png"));
+                ImageView healthPortrait = new ImageView(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/"+characterNames.get(characterNames.keySet().toArray()[i])+".png"));
                 healthPortrait.setViewport(new javafx.geometry.Rectangle2D(x,y,size,size));
                 HealthDisplay healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
                 healthDisplayContainer.getChildren().add(healthDisplay);
@@ -160,6 +161,8 @@ public class CombatScreen extends Screen {
         //set up combat systems
         myInputSystem = new InputSystem(myGameDirectory);
         myMessageBus.register(myInputSystem);
+        AudioSystem myAudioSystem = new AudioSystem(myGameDirectory);
+        myMessageBus.register(myAudioSystem);
         myPhysicsSystem = new PhysicsSystem();
         myGameLoop = new GameLoop(myPhysicsSystem,this);
         myMessageBus.register(myPhysicsSystem);
@@ -168,6 +171,7 @@ public class CombatScreen extends Screen {
         //music and audio
         myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        myBGMPlayer.setVolume(0.05);
         myBGMPlayer.play();
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
         //ui elements
@@ -248,6 +252,7 @@ public class CombatScreen extends Screen {
 
     @Subscribe
     public void onRekt(GetRektEvent getRektEvent){
+        //TODO add other functionality when hit happens
         for(int i : getRektEvent.getPeopleBeingRekt().keySet()){
             myHealthMap.get(i).setHealth((int)Math.round(getRektEvent.getPeopleBeingRekt().get(i)));
         }
