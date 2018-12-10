@@ -97,7 +97,7 @@ public class EditorManager {
 
     private List<EditorSuper> makeEditors(){
         List<EditorSuper> editors = new ArrayList<>();
-        Collections.addAll(editors,new MapEditor(this),new CharacterEditor(this, new InputEditor(this)),new GameSettingsEditor(new Group(),this));
+        Collections.addAll(editors,new MapEditor(this),new CharacterEditor(this, new InputEditor(this)),new InputEditor(this),new GameSettingsEditor(new Group(),this));
         return editors;
     }
     private List<EditorHome> makeEditorHomes(){
@@ -111,16 +111,16 @@ public class EditorManager {
             @Override
             public void accept(Scene playerScene) {
                 //1. switch the stage's scene to the editor input settings
-                changeScene(myEditors.get(2));
                 //2. when back button pressed switch back to playerScene
-                changeScene(playerScene);
-
+                    goToInput(playerScene);
             }
         };
     }
 
-    public void goToInput(){
-        changeScene(myEditors.get(2));
+    public void goToInput(Scene scene){
+        InputEditor input = new InputEditor(this);
+        input.createBack(scene);
+        changeScene(input);
     }
 
 
