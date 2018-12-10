@@ -21,7 +21,6 @@ import renderer.external.Structures.Level;
 import renderer.external.Scrollable;
 import renderer.external.Structures.*;
 import xml.XMLParser;
-
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 ;
 

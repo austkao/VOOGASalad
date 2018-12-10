@@ -1,5 +1,6 @@
 package player.external;
 
+import audio.external.AudioSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import input.external.InputSystem;
@@ -42,7 +43,7 @@ public class CombatScreen extends Screen {
     private EventBus myMessageBus;
 
     private SceneSwitch prevScene;
-    private BiConsumer<Integer, Queue<Integer>> nextScene;
+    private BiConsumer<Integer, ArrayList<Integer>> nextScene;
 
     private InputSystem myInputSystem;
     private CombatSystem myCombatSystem;
@@ -72,7 +73,7 @@ public class CombatScreen extends Screen {
 
     private ScreenTimer myTimer;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, Queue<Integer>> nextScene) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, ArrayList<Integer>> nextScene) {
         super(root, renderer);
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
@@ -160,6 +161,8 @@ public class CombatScreen extends Screen {
         //set up combat systems
         myInputSystem = new InputSystem(myGameDirectory);
         myMessageBus.register(myInputSystem);
+        AudioSystem myAudioSystem = new AudioSystem(myGameDirectory);
+        myMessageBus.register(myAudioSystem);
         myPhysicsSystem = new PhysicsSystem();
         myGameLoop = new GameLoop(myPhysicsSystem,this);
         myMessageBus.register(myPhysicsSystem);
@@ -168,6 +171,7 @@ public class CombatScreen extends Screen {
         //music and audio
         myBGMPlayer = new MediaPlayer(new Media(new File(myGameDirectory.getPath()+"/data/bgm/"+myMusicMap.get("mFile").get(0)).toURI().toString()));
         myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        myBGMPlayer.setVolume(0.05);
         myBGMPlayer.play();
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
         //ui elements
@@ -204,7 +208,10 @@ public class CombatScreen extends Screen {
         return myTileMap;
     }
 
-    public void update(Map<Integer, Point2D> characterMap, Map<Integer, Double> directionsMap){
+    @Subscribe
+    public void update(PositionsUpdateEvent positionsUpdateEvent){
+        Map<Integer, Point2D> characterMap = positionsUpdateEvent.getPositions();
+        Map<Integer, Double> directionsMap = positionsUpdateEvent.getDirections();
         for(int i=0;i<mySpriteMap.keySet().size();i++){
             mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
             mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());

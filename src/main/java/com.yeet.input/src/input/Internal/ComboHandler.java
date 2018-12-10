@@ -12,7 +12,7 @@ public class ComboHandler {
 
     private Map<String, ArrayList<String>> testCombos;
 
-    private List<Map<String, ArrayList<String>>> attackMapping;
+    private List<Map<String, String>> attackMapping;
     private static final double COMBO_THRESHOLD = 250;
     private List<Node> comboTrees;
     private DataReceiver DR;
@@ -39,7 +39,6 @@ public class ComboHandler {
         int cnt = 0;
         for(Node playerTree : comboTrees){
             String possibleCombo = parseComboTree(playerTree, new ArrayList<>(q));
-            System.out.println(comboTrees.size());
             if(possibleCombo != null && !possibleCombo.equals("")){
                 var arr = new ArrayList();
                 arr.add(possibleCombo);
@@ -59,7 +58,7 @@ public class ComboHandler {
             List<String> output = new ArrayList<>();
             for(KeyInputEvent input:q){
                 if(playerMap.keySet().contains(input.getName())){
-                    output.add(playerMap.get(input.getName()).get(0));
+                    output.add(playerMap.get(input.getName()));
                 }
             }
             parsedInputs.put(cnt, output);

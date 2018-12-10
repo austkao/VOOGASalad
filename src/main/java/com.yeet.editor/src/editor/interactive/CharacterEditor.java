@@ -3,6 +3,7 @@ package editor.interactive;
 import editor.AnimationInfo;
 import editor.EditorManager;
 import javafx.animation.Animation;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.*;
@@ -10,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -19,9 +21,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import renderer.external.Scrollable;
 import renderer.external.Structures.*;
 import xml.XMLParser;
+
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,8 +53,8 @@ public class CharacterEditor extends EditorSuper {
     //Animation variables
     private SpriteAnimation currentAnimation;
     private Pane mySpritePane;
-    private ScrollablePane animationList;
-    private Map<ScrollableItem, SpriteAnimation> scrollToAnimation;
+    private ScrollablePaneNew newAnimationList;
+    private Map<Scrollable, SpriteAnimation> scrollToAnimationNew;
     private Map<SpriteAnimation, AnimationInfo> animationFrame;
 
     private VBox mySliders;
@@ -72,7 +78,7 @@ public class CharacterEditor extends EditorSuper {
         spriteSheet.setLayoutX(25.0);
         spriteSheet.setLayoutY(350.0);
 
-        scrollToAnimation = new HashMap<>();
+        scrollToAnimationNew = new HashMap<>();
         initializeScrollPane();
 
         this.setImageView(portrait, DEFAULT_PORTRAIT);
@@ -95,8 +101,7 @@ public class CharacterEditor extends EditorSuper {
         myDirectory = characterDirectory;
         isSaved = isEdit;
         if(isEdit) {
-            File characterProperties = Paths.get(characterDirectory.getPath(), "characterproperties.xml").toFile();
-            loadCharacterData(characterProperties);
+            loadCharacterData(characterDirectory);
         }
     }
 
@@ -142,8 +147,6 @@ public class CharacterEditor extends EditorSuper {
         Font switchFont = new Font(15);
         hitOrHurt = new SwitchButton(options, 250.0, 400.0, 350.0, 20.0, 5.0, Color.BLACK,
                 Color.FLORALWHITE, switchFont);
-        //hitOrHurt = myRS.makeSwitchButtons(options, true, Color.BLACK,
-        //        Color.FLORALWHITE, 5.0,400.0, 400.0, 50.0, 15.0 );
 
         root.getChildren().addAll(addPortrait, saveFile, getSpriteSheet, setAnimation, playAnimation,
                 setInputCombo, stepForward, stepBackward, frameText, hitOrHurt );
@@ -168,20 +171,19 @@ public class CharacterEditor extends EditorSuper {
         root.getChildren().add(mySpritePane);
     }
     private void initializeScrollPane(){
-        animationList = new ScrollablePane(50.0,300.0);
-        root.getChildren().add(animationList.getScrollPane());
+        newAnimationList = new ScrollablePaneNew(30.0, 350.0, 200.0, 400.0);
+        root.getChildren().add(newAnimationList.getScrollPane());
     }
-    private void selectAnimationFromScroll(ScrollableItem b){
+    private void selectNewAnimationFromScroll(Scrollable b){
         if (currentAnimation != null){
             currentAnimation.stop();
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
         }
-        currentAnimation = scrollToAnimation.get(b);
+        currentAnimation = scrollToAnimationNew.get(b);
         AnimationInfo frame = animationFrame.get(currentAnimation);
         frame.setCurrentFrame(1);
         stepForwardAnimation();
-        //stepBackAnimation();
     }
     private ImageView initializeImageView(int width, int height, int x, int y){
         ImageView picture = new ImageView();
@@ -282,7 +284,7 @@ public class CharacterEditor extends EditorSuper {
 
         currentAnimation = null;
         animationFrame = new HashMap<>();
-        scrollToAnimation = new HashMap<>();
+        scrollToAnimationNew = new HashMap<>();
         initializeScrollPane();
     }
 
@@ -341,27 +343,31 @@ public class CharacterEditor extends EditorSuper {
     }
 
     private void makeNewSpriteAnimation(){
-        File image = chooseImage("Choose thumbnail for animation");
-        if (testNull(image, "No valid image provided")){
-            return;
-        }
-        List<String> inputString = getCombo();
-        TextInputDialog text = new TextInputDialog("");
-        text.setContentText("Enter Attack Power");
-        int power = Integer.parseInt(text.showAndWait().orElse("0"));
-
-        SpriteAnimation myAnimation = promptForAnimation();
-        initializeSpriteAnimation(image, inputString, power, myAnimation);
-    }
-    private void initializeSpriteAnimation(File image, List<String> inputString, int power, SpriteAnimation myAnimation) {
         if (testNull(spriteSheet.getImage(), "Sprite Sheet Not Set")){
             return;
         }
+
+        TextInputDialog text = new TextInputDialog("");
+        resetText("Enter Animation Name", text);
+        String name = text.showAndWait().orElse("unknown");
+        resetText("Enter Attack Power", text);
+        int power = Integer.parseInt(text.showAndWait().orElse("0"));
+
+        List<String> inputString = getCombo();
+
+        SpriteAnimation myAnimation = promptForAnimation();
+        initializeSpriteAnimation(inputString, power, myAnimation, name);
+    }
+    private void initializeSpriteAnimation(List<String> inputString, int power, SpriteAnimation myAnimation, String name) {
+
         myAnimation.setCycleCount(Animation.INDEFINITE);
-        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
-        scrollToAnimation.put(animPic, myAnimation);
-        animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
-        animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power));
+
+        ScrollItem animText = new ScrollItem(new WritableImage(1, 1), new Text(name));
+        newAnimationList.addItem(animText);
+        scrollToAnimationNew.put(animText, myAnimation);
+        animText.getButton().setOnMouseClicked(e -> selectNewAnimationFromScroll(animText));
+
+        animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power, name));
     }
     private SpriteAnimation promptForAnimation(){
         /*
@@ -430,36 +436,14 @@ public class CharacterEditor extends EditorSuper {
         return "Character Editor";
     }
 
-    /**
-     * general method for choosing an image
-     * @returns file chosen
-     */
-    private File chooseImage(String message){
-        FileChooser fileChooser = myRS.makeFileChooser("image");
-        fileChooser.setTitle(message);
-        if(isSaved) {
-            isSaved = false;
-            root.getChildren().remove(saved);
-        }
-        return fileChooser.showOpenDialog(getWindow());
+    private void loadFiles(File directory) {
+        File characterProperties = Paths.get(directory.getPath(), "characterproperties.xml").toFile();
+        loadCharacterData(characterProperties);
+        File attackProperties = Paths.get(directory.getPath(), "attacks","attackproperties.xml").toFile();
+        loadAttacksData(attackProperties);
+        File spriteProperties = Paths.get(directory.getPath(), "sprites","spriteproperties.xml").toFile();
+        loadSpriteData(spriteProperties);
     }
-    /*
-    Alert system found at:
-    https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
-    */
-    private boolean testNull(Object object, String message){
-        if (object == null){
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
-                    ButtonType.OK);
-            alert.showAndWait();
-            return true;
-        }
-        return false;
-    }
-    private void setImageView(ImageView img, String portraitURL){
-        img.setImage(new Image(portraitURL));
-    }
-
 
     private void loadCharacterData(File file) {
         try {
@@ -468,14 +452,39 @@ public class CharacterEditor extends EditorSuper {
             ArrayList<String> health = data.get("health");
             ArrayList<String> attack = data.get("attack");
             ArrayList<String> defense = data.get("defense");
+
+            //todo: finish portrait and thumbnail
+            HashMap<String, ArrayList<String>> portraitBox = parser.parseFileForElement("portrait");
+
+
             healthSlider.setNewValue(Double.parseDouble(health.get(0)));
             attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
             defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
+
+            File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
+            setImageView(portrait, portraitFile.toURI().toString());
+
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
     }
-
+    private void loadAttacksData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> attacks = parser.parseFileForElement("attack");
+            HashMap<String, ArrayList<String>> frames = parser.parseFileForElement("frame");
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
+    private void loadSpriteData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> sprites = parser.parseFileForElement("sprite");
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
     private void createSaveFile() {
         saveCharacterProperties();
         saveAttackProperties();
@@ -502,15 +511,18 @@ public class CharacterEditor extends EditorSuper {
         try {
             File xmlFile = Paths.get(myDirectory.getPath(), "characterproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
+
+            File file = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
+            ImageIO.write(SwingFXUtils.fromFXImage(portrait.getImage(), null), "png", file);
         } catch (Exception ex) {
             System.out.println("Invalid save");
         }
     }
     private void saveAttackProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        ArrayList<String> attackAttributes = new ArrayList<>(List.of("duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
+        ArrayList<String> attackAttributes = new ArrayList<>(List.of("name","duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
         structure.put("attack", attackAttributes);
-        ArrayList<String> frameAttributes = new ArrayList<>(List.of("number","hitXPos","hitYPos","hitWidth","hitHeight","hurtXPos","hurtYPos","hurtWidth","hurtHeight"));
+        ArrayList<String> frameAttributes = new ArrayList<>(List.of("fname","number","hitXPos","hitYPos","hitWidth","hitHeight","hurtXPos","hurtYPos","hurtWidth","hurtHeight"));
         structure.put("frame", frameAttributes);
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         for(String s : attackAttributes) {
@@ -521,7 +533,7 @@ public class CharacterEditor extends EditorSuper {
         }
         for(SpriteAnimation ani : animationFrame.keySet()) {
             AnimationInfo aniInfo = animationFrame.get(ani);
-            //data.get("name").add("Hi");
+            data.get("name").add(aniInfo.getName());
             data.get("duration").add(ani.getCycleDuration().toSeconds() +"");
             data.get("count").add(aniInfo.getTotalFrames()+"");
             data.get("columns").add(ani.getColumns() + "");
@@ -535,6 +547,7 @@ public class CharacterEditor extends EditorSuper {
                 aniInfo.setCurrentFrame(i);
                 Rectangle hitBox = aniInfo.getHitBox();
                 Rectangle hurtBox = aniInfo.getHurtBox();
+                data.get("fname").add(aniInfo.getName());
                 data.get("number").add(Integer.toString(i));
                 data.get("hitXPos").add(hitBox.getX()+"");
                 data.get("hitYPos").add(hitBox.getY()+"");
@@ -574,6 +587,36 @@ public class CharacterEditor extends EditorSuper {
         }
     }
 
+
+    /**
+     * general method for choosing an image
+     * @returns file chosen
+     */
+    private File chooseImage(String message){
+        FileChooser fileChooser = myRS.makeFileChooser("image");
+        fileChooser.setTitle(message);
+        if(isSaved) {
+            isSaved = false;
+            root.getChildren().remove(saved);
+        }
+        return fileChooser.showOpenDialog(getWindow());
+    }
+    /**
+    Alert system found at:
+    https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
+    **/
+    private boolean testNull(Object object, String message){
+        if (object == null){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
+                    ButtonType.OK);
+            alert.showAndWait();
+            return true;
+        }
+        return false;
+    }
+    private void setImageView(ImageView img, String portraitURL){
+        img.setImage(new Image(portraitURL));
+    }
     private void resetText (String message, TextInputDialog text){
         text.setContentText(message);
         text.getEditor().setText("");

@@ -79,7 +79,7 @@ public class InputSystem {
             else if(action.equals("RIGHT")){
                 keyEvent = new MoveEvent(player, false);
             }
-            else if (action.equals("UP'")){
+            else if (action.equals("JUMP")){
                 keyEvent =  new JumpEvent(player);
             }
             else if (action.equals("DOWN")){
