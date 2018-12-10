@@ -14,6 +14,7 @@ public class PositionCalculator {
     void updatePositions() {
         Coordinate newCoordinate;
         for (PhysicsObject o : myObjects.values()) {
+            if(!o.isPhysicsGround()){
             Coordinate currentPosition = o.getMyCoordinateBody().getPos();
             int XVelocity;
             int YVelocity;
@@ -28,6 +29,7 @@ public class PositionCalculator {
                 }
             }
             o.getMyCoordinateBody().update(newCoordinate);
+        }
         }
     }
 }

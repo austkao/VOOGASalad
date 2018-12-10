@@ -29,6 +29,7 @@ public class SubRectangle {
 
     public void setPosX(double posX) {
         this.posX = posX;
+        this.myRect = new Rectangle2D.Double(posX, this.posY, this.width, this.height);
     }
 
     public double getPosY() {
@@ -37,6 +38,7 @@ public class SubRectangle {
 
     public void setPosY(double posY) {
         this.posY = posY;
+        this.myRect = new Rectangle2D.Double(this.posX, posY, this.width, this.height);
     }
 
     public double getWidth() {

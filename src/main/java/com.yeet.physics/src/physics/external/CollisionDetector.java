@@ -24,14 +24,14 @@ CollisionDetector {
                     System.out.println("HurtBox Position: " + bod2.getMyCoordinateBody().getHitBox().getMinX() + ", " + bod2.getMyCoordinateBody().getHitBox().getMaxX() + ", " + bod2.getMyCoordinateBody().getHitBox().getMinY() + ", " + bod2.getMyCoordinateBody().getHitBox().getMaxY());
                     System.out.println("Intersects? " + bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody()));
                 }
-                if(!bod.equals(bod2)){
+                if(!bod.equals(bod2) && !(bod.isPhysicsGround() && bod2.isPhysicsGround())){
                     Intersection myInt = bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody());
-                    Side s = myInt.getIntersector();
-                    if(!s.getMySide().equals("NONE")){
+                    List<Side> s = myInt.getSides();
+                    if(s.size() > 0){
                         List<PhysicsObject> colliders = new ArrayList<>();
                         colliders.add(bod);
                         colliders.add(bod2);
-                        Collision col = new Collision(colliders, s);
+                        Collision col = new Collision(colliders, myInt);
                         collisions.add(col);
                     }
                 }
