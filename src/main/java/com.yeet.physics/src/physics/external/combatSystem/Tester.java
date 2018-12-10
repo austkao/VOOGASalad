@@ -1,47 +1,36 @@
 package physics.external.combatSystem;
 
-
-import com.google.common.eventbus.EventBus;
-import messenger.external.EventBusFactory;
-
-import java.awt.geom.Point2D;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class Tester {
 
     public static void main(String[] args){
 
-        Point2D selfPos;
-        selfPos = new Point2D.Double(0,0);
-        Point2D.Double pos2 = new Point2D.Double(2,2);
-        Point2D.Double pos3 = new Point2D.Double(3,3);
-        Point2D.Double pos1 = new Point2D.Double(1,1);
-        Point2D.Double test = new Point2D.Double(0,0);
 
-//        Queue<Point2D.Double> qu = new PriorityQueue<>(Comparator.comparing(selfPos::distance));
-//        qu.offer();
-//        qu.offer(new Point2D.Double(3,3));
-//        qu.offer(new Point2D.Double(1,1));
 
-//        while(!qu.isEmpty()){
-//            System.out.println(qu.remove());
-//        }
+        parse("gameover 0 (4213)");
 
-        System.out.println(selfPos.equals(test));
+//        System.out.println(list);
 
-//        Bot bot = new DummyBot();
-//        CombatSystem system = new CombatSystem(bot);
-//
-//        EventBus eventBus = EventBusFactory.getEventBus();
-//        EventBusFactory.getEventBus().register(system);
-//
-//        for(int i = 0; i < 10; i++){
-//            bot.step();
-////            System.out.println(bot.getPlayerState());
-//        }
+    }
 
+    private static void parse(String event){
+
+        if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")) {
+            int winnerID = Integer.parseInt(event.substring(9, 10));
+//            LinkedList<Integer> rankList = new LinkedList<>();
+            String[] rawRankList = event.split("[()]")[1].split("");
+            ArrayList<Integer> rankList = new ArrayList<>();
+
+            for(int i = 0; i < rawRankList.length; i++){
+                rankList.add(Integer.parseInt(rawRankList[i]));
+            }
+            System.out.println(rankList);
+//            System.out.println(rawRankList);
+//            for (String s : rawRankList) {
+//                rankList.add(Integer.parseInt(s));
+//            }
+        }
     }
 
 }

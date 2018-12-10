@@ -1,10 +1,8 @@
 package physics.external.combatSystem;
 import com.google.common.eventbus.EventBus;
-import messenger.external.EventBusFactory;
-import messenger.external.PlayerState;
+import messenger.external.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Bot extends Player{
 
@@ -47,9 +45,58 @@ public abstract class Bot extends Player{
     /* implement this method to define the rule of transitioning
         from initial state to a new state */
     public abstract void step();
-    public abstract void transition();
+    protected abstract void transition();
     /* determine what the next state is based on a probability distribution */
-    protected abstract PlayerState getNextState(Double[] distribution);
+    protected PlayerState getNextState(Double[] distribution) {
+        Random random = new Random();
+        double prob = random.nextDouble();
+        double cumulated = 0.0;
+        int stateIndex = NUM_OF_STATES;
+        for(int i = 0; i < distribution.length; i++){
+            cumulated += distribution[i];
+            if(prob<=cumulated){
+                stateIndex = i;
+                break;
+            }
+        }
+        return states[stateIndex];
+    }
+
+    public void start(){
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                step();
+            }
+        }, 1000, 500);
+    }
+
+    protected void takeActionBasedOnNextState(PlayerState nextState){
+        switch (nextState){
+            case MOVING:
+                moveRandomly();
+                break;
+            case SINGLE_JUMP:
+                eventBus.post(new JumpEvent(id));
+                break;
+            case ATTACKING:
+                eventBus.post(new AttackEvent(id, AttackEvent.WEAK_TYPE));
+                break;
+            case CROUCH:
+                eventBus.post(new CrouchEvent(id));
+                break;
+        }
+    }
+
+    protected void moveRandomly(){
+        if(Math.random() < 0.5) {
+            eventBus.post(new MoveEvent(id, true));
+        }
+        else{
+            eventBus.post(new MoveEvent(id, false));
+        }
+    }
 
 
 }
