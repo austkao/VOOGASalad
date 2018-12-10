@@ -42,7 +42,7 @@ public class InputSystem {
                     try {
                         var inputs = myParser.parse(commandHolder); // Should return  mapping of player number to commands
                         for (Map.Entry<Integer, List<String>> pair : inputs.entrySet()) {
-                            //System.out.println(pair.getKey()+ " " +pair.getValue());
+                            System.out.println(pair.getKey()+ " " +pair.getValue());
                             if(pair.getValue().isEmpty()){
                                 myMessageBus.post(new IdleEvent(pair.getKey()));
                             }
