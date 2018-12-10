@@ -9,6 +9,7 @@ public class CollisionHandler {
 
     public static double defaultAttackMagnitude = 2000000;
     public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
+    public static final double KINETIC_FRICTION_THRESHOLD = 10;
 
     private List<Collision> myCollisions;
     private List<Integer> groundCollisions = new ArrayList<>();
@@ -67,19 +68,13 @@ public class CollisionHandler {
                 double bodyMass = one.getMass();
                 applyReactiveForce(one, bodyVelocity, bodyMass);
 
-                if(Math.abs(one.getXVelocity().getMagnitude()) > 10) { //Should we apply kinetic friction?
-                    PhysicsVector friction;
-                    if(one.getXVelocity().getMagnitude() > 0) {
-                        friction = new PhysicsVector((int) -one.getMass() * DEFAULT_GRAVITY_ACCELERATION * ground.getFrictionCoef(), 0);
-                    }else{
-                        friction = new PhysicsVector((int) one.getMass() * DEFAULT_GRAVITY_ACCELERATION * ground.getFrictionCoef(), 0);
-                    }
-                    one.addCurrentForce(friction);
+                if(Math.abs(one.getXVelocity().getMagnitude()) > KINETIC_FRICTION_THRESHOLD) { //Should we apply kinetic friction?
+                    one.addCurrentForce(getKineticFriction(one, ground));
                 }else{
-                    PhysicsVector staticFriction;
-                    bodyVelocity = one.getXVelocity().getMagnitude();
-                    staticFriction = new PhysicsVector(-bodyMass*bodyVelocity/timeOfFrame, 0);
-                    one.addCurrentForce(staticFriction);
+                    //PhysicsVector staticFriction;
+                    //bodyVelocity = one.getXVelocity().getMagnitude();
+                    //staticFriction = new PhysicsVector(-bodyMass*bodyVelocity/timeOfFrame, 0);
+                    one.addCurrentForce(getStaticFriction(one, bodyMass));
                 }
                 groundCollisions.add(one.getId());
 
@@ -108,6 +103,24 @@ public class CollisionHandler {
             }
         }
     }
+
+    public PhysicsVector getKineticFriction(PhysicsObject one, PhysicsGround ground){
+        PhysicsVector friction;
+        if(one.getXVelocity().getMagnitude() > 0) {
+            friction = new PhysicsVector((int) -one.getMass() * DEFAULT_GRAVITY_ACCELERATION * ground.getFrictionCoef(), 0);
+        }else{
+            friction = new PhysicsVector((int) one.getMass() * DEFAULT_GRAVITY_ACCELERATION * ground.getFrictionCoef(), 0);
+        }
+        return friction;
+    }
+
+    public PhysicsVector getStaticFriction(PhysicsObject one, double bodyMass){
+        PhysicsVector staticFriction;
+        double bodyVelocity = one.getXVelocity().getMagnitude();
+        staticFriction = new PhysicsVector(-bodyMass*bodyVelocity/timeOfFrame, 0);
+        return staticFriction;
+    }
+
     public List<Integer> playerAndAttack(PhysicsObject one, PhysicsObject two){
         System.out.println("Successful Hit Attack");
         PhysicsVector force = new PhysicsVector(defaultAttackMagnitude, two.getDirection());
