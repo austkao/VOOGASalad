@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VOOGASalad author="yeet">
-    <character attack="76.9" defense="50.0" health="29.0"/>
-    <thumbnail x="95" y="106" w="132" h="95"></thumbnail>
-    <portrait x="83" y="68" size="152"></portrait>
-</VOOGASalad>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><VOOGASalad author="yeet"><character attack="50.0" defense="50.0" health="50.0"/><portrait size="200.0" x="0.0" y="0.0"/></VOOGASalad>

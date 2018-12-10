@@ -54,7 +54,6 @@ public class CharacterHome extends EditorHome {
         if(bb != null) {
             String characterName = bb.getText();
             File characterDirectory = Paths.get(em.getGameDirectoryString(), "characters", characterName).toFile();
-            System.out.println(characterDirectory.getPath());
             setEditor(characterDirectory, true);
             return;
         } else if(directory != null) {
