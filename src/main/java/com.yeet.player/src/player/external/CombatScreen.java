@@ -261,4 +261,13 @@ public class CombatScreen extends Screen {
             myHealthMap.get(i).setHealth((int)Math.round(getRektEvent.getPeopleBeingRekt().get(i)));
         }
     }
+
+    @Subscribe
+    public void onDeath(PlayerDeathEvent deathEvent){
+        //TODO add other on death visuals
+        myHealthMap.get(deathEvent.getId()).setLives(deathEvent.getRemainingLife());
+        if(deathEvent.getRemainingLife()==0){
+            myHealthMap.get(deathEvent.getId()).setOpacity(0.2);
+        }
+    }
 }
