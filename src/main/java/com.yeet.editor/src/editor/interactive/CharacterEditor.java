@@ -417,7 +417,7 @@ public class CharacterEditor extends EditorSuper {
         }
         return combo;
     }
-    
+
     public String toString(){
         return "Character Editor";
     }
