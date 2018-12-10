@@ -55,6 +55,7 @@ public class CombatSystem {
         if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);
         }
+
     }
 
     @Subscribe
@@ -135,11 +136,13 @@ public class CombatSystem {
             ((Bot)playerManager.getPlayerByID(id)).setPlayerGraph(graph);
         }
         for(int id: botList){
-            ((DummyBot)playerManager.getPlayerByID(id)).start();
+            ((NormalBot)playerManager.getPlayerByID(id)).start();
         }
     }
 
-//    @Subscribe
+    @Subscribe
+    public void onTimeUpEvent(TimeUpEvent timeUpEvent){
 
+    }
 
 }
