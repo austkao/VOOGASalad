@@ -27,12 +27,8 @@ import xml.XMLParser;
 
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -47,14 +43,14 @@ public class CharacterEditor extends EditorSuper {
     private static final String HURT_TEXT = "HURTBOX";
 
     private ImageView portrait;
-    private ImageView spriteSheet;
+    private Image spriteSheet;
     private Sprite currentSprite;
 
     //Animation variables
     private SpriteAnimation currentAnimation;
     private Pane mySpritePane;
     private ScrollablePaneNew newAnimationList;
-    private Map<Scrollable, SpriteAnimation> scrollToAnimationNew;
+    private Map<String, SpriteAnimation> nameToAnimation;
     private Map<SpriteAnimation, AnimationInfo> animationFrame;
 
     private VBox mySliders;
@@ -73,12 +69,8 @@ public class CharacterEditor extends EditorSuper {
         super(new Group(),em);
         this.inputEditor = editor;
         portrait = initializeImageView(200, 300, 275, 25);
-        //spriteSheet = initializeImageView(600, 400, 25, 350);
-        spriteSheet = new ImageView();
-        spriteSheet.setLayoutX(25.0);
-        spriteSheet.setLayoutY(350.0);
 
-        scrollToAnimationNew = new HashMap<>();
+        nameToAnimation = new HashMap<>();
         initializeScrollPane();
 
         this.setImageView(portrait, DEFAULT_PORTRAIT);
@@ -180,7 +172,7 @@ public class CharacterEditor extends EditorSuper {
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
         }
-        currentAnimation = scrollToAnimationNew.get(b);
+        currentAnimation = nameToAnimation.get(b.getButton().toString());
         AnimationInfo frame = animationFrame.get(currentAnimation);
         frame.setCurrentFrame(1);
         stepForwardAnimation();
@@ -267,8 +259,8 @@ public class CharacterEditor extends EditorSuper {
         if (testNull(sprites, "File not valid")){
             return;
         }
-        setImageView(spriteSheet,sprites.toURI().toString());
-        currentSprite = myRS.makeSprite(spriteSheet.getImage(), offsetX, offsetY, width, height);
+        spriteSheet = new Image(sprites.toURI().toString());
+        currentSprite = myRS.makeSprite(spriteSheet, offsetX, offsetY, width, height);
         currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
         currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
 
@@ -284,7 +276,7 @@ public class CharacterEditor extends EditorSuper {
 
         currentAnimation = null;
         animationFrame = new HashMap<>();
-        scrollToAnimationNew = new HashMap<>();
+        nameToAnimation = new HashMap<>();
         initializeScrollPane();
     }
 
@@ -343,7 +335,7 @@ public class CharacterEditor extends EditorSuper {
     }
 
     private void makeNewSpriteAnimation(){
-        if (testNull(spriteSheet.getImage(), "Sprite Sheet Not Set")){
+        if (testNull(spriteSheet, "Sprite Sheet Not Set")){
             return;
         }
 
@@ -358,13 +350,13 @@ public class CharacterEditor extends EditorSuper {
         SpriteAnimation myAnimation = promptForAnimation();
         initializeSpriteAnimation(inputString, power, myAnimation, name);
     }
-    private void initializeSpriteAnimation(List<String> inputString, int power, SpriteAnimation myAnimation, String name) {
+    private void initializeSpriteAnimation(List<String> inputString, double power, SpriteAnimation myAnimation, String name) {
 
         myAnimation.setCycleCount(Animation.INDEFINITE);
 
         ScrollItem animText = new ScrollItem(new WritableImage(1, 1), new Text(name));
         newAnimationList.addItem(animText);
-        scrollToAnimationNew.put(animText, myAnimation);
+        nameToAnimation.put(name, myAnimation);
         animText.getButton().setOnMouseClicked(e -> selectNewAnimationFromScroll(animText));
 
         animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power, name));
@@ -456,16 +448,17 @@ public class CharacterEditor extends EditorSuper {
             //todo: finish portrait and thumbnail
             HashMap<String, ArrayList<String>> portraitBox = parser.parseFileForElement("portrait");
 
-
             healthSlider.setNewValue(Double.parseDouble(health.get(0)));
             attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
             defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
 
             File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
             setImageView(portrait, portraitFile.toURI().toString());
+            File spriteSheetFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
+            spriteSheet = new Image(spriteSheetFile.toURI().toString());
 
         } catch (Exception ex) {
-            System.out.println("Cannot load file");
+            System.out.println("Cannot load Character Information");
         }
     }
     private void loadAttacksData(File file) {
@@ -473,16 +466,71 @@ public class CharacterEditor extends EditorSuper {
             XMLParser parser = loadXMLFile(file);
             HashMap<String, ArrayList<String>> attacks = parser.parseFileForElement("attack");
             HashMap<String, ArrayList<String>> frames = parser.parseFileForElement("frame");
+
+            int numAttacks = attacks.get("attackPower").size();
+            int numFrames = frames.get("hitHeight").size();
+
+
+            List<String> inputs = attacks.get("inputCombo");
+            List<String> powers = attacks.get("attackPowers");
+            List<String> names = attacks.get("name");
+
+            for (int i = 0; i < numAttacks; i++){
+                SpriteAnimation newAnim = createSpriteAnimationFromData(attacks, i);
+                initializeSpriteAnimation(Arrays.asList(inputs.get(i).split("-")),
+                        Double.parseDouble(powers.get(i)), newAnim, names.get(i));
+            }
+            for (int i = 0; i < numFrames; i++){
+                setUpAnimationInfo(frames, i);
+            }
+
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
     }
+
+    private void setUpAnimationInfo(HashMap<String, ArrayList<String>> frames, int index) {
+        String  fname = frames.get("fname").get(index);
+        int    frameNumber    = Integer.parseInt(frames.get("number").get(index));
+        double hix = Double.parseDouble(frames.get("hitXPos").get(index));
+        double hiy = Double.parseDouble(frames.get("hitYPos").get(index));
+        double hux = Double.parseDouble(frames.get("hurtXPos").get(index));
+        double huy = Double.parseDouble(frames.get("hurtYPos").get(index));
+        double hiw = Double.parseDouble(frames.get("hitWidth").get(index));
+        double hih = Double.parseDouble(frames.get("hitHeight").get(index));
+        double huw = Double.parseDouble(frames.get("hurtWidth").get(index));
+        double huh = Double.parseDouble(frames.get("hurtHeight").get(index));
+
+        SpriteAnimation currentAnimation = nameToAnimation.get(fname);
+        AnimationInfo frameInfo = animationFrame.get(currentAnimation);
+
+        frameInfo.setCurrentFrame(frameNumber);
+        frameInfo.setHitBox(new Rectangle(hix, hiy, hiw, hih));
+        frameInfo.setHurtBox(new Rectangle(hux, huy, huw, huh));
+    }
+    private SpriteAnimation createSpriteAnimationFromData(HashMap<String, ArrayList<String>> attacks, int index) {
+        Duration duration = Duration.seconds(Double.parseDouble(attacks.get("duration").get(index)));
+        int count = Integer.parseInt(attacks.get("count").get(index));
+        int columns = Integer.parseInt(attacks.get("columns").get(index));
+        double offsetX = Double.parseDouble(attacks.get("offsetX").get(index));
+        double offsetY = Double.parseDouble(attacks.get("offsetY").get(index));
+        double width = Double.parseDouble(attacks.get("width").get(index));
+        double height = Double.parseDouble(attacks.get("height").get(index));
+        return new SpriteAnimation(currentSprite, duration, count, columns, offsetX, offsetY, width, height);
+    }
+
     private void loadSpriteData(File file) {
         try {
             XMLParser parser = loadXMLFile(file);
             HashMap<String, ArrayList<String>> sprites = parser.parseFileForElement("sprite");
+
+            double h = Double.parseDouble(sprites.get("height").get(0));
+            double w = Double.parseDouble(sprites.get("width").get(0));
+            double x = Double.parseDouble(sprites.get("offsetX").get(0));
+            double y = Double.parseDouble(sprites.get("offsetY").get(0));
+
         } catch (Exception ex) {
-            System.out.println("Cannot load file");
+            System.out.println("Cannot load Sprite file");
         }
     }
     private void createSaveFile() {
@@ -511,11 +559,22 @@ public class CharacterEditor extends EditorSuper {
         try {
             File xmlFile = Paths.get(myDirectory.getPath(), "characterproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
-
-            File file = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
-            ImageIO.write(SwingFXUtils.fromFXImage(portrait.getImage(), null), "png", file);
         } catch (Exception ex) {
             System.out.println("Invalid save");
+        }
+
+        try {
+            File file = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
+            ImageIO.write(SwingFXUtils.fromFXImage(portrait.getImage(), null), "png", file);
+        } catch (Exception ex){
+            System.out.println("Could not save Portrait");
+        }
+
+        try {
+            File file = Paths.get(myDirectory.getPath(), "spritesheet" + ".png").toFile();
+            ImageIO.write(SwingFXUtils.fromFXImage(spriteSheet, null), "png", file);
+        } catch (Exception ex){
+            System.out.println("Could not save Sprite Sheet");
         }
     }
     private void saveAttackProperties() {
