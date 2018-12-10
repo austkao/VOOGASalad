@@ -40,7 +40,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         Text t = createTitle();
         root.getChildren().add(t);
         isSaved = true;
-        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 600.0, 700.0);
+        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 200.0, 60.0);
     }
 
     /**

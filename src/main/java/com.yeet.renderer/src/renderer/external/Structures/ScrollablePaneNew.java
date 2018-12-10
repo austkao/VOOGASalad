@@ -125,6 +125,15 @@ public class ScrollablePaneNew extends Pane {
 
     }
 
+    public Scrollable getSelectedItem(){
+        for(Scrollable s:items){
+            if(s.getButton().isSelected() ){
+                return s;
+            }
+        }
+        return null;
+    }
+
     public void modifyItem(Text t){ //TODO allow for changing titles
         final List<Scrollable> modifyCandidates = new ArrayList<>();
         for(Scrollable s:items){
@@ -157,7 +166,7 @@ public class ScrollablePaneNew extends Pane {
         return scrollPane;
     }
 
-    public ButtonBase getSelectedItem() {
+    public ButtonBase getSelectedButton() {
         for (Scrollable s : items) {
             if (s.getButton().isSelected() || s.getImageButton().isSelected()) {
                 return s.getButton();
@@ -172,5 +181,9 @@ public class ScrollablePaneNew extends Pane {
             itemList.add(item.getButton().getText());
         }
         return itemList;
+    }
+
+    public void setItemSize(int value){
+
     }
 }

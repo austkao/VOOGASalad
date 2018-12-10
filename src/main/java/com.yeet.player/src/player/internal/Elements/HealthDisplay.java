@@ -2,11 +2,14 @@ package player.internal.Elements;
 
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
@@ -18,16 +21,42 @@ import static renderer.external.RenderUtils.toRGBCode;
 public class HealthDisplay  extends StackPane {
 
     public static final double DISPLAY_WIDTH = 229.77;
-    public static final double DISPLAY_HEIGHT = 112.95;
+    public static final double DISPLAY_HEIGHT = 131;
     public static final double PORTRAIT_SIZE = 91.0;
     public static final double POLYGON_HEIGHT = 43.99;
 
     private Text percentageText;
+    private Text livesText;
 
+    /** Constructor if lives are being used */
+    public HealthDisplay(Text playerText, int initialLives, ImageView playerPortrait, Color portraitColor, Color polygonColor){
+        super();
+        createDisplay(playerText, playerPortrait, portraitColor, polygonColor);
+        HBox livesDisplay = new HBox(10.0);
+        livesDisplay.setMinSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);
+        livesDisplay.setAlignment(Pos.BOTTOM_LEFT);
+        Rectangle livesSpacer = new Rectangle(29.45,DISPLAY_HEIGHT,Color.TRANSPARENT);
+        ImageView heartIcon = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("heart_icon.png")));
+        heartIcon.setFitWidth(16.0);
+        heartIcon.setFitHeight(15.0);
+        livesText = new Text();
+        livesText.setFont(playerText.getFont());
+        livesText.setStyle("-fx-font-size: 20;");
+        setLives(initialLives);
+        livesDisplay.getChildren().addAll(livesSpacer,heartIcon,livesText);
+        this.getChildren().addAll(livesDisplay);
+    }
+
+    /** Constructor if lives are not being used */
     public HealthDisplay(Text playerText, ImageView playerPortrait, Color portraitColor, Color polygonColor){
         super();
-        super.setPrefSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        super.setAlignment(Pos.TOP_CENTER);
+        createDisplay(playerText, playerPortrait, portraitColor, polygonColor);
+    }
+
+    /** Common method used between different health display creations */
+    private void createDisplay(Text playerText, ImageView playerPortrait, Color portraitColor, Paint polygonColor) {
+        this.setPrefSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        this.setAlignment(Pos.TOP_CENTER);
         StackPane topAlignedContainer = new StackPane();
         topAlignedContainer.setPrefSize(DISPLAY_WIDTH,DISPLAY_HEIGHT);
         topAlignedContainer.setAlignment(Pos.TOP_CENTER);
@@ -89,6 +118,11 @@ public class HealthDisplay  extends StackPane {
         nameContainer.getChildren().addAll(namePolygon,nameTextContainer);
         bottomAlignedContainer.getChildren().addAll(nameContainer);
         super.getChildren().addAll(topAlignedContainer,bottomAlignedContainer);
+    }
+
+    /** Sets the displayed number of lives */
+    public void setLives(int lives){
+        livesText.setText("x "+lives);
     }
 
     /** Sets the value of the health display */

@@ -45,6 +45,8 @@ public class SpriteAnimation extends Transition {
         this.setInterpolator(Interpolator.LINEAR);
     }
 
+
+
     @Override
     protected void interpolate(double frac) {
         final int index = Math.min((int) Math.floor(frac * count), count - 1);
@@ -71,5 +73,24 @@ public class SpriteAnimation extends Transition {
 
     public int getCount(){
         return count;
+    }
+    public int getColumns() {
+        return columns;
+    }
+
+    public Double getOffsetX() {
+        return offsetX;
+    }
+
+    public Double getOffsetY() {
+        return offsetY;
+    }
+
+    public Double getWidth() {
+        return width;
+    }
+
+    public Double getHeight() {
+        return height;
     }
 }

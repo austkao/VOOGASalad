@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.SliderBox;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
