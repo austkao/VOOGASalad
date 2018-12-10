@@ -9,6 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
  * @author ob29
  */
 
-public class EditorManager {
+public class EditorManager implements EditorScreen {
     private Scene myScene;
     private List<EditorSuper> myEditors;
     private List<EditorHome> myEditorHomes;
@@ -42,14 +43,13 @@ public class EditorManager {
         myEditors = makeEditors();
         myEditorHomes = makeEditorHomes();
         rs = new RenderSystem();
-
         myScene = makeMyScene();
         mySettingsEditor.createBack(myScene);
     }
 
     private Scene makeMyScene(){
         Scene scene = new Scene(root);
-        Button back = rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0);
+        Button back = createBack(homeScene);
         back.setOnMouseClicked(e -> goHome());
         arrangeButtons();
         root.getChildren().add(back);
@@ -81,6 +81,16 @@ public class EditorManager {
 
     public File getGameDirectory(){
       return gameDirectory;
+    }
+
+    @Override
+    public Text createTitle() {
+        return null;
+    }
+
+    @Override
+    public Button createBack(Scene scene) {
+        return rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0);
     }
 
     public String getGameDirectoryString(){

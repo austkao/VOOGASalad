@@ -31,7 +31,6 @@ import java.util.List;
  */
 public class GameModeEditor extends EditorSuper {
     private static String[] DEFAULT_GAME_MODES = new String[]{"SSBB","Street Fighter"};
-    private static final String DEFAULT_SPLASH = "/Users/orgil/cs308/voogasalad_yeet/src/main/java/com.yeet.main/resources/lucinaglasses.png";
     private Image splashScreen;
     private File splashFile;
     private ImageView splashView;
@@ -49,12 +48,7 @@ public class GameModeEditor extends EditorSuper {
     public GameModeEditor(Group root, EditorManager em) {
         super(root,em);
         makeMyBox();
-
         splashView = new ImageView();
-
-
-
-
         splashFile = Paths.get(em.getGameDirectoryString(), "data","splash","splash.png").toFile();
         root.getChildren().addAll(myBox,splashView);
     }
@@ -135,7 +129,6 @@ public class GameModeEditor extends EditorSuper {
 
     private int processEnter(TextField t, Text text) {
         if (!Character.isDigit(t.getText().charAt(0))){
-            System.out.println(t.getText());
             RenderUtils.throwErrorAlert("Invalid Input", "Only Numbers");
         } else {
             text.setText(t.getText());
@@ -162,10 +155,6 @@ public class GameModeEditor extends EditorSuper {
         structure.put("stock", new ArrayList<>(List.of("numLives")));
         structure.put("time", new ArrayList<>(List.of("numMinutes")));
         HashMap<String, ArrayList<String>> data = new HashMap<>();
-        System.out.println(splashFile.getName());
-        System.out.println(bgMusic.getName());
-        System.out.println(maxMinutes);
-        System.out.println(maxStock);
         data.put("bgFile", new ArrayList<>(List.of(splashFile.getName())));
         data.put("mFile", new ArrayList<>(List.of(bgMusic.getName())));
         data.put("numLives", new ArrayList<>(List.of(maxMinutes+"")));

@@ -12,4 +12,5 @@ public interface EditorScreen {
     Text createTitle();
     Button createBack(Scene scene);
     String toString();
+    String getGameDirectoryString();
 }

@@ -12,9 +12,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 import renderer.external.Structures.SliderBox;
+import xml.XMLSaveBuilder;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -33,8 +37,13 @@ public class MapSettings {
     private RenderSystem rs;
     private VBox v1;
     private File stageMusic;
+    private EditorScreen prev;
+    private SliderBox gravityBox;
+    private SliderBox frictionBox;
+    private SliderBox terminalBox;
 
-    public MapSettings(){
+    public MapSettings(EditorScreen prevScene){
+        prev = prevScene;
         dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         root = new Group();
@@ -43,6 +52,9 @@ public class MapSettings {
         initPhysicsValues();
         initConsumers();
         buildScene();
+        Button save = rs.makeStringButton("Save", Color.BLACK,true, Color.WHITE,15.0,250.0,200.0,150.0,40.0);
+        save.setOnMouseClicked(e -> createSaveFile());
+        root.getChildren().add(save);
     }
 
     private void initPhysicsValues(){
@@ -115,19 +127,42 @@ public class MapSettings {
 //    }
 
     private List<SliderBox> initSliderBoxes(){
-        SliderBox gravity = rs.makeSlider("Gravity",1.0,consumerG,0.0,0.0,400.0);
-        gravity.getSlider().setMin(-1.0);
-        gravity.getSlider().setMax(800.0);
-        SliderBox friction = rs.makeSlider("Friction",25.0,consumerF,0.0,0.0,400.0);
-        friction.getSlider().setMin(0.0);
-        friction.getSlider().setMax(5);
-        SliderBox terminal = rs.makeSlider("Terminal Velocity",25.0,consumerT,0.0,0.0,400.0);
-        terminal.getSlider().setMin(0.0);
-        terminal.getSlider().setMax(600.0);
+        gravityBox = rs.makeSlider("Gravity",1.0,consumerG,0.0,0.0,400.0);
+        gravityBox.getSlider().setMin(-1.0);
+        gravityBox.getSlider().setMax(800.0);
+        frictionBox = rs.makeSlider("Friction",25.0,consumerF,0.0,0.0,400.0);
+        frictionBox.getSlider().setMin(0.0);
+        frictionBox.getSlider().setMax(5);
+        terminalBox = rs.makeSlider("Terminal Velocity",25.0,consumerT,0.0,0.0,400.0);
+        terminalBox.getSlider().setMin(0.0);
+        terminalBox.getSlider().setMax(600.0);
         List<SliderBox> s = new ArrayList<>();
-        s.add(gravity);
-        s.add(friction);
-        s.add(terminal);
+        s.add(gravityBox);
+        s.add(frictionBox);
+        s.add(terminalBox);
         return s;
     }
+
+    public void createSaveFile() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        structure.put("gravity", new ArrayList<>(List.of("gValue")));
+        structure.put("friction", new ArrayList<>(List.of("meuValue")));
+        structure.put("terminal velocity", new ArrayList<>(List.of("vtValue")));
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        double[] physicsValues = getPhysicsValues();
+        data.put("gValue", new ArrayList<>(List.of(gravityBox.getValue()+"")));
+        data.put("meuValue", new ArrayList<>(List.of(frictionBox.getValue()+"")));
+        data.put("vtValue", new ArrayList<>(List.of(terminalBox.getValue()+"")));
+        try {
+            File xmlFile = Paths.get(prev.getGameDirectoryString(), "physicsproperties.xml").toFile();
+            if (xmlFile != null) {
+                new XMLSaveBuilder(structure, data, xmlFile);
+            } else {
+                throw new IOException("Invalid save location");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred during the save process");
+        }
+    }
+
 }

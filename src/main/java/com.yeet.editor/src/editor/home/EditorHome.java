@@ -129,4 +129,9 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         myScroll = initializeScroll(directory);
         myRoot.getChildren().add(myScroll);
     }
+
+    @Override
+    public String getGameDirectoryString() {
+        return em.getGameDirectoryString();
+    }
 }
