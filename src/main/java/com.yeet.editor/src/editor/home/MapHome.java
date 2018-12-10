@@ -16,8 +16,8 @@ public class MapHome extends EditorHome {
     public MapHome(EditorManager em){
         super(new Group(), em);
         buttonNew.setOnMouseClicked(e -> nameNewObject("Create New Stage","Stage name:"));
-        buttonEdit.setOnMouseClicked(e -> initializeEditor(myScroll.getSelectedItem(), null));
-        buttonDelete.setOnMouseClicked(e -> deleteMap(myScroll.getSelectedItem()));
+        buttonEdit.setOnMouseClicked(e -> initializeEditor(myScroll.getSelectedButton(), null));
+        buttonDelete.setOnMouseClicked(e -> deleteMap(myScroll.getSelectedButton()));
         myScroll = initializeScroll("stages");
     }
 
