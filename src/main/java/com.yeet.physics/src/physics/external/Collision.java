@@ -6,11 +6,11 @@ import java.util.List;
 public class Collision extends Interaction {
 
     private List<PhysicsObject> colliders;
-    private Intersection myIntersection;
+    private Side side;
 
-    public Collision(List<PhysicsObject> colliders, Intersection intersection){
+    public Collision(List<PhysicsObject> colliders, Side s){
         super(colliders);
-        this.myIntersection = intersection;
+        this.side = s;
         this.colliders = colliders;
     }
 
@@ -32,11 +32,11 @@ public class Collision extends Interaction {
         return this.colliders;
     }
 
-    public Intersection getIntersection() {
-        return myIntersection;
+    public Side getSide() {
+        return side;
     }
 
-    public void setIntersection(Intersection myIntersection) {
-        this.myIntersection = myIntersection;
+    public void setSide(Side side) {
+        this.side = side;
     }
 }

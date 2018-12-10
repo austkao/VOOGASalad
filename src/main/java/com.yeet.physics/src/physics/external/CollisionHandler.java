@@ -28,20 +28,14 @@ public class CollisionHandler {
             Collision col = collisionIterator.next();
             PhysicsObject one = col.getCollider1();
             PhysicsObject two = col.getCollider2();
+            if(one.getId() == 1 && two.getId() > 100){
+                System.out.println(col.getSide().getMySide());
+            }
             if (one.isPhysicsBody() && two.isPhysicsGround()) {
-                if (one.getId() == 1)
-                    this.printSides(col.getIntersection().getSides());
-                    System.out.println("DIRECTION: " + col.getIntersection().getCollisionDirection());
                 filterGroundCollisions(groundCols, one, col);
             } else if (one.isPhysicsBody() && two.isPhysicsAttack()) {
                 filterAttackCollisions(one, two, col);
             }
-        }
-    }
-
-    private void printSides(List<Side> sides){
-        for(Side s: sides){
-            System.out.println(s.getMySide());
         }
     }
 
@@ -78,18 +72,12 @@ public class CollisionHandler {
                 attackCollisions.add(collisions);
             }
             // body+ground
-            if(one.isPhysicsBody() && two.isPhysicsGround()){
-
-                if (one.getId() == 1) {
-                    for (Side s : c.getIntersection().getSides()) {
-                        System.out.print(s.getMySide() + ", ");
-                    }
-                    System.out.println();
-                }
+            if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){
                 double bodyVelocity = one.getYVelocity().getMagnitude();
                 double bodyMass = one.getMass();
                 double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
                 PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) + gravityMag), -PI/2);
+                one.addCurrentForce(upwardForce);
                 if(Math.abs(one.getXVelocity().getMagnitude()) > 10) { //Should we apply kinetic friction?
                     PhysicsVector friction;
                     if(one.getXVelocity().getMagnitude() > 0) {
@@ -127,10 +115,6 @@ public class CollisionHandler {
                 groundCollisions.add(one.getId());
             }
         }
-    }
-
-    public void applyFriction(){
-
     }
 
     public List<Integer> getGroundCollisions() {

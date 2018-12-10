@@ -22,12 +22,12 @@ CollisionDetector {
             for(PhysicsObject bod2: currentBodies.values()){
                 if(!bod.equals(bod2)){
                     Intersection myInt = bod.getMyCoordinateBody().intersects(bod2.getMyCoordinateBody());
-                    List<Side> s = myInt.getSides();
-                    if(s.size() > 0){
+                    Side s = myInt.getIntersector();
+                    if(!s.getMySide().equals("NONE")){
                         List<PhysicsObject> colliders = new ArrayList<>();
                         colliders.add(bod);
                         colliders.add(bod2);
-                        Collision col = new Collision(colliders, myInt);
+                        Collision col = new Collision(colliders, s);
                         collisions.add(col);
                     }
                 }

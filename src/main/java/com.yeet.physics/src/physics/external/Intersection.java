@@ -1,60 +1,28 @@
 package physics.external;
 
-import java.util.List;
-
-import static java.lang.Math.PI;
-
 public class Intersection {
 
 
-    private List<Side> sides;
-    private double collisionDirection;
+    private Side intersector1;
+    private Side intersector2;
 
-    public Intersection(List<Side> sides) {
-        this.sides = sides;
-        calculateDirection();
+    public Intersection(Side inter1) {
+        this.intersector1 = inter1;
     }
 
-
-    private void calculateDirection() {
-        if (this.containsSide(new Side("TOP")) && this.containsSide(new Side("BOTTOM"))) {
-            if (this.containsSide(new Side("LEFT"))) {
-                this.setCollisionDirection(0);
-            } else {
-                this.setCollisionDirection(PI);
-            }
-
-        } else {
-            if (this.containsSide(new Side("BOTTOM"))) {
-                this.setCollisionDirection(-PI/2);
-            } else {
-                this.setCollisionDirection(PI/2);
-            }
-        }
+    public Side getIntersector2() {
+        return intersector2;
     }
 
-    public List<Side> getSides() {
-        return sides;
+    public void setIntersector2(Side intersector2) {
+        this.intersector2 = intersector2;
     }
 
-    public boolean containsSide(Side s){
-        for(Side side: this.getSides()){
-            if(side.getMySide().equals(s.getMySide())){
-                return true;
-            }
-        }
-        return false;
+    public Side getIntersector() {
+        return intersector1;
     }
 
-    public void setSides(List<Side> sides) {
-        this.sides = sides;
-    }
-
-    public double getCollisionDirection() {
-        return collisionDirection;
-    }
-
-    public void setCollisionDirection(double collisionDirection) {
-        this.collisionDirection = collisionDirection;
+    public void setIntersector1(Side intersector1) {
+        this.intersector1 = intersector1;
     }
 }
