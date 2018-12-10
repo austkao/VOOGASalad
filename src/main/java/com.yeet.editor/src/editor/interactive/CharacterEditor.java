@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -19,8 +20,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import renderer.external.Scrollable;
 import renderer.external.Structures.*;
 import xml.XMLParser;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -47,8 +50,8 @@ public class CharacterEditor extends EditorSuper {
     //Animation variables
     private SpriteAnimation currentAnimation;
     private Pane mySpritePane;
-    private ScrollablePane animationList;
-    private Map<ScrollableItem, SpriteAnimation> scrollToAnimation;
+    private ScrollablePaneNew newAnimationList;
+    private Map<Scrollable, SpriteAnimation> scrollToAnimationNew;
     private Map<SpriteAnimation, AnimationInfo> animationFrame;
 
     private VBox mySliders;
@@ -72,7 +75,7 @@ public class CharacterEditor extends EditorSuper {
         spriteSheet.setLayoutX(25.0);
         spriteSheet.setLayoutY(350.0);
 
-        scrollToAnimation = new HashMap<>();
+        scrollToAnimationNew = new HashMap<>();
         initializeScrollPane();
 
         this.setImageView(portrait, DEFAULT_PORTRAIT);
@@ -167,20 +170,21 @@ public class CharacterEditor extends EditorSuper {
         root.getChildren().add(mySpritePane);
     }
     private void initializeScrollPane(){
-        animationList = new ScrollablePane(50.0,300.0);
-        root.getChildren().add(animationList.getScrollPane());
+        newAnimationList = new ScrollablePaneNew(50.0, 300.0, 200.0, 400.0);
+        root.getChildren().add(newAnimationList.getScrollPane());
+        //animationList = new ScrollablePane(50.0,300.0);
+        //root.getChildren().add(animationList.getScrollPane());
     }
-    private void selectAnimationFromScroll(ScrollableItem b){
+    private void selectNewAnimationFromScroll(Scrollable b){
         if (currentAnimation != null){
             currentAnimation.stop();
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
         }
-        currentAnimation = scrollToAnimation.get(b);
+        currentAnimation = scrollToAnimationNew.get(b);
         AnimationInfo frame = animationFrame.get(currentAnimation);
         frame.setCurrentFrame(1);
         stepForwardAnimation();
-        //stepBackAnimation();
     }
     private ImageView initializeImageView(int width, int height, int x, int y){
         ImageView picture = new ImageView();
@@ -281,7 +285,7 @@ public class CharacterEditor extends EditorSuper {
 
         currentAnimation = null;
         animationFrame = new HashMap<>();
-        scrollToAnimation = new HashMap<>();
+        scrollToAnimationNew = new HashMap<>();
         initializeScrollPane();
     }
 
@@ -340,27 +344,31 @@ public class CharacterEditor extends EditorSuper {
     }
 
     private void makeNewSpriteAnimation(){
-        File image = chooseImage("Choose thumbnail for animation");
-        if (testNull(image, "No valid image provided")){
-            return;
-        }
-        List<String> inputString = getCombo();
-        TextInputDialog text = new TextInputDialog("");
-        text.setContentText("Enter Attack Power");
-        int power = Integer.parseInt(text.showAndWait().orElse("0"));
-
-        SpriteAnimation myAnimation = promptForAnimation();
-        initializeSpriteAnimation(image, inputString, power, myAnimation);
-    }
-    private void initializeSpriteAnimation(File image, List<String> inputString, int power, SpriteAnimation myAnimation) {
         if (testNull(spriteSheet.getImage(), "Sprite Sheet Not Set")){
             return;
         }
+
+        TextInputDialog text = new TextInputDialog("");
+        resetText("Enter Animation Name", text);
+        String name = text.showAndWait().orElse("unknown");
+        resetText("Enter Attack Power", text);
+        int power = Integer.parseInt(text.showAndWait().orElse("0"));
+
+        List<String> inputString = getCombo();
+
+        SpriteAnimation myAnimation = promptForAnimation();
+        initializeSpriteAnimation(inputString, power, myAnimation, name);
+    }
+    private void initializeSpriteAnimation(List<String> inputString, int power, SpriteAnimation myAnimation, String name) {
+
         myAnimation.setCycleCount(Animation.INDEFINITE);
-        ScrollableItem animPic = animationList.addItem(new Image(image.toURI().toString()));
-        scrollToAnimation.put(animPic, myAnimation);
-        animPic.getButton().setOnMouseClicked(e -> selectAnimationFromScroll(animPic));
-        animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power));
+
+        ScrollItem animText = new ScrollItem(new WritableImage(1, 1), new Text(name));
+        newAnimationList.addItem(animText);
+        scrollToAnimationNew.put(animText, myAnimation);
+        animText.getButton().setOnMouseClicked(e -> selectNewAnimationFromScroll(animText));
+
+        animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power, name));
     }
     private SpriteAnimation promptForAnimation(){
         /*
@@ -533,7 +541,7 @@ public class CharacterEditor extends EditorSuper {
 
     private void saveAttackProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        ArrayList<String> attackAttributes = new ArrayList<>(List.of("duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
+        ArrayList<String> attackAttributes = new ArrayList<>(List.of("name","duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
         structure.put("attack", attackAttributes);
         ArrayList<String> frameAttributes = new ArrayList<>(List.of("number","hitXPos","hitYPos","hitWidth","hitHeight","hurtXPos","hurtYPos","hurtWidth","hurtHeight"));
         structure.put("frame", frameAttributes);
@@ -546,7 +554,7 @@ public class CharacterEditor extends EditorSuper {
         }
         for(SpriteAnimation ani : animationFrame.keySet()) {
             AnimationInfo aniInfo = animationFrame.get(ani);
-            //data.get("name").add("Hi");
+            data.get("name").add(aniInfo.getName());
             data.get("duration").add(ani.getCycleDuration().toSeconds() +"");
             data.get("count").add(aniInfo.getTotalFrames()+"");
             data.get("columns").add(ani.getColumns() + "");

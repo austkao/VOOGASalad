@@ -9,12 +9,13 @@ import java.util.Map;
 public class AnimationInfo {
     private int currentFrame;
     private int totalFrames;
-    double attackPower;
+    private String name;
+    private double attackPower;
     private Map<Integer, Rectangle> hitBoxes;
     private Map<Integer, Rectangle> hurtBoxes;
     private List<String> input;
 
-    public AnimationInfo(int total, List<String> inputString, double power) {
+    public AnimationInfo(int total, List<String> inputString, double power, String name) {
         input = inputString;
         currentFrame = -1;
         totalFrames = total;
@@ -25,6 +26,7 @@ public class AnimationInfo {
             hurtBoxes.putIfAbsent(i, new Rectangle());
         }
         attackPower = power;
+        this.name = name;
     }
 
     public void setCurrentFrame(int f){currentFrame = f;}
@@ -72,4 +74,7 @@ public class AnimationInfo {
 
     public double getAttackPower(){return attackPower;}
     public int getTotalFrames(){return totalFrames;}
+
+    public void setName(String n){name = n;}
+    public String getName(){return name;}
 }
