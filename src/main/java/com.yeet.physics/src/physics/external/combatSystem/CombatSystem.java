@@ -142,7 +142,7 @@ public class CombatSystem {
 
     @Subscribe
     public void onTimeUpEvent(TimeUpEvent timeUpEvent){
-
+        eventBus.post(new GameOverEvent(playerManager.winnerID, playerManager.getRanking()));
     }
 
 }
