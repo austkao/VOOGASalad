@@ -112,7 +112,7 @@ public class CollisionHandler {
 
     public PhysicsVector getStaticFriction(PhysicsObject one){
         PhysicsVector staticFriction;
-        double bodyMass = one.getMass(); 
+        double bodyMass = one.getMass();
         double bodyVelocity = one.getXVelocity().getMagnitude();
         staticFriction = new PhysicsVector(-bodyMass*bodyVelocity/timeOfFrame, 0);
         return staticFriction;

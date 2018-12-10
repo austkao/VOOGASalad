@@ -3,7 +3,7 @@ package physics.external;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
-public class CoordinateBody {
+public class CoordinateBody extends CoordinateObject{
 
 
     private Dimensions dims;
@@ -17,6 +17,7 @@ public class CoordinateBody {
     private int ySubRects = 4;
 
     public CoordinateBody(Coordinate start, Dimensions dims){
+        super(start, dims);
         this.dims = dims;
         this.pos = start;
         this.hitBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), this.dims.getSizeX(), this.dims.getSizeY());
@@ -40,7 +41,7 @@ public class CoordinateBody {
         for(SubRectangle sub: this.getSubRects()){
         }
     }
-
+    @Override
     public void update(Coordinate newPos){
         this.pos = newPos;
         this.hitBox = new Rectangle2D.Double(this.pos.getX(), this.pos.getY(), dims.getSizeX(), dims.getSizeY());
@@ -60,6 +61,7 @@ public class CoordinateBody {
     INPUT: This function takes in another coordinate body
     OUTPUT: T or F depending on weather or not this body intersects with the one passed into the parameter
      */
+    @Override
     public Intersection intersects(CoordinateBody c){
 
         Rectangle2D object = c.getHitBox();
