@@ -71,27 +71,17 @@ public class CollisionHandler {
                 if(Math.abs(one.getXVelocity().getMagnitude()) > KINETIC_FRICTION_THRESHOLD) { //Should we apply kinetic friction?
                     one.addCurrentForce(getKineticFriction(one, ground));
                 }else{
-                    //PhysicsVector staticFriction;
-                    //bodyVelocity = one.getXVelocity().getMagnitude();
-                    //staticFriction = new PhysicsVector(-bodyMass*bodyVelocity/timeOfFrame, 0);
                     one.addCurrentForce(getStaticFriction(one, bodyMass));
                 }
                 groundCollisions.add(one.getId());
 
             } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("TOP")){
-                double bodyVelocity = one.getYVelocity().getMagnitude();
-                double bodyMass = one.getMass();
-                double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
-                PhysicsVector downwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) - gravityMag), -PI/2);
-                one.addCurrentForce(downwardForce);
-                groundCollisions.add(one.getId());
-
+                one.addCurrentForce(topCollisionBodyGround(one));
             } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("LEFT")){
                 double bodyVelocity = Math.abs(one.getXVelocity().getMagnitude());
                 double bodyMass = one.getMass();
                 PhysicsVector rightwardForce = new PhysicsVector(bodyMass*bodyVelocity/(timeOfFrame), PI);
                 one.addCurrentForce(rightwardForce);
-                groundCollisions.add(one.getId());
 
 
             } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("RIGHT")){
@@ -99,9 +89,16 @@ public class CollisionHandler {
                 double bodyMass = one.getMass();
                 PhysicsVector leftwardForce = new PhysicsVector(bodyMass*bodyVelocity/(timeOfFrame), 0);
                 one.addCurrentForce(leftwardForce);
-                groundCollisions.add(one.getId());
             }
         }
+    }
+
+    public PhysicsVector topCollisionBodyGround(PhysicsObject one){
+        double bodyVelocity = one.getYVelocity().getMagnitude();
+        double bodyMass = one.getMass();
+        double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
+        PhysicsVector downwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) - gravityMag), -PI/2);
+        return downwardForce;
     }
 
     public PhysicsVector getKineticFriction(PhysicsObject one, PhysicsGround ground){
