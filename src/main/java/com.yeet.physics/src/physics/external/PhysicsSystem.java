@@ -54,8 +54,8 @@ public class PhysicsSystem {
         applyForces();
         updatePositions();
         GroundIntersectEvent groundedPlayers = new GroundIntersectEvent(groundCollisions);
-        if (groundedPlayers.getGroundedPlayers().size() > 0) {
-            myMessageBus.post(groundCollisions);
+        if (groundCollisions.size() > 0) {
+            myMessageBus.post(groundedPlayers);
         }
         AttackIntersectEvent attackPlayers = new AttackIntersectEvent(attackCollisions);
         if (attackPlayers.getAttackPlayers().size() > 0) {
