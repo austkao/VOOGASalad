@@ -3,7 +3,9 @@ package editor.interactive;
 
 import editor.EditorManager;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,18 +16,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import renderer.external.RenderUtils;
-import renderer.external.Structures.SwitchButton;
-import renderer.external.Structures.TextBox;
 
-import java.awt.*;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 /**
@@ -41,9 +39,11 @@ public class GameModeEditor extends EditorSuper {
 
     private int maxMinutes;
     private int maxStock;
+    private Text musicLabel;
     private TextField minutesField;
     private TextField stockField;
     private VBox myBox;
+    private Stage popupStage;
 
 
     public GameModeEditor(Group root, EditorManager em) {
@@ -55,13 +55,25 @@ public class GameModeEditor extends EditorSuper {
 
 
 
-
+        splashFile = Paths.get(em.getGameDirectoryString(), "data","splash","splash.png").toFile();
         root.getChildren().addAll(myBox,splashView);
     }
 
+    private ListView makeListViewForFile(String directoryType) {
+        File directory = Paths.get(myEM.getGameDirectoryString(), "data",directoryType).toFile();
+        ListView filesList = myRS.makeDirectoryFileList(directory, false);
+        popupStage = new Stage();
+        popupStage.setScene(new Scene(new Group(filesList)));
+        popupStage.show();
+        return filesList;
+    }
+
     private void getSplashFile(){
-        FileChooser fileChooser = myRS.makeFileChooser("image");
-        splashFile = fileChooser.showOpenDialog(getWindow());
+        ListView splashList = makeListViewForFile("splash");
+        splashList.setOnMouseClicked(e -> {
+            splashFile = Paths.get(myEM.getGameDirectoryString(), "data", "splash", splashList.getSelectionModel().getSelectedItem().toString()).toFile();
+            popupStage.close();
+        });
         splashScreen = new Image(splashFile.toURI().toString());
         splashView.setImage(splashScreen);
         splashView.setPreserveRatio(true);
@@ -75,20 +87,16 @@ public class GameModeEditor extends EditorSuper {
         myBox = new VBox(20.0);
         Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
                 20.0,0.0, 0.0, 200.0, 50.0);
-        //saveFile.setOnMouseClicked(e -> (null));
+        saveFile.setOnMouseClicked(e -> createSaveFile());
 
         Button pickSplash = myRS.makeStringButton("pick splash",Color.BLACK,true,Color.WHITE,20.0,60.0,100.0,200.0,50.0);
         pickSplash.setOnMouseClicked(e -> getSplashFile());
 
         HBox musicbox = new HBox(5);
         Button pickMusic = myRS.makeStringButton("pick main music",Color.BLACK,true,Color.WHITE,20.0,60.0,200.0,200.0,50.0);
-        Text musicLabel = new Text();
-        pickMusic.setOnMouseClicked(e -> {
-            getMusicFile();
-            musicLabel.setText(bgMusic.getName());
-        });
+        musicLabel = myRS.makeText("[Current Music]", false, 30, Color.BLACK, 50.0, 0.0);
+        pickMusic.setOnMouseClicked(e -> getMusicFile());
         musicbox.getChildren().addAll(pickMusic,musicLabel);
-
 
         HBox minbox = new HBox(5);
         HBox stockbox = new HBox(5);
@@ -96,13 +104,12 @@ public class GameModeEditor extends EditorSuper {
         Text stock = new Text();
         minutesField = new TextField();
         stockField = new TextField();
-        minutesField.setOnKeyPressed(e -> displayDigit(e,minutesField,minutes,maxMinutes));
-        stockField.setOnKeyPressed(e -> displayDigit(e,stockField,stock,maxStock));
+        minutesField.setOnKeyPressed(e -> updateMinuteField(e, minutesField, minutes));
+        stockField.setOnKeyPressed(e -> updateStockField(e, stockField, stock));
         Text minLabel = new Text("Maximum Minutes");
         Text stockLabel = new Text("Maximum Lives");
         minbox.getChildren().addAll(minLabel,minutesField,minutes);
         stockbox.getChildren().addAll(stockLabel,stockField,stock);
-
 
         myBox.getChildren().addAll(saveFile,pickSplash,musicbox,minbox,stockbox);
         myBox.setLayoutX(50.0);
@@ -111,20 +118,35 @@ public class GameModeEditor extends EditorSuper {
     }
 
     private void getMusicFile(){
-        FileChooser fileChooser = myRS.makeFileChooser("audio");
-        bgMusic = fileChooser.showOpenDialog(getWindow());
+        ListView musicList = makeListViewForFile("bgm");
+        musicList.setOnMouseClicked(e -> {
+            bgMusic = Paths.get(myEM.getGameDirectoryString(), "data", "bgm", musicList.getSelectionModel().getSelectedItem().toString()).toFile();
+            popupStage.close();
+            musicLabel.setText(bgMusic.getName());
+        });
     }
 
 
-    private void displayDigit(KeyEvent e, TextField t,Text text, int val){
+    private void updateMinuteField(KeyEvent e, TextField t,Text text){
         if(e.getCode() == KeyCode.ENTER) {
-            if (!Character.isDigit(t.getText().charAt(0))){
-                System.out.println(t.getText());
-                RenderUtils.throwErrorAlert("Invalid Input", "Only Numbers");
-            } else {
-                val = Integer.parseInt(t.getText());
-                text.setText(t.getText());
-            }
+            maxMinutes = processEnter(t, text);
+        }
+    }
+
+    private int processEnter(TextField t, Text text) {
+        if (!Character.isDigit(t.getText().charAt(0))){
+            System.out.println(t.getText());
+            RenderUtils.throwErrorAlert("Invalid Input", "Only Numbers");
+        } else {
+            text.setText(t.getText());
+            return Integer.parseInt(t.getText());
+        }
+        return 0;
+    }
+
+    private void updateStockField(KeyEvent e, TextField t,Text text){
+        if(e.getCode() == KeyCode.ENTER) {
+            maxStock = processEnter(t, text);
         }
     }
 
@@ -133,6 +155,29 @@ public class GameModeEditor extends EditorSuper {
         return "Game Settings Editor";
     }
 
-
+    public void createSaveFile() {
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        structure.put("music", new ArrayList<>(List.of("mFile")));
+        structure.put("splash", new ArrayList<>(List.of("bgFile")));
+        structure.put("stock", new ArrayList<>(List.of("numLives")));
+        structure.put("time", new ArrayList<>(List.of("numMinutes")));
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        System.out.println(splashFile.getName());
+        System.out.println(bgMusic.getName());
+        System.out.println(maxMinutes);
+        System.out.println(maxStock);
+        data.put("bgFile", new ArrayList<>(List.of(splashFile.getName())));
+        data.put("mFile", new ArrayList<>(List.of(bgMusic.getName())));
+        data.put("numLives", new ArrayList<>(List.of(maxMinutes+"")));
+        data.put("numMinutes", new ArrayList<>(List.of(maxStock+"")));
+        try {
+            File xmlFile = Paths.get(myEM.getGameDirectoryString(),"gameproperties.xml").toFile();
+            generateSave(structure, data, xmlFile);
+            root.getChildren().add(saved);
+            isSaved = true;
+        } catch (Exception ex) {
+            System.out.println("Invalid save");
+        }
+    }
 
 }

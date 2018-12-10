@@ -247,7 +247,6 @@ public class MapEditor extends EditorSuper {
             isSaved = true;
         } catch (Exception ex) {
             System.out.println("Invalid save");
-            ex.printStackTrace();
         }
     }
 
