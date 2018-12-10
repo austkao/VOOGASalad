@@ -77,7 +77,7 @@ public class PhysicsSystem {
 
     public void applyForces() {
         for (PhysicsObject o : gameObjects.values()) {
-            List<PhysicsVector> currentForces = o.getCurrentForces();
+            List<PhysicsVector> currentForces = new ArrayList<>(o.getCurrentForces());
             if (!o.isPhysicsGround()) {
                 NetVectorCalculator calc = new NetVectorCalculator(currentForces);
                 o.applyForce(calc.getNetVector());
@@ -139,7 +139,7 @@ public class PhysicsSystem {
         }
         Coordinate playerLocation = gameObjects.get(id).getMyCoordinateBody().getPos();
         Coordinate attackLocation = new Coordinate(playerLocation.getX() + direction * DEFAULT_ATTACK_SPACE,playerLocation.getY() + DEFAULT_ATTACK_SPACE);
-        PhysicsAttack attack = new PhysicsAttack(attackId, id, parentDirection, gameObjects.get(id).getMass(), attackLocation, new Dimensions(20, 10));
+        PhysicsAttack attack = new PhysicsAttack(attackId, id, parentDirection, gameObjects.get(id).getMass(), attackLocation, new Dimensions(40, 20));
         gameObjects.put(attackId, attack);
         attackId++;
     }
