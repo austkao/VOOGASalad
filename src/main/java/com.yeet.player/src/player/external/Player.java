@@ -13,6 +13,7 @@ import player.internal.*;
 import renderer.external.Renderer;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 /** Visualizer for game data and gameplay
  *  @author bpx
@@ -24,7 +25,7 @@ public class Player {
     private Renderer myRenderer;
     private Scene originalScene;
 
-
+    private Consumer<Scene> myEditorLink;
 
     private MediaPlayer myBGMPlayer;
     private Media myBGM;
@@ -69,8 +70,8 @@ public class Player {
             myStage.setScene(myMainMenuScreen);
             myBGMPlayer.play();
         });
-        mySettingsScreen = new SettingsScreen(new Group(),myRenderer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myStage.setScene(myControlsSettingsScreen));
-        mySoundsSettingsScreen = new SoundsSettingsScreen(new Group(),myRenderer);
+        mySettingsScreen = new SettingsScreen(new Group(),myRenderer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myEditorLink.accept(mySettingsScreen));
+        mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,()->myStage.setScene(mySettingsScreen));
         myControlsSettingsScreen = new ControlsSettingsScreen(new Group(),myRenderer);
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()-> {
             myBGMPlayer.stop();
@@ -126,6 +127,10 @@ public class Player {
     public void doSomething(){
         TestSuccesfulEvent testSuccesfulEvent = new TestSuccesfulEvent();
         myMessageBus.post(testSuccesfulEvent);
+    }
+
+    public void setEditorLink(Consumer<Scene> editorScene){
+        myEditorLink = editorScene;
     }
 
     @Subscribe
