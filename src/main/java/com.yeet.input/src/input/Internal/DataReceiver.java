@@ -4,6 +4,7 @@ import xml.XMLParser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,10 +27,11 @@ public class DataReceiver {
         numPlayers = Integer.parseInt(x.get(0));
     }
 
-    public List<Map<String, ArrayList<String>>> getKeys(){
-        List<Map<String, ArrayList<String>>> allInputs = new ArrayList<>();
+    public List<Map<String, String>> getKeys(){
+        List<Map<String, String>> allInputs = new ArrayList<>();
         for(int i = 0; i<numPlayers; i++){
-            allInputs.add(myParser.parseFileForElement("input"+Integer.toString(i))); //Collect the keyInputs for ALL of the players
+            Map<String, String> inputMap = reverse(myParser.parseFileForElement("input"+Integer.toString(i)));
+            allInputs.add(inputMap); //Collect the keyInputs for ALL of the players
 
         }
         //inputKeys = myParser.parseFileForElement("input");
@@ -37,13 +39,26 @@ public class DataReceiver {
 
     }
 
-    public List<Map<String, ArrayList<String>>> getCombos(){
-        List<Map<String, ArrayList<String>>> allCombos = new ArrayList<>();
+    public List<Map<String, String>> getCombos(){
+        List<Map<String, String>> allCombos = new ArrayList<>();
         for(int i = 0; i<numPlayers; i++){
-            allCombos.add(myParser.parseFileForElement("combo"+ Integer.toString(i))); //Collect the keyInputs for ALL of the players
+            Map<String, String> comboMap = reverse(myParser.parseFileForElement("combo"+Integer.toString(i)));
+            allCombos.add(comboMap); //Collect the keyInputs for ALL of the players
         }
+
         comboKeys = myParser.parseFileForElement("combo");
         return allCombos;
+    }
+
+    /**
+     *
+     * For the purpose of reversing the Map that is obtained from the data processor
+     */
+    public Map<String,String> reverse(HashMap<String,ArrayList<String>> map) {
+        Map<String,String> rev = new HashMap<>();
+        for(Map.Entry<String,ArrayList<String>> entry : map.entrySet())
+            rev.put(entry.getValue().get(0), entry.getKey()); // reverse and remove the arrayList inside the map
+        return rev;
     }
 
 }

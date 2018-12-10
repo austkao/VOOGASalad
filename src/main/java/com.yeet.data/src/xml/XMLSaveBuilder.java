@@ -57,6 +57,7 @@ public class XMLSaveBuilder implements Saver {
             }
         } catch (ParserConfigurationException | IOException e) {
             System.out.println("Cannot initialize save file");
+            e.printStackTrace();
         }
     }
 
