@@ -47,7 +47,7 @@ public class InputEditor extends EditorSuper {
                     getBindings();
                     System.out.println(bindings);
                 });
-        Button save = myRS.makeStringButton("Save",Color.BLACK,true,Color.WHITE,20.0,650.0,150.0,150.0,50.0);
+        Button save = myRS.makeStringButton("Save",Color.BLACK,true,Color.WHITE,20.0,650.0,200.0,150.0,50.0);
         save.setOnMouseClicked(e -> createSaveFile());
         root.getChildren().addAll(tabs,test, save);
     }
@@ -162,23 +162,30 @@ public class InputEditor extends EditorSuper {
 
     private void createSaveFile() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        structure.put("players", new ArrayList<>(List.of("numPlayers")));
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         TreeSet<String> moves = new TreeSet<>();
         bindings = getBindings();
-        for(HashMap<String, String> bindingsMap : getBindings()) {
-            if(bindingsMap.isEmpty()) {
-                continue;
-            }
+        for(int i = 0; i < bindings.size(); i++) {
+            HashMap<String, String> bindingsMap = bindings.get(i);
             for(String move : bindingsMap.keySet()) {
-                move.replace("\n","").replace("\r","");
-                String key = bindingsMap.get(move);
-                key.replace("\n","").replace("\r","");
                 moves.add(move);
                 data.putIfAbsent(move, new ArrayList<>());
-                data.get(move).add(key);
             }
         }
         structure.put("input", new ArrayList<>(moves));
+        for(String s: data.keySet()) {
+            System.out.println(s);
+            for(int i = 0; i < bindings.size(); i++) {
+                HashMap<String, String> bindingsMap = bindings.get(i);
+                if(bindingsMap.containsKey(s)) {
+                    data.get(s).add(bindingsMap.get(s));
+                } else {
+                    data.get(s).add("");
+                }
+            }
+        }
+        System.out.println(data);
         File save = Paths.get(myEM.getGameDirectoryString(), "inputsetuptest.xml").toFile();
         generateSave(structure, data, save);
     }
