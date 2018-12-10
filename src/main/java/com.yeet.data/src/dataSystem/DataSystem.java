@@ -4,6 +4,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.event.Event;
 import messenger.external.*;
+import org.w3c.dom.Document;
+import xml.XMLParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +49,13 @@ public class DataSystem {
         } catch (IOException e) {
             System.out.println("Could not create stage file");
         }
+    }
+
+    @Subscribe
+    public void overwriteGameFile(File xmlFile) {
+        XMLParser parser = new XMLParser(xmlFile);
+        Document xmlDoc = parser.createDocument(xmlFile);
+
     }
 
     @Subscribe
