@@ -61,13 +61,11 @@ public class CollisionHandler {
                 attackCollisions.add(playerAndAttack(one, two));
             } if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){// body+ground
                 PhysicsGround ground = (PhysicsGround)two;
-                double bodyVelocity = one.getYVelocity().getMagnitude();
-                double bodyMass = one.getMass();
-                applyReactiveForce(one, bodyVelocity, bodyMass);
+                applyReactiveForce(one);
                 if(Math.abs(one.getXVelocity().getMagnitude()) > KINETIC_FRICTION_THRESHOLD) { //Should we apply kinetic friction?
                     one.addCurrentForce(getKineticFriction(one, ground));
                 }else{
-                    one.addCurrentForce(getStaticFriction(one, bodyMass));
+                    one.addCurrentForce(getStaticFriction(one));
                 }
                 groundCollisions.add(one.getId());
             } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("TOP")){
@@ -112,8 +110,9 @@ public class CollisionHandler {
         return friction;
     }
 
-    public PhysicsVector getStaticFriction(PhysicsObject one, double bodyMass){
+    public PhysicsVector getStaticFriction(PhysicsObject one){
         PhysicsVector staticFriction;
+        double bodyMass = one.getMass(); 
         double bodyVelocity = one.getXVelocity().getMagnitude();
         staticFriction = new PhysicsVector(-bodyMass*bodyVelocity/timeOfFrame, 0);
         return staticFriction;
@@ -133,7 +132,9 @@ public class CollisionHandler {
         return collisions;
     }
 
-    public void applyReactiveForce(PhysicsObject one, double bodyVelocity, double bodyMass){
+    public void applyReactiveForce(PhysicsObject one){
+        double bodyVelocity = one.getYVelocity().getMagnitude();
+        double bodyMass = one.getMass();
         double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
         PhysicsVector upwardForce = new PhysicsVector(Math.round(bodyMass*bodyVelocity/(timeOfFrame) + gravityMag), -PI/2);
         one.addCurrentForce(upwardForce);
