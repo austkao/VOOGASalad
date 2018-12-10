@@ -452,12 +452,17 @@ public class CharacterEditor extends EditorSuper {
             ArrayList<String> health = data.get("health");
             ArrayList<String> attack = data.get("attack");
             ArrayList<String> defense = data.get("defense");
-            HashMap<String, ArrayList<String>> portrait = parser.parseFileForElement("portrait");
+
+            //todo: finish portrait and thumbnail
+            HashMap<String, ArrayList<String>> portraitBox = parser.parseFileForElement("portrait");
 
 
             healthSlider.setNewValue(Double.parseDouble(health.get(0)));
             attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
             defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
+
+            File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
+            setImageView(portrait, portraitFile.toURI().toString());
 
         } catch (Exception ex) {
             System.out.println("Cannot load file");
