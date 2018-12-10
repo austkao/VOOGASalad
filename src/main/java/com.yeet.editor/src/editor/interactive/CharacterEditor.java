@@ -3,6 +3,7 @@ package editor.interactive;
 import editor.AnimationInfo;
 import editor.EditorManager;
 import javafx.animation.Animation;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.*;
@@ -24,7 +25,9 @@ import renderer.external.Scrollable;
 import renderer.external.Structures.*;
 import xml.XMLParser;
 
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,8 +147,6 @@ public class CharacterEditor extends EditorSuper {
         Font switchFont = new Font(15);
         hitOrHurt = new SwitchButton(options, 250.0, 400.0, 350.0, 20.0, 5.0, Color.BLACK,
                 Color.FLORALWHITE, switchFont);
-        //hitOrHurt = myRS.makeSwitchButtons(options, true, Color.BLACK,
-        //        Color.FLORALWHITE, 5.0,400.0, 400.0, 50.0, 15.0 );
 
         root.getChildren().addAll(addPortrait, saveFile, getSpriteSheet, setAnimation, playAnimation,
                 setInputCombo, stepForward, stepBackward, frameText, hitOrHurt );
@@ -170,10 +171,8 @@ public class CharacterEditor extends EditorSuper {
         root.getChildren().add(mySpritePane);
     }
     private void initializeScrollPane(){
-        newAnimationList = new ScrollablePaneNew(50.0, 300.0, 200.0, 400.0);
+        newAnimationList = new ScrollablePaneNew(30.0, 350.0, 200.0, 400.0);
         root.getChildren().add(newAnimationList.getScrollPane());
-        //animationList = new ScrollablePane(50.0,300.0);
-        //root.getChildren().add(animationList.getScrollPane());
     }
     private void selectNewAnimationFromScroll(Scrollable b){
         if (currentAnimation != null){
@@ -441,7 +440,9 @@ public class CharacterEditor extends EditorSuper {
         File characterProperties = Paths.get(directory.getPath(), "characterproperties.xml").toFile();
         loadCharacterData(characterProperties);
         File attackProperties = Paths.get(directory.getPath(), "attacks","attackproperties.xml").toFile();
+        loadAttacksData(attackProperties);
         File spriteProperties = Paths.get(directory.getPath(), "sprites","spriteproperties.xml").toFile();
+        loadSpriteData(spriteProperties);
     }
 
     private void loadCharacterData(File file) {
@@ -451,10 +452,13 @@ public class CharacterEditor extends EditorSuper {
             ArrayList<String> health = data.get("health");
             ArrayList<String> attack = data.get("attack");
             ArrayList<String> defense = data.get("defense");
+            HashMap<String, ArrayList<String>> portrait = parser.parseFileForElement("portrait");
+
+
             healthSlider.setNewValue(Double.parseDouble(health.get(0)));
             attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
             defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
-            HashMap<String, ArrayList<String>> portrait = parser.parseFileForElement("portrait");
+
         } catch (Exception ex) {
             System.out.println("Cannot load file");
         }
@@ -476,7 +480,6 @@ public class CharacterEditor extends EditorSuper {
             System.out.println("Cannot load file");
         }
     }
-
     private void createSaveFile() {
         saveCharacterProperties();
         saveAttackProperties();
@@ -484,37 +487,6 @@ public class CharacterEditor extends EditorSuper {
         isSaved = true;
         root.getChildren().add(saved);
     }
-
-    /**
-     * general method for choosing an image
-     * @returns file chosen
-     */
-    private File chooseImage(String message){
-        FileChooser fileChooser = myRS.makeFileChooser("image");
-        fileChooser.setTitle(message);
-        if(isSaved) {
-            isSaved = false;
-            root.getChildren().remove(saved);
-        }
-        return fileChooser.showOpenDialog(getWindow());
-    }
-    /*
-    Alert system found at:
-    https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
-    */
-    private boolean testNull(Object object, String message){
-        if (object == null){
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
-                    ButtonType.OK);
-            alert.showAndWait();
-            return true;
-        }
-        return false;
-    }
-    private void setImageView(ImageView img, String portraitURL){
-        img.setImage(new Image(portraitURL));
-    }
-
     private void saveCharacterProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> characterAttributes = new ArrayList<>(List.of("health","attack","defense"));
@@ -534,11 +506,13 @@ public class CharacterEditor extends EditorSuper {
         try {
             File xmlFile = Paths.get(myDirectory.getPath(), "characterproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
+
+            File file = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
+            ImageIO.write(SwingFXUtils.fromFXImage(portrait.getImage(), null), "png", file);
         } catch (Exception ex) {
             System.out.println("Invalid save");
         }
     }
-
     private void saveAttackProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> attackAttributes = new ArrayList<>(List.of("name","duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
@@ -586,7 +560,6 @@ public class CharacterEditor extends EditorSuper {
             System.out.println("Invalid save");
         }
     }
-
     private void saveSpriteProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> spriteAttributes = new ArrayList<>(List.of("offsetX", "offsetY", "width", "height"));
@@ -606,6 +579,37 @@ public class CharacterEditor extends EditorSuper {
         } catch (Exception ex) {
             System.out.println("Invalid save");
         }
+    }
+
+
+    /**
+     * general method for choosing an image
+     * @returns file chosen
+     */
+    private File chooseImage(String message){
+        FileChooser fileChooser = myRS.makeFileChooser("image");
+        fileChooser.setTitle(message);
+        if(isSaved) {
+            isSaved = false;
+            root.getChildren().remove(saved);
+        }
+        return fileChooser.showOpenDialog(getWindow());
+    }
+    /**
+    Alert system found at:
+    https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
+    **/
+    private boolean testNull(Object object, String message){
+        if (object == null){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
+                    ButtonType.OK);
+            alert.showAndWait();
+            return true;
+        }
+        return false;
+    }
+    private void setImageView(ImageView img, String portraitURL){
+        img.setImage(new Image(portraitURL));
     }
     private void resetText (String message, TextInputDialog text){
         text.setContentText(message);
