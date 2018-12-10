@@ -1,27 +1,29 @@
 package physics.external;
 
-public class PhysicsAttack extends PhysicsObject {
+public abstract class PhysicsAttack extends PhysicsObject {
 
-    PhysicsAttack(int id, double mass, Coordinate start, Dimensions dims) {
+    private int myParentID;
+    private int knockForce;
+
+    PhysicsAttack(int id, int parentID, double direction, double mass, Coordinate start, Dimensions dims) {
         super(id, mass, start, dims);
+        this.myParentID = parentID;
+        this.myDirection = direction;
     }
+
+    @Override
+    public int getParentID() { return myParentID; }
 
     @Override
     public boolean isPhysicsAttack() {
         return true;
     }
 
-    @Override
-    public PhysicsVector getYVelocity() {
-        double yMag = this.getVelocity().getMagnitude() * Math.sin(this.getVelocity().getDirection());
-        PhysicsVector yVel = new PhysicsVector(yMag, -Math.PI/2);
-        return yVel;
+    public int getKnockForce() {
+        return knockForce;
     }
 
-    @Override
-    public PhysicsVector getXVelocity(){
-        double xMag = this.getVelocity().getMagnitude() * Math.cos(this.getVelocity().getDirection());
-        PhysicsVector xVel = new PhysicsVector(xMag, 0);
-        return xVel;
+    public void setKnockForce(int knockForce) {
+        this.knockForce = knockForce;
     }
 }

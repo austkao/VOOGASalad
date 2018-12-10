@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Console {
 
@@ -74,6 +73,8 @@ public class Console {
     @Subscribe
     public  void printEvent(Event event){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        System.out.println("["+timestamp+"]"+" Console: "+event.getName());
+        if(!"PositionsUpdateEvent".equals(event.getName())){
+            System.out.println("["+timestamp+"]"+" Console: "+event.getName());
+        }
     }
 }

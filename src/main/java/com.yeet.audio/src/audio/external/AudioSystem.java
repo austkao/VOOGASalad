@@ -83,7 +83,19 @@ public class AudioSystem {
 
     @Subscribe
     public void changeBGMVolume(BGMVolumeEvent newVol){
+        System.out.println("changing volume of bgm to "+newVol.getVolume());
         bgmvol = newVol.getVolume();
+        menuvol = newVol.getVolume();
+        fightvol = newVol.getVolume();
+        if(bgmMP!=null){
+            bgmMP.setVolume(newVol.getVolume());
+        }
+        if(menuMP!=null){
+            menuMP.setVolume(newVol.getVolume());
+        }
+        if(fightMP!=null){
+            fightMP.setVolume(newVol.getVolume());
+        }
     }
 
 

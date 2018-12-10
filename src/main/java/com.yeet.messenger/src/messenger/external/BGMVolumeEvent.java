@@ -11,7 +11,7 @@ public class BGMVolumeEvent extends Event {
 
     @Override
     public String getName() {
-        return null;
+        return "Music volume change event";
     }
 
     public double getVolume(){

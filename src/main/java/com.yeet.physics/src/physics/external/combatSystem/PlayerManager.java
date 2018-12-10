@@ -27,6 +27,20 @@ public class PlayerManager {
         }
     }
 
+    public PlayerManager(int numOfPlayers, Map<Integer, ArrayList<Double>> stats){
+        playerMap = new HashMap<>();
+        ranking = new LinkedList<>();
+        this.numOfPlayers = numOfPlayers;
+        for(int id = INITIAL_ID; id < numOfPlayers; id++){
+            ArrayList<Double> stat = stats.get(id);
+            playerMap.put(id, new Player(id, stat.get(0), stat.get(1), stat.get(2)));
+        }
+
+
+
+    }
+
+
     public Player getPlayerByID(int id){
         if(id >= INITIAL_ID + numOfPlayers)
             throw new RuntimeException(String.format("ID %d does not exist", id));
