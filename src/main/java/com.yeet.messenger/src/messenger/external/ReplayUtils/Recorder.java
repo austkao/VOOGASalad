@@ -1,23 +1,44 @@
 package messenger.external.ReplayUtils;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 /** Creates and plays back {@code Replay} objects, and can write them to file
  *  @author bpx
  */
 public class Recorder {
+    private EventBus myEventBus;
 
+    private File myDirectory;
     private Replay myActiveReplay;
     private boolean isRecording;
 
-    public Recorder(){
+    /** Create a new {@code Recorder} to record {@code Event} objects
+     *  @param recordTarget The target {@code EventBus} to record
+     */
+    public Recorder(EventBus recordTarget){
+        myEventBus = recordTarget;
         myActiveReplay = new Replay();
         isRecording = false;
+        myEventBus.register(this);
+    }
+
+    /** Create a new {@code Recorder} with a recording directory */
+    public Recorder(EventBus recordTarget, File directory) throws InvalidDirectoryException{
+        this(recordTarget);
+        setRecordingDirectory(directory);
+    }
+
+    public void setRecordingDirectory(File directory) throws InvalidDirectoryException{
+        if(directory.isDirectory()){
+            myDirectory = directory;
+        }
+        else{
+            throw new InvalidDirectoryException();
+        }
     }
 
     /** Starts a new recording of events */
@@ -31,13 +52,28 @@ public class Recorder {
         isRecording = false;
     }
 
-    /** Saves the active replay */
+    /** Saves the active replay to disk using serialization. Saves to project directory if recording directory is null,
+     *  or specified directory if recording directory has been set.
+     */
     public void save(){
         // Serialization
         try
         {
             //Saving of object in a file
-            FileOutputStream file = new FileOutputStream("replay.yeet");
+            FileOutputStream file;
+            if(myDirectory==null){
+                file = new FileOutputStream("replay.yeet");
+            }
+            else{
+                File targetFile = new File(myDirectory,createFileName());
+                int copy = 1;
+                while(!targetFile.createNewFile()){
+                    targetFile = new File(myDirectory,targetFile.getName()+"("+copy+")");
+                    copy++;
+                }
+                file = new FileOutputStream(targetFile);
+            }
+
             ObjectOutputStream out = new ObjectOutputStream(file);
 
             // Method for serialization of object
@@ -51,6 +87,32 @@ public class Recorder {
         {
             System.out.println("IOException is caught");
         }
+    }
+
+    /** Loads a replay from a {@code File}, throws {@code InvalidReplayFileException} if an error occurs */
+    public void load(File replayFile) throws InvalidReplayFileException{
+        Replay replay;
+        // Deserialization
+        try
+        {
+            // Reading the object from a file
+            FileInputStream file = new FileInputStream(replayFile);
+            ObjectInputStream in = new ObjectInputStream(file);
+            // Method for deserialization of object
+            replay = (Replay)in.readObject();
+            in.close();
+            file.close();
+            myActiveReplay = replay;
+        }
+        catch(IOException | ClassNotFoundException | ClassCastException ex)
+        {
+            throw new InvalidReplayFileException(ex.getMessage());
+        }
+    }
+
+    private String createFileName(){
+        String timestamp = ReplayUtilities.getCurrentTimeUsingCalendar();
+        return("replay_"+timestamp+".yeet");
     }
 
     @Subscribe

@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import messenger.external.*;
+import messenger.external.ReplayUtils.ReplayUtilities;
 import player.internal.*;
 import renderer.external.Renderer;
 
@@ -101,6 +102,7 @@ public class Player {
         });
         //finished loading
         myStage.setScene(mySplashScreen);
+        System.out.println(ReplayUtilities.getCurrentTimeUsingCalendar());
     }
 
     /** Sets the location of the active game directory to load files from

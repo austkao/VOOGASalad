@@ -39,4 +39,12 @@ public class Replay implements Serializable {
         }
     }
 
+    public int getIndex(){
+        return index;
+    }
+
+    public int getLength(){
+        return length;
+    }
+
 }

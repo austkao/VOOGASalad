@@ -6,6 +6,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class RenderUtils {
+
+    private RenderUtils(){}
+
     public static String toRGBCode( Color color )
     {
         return String.format( "#%02X%02X%02X",
