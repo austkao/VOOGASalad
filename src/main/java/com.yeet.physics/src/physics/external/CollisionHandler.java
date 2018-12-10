@@ -58,17 +58,7 @@ public class CollisionHandler {
             two = c.getCollider2();
             // body+attack
             if(one.isPhysicsBody() && two.isPhysicsAttack()){
-                System.out.println("Successful Hit Attack");
-                PhysicsVector force = new PhysicsVector(defaultAttackMagnitude, two.getDirection());
-                one.addCurrentForce(force);
-                System.out.println("CH Current Forces:");
-                for (PhysicsVector f : one.getCurrentForces()) {
-                    System.out.println(f.getMagnitude() + ", " + f.getDirection());
-                }
-                List<Integer> collisions = new ArrayList<>();
-                collisions.add(one.getId());
-                collisions.add(two.getId());
-                attackCollisions.add(collisions);
+                attackCollisions.add(playerAndAttack(one, two));
             }
             // body+ground
             if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){
@@ -107,6 +97,8 @@ public class CollisionHandler {
                 PhysicsVector rightwardForce = new PhysicsVector(bodyMass*bodyVelocity/(timeOfFrame), PI);
                 one.addCurrentForce(rightwardForce);
                 groundCollisions.add(one.getId());
+
+
             } else if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("RIGHT")){
                 double bodyVelocity = Math.abs(one.getXVelocity().getMagnitude());
                 double bodyMass = one.getMass();
@@ -116,7 +108,19 @@ public class CollisionHandler {
             }
         }
     }
-
+    public List<Integer> playerAndAttack(PhysicsObject one, PhysicsObject two){
+        System.out.println("Successful Hit Attack");
+        PhysicsVector force = new PhysicsVector(defaultAttackMagnitude, two.getDirection());
+        one.addCurrentForce(force);
+        System.out.println("CH Current Forces:");
+        for (PhysicsVector f : one.getCurrentForces()) {
+            System.out.println(f.getMagnitude() + ", " + f.getDirection());
+        }
+        List<Integer> collisions = new ArrayList<>();
+        collisions.add(one.getId());
+        collisions.add(two.getId());
+        return collisions;
+    }
 
     public void applyReactiveForce(PhysicsObject one, double bodyVelocity, double bodyMass){
         double gravityMag = Math.round(one.getMass() * DEFAULT_GRAVITY_ACCELERATION);
