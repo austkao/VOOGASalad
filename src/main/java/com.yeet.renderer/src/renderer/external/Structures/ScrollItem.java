@@ -17,41 +17,47 @@ public class ScrollItem implements Scrollable {
     private ToggleButton button;
     private ToggleButton imageButton;
     private Image image;
-    private ImageView imageView;
+    private ImageView imageView1;
+    private ImageView imageView2;
     private RenderSystem rs;
 
 
     public ScrollItem(Image image, Text desc){
         rs = new RenderSystem();
         this.image = image;
-        this.imageView = new ImageView(image);
+        this.imageView1 = new ImageView(image);
+        this.imageView2 = new ImageView(image);
+        imageView1.setPreserveRatio(true);
+        imageView2.setPreserveRatio(true);
+        resize(200);
         initializeButton(desc);
         initializeImageButton();
     }
 
-
     public void initializeButton(Text desc){
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(100);
-        button = new ToggleButton(desc.getText(),imageView);
+        button = new ToggleButton(desc.getText(),imageView1);
         button.setTextFill(Color.WHITE);
         button.wrapTextProperty().setValue(true);
         rs.applyStyleAndEffect(button);
     }
+
+    private void initializeImageButton(){
+        imageButton = new ToggleButton("",imageView2);
+        rs.applyStyleAndEffect(imageButton);
+    }
+
+
+    public void resize(int val){
+        imageView1.setFitHeight(val);
+        imageView2.setFitHeight(val);
+    }
+
 
     @Override
     public void setNodeGraphic(Node key, String text) {
 
     }
 
-    private void initializeImageButton(){
-        imageButton = new ToggleButton();
-        ImageView copy = new ImageView(image);
-        copy.setPreserveRatio(true);
-        copy.setFitHeight(100);
-        imageButton.setGraphic(copy);
-        rs.applyStyleAndEffect(imageButton);
-    }
 
 
 

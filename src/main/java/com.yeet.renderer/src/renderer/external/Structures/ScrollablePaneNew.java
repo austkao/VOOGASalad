@@ -182,4 +182,8 @@ public class ScrollablePaneNew extends Pane {
         }
         return itemList;
     }
+
+    public void setItemSize(int value){
+
+    }
 }

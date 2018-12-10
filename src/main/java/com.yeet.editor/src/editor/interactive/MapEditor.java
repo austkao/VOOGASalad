@@ -69,7 +69,7 @@ public class MapEditor extends EditorSuper {
         myBackgroundImage = DEFAULT_BACKGROUND_IMAGE;
         myBGMFileName = DEFAULT_BGM;
         try {
-            initializeLevel(880, 550, 330, 120,
+            initializeLevel(1008, 630, 260, 120,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -98,7 +98,7 @@ public class MapEditor extends EditorSuper {
 
     private void initializeScrollPane(){
         File paneFile = new File(myEM.getGameDirectoryString()+DEFAULT_IMAGE_DIR);
-        myScrollablePane = new ScrollablePaneNew(paneFile,15,120.0, 300, 600);
+        myScrollablePane = new ScrollablePaneNew(paneFile,15,120.0, 250, 600);
         for(Scrollable b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage(), b.getButton().getText()));
         }
@@ -131,9 +131,9 @@ public class MapEditor extends EditorSuper {
             MapSettings s = new MapSettings();
             s.setScene();
         });
-        myButtons.getChildren().addAll(saveFile,settings,resetGrid,addBG,chooseTile,input);
+        myButtons.getChildren().addAll(saveFile,chooseTile,settings,resetGrid,addBG,input);
         myButtons.setLayoutX(60.0);
-        myButtons.setLayoutY(50.0);
+        myButtons.setLayoutY(70.0);
     }
 
     /**
