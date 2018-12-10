@@ -10,7 +10,7 @@ public class FXVolumeEvent extends Event {
 
     @Override
     public String getName() {
-        return null;
+        return "Sound effects volume change event";
     }
 
     public double getVolume(){
