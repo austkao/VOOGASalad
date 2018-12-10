@@ -12,7 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import messenger.external.BGMVolumeEvent;
 import messenger.external.EventBusFactory;
+import messenger.external.FXVolumeEvent;
 import messenger.external.VolumeChangeEvent;
 import player.internal.Elements.MessageBar;
 import renderer.external.Renderer;
@@ -39,18 +41,21 @@ public class SoundsSettingsScreen extends Screen {
     private HashMap<String,String> myVolumeMap;
     private Button saveButton;
 
+    private Consumer<Double> mySEChanger;
+
     private File volumeProperties;
 
     private SliderBox musicSllider;
     private SliderBox soundSlider;
     private SliderBox voiceSlider;
 
-    public SoundsSettingsScreen(File gameDirectory, Group root, Renderer renderer, SceneSwitch settingsSwitch) {
+    public SoundsSettingsScreen(File gameDirectory, Group root, Renderer renderer, SceneSwitch settingsSwitch, Consumer<Double> seChanger) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(SOUNDS_TITLE,true,MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(SOUNDS_MSG,false,MESSAGEBAR_MSG_FONTSIZE,Color.BLACK,0.0,0.0),
                 MESSAGEBAR_X,MESSAGEBAR_Y);
         myVolumeMap = new HashMap<>();
+        mySEChanger = seChanger;
         volumeProperties = new File(gameDirectory.getPath()+"/gameproperties.xml");
         XMLParser volumePropertiesParser = new XMLParser(volumeProperties);
         HashMap<String, ArrayList<String>> volumeInfo = volumePropertiesParser.parseFileForElement("volume");
@@ -119,11 +124,14 @@ public class SoundsSettingsScreen extends Screen {
     private void setSoundVolume(Double volume) {
         myVolumeMap.put("sound",String.valueOf(volume));
         enableSaveButton();
+        mySEChanger.accept(volume/100);
+        myMessageBus.post(new FXVolumeEvent(volume/100));
     }
 
     private void setMusicVolume(Double volume) {
         myVolumeMap.put("music",String.valueOf(volume));
         enableSaveButton();
+        myMessageBus.post(new BGMVolumeEvent(volume/100));
     }
 
     private HBox createVolumeSlider(String fileName, String label, Consumer<Double> volumeSetter) {

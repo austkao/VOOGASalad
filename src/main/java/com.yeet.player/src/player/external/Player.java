@@ -5,8 +5,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import messenger.external.*;
 import player.internal.*;
@@ -27,17 +25,11 @@ public class Player {
 
     private Consumer<Scene> myEditorLink;
 
-    private MediaPlayer myBGMPlayer;
-    private Media myBGM;
-    private MediaPlayer myFightMusicPlayer;
-    private Media myFightMusic;
-
     private LoadingScreen myLoadingScreen;
     private SplashScreen mySplashScreen;
     private MainMenuScreen myMainMenuScreen;
     private SettingsScreen mySettingsScreen;
     private SoundsSettingsScreen mySoundsSettingsScreen;
-    private ControlsSettingsScreen myControlsSettingsScreen;
     private CharacterSelectScreen myCharacterSelectScreen;
     private MatchRulesScreen myMatchRulesScreen;
     private StageSelectScreen myStageSelectScreen;
@@ -67,8 +59,6 @@ public class Player {
             myMessageBus.post(new MenuStartEvent());
         });
         mySettingsScreen = new SettingsScreen(new Group(),myRenderer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myEditorLink.accept(mySettingsScreen));
-        mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,()->myStage.setScene(mySettingsScreen));
-        myControlsSettingsScreen = new ControlsSettingsScreen(new Group(),myRenderer);
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()-> {
             myMessageBus.post(new ExitMenuEvent());
             myMessageBus.post(new FightStartEvent()); // FightStartEvent is the character select screen!
@@ -80,6 +70,7 @@ public class Player {
         },()-> {
             myStage.setScene(mySettingsScreen);
         });
+        mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,()->myStage.setScene(mySettingsScreen),(volume)->myMainMenuScreen.setSelectVolume(volume));
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
             myStage.setScene(myMainMenuScreen);
             myMessageBus.post(new FightEndEvent());
