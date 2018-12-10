@@ -95,8 +95,7 @@ public class CharacterEditor extends EditorSuper {
         myDirectory = characterDirectory;
         isSaved = isEdit;
         if(isEdit) {
-            File characterProperties = Paths.get(characterDirectory.getPath(), "characterproperties.xml").toFile();
-            loadCharacterData(characterProperties);
+            loadCharacterData(characterDirectory);
         }
     }
 
@@ -428,6 +427,54 @@ public class CharacterEditor extends EditorSuper {
 
     public String toString(){
         return "Character Editor";
+    }
+
+    private void loadFiles(File directory) {
+        File characterProperties = Paths.get(directory.getPath(), "characterproperties.xml").toFile();
+        loadCharacterData(characterProperties);
+        File attackProperties = Paths.get(directory.getPath(), "attacks","attackproperties.xml").toFile();
+        File spriteProperties = Paths.get(directory.getPath(), "sprites","spriteproperties.xml").toFile();
+    }
+
+    private void loadCharacterData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> data = parser.parseFileForElement("character");
+            ArrayList<String> health = data.get("health");
+            ArrayList<String> attack = data.get("attack");
+            ArrayList<String> defense = data.get("defense");
+            healthSlider.setNewValue(Double.parseDouble(health.get(0)));
+            attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
+            defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
+            HashMap<String, ArrayList<String>> portrait = parser.parseFileForElement("portrait");
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
+    private void loadAttacksData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> attacks = parser.parseFileForElement("attack");
+            HashMap<String, ArrayList<String>> frames = parser.parseFileForElement("frame");
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
+    private void loadSpriteData(File file) {
+        try {
+            XMLParser parser = loadXMLFile(file);
+            HashMap<String, ArrayList<String>> sprites = parser.parseFileForElement("sprite");
+        } catch (Exception ex) {
+            System.out.println("Cannot load file");
+        }
+    }
+
+    private void createSaveFile() {
+        saveCharacterProperties();
+        saveAttackProperties();
+        saveSpriteProperties();
+        isSaved = true;
+        root.getChildren().add(saved);
     }
 
     /**

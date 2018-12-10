@@ -4,11 +4,17 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.event.Event;
 import messenger.external.*;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import xml.XMLParser;
 
+import javax.print.attribute.Attribute;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DataSystem {
     private EventBus myEB;
@@ -51,11 +57,25 @@ public class DataSystem {
         }
     }
 
-    @Subscribe
     public void overwriteGameFile(File xmlFile) {
         XMLParser parser = new XMLParser(xmlFile);
         Document xmlDoc = parser.createDocument(xmlFile);
+        NodeList voogaNodes = xmlDoc.getElementsByTagName("VOOGASalad");
+        HashMap<String, ArrayList<String>> structure = new HashMap<>();
+        HashMap<String, ArrayList<String>> data = new HashMap<>();
+        for(int i = 0; i < voogaNodes.getLength(); i++) {
+            if(voogaNodes.item(i) instanceof Element) {
+                Element voogaElem = (Element) voogaNodes.item(i);
+                NodeList voogaElemNodes = voogaElem.getChildNodes();
+                for(int j = 0; j < voogaElemNodes.getLength(); j++) {
+                    if(voogaElemNodes.item(j) instanceof Attribute) {
+                        Attr voogaAttr = (Attr) voogaElemNodes.item(j);
+                        //structure.putIfAbsent(voogaElem.getTagName(), voogaAttr.getName());
 
+                    }
+                }
+            }
+        }
     }
 
     @Subscribe
