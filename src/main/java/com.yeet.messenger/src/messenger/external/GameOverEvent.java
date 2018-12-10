@@ -1,14 +1,13 @@
 package messenger.external;
 
 import java.util.ArrayList;
-import java.util.Queue;
 
 public class GameOverEvent extends Event{
 
     private int winnerID;
-    private Queue<Integer> rankList;
+    private ArrayList<Integer> rankList;
 
-    public GameOverEvent(int winnerID, Queue<Integer> rankList){
+    public GameOverEvent(int winnerID, ArrayList<Integer> rankList){
         super();
         this.winnerID = winnerID;
         this.rankList = rankList;
@@ -23,7 +22,7 @@ public class GameOverEvent extends Event{
         return winnerID;
     }
 
-    public Queue<Integer> getRankList(){
+    public ArrayList<Integer> getRankList(){
         return rankList;
     }
 }

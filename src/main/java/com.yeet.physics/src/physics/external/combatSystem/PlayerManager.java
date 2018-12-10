@@ -82,8 +82,16 @@ public class PlayerManager {
         return false;
     }
 
-    public Queue<Integer> getRanking(){
-        return ranking;
+//    <0,3,1,2> 2 is first place
+    public ArrayList<Integer> getRanking(){
+        Map<Integer, Integer> map = new TreeMap<>();
+        int rank = numOfPlayers;
+        while(!ranking.isEmpty()){
+            int id = ranking.remove();
+            map.put(id, rank);
+            rank--;
+        }
+        return new ArrayList<>(map.values());
     }
 
     public void setNumOfLives(int numOfLives){
@@ -91,15 +99,6 @@ public class PlayerManager {
             playerMap.get(id).setNumOfLives(numOfLives);
         }
     }
-
-//    public void sendEventToBots(CombatActionEvent combatActionEvent){
-//        for(Player player: playerMap.values()){
-//            if(player.isBot()){
-////                System.out.println("Receive events.");
-//                ((Bot)player).receiveEvent(combatActionEvent);
-//            }
-//        }
-//    }
 
     // check if the id passed in exists in the map
     private boolean checkIDValid(int id){
