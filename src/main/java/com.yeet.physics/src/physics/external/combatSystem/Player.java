@@ -21,6 +21,7 @@ public class Player {
     private int powerLevel;
     private int score;
     private double attackDamage = 10.0;
+    private double defense = 0.0;
     private List<Player> isAttackingTargets;
     private List<List<Integer>> hitboxes;
     private Player beingAttackedBy;
@@ -35,6 +36,14 @@ public class Player {
     public Player(int id){
         this();
         this.id = id;
+    }
+
+    public Player(int id, double attackDamage, double defense, double health){
+        this();
+        this.id = id;
+        this.attackDamage = attackDamage;
+        this.defense = defense;
+        this.health = health;
     }
 
     public PlayerState getPlayerState(){
