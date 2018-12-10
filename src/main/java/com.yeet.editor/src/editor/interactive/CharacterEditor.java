@@ -1,5 +1,6 @@
 package editor.interactive;
 
+import editor.AnimationInfo;
 import editor.EditorManager;
 import javafx.animation.Animation;
 import javafx.geometry.Point2D;
@@ -40,9 +41,7 @@ public class CharacterEditor extends EditorSuper {
     private static final String HURT_TEXT = "HURTBOX";
 
     private ImageView portrait;
-
     private ImageView spriteSheet;
-
     private Sprite currentSprite;
 
     //Animation variables
@@ -62,63 +61,7 @@ public class CharacterEditor extends EditorSuper {
     private File myDirectory;
     private InputEditor inputEditor;
 
-    static class AnimationInfo {
-        int currentFrame;
-        int totalFrames;
-        int attackPower;
-        Map<Integer, Rectangle> hitBoxes;
-        Map<Integer, Rectangle> hurtBoxes;
-        List<String> input;
 
-        AnimationInfo(int total, List<String> inputString, int power) {
-            input = inputString;
-            currentFrame = -1;
-            totalFrames = total;
-            hitBoxes = new HashMap<>();
-            hurtBoxes = new HashMap<>();
-            for (int i = 1; i <= totalFrames; i++){
-                hitBoxes.putIfAbsent(i, new Rectangle());
-                hurtBoxes.putIfAbsent(i, new Rectangle());
-            }
-            attackPower = power;
-        }
-
-        void setHitBox(Rectangle r){
-            hitBoxes.put(currentFrame, r);
-        }
-        void setHurtBox(Rectangle r){
-            hurtBoxes.put(currentFrame, r);
-        }
-        Rectangle getHitBox(){
-            return hitBoxes.get(currentFrame);
-        }
-        Rectangle getHurtBox(){
-            return hurtBoxes.get(currentFrame);
-        }
-        void advance(int add){
-            currentFrame = Math.floorMod((currentFrame + add),totalFrames);
-            if (currentFrame == 0){
-                currentFrame = totalFrames;
-            }
-        }
-        public String toString(){
-            if (currentFrame == -1 || totalFrames == -1){
-                return "Animation Not Set";
-            }
-            String ret = "Frame "+currentFrame+"/"+totalFrames + "\ninput: ";
-            for (int i = 0 ; i < input.size(); i++){
-                if (i < input.size() - 1){
-                    ret += input.get(i)+"-";
-                }
-                else{
-                    ret += input.get(i);
-                }
-            }
-            return ret;
-        }
-        void setInput(List<String> in){ input = in;}
-        List<String> getInput(){return input;}
-    }
 
     public CharacterEditor(EditorManager em, InputEditor editor){
         super(new Group(),em);
@@ -236,7 +179,7 @@ public class CharacterEditor extends EditorSuper {
         }
         currentAnimation = scrollToAnimation.get(b);
         AnimationInfo frame = animationFrame.get(currentAnimation);
-        frame.currentFrame = 1;
+        frame.setCurrentFrame(1);
         stepForwardAnimation();
         //stepBackAnimation();
     }
@@ -261,7 +204,7 @@ public class CharacterEditor extends EditorSuper {
         if (currentAnimation.getStatus().equals(Animation.Status.RUNNING)){
             currentAnimation.jumpTo(new Duration(0));
             currentAnimation.stop();
-            frame.currentFrame = 1;
+            frame.setCurrentFrame(1);
             frameText.setText(frame.toString());
             mySpritePane.getChildren().add(frame.getHitBox());
             mySpritePane.getChildren().add(frame.getHurtBox());
@@ -438,32 +381,23 @@ public class CharacterEditor extends EditorSuper {
         return myAnimation;
     }
 
-
-
     private String showAlertInputOptions(int num){
-
         //Set<String> options = inputEditor.getInputTypes();
-
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Enter input #" + num);
-
-        boolean disabled = false;
 
 //        for (String option: options){
 //            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
 //            dialog.getDialogPane().getButtonTypes().add(optionButton);
-//            dialog.getDialogPane().lookupButton(optionButton).setDisable(disabled);
+//            dialog.getDialogPane().lookupButton(optionButton).setDisable(false);
 //        }
 
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-
         ButtonType input = dialog.showAndWait().orElse(ButtonType.CLOSE);
-
         if (input == ButtonType.CLOSE){
             return "";
         }
         return input.getText();
-
     }
     private void setInputCombo(){
         if (testNull(currentAnimation, "Animation not selected")){
@@ -483,9 +417,7 @@ public class CharacterEditor extends EditorSuper {
         }
         return combo;
     }
-
-
-
+    
     public String toString(){
         return "Character Editor";
     }
