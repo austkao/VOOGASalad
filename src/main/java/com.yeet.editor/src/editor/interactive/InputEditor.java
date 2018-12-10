@@ -28,11 +28,13 @@ public class InputEditor extends EditorSuper {
     private List<HashMap<String,String>> bindings;
     private TabPane tabs;
     private int currentTabId;
+    private int numTabs;
 
 
     public InputEditor(EditorManager em){
         super(new Group(), em);
         currentTabId = 1;
+        numTabs = DEFAULT_NUM_TABS;
         bindings = new ArrayList<>();
         userInputs = new ArrayList<>();
         inputTypes = FXCollections.observableArrayList();
@@ -62,7 +64,7 @@ public class InputEditor extends EditorSuper {
     private void showBindings(Text t){
         getBindings();
         String res = "";
-        for(int i = 0; i < DEFAULT_NUM_TABS; i++){
+        for(int i = 0; i < numTabs; i++){
             String map = bindings.get(i).toString();
             res += "Player " + Integer.toString(i+1) +  " " + map + "\n";
         }
@@ -93,12 +95,16 @@ public class InputEditor extends EditorSuper {
 
     private List<Tab> makeTabs(){
         List<Tab> tablist = new ArrayList<>();
-        for(int i = 0; i < DEFAULT_NUM_TABS; i++) {
+        for(int i = 0; i < numTabs; i++) {
             Tab t = new Tab();
             t.setText("Player " + (i + 1));
             t.setId(Integer.toString(i+1));
             t.setOnSelectionChanged(e ->
                     currentTabId = Integer.parseInt(t.getId()));
+            t.setOnCloseRequest(e -> {
+                numTabs--;
+                System.out.println(numTabs);
+            });
             t.setContent(generateContent());
             tablist.add(t);
         }
@@ -129,7 +135,7 @@ public class InputEditor extends EditorSuper {
     }
 
     private void setRequirements(){
-        for(int i = 0; i < DEFAULT_NUM_TABS; i++){
+        for(int i = 0; i < numTabs; i++){
             for(int j = 0; j < DEFAULT_MOVES.length; j++){
                 inputTypes.get(i).add(DEFAULT_MOVES[j]);
                 myScrolls.get(i).addItem(new InputItem(new Text(DEFAULT_MOVES[j])));
@@ -156,7 +162,7 @@ public class InputEditor extends EditorSuper {
 
     public List<HashMap<String,String>> getBindings(){
         bindings.clear();
-        for(int i = 0; i < DEFAULT_NUM_TABS; i++) {
+        for(int i = 0; i < numTabs; i++) {
             bindings.add(new HashMap<>());
             for (Scrollable s : myScrolls.get(i).getItems()) {
                 String move = s.getButton().getText();
@@ -188,7 +194,6 @@ public class InputEditor extends EditorSuper {
 
     private void createSaveFile() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        structure.put("players", new ArrayList<>(List.of("numPlayers")));
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         TreeSet<String> moves = new TreeSet<>();
         bindings = getBindings();
@@ -201,7 +206,6 @@ public class InputEditor extends EditorSuper {
         }
         structure.put("input", new ArrayList<>(moves));
         for(String s: data.keySet()) {
-            System.out.println(s);
             for(int i = 0; i < bindings.size(); i++) {
                 HashMap<String, String> bindingsMap = bindings.get(i);
                 if(bindingsMap.containsKey(s)) {
@@ -211,7 +215,8 @@ public class InputEditor extends EditorSuper {
                 }
             }
         }
-        System.out.println(data);
+        structure.put("players", new ArrayList<>(List.of("numPlayers")));
+        data.put("numPlayers", new ArrayList<>(List.of(Integer.toString(numTabs))));
         File save = Paths.get(myEM.getGameDirectoryString(), "inputsetuptest.xml").toFile();
         generateSave(structure, data, save);
     }
