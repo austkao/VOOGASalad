@@ -153,7 +153,13 @@ public class CombatScreen extends Screen {
                 double size = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","size").get(0));
                 ImageView healthPortrait = new ImageView(new Image(myGameDirectory.toURI()+"/characters/"+characterNames.get(characterNames.keySet().toArray()[i])+"/"+characterNames.get(characterNames.keySet().toArray()[i])+".png"));
                 healthPortrait.setViewport(new javafx.geometry.Rectangle2D(x,y,size,size));
-                HealthDisplay healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),3,healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
+                HealthDisplay healthDisplay;
+                if(gameMode.equalsIgnoreCase("TIME")){
+                    healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
+                }
+                else{
+                    healthDisplay = new HealthDisplay(super.getMyRenderer().makeText(characterNames.get(characterNames.keySet().toArray()[i]),true,40,Color.WHITE,0.0,0.0),typeValue,healthPortrait,characterColors.get(characterNames.keySet().toArray()[i]),characterColors.get(characterNames.keySet().toArray()[i]).darker());
+                }
                 healthDisplayContainer.getChildren().add(healthDisplay);
                 myHealthMap.put((int)characterNames.keySet().toArray()[i],healthDisplay);
             }
