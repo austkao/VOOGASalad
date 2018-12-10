@@ -522,7 +522,7 @@ public class CharacterEditor extends EditorSuper {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> attackAttributes = new ArrayList<>(List.of("name","duration","count","columns","offsetX","offsetY","width","height", "attackPower", "inputCombo"));
         structure.put("attack", attackAttributes);
-        ArrayList<String> frameAttributes = new ArrayList<>(List.of("number","hitXPos","hitYPos","hitWidth","hitHeight","hurtXPos","hurtYPos","hurtWidth","hurtHeight"));
+        ArrayList<String> frameAttributes = new ArrayList<>(List.of("fname","number","hitXPos","hitYPos","hitWidth","hitHeight","hurtXPos","hurtYPos","hurtWidth","hurtHeight"));
         structure.put("frame", frameAttributes);
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         for(String s : attackAttributes) {
@@ -547,6 +547,7 @@ public class CharacterEditor extends EditorSuper {
                 aniInfo.setCurrentFrame(i);
                 Rectangle hitBox = aniInfo.getHitBox();
                 Rectangle hurtBox = aniInfo.getHurtBox();
+                data.get("fname").add(aniInfo.getName());
                 data.get("number").add(Integer.toString(i));
                 data.get("hitXPos").add(hitBox.getX()+"");
                 data.get("hitYPos").add(hitBox.getY()+"");
