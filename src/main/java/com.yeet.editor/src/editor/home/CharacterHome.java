@@ -46,6 +46,7 @@ public class CharacterHome extends EditorHome {
         File characterDirectory = Paths.get(em.getGameDirectoryString(), "characters", name).toFile();
         myEB.post(new CreateCharacterEvent("Create Character", characterDirectory));
         setEditor(characterDirectory, false);
+        popupStage.close();
     }
 
     public void initializeEditor(ButtonBase bb, File directory) {
