@@ -69,7 +69,7 @@ public abstract class Bot extends Player{
             public void run() {
                 step();
             }
-        }, 1000, 100);
+        }, 1000, 500);
     }
 
     protected void takeActionBasedOnNextState(PlayerState nextState){
