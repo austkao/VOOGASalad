@@ -49,7 +49,7 @@ public class SoundsSettingsScreen extends Screen {
     private SliderBox soundSlider;
     private SliderBox voiceSlider;
 
-    public SoundsSettingsScreen(File gameDirectory, Group root, Renderer renderer, SceneSwitch settingsSwitch, Consumer<Double> seChanger) {
+    public SoundsSettingsScreen(File gameDirectory, Group root, Renderer renderer, Image bg, SceneSwitch settingsSwitch, Consumer<Double> seChanger) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(SOUNDS_TITLE,true,MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(SOUNDS_MSG,false,MESSAGEBAR_MSG_FONTSIZE,Color.BLACK,0.0,0.0),
@@ -62,7 +62,7 @@ public class SoundsSettingsScreen extends Screen {
         HBox musicBox = createVolumeSlider("music_icon.png", "Music", this::setMusicVolume);
         HBox soundBox = createVolumeSlider("sound_icon.png","Sound", this::setSoundVolume);
         HBox voiceBox = createVolumeSlider("voice_icon.png","Voice", this::setVoiceVolume);
-        ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("mainmenu_bg.png")));
+        ImageView background = new ImageView(bg);
         background.setFitHeight(SCREEN_HEIGHT);
         background.setFitWidth(SCREEN_WIDTH);
         StackPane topBar = new StackPane();

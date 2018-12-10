@@ -35,12 +35,12 @@ public class SettingsScreen extends Screen {
 
     private MessageBar myMessageBar;
 
-    public SettingsScreen(Group root, Renderer renderer, MediaPlayer sePlayer, SceneSwitch mainMenuSwitch, SceneSwitch soundsSwitch, SceneSwitch controlsSwitch) {
+    public SettingsScreen(Group root, Renderer renderer, Image bg, MediaPlayer sePlayer, SceneSwitch mainMenuSwitch, SceneSwitch soundsSwitch, SceneSwitch controlsSwitch) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(SETTINGS_TITLE,true,MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(SETTINGS_MSG,false,MESSAGEBAR_MSG_FONTSIZE,Color.BLACK,0.0,0.0),
                 MESSAGEBAR_X,MESSAGEBAR_Y);
-        ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("mainmenu_bg.png")));
+        ImageView background = new ImageView(bg);
         background.setFitHeight(SCREEN_HEIGHT);
         background.setFitWidth(SCREEN_WIDTH);
         StackPane topBar = new StackPane();
