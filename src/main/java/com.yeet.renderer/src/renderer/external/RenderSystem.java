@@ -225,7 +225,7 @@ public class RenderSystem implements Renderer{
             extensionFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
         }
         else if(filetype.equalsIgnoreCase("audio")){
-            extensionFilter = new FileChooser.ExtensionFilter("Audio files (*.mp3, *.wav, *.aac, *.aiff)", "*.mp3","*.wav","*.aac","*.aiff");
+            extensionFilter = new FileChooser.ExtensionFilter("Audio files (*.mp3, *.wav, *.aac, *.aiff)", "*.mp3","*.wav","*.aac","*.aiff","*.m4a");
         }
         else if(filetype.equalsIgnoreCase("image")){
             extensionFilter = new FileChooser.ExtensionFilter("Image files (*.png, *.gif, *.jpg, *.mpo)", "*.png","*.gif","*.jpg","*.mpo");
