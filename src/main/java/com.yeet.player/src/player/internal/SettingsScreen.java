@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -34,7 +35,7 @@ public class SettingsScreen extends Screen {
 
     private MessageBar myMessageBar;
 
-    public SettingsScreen(Group root, Renderer renderer, SceneSwitch mainMenuSwitch, SceneSwitch soundsSwitch, SceneSwitch controlsSwitch) {
+    public SettingsScreen(Group root, Renderer renderer, MediaPlayer sePlayer, SceneSwitch mainMenuSwitch, SceneSwitch soundsSwitch, SceneSwitch controlsSwitch) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(SETTINGS_TITLE,true,MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(SETTINGS_MSG,false,MESSAGEBAR_MSG_FONTSIZE,Color.BLACK,0.0,0.0),
@@ -58,9 +59,27 @@ public class SettingsScreen extends Screen {
         Text titleText = super.getMyRenderer().makeText("Settings",true,55,Color.BLACK,0.0,0.0);
         titleText.setFill(Color.rgb(0,0,0,0.71));
         topBar.getChildren().addAll(titleText,backButtonContainer);
-        ImageView soundsButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("sound_button.png"))), SOUNDS_TITLE, SOUNDS_MSG,BUTTON_WIDTH,BUTTON_HEIGHT,20.0, BUTTON_Y,myMessageBar, event -> soundsSwitch.switchScene());
-        ImageView qualityButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("quality_button.png"))), QUALITY_TITLE, QUALITY_MSG,475.0,BUTTON_HEIGHT,403.0, BUTTON_Y,myMessageBar, event -> doNothing());
-        ImageView controlsButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("controls_button.png"))), CONTROLS_TITLE, CONTROLS_MSG,BUTTON_WIDTH,BUTTON_HEIGHT,789.0, BUTTON_Y,myMessageBar, event -> controlsSwitch.switchScene());
+        ImageView soundsButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("sound_button.png"))), SOUNDS_TITLE, SOUNDS_MSG,BUTTON_WIDTH,BUTTON_HEIGHT,20.0, BUTTON_Y,myMessageBar, event -> {
+            sePlayer.setOnEndOfMedia(()-> {
+                soundsSwitch.switchScene();
+                sePlayer.stop();
+            });
+            sePlayer.play();
+        });
+        ImageView qualityButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("quality_button.png"))), QUALITY_TITLE, QUALITY_MSG,475.0,BUTTON_HEIGHT,403.0, BUTTON_Y,myMessageBar, event -> {
+            sePlayer.setOnEndOfMedia(()-> {
+                doNothing();
+                sePlayer.stop();
+            });
+            sePlayer.play();
+        });
+        ImageView controlsButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("controls_button.png"))), CONTROLS_TITLE, CONTROLS_MSG,BUTTON_WIDTH,BUTTON_HEIGHT,789.0, BUTTON_Y,myMessageBar, event -> {
+            sePlayer.setOnEndOfMedia(()-> {
+                controlsSwitch.switchScene();
+                sePlayer.stop();
+            });
+            sePlayer.play();
+        });
         super.getMyRoot().getChildren().addAll(background,topBar,myMessageBar,soundsButton,qualityButton,controlsButton);
 
     }

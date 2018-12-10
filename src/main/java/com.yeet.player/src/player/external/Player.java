@@ -5,6 +5,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import messenger.external.*;
 import messenger.external.ReplayUtils.ReplayUtilities;
@@ -19,12 +21,15 @@ import java.util.function.Consumer;
  */
 public class Player {
 
+    public static final String SELECT_SE = "src/main/java/com.yeet.player/resources/select.mp3";
     private EventBus myMessageBus;
     private Stage myStage;
     private Renderer myRenderer;
     private Scene originalScene;
 
     private Consumer<Scene> myEditorLink;
+
+    private MediaPlayer mySEPlayer;
 
     private LoadingScreen myLoadingScreen;
     private SplashScreen mySplashScreen;
@@ -44,6 +49,7 @@ public class Player {
         myMessageBus = EventBusFactory.getEventBus();
         myStage = stage;
         myDirectory = gameDirectory;
+        mySEPlayer = new MediaPlayer(new Media(new File(SELECT_SE).toURI().toString()));
         //create loading screen
         myLoadingScreen = new LoadingScreen(new Group(),myRenderer);
         AudioSystem myAudioSystem = new AudioSystem(gameDirectory);
@@ -59,8 +65,8 @@ public class Player {
             myStage.setScene(myMainMenuScreen);
             myMessageBus.post(new MenuStartEvent());
         });
-        mySettingsScreen = new SettingsScreen(new Group(),myRenderer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myEditorLink.accept(mySettingsScreen));
-        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()-> {
+        mySettingsScreen = new SettingsScreen(new Group(),myRenderer, mySEPlayer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myEditorLink.accept(mySettingsScreen));
+        myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, mySEPlayer,()-> {
             myMessageBus.post(new ExitMenuEvent());
             myMessageBus.post(new FightStartEvent()); // FightStartEvent is the character select screen!
             myStage.setScene(myCharacterSelectScreen);
@@ -71,7 +77,7 @@ public class Player {
         },()-> {
             myStage.setScene(mySettingsScreen);
         });
-        mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,()->myStage.setScene(mySettingsScreen),(volume)->myMainMenuScreen.setSelectVolume(volume));
+        mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,()->myStage.setScene(mySettingsScreen),(volume)->mySEPlayer.setVolume(volume));
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
             myStage.setScene(myMainMenuScreen);
             myMessageBus.post(new FightEndEvent());

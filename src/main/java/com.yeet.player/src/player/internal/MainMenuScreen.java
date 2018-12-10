@@ -4,13 +4,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import player.internal.Elements.MessageBar;
 import renderer.external.Renderer;
-
-import java.io.File;
 
 /** Central hub for access to all game functionality
  *  @author bpx
@@ -33,12 +30,12 @@ public class MainMenuScreen extends Screen {
     private MediaPlayer selectSE;
     private MessageBar myMessageBar;
 
-    public MainMenuScreen(Group root, Renderer renderer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch) {
+    public MainMenuScreen(Group root, Renderer renderer, MediaPlayer sePlayer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(DEFAULT_TITLE,true, MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(DEFAULT_MSG,false, MESSAGEBAR_MSG_FONTSIZE, Color.BLACK,0.0,0.0),
                 MESSAGEBAR_X, MESSAGEBAR_Y);
-        selectSE = new MediaPlayer(new Media(new File("src/main/java/com.yeet.player/resources/select.mp3").toURI().toString()));
+        selectSE = sePlayer;
         ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("mainmenu_bg.png")));
         background.setFitHeight(800.0);
         background.setFitWidth(1280.0);
@@ -81,9 +78,5 @@ public class MainMenuScreen extends Screen {
         });
         button.setOnMousePressed(clickHandler);
         return button;
-    }
-
-    public void setSelectVolume(Double volume){
-        selectSE.setVolume(volume);
     }
 }
