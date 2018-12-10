@@ -227,7 +227,7 @@ public class RenderSystem implements Renderer{
             extensionFilter = new FileChooser.ExtensionFilter("xml files (*.xml)", "*.xml");
         }
         else if(filetype.equalsIgnoreCase("audio")){
-            extensionFilter = new FileChooser.ExtensionFilter("Audio files (*.mp3, *.wav, *.aac, *.aiff)", "*.mp3","*.wav","*.aac","*.aiff");
+            extensionFilter = new FileChooser.ExtensionFilter("Audio files (*.mp3, *.wav, *.aac, *.aiff)", "*.mp3","*.wav","*.aac","*.aiff","*.m4a");
         }
         else if(filetype.equalsIgnoreCase("image")){
             extensionFilter = new FileChooser.ExtensionFilter("Image files (*.png, *.gif, *.jpg, *.mpo)", "*.png","*.gif","*.jpg","*.mpo");
@@ -307,8 +307,9 @@ public class RenderSystem implements Renderer{
      *  @param height The height of the first frame
      */
     public Sprite makeSprite(Image image, Double offsetX, Double offsetY, Double width, Double height){
-        Sprite sprite = new Sprite(image, width, height);
-        sprite.setViewport(offsetX,offsetY);
+        //Sprite sprite = new Sprite(image, width, height);
+        //sprite.setViewport(offsetX,offsetY);
+        Sprite sprite = new Sprite(image, offsetX, offsetY, width, height);
         return sprite;
     }
 

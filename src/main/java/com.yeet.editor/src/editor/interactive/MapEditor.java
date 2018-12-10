@@ -126,7 +126,7 @@ public class MapEditor extends EditorSuper {
         Button settings = myRS.makeStringButton("Map Settings", Color.CRIMSON, true, Color.WHITE,
                 20.0,0.0, 0.0, 200.0, 50.0);
         settings.setOnMouseClicked(e -> {
-            MapSettings s = new MapSettings();
+            MapSettings s = new MapSettings(this);
             s.setScene();
         });
         myButtons.getChildren().addAll(saveFile,chooseTile,settings,resetGrid,addBG,input);
@@ -247,7 +247,6 @@ public class MapEditor extends EditorSuper {
             isSaved = true;
         } catch (Exception ex) {
             System.out.println("Invalid save");
-            ex.printStackTrace();
         }
     }
 
