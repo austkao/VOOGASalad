@@ -67,7 +67,7 @@ public class Recorder {
                 replayDirectory.mkdir();
             }
             else{
-                replayDirectory = myDirectory;
+                replayDirectory = new File(myDirectory,"replays");
             }
             //Save file using automatically generated name, add (1), (2), etc. if file name taken
             File targetFile = new File(replayDirectory,createFileName());
