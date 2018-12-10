@@ -7,6 +7,13 @@ import physics.external.PhysicsSystem;
 import java.awt.geom.Point2D;
 import java.util.Map;
 
+/*
+    An interesting variation of bots implementation made for fun. This bot will copy
+    the actions performed by the player closest to it. For movement event, it will
+    reverse the direction.
+    @author xp19
+ */
+
 public class CopyNinjaBot extends Bot {
 
     Player target;

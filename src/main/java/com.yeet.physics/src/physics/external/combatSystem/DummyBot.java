@@ -2,6 +2,10 @@ package physics.external.combatSystem;
 
 import messenger.external.*;
 
+/*
+    A bot implementation that will perform action completely randomly
+    @author xp19
+ */
 
 public class DummyBot extends Bot{
 

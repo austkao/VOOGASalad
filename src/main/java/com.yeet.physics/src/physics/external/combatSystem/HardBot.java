@@ -7,6 +7,12 @@ import physics.external.PhysicsSystem;
 import java.awt.geom.Point2D;
 import java.util.Map;
 
+/*
+    A more intelligent version of bot than normal bot. It will perform action based on
+    the action other players take and change its play style based on its health condition
+    @author xp19
+ */
+
 public class HardBot extends NormalBot {
 
     Player target;
