@@ -111,7 +111,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     protected void updateToUnsaved() {
         if(isSaved) {
             isSaved = false;
-            root.getChildren().add(saved);
+            root.getChildren().remove(saved);
         }
     }
 }
