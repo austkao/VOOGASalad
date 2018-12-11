@@ -43,22 +43,10 @@ public class SettingsScreen extends Screen {
         ImageView background = new ImageView(bg);
         background.setFitHeight(SCREEN_HEIGHT);
         background.setFitWidth(SCREEN_WIDTH);
-        StackPane topBar = new StackPane();
-        topBar.setMinSize(SCREEN_WIDTH,80.0);
-        topBar.setPrefSize(SCREEN_WIDTH,80.0);
-        topBar.setAlignment(Pos.CENTER);
-        topBar.setStyle("-fx-background-color: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));");
-        topBar.setLayoutX(0.0);
-        topBar.setLayoutY(0.0);
-        HBox backButtonContainer = new HBox();
-        backButtonContainer.setPrefSize(SCREEN_WIDTH,80.0);
-        backButtonContainer.setAlignment(Pos.CENTER_LEFT);
-        Rectangle buttonSpacer = new Rectangle(30.0,80.0,Color.TRANSPARENT);
-        ImageView backButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png"))),"Back","Return to the main menu!",53.74,60.72,0.0,0.0,myMessageBar,event->mainMenuSwitch.switchScene());
-        backButtonContainer.getChildren().addAll(buttonSpacer,backButton);
-        Text titleText = super.getMyRenderer().makeText("Settings",true,55,Color.BLACK,0.0,0.0);
-        titleText.setFill(Color.rgb(0,0,0,0.71));
-        topBar.getChildren().addAll(titleText,backButtonContainer);
+        StackPane topBar = makeTopBar(super.getMyRenderer().makeText("Settings",true,55,Color.BLACK,0.0,0.0),
+                makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png"))),
+                        "Back","Return to the main menu!",53.74,60.72,0.0,0.0,myMessageBar,
+                        event->mainMenuSwitch.switchScene()));
         ImageView soundsButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("sound_button.png"))), SOUNDS_TITLE, SOUNDS_MSG,BUTTON_WIDTH,BUTTON_HEIGHT,20.0, BUTTON_Y,myMessageBar, event -> {
             sePlayer.setOnEndOfMedia(()-> {
                 soundsSwitch.switchScene();
@@ -83,6 +71,27 @@ public class SettingsScreen extends Screen {
         super.getMyRoot().getChildren().addAll(background,topBar,myMessageBar,soundsButton,qualityButton,controlsButton);
 
     }
+
+    static StackPane makeTopBar(Text title, ImageView button) {
+        StackPane topBar = new StackPane();
+        topBar.setMinSize(SCREEN_WIDTH,80.0);
+        topBar.setPrefSize(SCREEN_WIDTH,80.0);
+        topBar.setAlignment(Pos.CENTER);
+        topBar.setStyle("-fx-background-color: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));");
+        topBar.setLayoutX(0.0);
+        topBar.setLayoutY(0.0);
+        HBox backButtonContainer = new HBox();
+        backButtonContainer.setPrefSize(SCREEN_WIDTH,80.0);
+        backButtonContainer.setAlignment(Pos.CENTER_LEFT);
+        Rectangle buttonSpacer = new Rectangle(30.0,80.0, Color.TRANSPARENT);
+        ImageView backButton = button;
+        backButtonContainer.getChildren().addAll(buttonSpacer,backButton);
+        Text titleText = title;
+        titleText.setFill(Color.rgb(0,0,0,0.71));
+        topBar.getChildren().addAll(titleText,backButtonContainer);
+        return topBar;
+    }
+
     private void doNothing(){
         //LOL, there's no quality settings
     }

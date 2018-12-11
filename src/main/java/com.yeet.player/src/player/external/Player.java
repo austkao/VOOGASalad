@@ -37,6 +37,7 @@ public class Player {
     private SettingsScreen mySettingsScreen;
     private SoundsSettingsScreen mySoundsSettingsScreen;
     private CharacterSelectScreen myCharacterSelectScreen;
+    private ReplayScreen myReplayScreen;
     private MatchRulesScreen myMatchRulesScreen;
     private StageSelectScreen myStageSelectScreen;
     private CombatScreen myCombatScreen;
@@ -77,8 +78,11 @@ public class Player {
             myStage.setScene(originalScene);
         },()-> {
             myStage.setScene(mySettingsScreen);
+        },()->{
+            myStage.setScene(myReplayScreen);
         });
         mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,backgroundImage,()->myStage.setScene(mySettingsScreen),(volume)->mySEPlayer.setVolume(volume));
+        myReplayScreen = new ReplayScreen(new Group(),myRenderer,backgroundImage,myDirectory);
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
             myStage.setScene(myMainMenuScreen);
             myMessageBus.post(new FightEndEvent());

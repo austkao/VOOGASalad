@@ -30,7 +30,7 @@ public class MainMenuScreen extends Screen {
     private MediaPlayer selectSE;
     private MessageBar myMessageBar;
 
-    public MainMenuScreen(Group root, Renderer renderer, Image bg, MediaPlayer sePlayer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch) {
+    public MainMenuScreen(Group root, Renderer renderer, Image bg, MediaPlayer sePlayer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch, SceneSwitch replaySceneSwitch) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(DEFAULT_TITLE,true, MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(DEFAULT_MSG,false, MESSAGEBAR_MSG_FONTSIZE, Color.BLACK,0.0,0.0),
@@ -54,7 +54,14 @@ public class MainMenuScreen extends Screen {
             selectSE.play();
         });
         ImageView quitButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("quit_button.png"))),QUIT_TITLE, QUIT_MSG,610.0,132.0,649.0,436.0, myMessageBar, event -> quitSceneSwitch.switchScene());
-        super.getMyRoot().getChildren().addAll(background,myMessageBar,smashButton,settingsButton,quitButton);
+        ImageView replayButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("replay_button.png"))),"Replays","Relive your past matches!",192.0,192.0,1012.0,26.0,myMessageBar,event -> {
+            selectSE.setOnEndOfMedia(() -> {
+                replaySceneSwitch.switchScene();
+                selectSE.stop();
+            });
+            selectSE.play();
+        });
+        super.getMyRoot().getChildren().addAll(background,myMessageBar,smashButton,settingsButton,quitButton,replayButton);
     }
 
     static ImageView makeButton(ImageView buttonImage, String messageTitle, String messageContent, double width, double height, double x, double y, MessageBar messageBar, EventHandler clickHandler) {

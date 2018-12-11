@@ -65,13 +65,11 @@ public class SoundsSettingsScreen extends Screen {
         ImageView background = new ImageView(bg);
         background.setFitHeight(SCREEN_HEIGHT);
         background.setFitWidth(SCREEN_WIDTH);
-        StackPane topBar = new StackPane();
-        topBar.setMinSize(SCREEN_WIDTH,80.0);
-        topBar.setPrefSize(SCREEN_WIDTH,80.0);
-        topBar.setAlignment(Pos.CENTER);
-        topBar.setStyle("-fx-background-color: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));");
-        topBar.setLayoutX(0.0);
-        topBar.setLayoutY(0.0);
+        StackPane topBar = makeTopBar(super.getMyRenderer().makeText("Sounds",true,55,Color.BLACK,0.0,0.0),
+                makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png"))),
+                "Back","Return to the main menu!",53.74,60.72,0.0,0.0,myMessageBar,
+                event->settingsSwitch.switchScene()));
+                new StackPane();
         HBox backButtonContainer = new HBox();
         backButtonContainer.setPrefSize(SCREEN_WIDTH,80.0);
         backButtonContainer.setAlignment(Pos.CENTER_LEFT);
