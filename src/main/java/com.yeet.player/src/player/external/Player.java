@@ -82,7 +82,7 @@ public class Player {
             myStage.setScene(myReplayScreen);
         });
         mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,backgroundImage,()->myStage.setScene(mySettingsScreen),(volume)->mySEPlayer.setVolume(volume));
-        myReplayScreen = new ReplayScreen(new Group(),myRenderer,backgroundImage,myDirectory);
+        myReplayScreen = new ReplayScreen(new Group(),myRenderer,backgroundImage,myDirectory,()->myStage.setScene(myMainMenuScreen));
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
             myStage.setScene(myMainMenuScreen);
             myMessageBus.post(new FightEndEvent());

@@ -10,7 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import messenger.external.BGMVolumeEvent;
 import messenger.external.EventBusFactory;
@@ -70,15 +69,6 @@ public class SoundsSettingsScreen extends Screen {
                 "Back","Return to the main menu!",53.74,60.72,0.0,0.0,myMessageBar,
                 event->settingsSwitch.switchScene()));
                 new StackPane();
-        HBox backButtonContainer = new HBox();
-        backButtonContainer.setPrefSize(SCREEN_WIDTH,80.0);
-        backButtonContainer.setAlignment(Pos.CENTER_LEFT);
-        Rectangle buttonSpacer = new Rectangle(30.0,80.0,Color.TRANSPARENT);
-        ImageView backButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png"))),"Back","Return to the settings screen!",53.74,60.72,0.0,0.0,myMessageBar,event->settingsSwitch.switchScene());
-        backButtonContainer.getChildren().addAll(buttonSpacer,backButton);
-        Text titleText = super.getMyRenderer().makeText("Sounds",true,55,Color.BLACK,0.0,0.0);
-        titleText.setFill(Color.rgb(0,0,0,0.71));
-        topBar.getChildren().addAll(titleText,backButtonContainer);
         StackPane mainContainer = new StackPane();
         mainContainer.setPrefSize(SCREEN_WIDTH,SCREEN_HEIGHT);
         mainContainer.setAlignment(Pos.CENTER);
