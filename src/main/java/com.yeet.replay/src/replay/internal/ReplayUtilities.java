@@ -1,4 +1,4 @@
-package messenger.external.ReplayUtils;
+package replay.internal;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

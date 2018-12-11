@@ -1,4 +1,4 @@
-package messenger.external.ReplayUtils;
+package replay.internal;
 
 import messenger.external.Event;
 
@@ -28,8 +28,8 @@ public class Replay implements Serializable {
         length++;
     }
 
-    /** Returns the next {@code Event} in the {@code Replay}, throws {@code EndOfReplayException} if at end*/
-    public Event next() throws EndOfReplayException{
+    /** Returns the next {@code Event} in the {@code replay.internal.Replay}, throws {@code replay.internal.EndOfReplayException} if at end*/
+    public Event next() throws EndOfReplayException {
         if(index<length){
             index++;
             return eventList.get(index);

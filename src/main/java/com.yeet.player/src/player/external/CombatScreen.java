@@ -12,7 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import messenger.external.*;
-import messenger.external.ReplayUtils.Recorder;
 import physics.external.PhysicsSystem;
 import physics.external.combatSystem.CombatSystem;
 import player.internal.Elements.HealthDisplay;
@@ -24,6 +23,7 @@ import player.internal.Screen;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
 import renderer.external.Structures.SpriteAnimation;
+import replay.external.Recorder;
 import xml.XMLParser;
 
 import java.awt.geom.Point2D;

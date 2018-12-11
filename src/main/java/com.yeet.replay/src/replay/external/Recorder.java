@@ -1,12 +1,13 @@
-package messenger.external.ReplayUtils;
+package replay.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
+import replay.internal.*;
 
 import java.io.*;
 
-/** Creates and plays back {@code Replay} objects, and can write them to file
+/** Creates and plays back {@code replay.internal.Replay} objects, and can write them to file
  *  @author bpx
  */
 public class Recorder {
@@ -16,7 +17,7 @@ public class Recorder {
     private Replay myActiveReplay;
     private boolean isRecording;
 
-    /** Create a new {@code Recorder} to record {@code Event} objects
+    /** Create a new {@code replay.external.Recorder} to record {@code Event} objects
      *  @param recordTarget The target {@code EventBus} to record
      */
     public Recorder(EventBus recordTarget){
@@ -26,13 +27,13 @@ public class Recorder {
         myEventBus.register(this);
     }
 
-    /** Create a new {@code Recorder} with a recording directory */
-    public Recorder(EventBus recordTarget, File directory) throws InvalidDirectoryException{
+    /** Create a new {@code replay.external.Recorder} with a recording directory */
+    public Recorder(EventBus recordTarget, File directory) throws InvalidDirectoryException {
         this(recordTarget);
         setRecordingDirectory(directory);
     }
 
-    public void setRecordingDirectory(File directory) throws InvalidDirectoryException{
+    public void setRecordingDirectory(File directory) throws InvalidDirectoryException {
         if(directory.isDirectory()){
             myDirectory = directory;
         }
@@ -55,7 +56,7 @@ public class Recorder {
     /** Saves the active replay to disk using serialization. Saves to project directory if recording directory is null,
      *  or specified directory if recording directory has been set.
      */
-    public void save() throws SaveReplayFailedException{
+    public void save() throws SaveReplayFailedException {
         // Serialization
         try
         {
@@ -89,8 +90,8 @@ public class Recorder {
         }
     }
 
-    /** Loads a replay from a {@code File}, throws {@code InvalidReplayFileException} if an error occurs */
-    public void load(File replayFile) throws InvalidReplayFileException{
+    /** Loads a replay from a {@code File}, throws {@code replay.internal.InvalidReplayFileException} if an error occurs */
+    public void load(File replayFile) throws InvalidReplayFileException {
         Replay replay;
         // Deserialization
         try

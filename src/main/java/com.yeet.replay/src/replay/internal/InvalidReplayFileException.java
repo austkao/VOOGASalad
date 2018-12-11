@@ -1,4 +1,4 @@
-package messenger.external.ReplayUtils;
+package replay.internal;
 
 public class InvalidReplayFileException extends Exception {
 
