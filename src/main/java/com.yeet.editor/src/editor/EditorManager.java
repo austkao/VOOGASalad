@@ -14,6 +14,9 @@ import javafx.stage.Stage;
 import renderer.external.RenderSystem;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +48,8 @@ public class EditorManager implements EditorScreen {
         rs = new RenderSystem();
         myScene = makeMyScene();
         mySettingsEditor.createBack(myScene);
+        Text title = createTitle();
+        root.getChildren().add(title);
     }
 
     private Scene makeMyScene(){
@@ -81,7 +86,7 @@ public class EditorManager implements EditorScreen {
 
     @Override
     public Text createTitle() {
-        return null;
+        return rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
     }
 
     @Override
@@ -94,10 +99,6 @@ public class EditorManager implements EditorScreen {
        return gameDirectory.toString();
     }
 
-    public void changeScene() {
-
-    }
-
     public void goHome(){
         myStage.setScene(homeScene);
     }
@@ -108,7 +109,6 @@ public class EditorManager implements EditorScreen {
 
     private List<EditorSuper> makeEditors(){
         List<EditorSuper> editors = new ArrayList<>();
-
         Collections.addAll(editors,new MapEditor(this),new CharacterEditor(this, new InputEditor(this)),new InputEditor(this),new GameModeEditor(new Group(),this));
         return editors;
     }
@@ -135,5 +135,8 @@ public class EditorManager implements EditorScreen {
         changeScene(input);
     }
 
-
+    @Override
+    public String toString() {
+        return "Game Editor";
+    }
 }
