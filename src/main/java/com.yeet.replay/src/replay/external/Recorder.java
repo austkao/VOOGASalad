@@ -3,7 +3,8 @@ package replay.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
-import replay.internal.*;
+import replay.internal.Replay;
+import replay.internal.ReplayUtilities;
 
 import java.io.*;
 
@@ -90,7 +91,7 @@ public class Recorder {
         }
     }
 
-    /** Loads a replay from a {@code File}, throws {@code replay.internal.InvalidReplayFileException} if an error occurs */
+    /** Loads a replay from a {@code File}, throws {@code replay.external.InvalidReplayFileException} if an error occurs */
     public void load(File replayFile) throws InvalidReplayFileException {
         Replay replay;
         // Deserialization
