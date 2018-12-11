@@ -72,7 +72,7 @@ public class ReplayPlayer {
         eventList = new Event[length.intValue()];
         for(Frame frame : loadedReplay.getFrameList()){
             Long time = frame.getTime();
-            eventList[time.intValue()] = frame.getEvent();
+            eventList[time.intValue()-1] = frame.getEvent();
         }
     }
 
