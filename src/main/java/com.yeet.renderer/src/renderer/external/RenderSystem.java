@@ -334,7 +334,7 @@ public class RenderSystem implements Renderer{
         return fileList;
     }
 
-    public void createErrorAlert(String title, String text){
+    public static void createErrorAlert(String title, String text){
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setHeaderText(title);
         errorAlert.setContentText(text);

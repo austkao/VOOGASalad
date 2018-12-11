@@ -66,14 +66,12 @@ public abstract class EditorHome extends Scene implements EditorScreen {
                 scrollPane.loadFiles(file);
             }
         }
-        switchView = getRender().makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,100.0,100.0,30.0);
+        switchView = rs.makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,100.0,100.0,30.0);
         switchView.setOnMouseClicked(event -> scrollPane.switchView());
         myRoot.getChildren().addAll(scrollPane.getScrollPane(), switchView);
         return scrollPane;
     }
-    public RenderSystem getRender(){
-        return rs;
-    }
+
 
     public abstract void setEditor();
 
@@ -138,5 +136,9 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     @Override
     public String getDirectoryString() {
         return em.getGameDirectoryString();
+    }
+
+    public Scene getScene(){
+        return this;
     }
 }

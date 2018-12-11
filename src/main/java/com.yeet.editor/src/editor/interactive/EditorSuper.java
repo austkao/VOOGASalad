@@ -114,4 +114,8 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
             root.getChildren().add(saved);
         }
     }
+
+    public Scene getScene(){
+        return this;
+    }
 }
