@@ -5,6 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
 import replay.internal.Frame;
 import replay.internal.Replay;
+import replay.internal.ReplayHolder;
 import replay.internal.ReplayUtilities;
 
 import java.io.File;
@@ -62,6 +63,7 @@ public class Recorder {
      *  @param characterMap A map of player ID to the character they chose
      */
     public void setMetaData(String stageName, HashMap<Integer, String> characterMap, HashMap<Integer, String> characterColors, String gameMode, Integer typeValue){
+        System.out.println("Setting meta data: "+String.format("%s %s %s %s %s",stageName,characterMap.toString(),characterColors.toString(),gameMode,typeValue));
         myActiveReplay.setStageName(stageName);
         myActiveReplay.setCharacterMap(characterMap);
         myActiveReplay.setDate(getDate());
@@ -112,7 +114,8 @@ public class Recorder {
             file = new FileOutputStream(targetFile);
             ObjectOutputStream out = new ObjectOutputStream(file);
             // Method for serialization of object
-            out.writeObject(myActiveReplay);
+            ReplayHolder replayHolder = new ReplayHolder(myActiveReplay);
+            out.writeObject(replayHolder);
             out.close();
             file.close();
         }
@@ -121,6 +124,7 @@ public class Recorder {
             ex.printStackTrace();
             throw new SaveReplayFailedException();
         }
+
     }
 
     /** Creates a file name for the replay file based on current system date and time */

@@ -62,6 +62,7 @@ public class ReplayPlayer {
             in.close();
             file.close();
             loadedReplay = replay;
+            System.out.println(loadedReplay.getStageName());
         }
         catch(IOException | ClassNotFoundException | ClassCastException ex)
         {
