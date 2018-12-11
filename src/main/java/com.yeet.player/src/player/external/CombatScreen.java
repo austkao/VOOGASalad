@@ -207,6 +207,7 @@ public class CombatScreen extends Screen {
         try {
             myRecorder.save();
         } catch (SaveReplayFailedException e) {
+            e.printStackTrace();
             myMessageBus.post(new SaveReplayFailedEvent());
         }
         //TODO: stops game loop
@@ -255,7 +256,7 @@ public class CombatScreen extends Screen {
     public synchronized void endCombat(GameOverEvent gameOverEvent){
         Platform.runLater(
                 () -> {
-                    myGameLoop.stopLoop();
+                    stopLoop();
                     nextScene.accept(gameOverEvent.getWinnerID(),gameOverEvent.getRankList());
                 }
         );

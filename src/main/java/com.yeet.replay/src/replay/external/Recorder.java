@@ -68,13 +68,14 @@ public class Recorder {
             File replayDirectory;
             if(myDirectory==null){
                 replayDirectory = new File("replays");
-                replayDirectory.mkdir();
             }
             else{
                 replayDirectory = new File(myDirectory,"replays");
             }
+            replayDirectory.mkdir();
             //Save file using automatically generated name, add (1), (2), etc. if file name taken
-            File targetFile = new File(replayDirectory,createFileName());
+            String fileName = createFileName();
+            File targetFile = new File(replayDirectory,fileName);
             int copy = 1;
             while(!targetFile.createNewFile()){
                 targetFile = new File(myDirectory,targetFile.getName()+"("+copy+")");
@@ -89,6 +90,7 @@ public class Recorder {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             throw new SaveReplayFailedException();
         }
     }
