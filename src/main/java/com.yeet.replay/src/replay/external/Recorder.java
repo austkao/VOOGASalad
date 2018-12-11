@@ -3,6 +3,7 @@ package replay.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
+import replay.internal.Frame;
 import replay.internal.Replay;
 import replay.internal.ReplayUtilities;
 
@@ -23,6 +24,8 @@ public class Recorder {
     private File myDirectory;
     private Replay myActiveReplay;
     private boolean isRecording;
+
+    private long startTime;
 
     /** Create a new {@code replay.external.Recorder} to record {@code Event} objects
      *  @param recordTarget The target {@code EventBus} to record
@@ -70,6 +73,7 @@ public class Recorder {
     public void record(){
         myActiveReplay = new Replay();
         isRecording = true;
+        startTime = System.currentTimeMillis();
     }
 
     /** Stops recording events */
@@ -128,7 +132,7 @@ public class Recorder {
     @Subscribe
     public void getEvent(Event event){
         if(isRecording){
-            myActiveReplay.add(event);
+            myActiveReplay.add(new Frame(event,System.currentTimeMillis()-startTime));
         }
     }
 

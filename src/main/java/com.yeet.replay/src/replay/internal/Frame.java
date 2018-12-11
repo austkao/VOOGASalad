@@ -12,4 +12,12 @@ public class Frame implements Serializable {
         frameEvent = event;
         frameTime = time;
     }
+
+    public Event getEvent(){
+        return frameEvent;
+    }
+
+    public long getTime(){
+        return frameTime;
+    }
 }

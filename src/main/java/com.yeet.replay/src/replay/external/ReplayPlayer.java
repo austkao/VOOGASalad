@@ -1,5 +1,8 @@
 package replay.external;
 
+import com.google.common.eventbus.EventBus;
+import messenger.external.Event;
+import replay.internal.Frame;
 import replay.internal.Replay;
 
 import java.io.File;
@@ -12,10 +15,15 @@ import java.io.ObjectInputStream;
  */
 public class ReplayPlayer {
 
+    private EventBus myEventBus;
+
     private Replay loadedReplay;
 
-    public ReplayPlayer(){
+    private long currentTime;
+    private Event[] eventList;
 
+    public ReplayPlayer(EventBus eventBus){
+        myEventBus = eventBus;
     }
 
     /** Loads a replay from a {@code File}, throws {@code replay.external.InvalidReplayFileException} if an error occurs */
@@ -36,6 +44,13 @@ public class ReplayPlayer {
         catch(IOException | ClassNotFoundException | ClassCastException ex)
         {
             throw new InvalidReplayFileException(ex.getMessage());
+        }
+        //convert replay file into usable
+        Long length = loadedReplay.getFrameList().get(loadedReplay.getFrameList().size()-1).getTime();
+        eventList = new Event[length.intValue()];
+        for(Frame frame : loadedReplay.getFrameList()){
+            Long time = frame.getTime();
+            eventList[time.intValue()] = frame.getEvent();
         }
     }
 }

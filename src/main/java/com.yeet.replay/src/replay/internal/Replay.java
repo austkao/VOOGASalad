@@ -71,4 +71,8 @@ public class Replay implements Serializable {
         return length;
     }
 
+    public ArrayList<Frame> getFrameList(){
+        return frameList;
+    }
+
 }
