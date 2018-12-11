@@ -3,9 +3,12 @@ package replay.external;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.Event;
-import replay.internal.*;
+import replay.internal.Replay;
+import replay.internal.ReplayUtilities;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 /** Creates and plays back {@code replay.internal.Replay} objects, and can write them to file
  *  @author bpx
@@ -87,27 +90,6 @@ public class Recorder {
         catch(Exception ex)
         {
             throw new SaveReplayFailedException();
-        }
-    }
-
-    /** Loads a replay from a {@code File}, throws {@code replay.internal.InvalidReplayFileException} if an error occurs */
-    public void load(File replayFile) throws InvalidReplayFileException {
-        Replay replay;
-        // Deserialization
-        try
-        {
-            // Reading the object from a file
-            FileInputStream file = new FileInputStream(replayFile);
-            ObjectInputStream in = new ObjectInputStream(file);
-            // Method for deserialization of object
-            replay = (Replay)in.readObject();
-            in.close();
-            file.close();
-            myActiveReplay = replay;
-        }
-        catch(IOException | ClassNotFoundException | ClassCastException ex)
-        {
-            throw new InvalidReplayFileException(ex.getMessage());
         }
     }
 

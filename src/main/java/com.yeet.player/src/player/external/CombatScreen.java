@@ -23,7 +23,9 @@ import player.internal.Screen;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
 import renderer.external.Structures.SpriteAnimation;
+import replay.external.InvalidDirectoryException;
 import replay.external.Recorder;
+import replay.external.SaveReplayFailedException;
 import xml.XMLParser;
 
 import java.awt.geom.Point2D;
@@ -76,6 +78,11 @@ public class CombatScreen extends Screen {
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
         myMessageBus.register(this);
+        try {
+            myRecorder = new Recorder(myMessageBus,gameDirectory);
+        } catch (InvalidDirectoryException e) {
+            myRecorder = new Recorder(myMessageBus);
+        }
         //set up scene links
         this.prevScene = prevScene;
         this.nextScene = nextScene;
@@ -191,11 +198,19 @@ public class CombatScreen extends Screen {
     public void startLoop(){
         myTimer.play();
         myGameLoop.startLoop();
+        myRecorder.record();
     }
 
     public void stopLoop(){
         myTimer.pause();
+        myRecorder.stop();
+        try {
+            myRecorder.save();
+        } catch (SaveReplayFailedException e) {
+            myMessageBus.post(new SaveReplayFailedEvent());
+        }
         //TODO: stops game loop
+        myGameLoop.stopLoop();
     }
 
     public HashMap<Integer, Point2D> getCharacterMap(){
@@ -221,10 +236,6 @@ public class CombatScreen extends Screen {
                 //face left
                 mySpriteMap.get(i).setScaleX(1);
             }
-            /*System.out.println("Retrieving state for player: "+i);
-            if(myCombatSystem.getPlayerState(i).equals(PlayerState.INITIAL)){
-                mySpriteMap.get(i).defaultViewport();
-            }*/
         }
     }
 

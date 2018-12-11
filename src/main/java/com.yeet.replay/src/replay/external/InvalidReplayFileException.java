@@ -1,4 +1,4 @@
-package replay.internal;
+package replay.external;
 
 public class InvalidReplayFileException extends Exception {
 
