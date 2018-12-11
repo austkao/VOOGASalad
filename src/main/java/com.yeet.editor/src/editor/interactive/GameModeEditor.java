@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 
 /**
@@ -45,8 +46,8 @@ public class GameModeEditor extends EditorSuper {
     private Stage popupStage;
 
 
-    public GameModeEditor(Group root, EditorManager em) {
-        super(root,em);
+    public GameModeEditor(EditorManager em, Scene prev) {
+        super(new Group(),em, prev);
         makeMyBox();
         splashView = new ImageView();
         splashFile = Paths.get(em.getGameDirectoryString(), "data","splash","splash.png").toFile();
@@ -117,6 +118,7 @@ public class GameModeEditor extends EditorSuper {
             bgMusic = Paths.get(myEM.getGameDirectoryString(), "data", "bgm", musicList.getSelectionModel().getSelectedItem().toString()).toFile();
             popupStage.close();
             musicLabel.setText(bgMusic.getName());
+            updateToUnsaved();
         });
     }
 
@@ -124,6 +126,7 @@ public class GameModeEditor extends EditorSuper {
     private void updateMinuteField(KeyEvent e, TextField t,Text text){
         if(e.getCode() == KeyCode.ENTER) {
             maxMinutes = processEnter(t, text);
+            updateToUnsaved();
         }
     }
 
@@ -132,6 +135,7 @@ public class GameModeEditor extends EditorSuper {
             RenderUtils.throwErrorAlert("Invalid Input", "Only Numbers");
         } else {
             text.setText(t.getText());
+            updateToUnsaved();
             return Integer.parseInt(t.getText());
         }
         return 0;

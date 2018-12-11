@@ -156,7 +156,7 @@ public class MapSettings {
         System.out.println(structure);
         System.out.println(data);
         try {
-            File xmlFile = Paths.get(prev.getGameDirectoryString(), "physicsproperties.xml").toFile();
+            File xmlFile = Paths.get(prev.getDirectoryString(), "physicsproperties.xml").toFile();
             if (xmlFile != null) {
                 new XMLSaveBuilder(structure, data, xmlFile);
             } else {

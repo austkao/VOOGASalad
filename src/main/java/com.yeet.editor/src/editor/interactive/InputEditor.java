@@ -4,6 +4,7 @@ import editor.EditorManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -31,8 +32,8 @@ public class InputEditor extends EditorSuper {
     private int numTabs;
 
 
-    public InputEditor(EditorManager em){
-        super(new Group(), em);
+    public InputEditor(EditorManager em, Scene prev){
+        super(new Group(), em, prev);
         currentTabId = 1;
         numTabs = DEFAULT_NUM_TABS;
         bindings = new ArrayList<>();
