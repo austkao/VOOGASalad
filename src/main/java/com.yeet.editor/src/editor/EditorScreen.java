@@ -13,4 +13,5 @@ public interface EditorScreen {
     Button createBack(Scene scene);
     String toString();
     String getGameDirectoryString();
+    //void changeScene();
 }

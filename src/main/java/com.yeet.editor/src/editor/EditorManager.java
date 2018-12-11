@@ -79,10 +79,6 @@ public class EditorManager implements EditorScreen {
 
     }
 
-    public File getGameDirectory(){
-      return gameDirectory;
-    }
-
     @Override
     public Text createTitle() {
         return null;
@@ -98,9 +94,9 @@ public class EditorManager implements EditorScreen {
        return gameDirectory.toString();
     }
 
-//    public void loadEditorHomeScene() {
-//        setEditorHomeScene();
-//    }
+    public void changeScene() {
+
+    }
 
     public void goHome(){
         myStage.setScene(homeScene);
