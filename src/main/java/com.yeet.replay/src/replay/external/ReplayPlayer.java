@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,19 +31,6 @@ public class ReplayPlayer {
         myEventBus = eventBus;
         myTimer = new Timer();
         currentFrame = 0;
-        try{
-            myTimer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run(){
-                   advanceReplay();
-                }
-            }, (long) 0, (long) 1);
-            myTimer.wait();
-        }
-        catch(InterruptedException e){
-
-        }
-
     }
 
     private void advanceReplay(){
@@ -89,6 +77,35 @@ public class ReplayPlayer {
     }
 
     public void play(){
+        myTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run(){
+                advanceReplay();
+            }
+        }, (long) 0, (long) 1);
+    }
 
+    public String getStageName(){
+        return loadedReplay.getStageName();
+    }
+
+    public String getDate(){
+        return loadedReplay.getDate();
+    }
+
+    public HashMap<Integer, String> getCharacterMap(){
+        return (HashMap<Integer, String>) loadedReplay.getCharacterMap().clone();
+    }
+
+    public HashMap<Integer, String> getColorMap(){
+        return (HashMap<Integer, String>) loadedReplay.getColorMap().clone();
+    }
+
+    public String getGameMode(){
+        return loadedReplay.getGameMode();
+    }
+
+    public int getTypeValue(){
+        return loadedReplay.getTypeValue();
     }
 }

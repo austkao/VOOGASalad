@@ -11,10 +11,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import messenger.external.EventBusFactory;
 import player.internal.Elements.MessageBar;
 import renderer.external.Renderer;
+import replay.external.InvalidReplayFileException;
+import replay.external.ReplayPlayer;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 import static player.internal.Elements.CharacterChooseDisplay.FORMAT_RECT;
 import static player.internal.MainMenuScreen.*;
@@ -25,17 +30,28 @@ public class ReplayScreen extends Screen {
     public static final double REPLAY_MAIN_WIDTH = 1200.0;
     public static final double REPLAY_MAIN_HEIGHT = 600.0;
     public static final double REPLAY_MAIN_SPACING = 100.0;
+
     private MessageBar myMessageBar;
+
+    private File replayDirectory;
+
+    private ReplayPlayer replayPlayer;
 
     private String[] fileNames;
     private ListView replayList;
     private ImageView replayPreview;
+    private ImageView playButton;
+    private HBox characterPreview;
+    private Text stageName;
+    private Text date;
+    private Text gameMode;
 
     public ReplayScreen(Group root, Renderer renderer, Image background, File gameDirectory, SceneSwitch mainMenuSwitch) {
         super(root, renderer);
         ImageView bg = new ImageView(background);
         bg.setFitHeight(800.0);
         bg.setFitWidth(1280.0);
+        replayPlayer = new ReplayPlayer(EventBusFactory.getEventBus());
         myMessageBar = new MessageBar(this.getMyRenderer().makeText("Replays",true,MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText("Relive your past matches!",false,MESSAGEBAR_MSG_FONTSIZE,Color.BLACK,0.0,0.0),
                 MESSAGEBAR_X,MESSAGEBAR_Y);
@@ -58,7 +74,7 @@ public class ReplayScreen extends Screen {
         replayListContainer.setStyle("-fx-border-color: red");
 
         //search for replay directory and attempt to create list of replay files
-        File replayDirectory = new File(gameDirectory,"replays");
+        replayDirectory = new File(gameDirectory,"replays");
         replayDirectory.mkdir();
         fileNames = new String[replayDirectory.listFiles().length];
         for(int i=0;i<replayDirectory.listFiles().length;i++){
@@ -75,14 +91,22 @@ public class ReplayScreen extends Screen {
         replayDisplayContainer.setMaxSize(513.0,539.0);
         replayDisplayContainer.setAlignment(Pos.TOP_CENTER);
         replayDisplayContainer.setStyle("-fx-border-color: blue");
+        StackPane replayPreviewContainer = new StackPane();
+        replayPreviewContainer.setPrefSize(513.0,321.0);
+        replayPreviewContainer.setAlignment(Pos.CENTER);
+        replayPreviewContainer.setStyle("-fx-border-color: black;-fx-border-width: 2");
         replayPreview = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("replay_placeholder.png")));
         replayPreview.setFitWidth(513.0);
         replayPreview.setFitHeight(321.0);
+        playButton = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("play_button.png")));
+        playButton.setFitWidth(92.0);
+        playButton.setFitHeight(92.0);
+        playButton.setOpacity(0.0);
         HBox replayInfoContainer = new HBox(25.0);
         replayInfoContainer.setPrefSize(513.0,173.0);
         replayInfoContainer.setAlignment(Pos.TOP_LEFT);
         replayInfoContainer.setStyle("-fx-border-color: green");
-        HBox characterPreview = new HBox(15.0);
+        characterPreview = new HBox(15.0);
         characterPreview.setPrefSize(311.0,66.0);
         characterPreview.setAlignment(Pos.CENTER);
         characterPreview.setStyle("-fx-border-color: purple");
@@ -90,21 +114,43 @@ public class ReplayScreen extends Screen {
         replayInfo.setPrefSize(175.0,173.0);
         replayInfo.setAlignment(Pos.TOP_RIGHT);
         replayInfo.setStyle("-fx-border-color: cyan");
-
+        stageName = super.getMyRenderer().makeText("Stage Name",false,30,Color.BLACK,0.0,0.0);
+        date = super.getMyRenderer().makeText("Date",false,30,Color.BLACK,0.0,0.0);
+        gameMode = super.getMyRenderer().makeText("Game Mode",false,30,Color.BLACK,0.0,0.0);
+        replayInfo.getChildren().addAll(stageName,date,gameMode);
         replayListContainer.getChildren().addAll(replayList,openDirectory);
         replayInfoContainer.getChildren().addAll(characterPreview,replayInfo);
-        replayDisplayContainer.getChildren().addAll(replayPreview,replayInfoContainer);
+        replayPreviewContainer.getChildren().addAll(replayPreview,playButton);
+        replayDisplayContainer.getChildren().addAll(replayPreviewContainer,replayInfoContainer);
         replayMainContainer.getChildren().addAll(replayListContainer,replayDisplayContainer);
         mainContainer.getChildren().addAll(replayMainContainer);
         super.getMyRoot().getChildren().addAll(bg,mainContainer,topBar);
     }
 
     private void openReplayDirectory() {
+        try {
+            Desktop.getDesktop().open(replayDirectory);
+        } catch (IOException e) {
+            //TODO some kind of error handling?
+        }
 
     }
 
     private void handleListClick() {
-
+        try{
+            String file = (String)replayList.getSelectionModel().getSelectedItem();
+            File replayFile = new File(replayDirectory,file);
+            replayPlayer.load(replayFile);
+            System.out.println(replayPlayer.getStageName());
+            stageName.setText(replayPlayer.getStageName());
+            date.setText(replayPlayer.getDate());
+            gameMode.setText(replayPlayer.getGameMode());
+        } catch (InvalidReplayFileException e) {
+            //TODO bad replay file
+            e.printStackTrace();
+        } catch (NullPointerException e){
+            //TODO no file selected in bar, no biggie
+        }
     }
 
 }

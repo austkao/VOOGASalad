@@ -35,28 +35,56 @@ public class Replay implements Serializable {
         this.stageName = stageName;
     }
 
+    public String getStageName() {
+        return stageName;
+    }
+
     public void setCharacterMap(HashMap<Integer,String> characterMap){
         this.characterMap = characterMap;
+    }
+
+    public HashMap<Integer, String> getCharacterMap() {
+        return characterMap;
     }
 
     public void setDate(String date){
         this.date = date;
     }
 
+    public String getDate() {
+        return date;
+    }
+
     public void setTime(String time){
         this.time = time;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public void setColorMap(HashMap<Integer, String> colorMap){
         this.colorMap = colorMap;
     }
 
+    public HashMap<Integer, String> getColorMap() {
+        return colorMap;
+    }
+
     public void setGameMode(String gameMode){
         this.gameMode = gameMode;
     }
 
+    public String getGameMode() {
+        return gameMode;
+    }
+
     public void setTypeValue(int typeValue){
         this.typeValue = typeValue;
+    }
+
+    public int getTypeValue() {
+        return typeValue;
     }
 
     /** Add an {@code Event} to the replay
