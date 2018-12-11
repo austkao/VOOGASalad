@@ -78,11 +78,6 @@ public class CombatScreen extends Screen {
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
         myMessageBus.register(this);
-        try {
-            myRecorder = new Recorder(myMessageBus,gameDirectory);
-        } catch (InvalidDirectoryException e) {
-            myRecorder = new Recorder(myMessageBus);
-        }
         //set up scene links
         this.prevScene = prevScene;
         this.nextScene = nextScene;
@@ -177,6 +172,12 @@ public class CombatScreen extends Screen {
         myMessageBus.register(myPhysicsSystem);
         myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem, myGameDirectory, characterNames);
         myMessageBus.register(myCombatSystem);
+        //replay system
+        try {
+            myRecorder = new Recorder(myMessageBus,myGameDirectory);
+        } catch (InvalidDirectoryException e) {
+            myRecorder = new Recorder(myMessageBus);
+        }
         //music and audio
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
         //ui elements

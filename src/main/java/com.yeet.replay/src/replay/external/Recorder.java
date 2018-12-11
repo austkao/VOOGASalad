@@ -9,6 +9,10 @@ import replay.internal.ReplayUtilities;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+
+import static replay.internal.ReplayUtilities.getDate;
+import static replay.internal.ReplayUtilities.getTime;
 
 /** Creates and plays back {@code replay.internal.Replay} objects, and can write them to file
  *  @author bpx
@@ -23,19 +27,23 @@ public class Recorder {
     /** Create a new {@code replay.external.Recorder} to record {@code Event} objects
      *  @param recordTarget The target {@code EventBus} to record
      */
-    public Recorder(EventBus recordTarget){
+    public Recorder(EventBus recordTarget, String stageName, HashMap<Integer, String> characterMap){
         myEventBus = recordTarget;
         myActiveReplay = new Replay();
+        setMetaData(stageName,characterMap);
         isRecording = false;
         myEventBus.register(this);
     }
 
     /** Create a new {@code replay.external.Recorder} with a recording directory */
-    public Recorder(EventBus recordTarget, File directory) throws InvalidDirectoryException {
-        this(recordTarget);
+    public Recorder(EventBus recordTarget, File directory, String stageName, HashMap<Integer, String> characterMap) throws InvalidDirectoryException {
+        this(recordTarget, stageName, characterMap);
         setRecordingDirectory(directory);
     }
 
+    /** Sets the recording directory and throws {@code InvalidDirectoryException} if the operation fails
+     *  @param directory New parent directory
+     */
     public void setRecordingDirectory(File directory) throws InvalidDirectoryException {
         if(directory.isDirectory()){
             myDirectory = directory;
@@ -44,6 +52,19 @@ public class Recorder {
             throw new InvalidDirectoryException();
         }
     }
+
+
+    /** Sets the meta information for the active replay
+     *  @param stageName The name of the stage the combat took place on
+     *  @param characterMap A map of player ID to the character they chose
+     */
+    public void setMetaData(String stageName, HashMap<Integer, String> characterMap){
+        myActiveReplay.setStageName(stageName);
+        myActiveReplay.setCharacterMap(characterMap);
+        myActiveReplay.setDate(getDate());
+        myActiveReplay.setTime(getTime());
+    }
+
 
     /** Starts a new recording of events */
     public void record(){
