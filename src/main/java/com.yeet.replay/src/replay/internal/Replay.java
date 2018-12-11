@@ -12,6 +12,9 @@ public class Replay implements Serializable {
     //meta data
     private String stageName;
     private HashMap<Integer,String> characterMap;
+    private HashMap<Integer, String> colorMap;
+    private String gameMode;
+    private int typeValue;
     private String date;
     private String time;
 
@@ -42,6 +45,18 @@ public class Replay implements Serializable {
 
     public void setTime(String time){
         this.time = time;
+    }
+
+    public void setColorMap(HashMap<Integer, String> colorMap){
+        this.colorMap = colorMap;
+    }
+
+    public void setGameMode(String gameMode){
+        this.gameMode = gameMode;
+    }
+
+    public void setTypeValue(int typeValue){
+        this.typeValue = typeValue;
     }
 
     /** Add an {@code Event} to the replay

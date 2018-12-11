@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static renderer.external.RenderUtils.toRGBCode;
+
 /** Displays a stage and visualizes character combat animation
  *  @author bpx
  */
@@ -173,10 +175,14 @@ public class CombatScreen extends Screen {
         myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem, myGameDirectory, characterNames);
         myMessageBus.register(myCombatSystem);
         //replay system
+        HashMap<Integer, String> hexmap = new HashMap<>();
+        for(Integer i : characterColors.keySet()){
+            hexmap.put(i,toRGBCode(characterColors.get(i)));
+        }
         try {
-            myRecorder = new Recorder(myMessageBus,myGameDirectory,stageName,characterNames);
+            myRecorder = new Recorder(myMessageBus,myGameDirectory,stageName,characterNames,hexmap,gameMode,typeValue);
         } catch (InvalidDirectoryException e) {
-            myRecorder = new Recorder(myMessageBus,stageName,characterNames);
+            myRecorder = new Recorder(myMessageBus,stageName,characterNames,hexmap,gameMode,typeValue);
         }
         //music and audio
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));

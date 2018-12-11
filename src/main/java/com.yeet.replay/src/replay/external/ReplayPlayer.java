@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /** Tool for loading serialized {@code Replay} objects and playing them back
  *  @author bpx
@@ -19,11 +21,43 @@ public class ReplayPlayer {
 
     private Replay loadedReplay;
 
-    private long currentTime;
+    private Timer myTimer;
+
+    private int currentFrame;
     private Event[] eventList;
 
     public ReplayPlayer(EventBus eventBus){
         myEventBus = eventBus;
+        myTimer = new Timer();
+        currentFrame = 0;
+        try{
+            myTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run(){
+                   advanceReplay();
+                }
+            }, (long) 0, (long) 1);
+            myTimer.wait();
+        }
+        catch(InterruptedException e){
+
+        }
+
+    }
+
+    private void advanceReplay(){
+        try{
+            myEventBus.post(eventList[currentFrame]);
+            currentFrame++;
+        }
+        catch(IndexOutOfBoundsException e){
+            try {
+                myTimer.wait();
+            } catch (InterruptedException e1) {
+                myTimer.cancel();
+            }
+        }
+
     }
 
     /** Loads a replay from a {@code File}, throws {@code replay.external.InvalidReplayFileException} if an error occurs */
@@ -52,5 +86,9 @@ public class ReplayPlayer {
             Long time = frame.getTime();
             eventList[time.intValue()] = frame.getEvent();
         }
+    }
+
+    public void play(){
+
     }
 }

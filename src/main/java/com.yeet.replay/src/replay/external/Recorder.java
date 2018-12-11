@@ -30,17 +30,17 @@ public class Recorder {
     /** Create a new {@code replay.external.Recorder} to record {@code Event} objects
      *  @param recordTarget The target {@code EventBus} to record
      */
-    public Recorder(EventBus recordTarget, String stageName, HashMap<Integer, String> characterMap){
+    public Recorder(EventBus recordTarget, String stageName, HashMap<Integer, String> characterMap, HashMap<Integer, String> characterColors, String gameMode, Integer typeValue){
         myEventBus = recordTarget;
         myActiveReplay = new Replay();
-        setMetaData(stageName,characterMap);
+        setMetaData(stageName,characterMap, characterColors,gameMode,typeValue);
         isRecording = false;
         myEventBus.register(this);
     }
 
     /** Create a new {@code replay.external.Recorder} with a recording directory */
-    public Recorder(EventBus recordTarget, File directory, String stageName, HashMap<Integer, String> characterMap) throws InvalidDirectoryException {
-        this(recordTarget, stageName, characterMap);
+    public Recorder(EventBus recordTarget, File directory, String stageName, HashMap<Integer, String> characterMap, HashMap<Integer, String> characterColors, String gameMode, Integer typeValue) throws InvalidDirectoryException {
+        this(recordTarget, stageName, characterMap, characterColors, gameMode, typeValue);
         setRecordingDirectory(directory);
     }
 
@@ -61,11 +61,14 @@ public class Recorder {
      *  @param stageName The name of the stage the combat took place on
      *  @param characterMap A map of player ID to the character they chose
      */
-    public void setMetaData(String stageName, HashMap<Integer, String> characterMap){
+    public void setMetaData(String stageName, HashMap<Integer, String> characterMap, HashMap<Integer, String> characterColors, String gameMode, Integer typeValue){
         myActiveReplay.setStageName(stageName);
         myActiveReplay.setCharacterMap(characterMap);
         myActiveReplay.setDate(getDate());
         myActiveReplay.setTime(getTime());
+        myActiveReplay.setColorMap(characterColors);
+        myActiveReplay.setGameMode(gameMode);
+        myActiveReplay.setTypeValue(typeValue);
     }
 
 
