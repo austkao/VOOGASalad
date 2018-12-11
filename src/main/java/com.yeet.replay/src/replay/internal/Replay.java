@@ -1,7 +1,5 @@
 package replay.internal;
 
-import messenger.external.Event;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +16,7 @@ public class Replay implements Serializable {
     private String time;
 
     private int index;
-    private ArrayList<Event> eventList;
+    private ArrayList<Frame> frameList;
     private int length;
 
     public Replay(){
@@ -27,7 +25,7 @@ public class Replay implements Serializable {
         date = "";
         index = -1;
         length = 0;
-        eventList = new ArrayList<>();
+        frameList = new ArrayList<>();
     }
 
     public void setStageName(String stageName){
@@ -49,16 +47,16 @@ public class Replay implements Serializable {
     /** Add an {@code Event} to the replay
      *  @param frame Any kind of {@code Event}
      */
-    public void add(Event frame){
-        eventList.add(frame);
+    public void add(Frame frame){
+        frameList.add(frame);
         length++;
     }
 
     /** Returns the next {@code Event} in the {@code replay.internal.Replay}, throws {@code replay.internal.EndOfReplayException} if at end*/
-    public Event next() throws EndOfReplayException {
+    public Frame next() throws EndOfReplayException {
         if(index<length){
             index++;
-            return eventList.get(index);
+            return frameList.get(index);
         }
         else{
             throw new EndOfReplayException();
