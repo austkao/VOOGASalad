@@ -41,9 +41,7 @@ public class MapHome extends EditorHome {
         //System.out.println(directory.getPath());
         if(bb != null) {
             String stageName = bb.getText();
-            System.out.println(stageName);
             File stageDirectory = Paths.get(em.getGameDirectoryString(), "stages", stageName).toFile();
-            System.out.println(stageDirectory.getPath());
             setEditor(stageDirectory, true);
             return;
         } else if(directory != null) {

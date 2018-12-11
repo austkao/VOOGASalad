@@ -10,7 +10,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import xml.XMLParser;
-
 import javax.print.attribute.Attribute;
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +32,10 @@ public class DataSystem {
         myFileSystem = new FileSystemHandler();
     }
 
+    /**
+     * In the event that a new game is created
+     * @param event a CreateGameEvent that specifies that a new game is being created
+     */
     @Subscribe
     public void createInitialGameFiles(CreateGameEvent event) {
         File defaultFile = event.getDirectory();
@@ -43,14 +46,30 @@ public class DataSystem {
         myFileSystem.createDirectory(defaultFile.getPath() + myFP.BACKGROUNDPATH.getPath());
         myFileSystem.createDirectory(defaultFile.getPath() + myFP.BGMPATH.getPath());
         myFileSystem.createDirectory(defaultFile.getPath() + myFP.TILEPATH.getPath());
+        myFileSystem.createDirectory(defaultFile.getPath() + myFP.SPLASHPATH.getPath());
         myFileSystem.createDirectory(defaultFile.getPath() + myFP.MODE.getPath());
         myFileSystem.createDirectory(defaultFile.getPath() + myFP.TIME.getPath());
         myFileSystem.createDirectory(defaultFile.getPath() + myFP.STOCK.getPath());
+        myFileSystem.createFile(defaultFile.getPath()+myFP.GAMEPROPERTIES.getPath());
+        String defaultGamePath = System.getProperty("user.dir")+myFP.DEFAULTGAMEPATH.getPath();
+        String backgroundPath = myFP.DEFAULTBACKGROUND.getPath();
+        String musicPath = myFP.DEFAULTBGM.getPath();
+        String tilePath = myFP.DEFAULTTILE.getPath();
+        String splashPath = myFP.DEFAULTSPLASH.getPath();
+        myFileSystem.copyFile(new File(defaultGamePath + backgroundPath), new File(defaultFile.getPath()+ backgroundPath));
+        myFileSystem.copyFile(new File(defaultGamePath + musicPath), new File(defaultFile.getPath()+ musicPath));
+        myFileSystem.copyFile(new File(defaultGamePath + tilePath), new File(defaultFile.getPath()+ tilePath));
+        myFileSystem.copyFile(new File(defaultGamePath + splashPath), new File(defaultFile.getPath()+ splashPath));
     }
 
+    /**
+     * In the event a user wants to save the current game state in game
+     * @param event An event that will specify that the user is trying to save midgame
+     * Note: Not currently implemented
+     */
     @Subscribe
     public void saveGameFiles(Event event) {
-        //myEB.post(event);
+
     }
 
     @Subscribe

@@ -68,13 +68,14 @@ public class GameModeEditor extends EditorSuper {
         splashList.setOnMouseClicked(e -> {
             splashFile = Paths.get(myEM.getGameDirectoryString(), "data", "splash", splashList.getSelectionModel().getSelectedItem().toString()).toFile();
             popupStage.close();
+            splashScreen = new Image(splashFile.toURI().toString());
+            splashView.setImage(splashScreen);
+            splashView.setPreserveRatio(true);
+            splashView.setFitHeight(200.0);
+            splashView.setLayoutX(400.0);
+            splashView.setLayoutY(100.0);
+            updateToUnsaved();
         });
-        splashScreen = new Image(splashFile.toURI().toString());
-        splashView.setImage(splashScreen);
-        splashView.setPreserveRatio(true);
-        splashView.setFitHeight(200.0);
-        splashView.setLayoutX(400.0);
-        splashView.setLayoutY(100.0);
     }
 
 
@@ -126,7 +127,6 @@ public class GameModeEditor extends EditorSuper {
     private void updateMinuteField(KeyEvent e, TextField t,Text text){
         if(e.getCode() == KeyCode.ENTER) {
             maxMinutes = processEnter(t, text);
-            updateToUnsaved();
         }
     }
 
