@@ -63,7 +63,6 @@ public class Recorder {
      *  @param characterMap A map of player ID to the character they chose
      */
     public void setMetaData(String stageName, HashMap<Integer, String> characterMap, HashMap<Integer, String> characterColors, String gameMode, Integer typeValue){
-        System.out.println("Setting meta data: "+String.format("%s %s %s %s %s",stageName,characterMap.toString(),characterColors.toString(),gameMode,typeValue));
         myActiveReplay.setStageName(stageName);
         myActiveReplay.setCharacterMap(characterMap);
         myActiveReplay.setDate(getDate());
@@ -76,7 +75,6 @@ public class Recorder {
 
     /** Starts a new recording of events */
     public void record(){
-        myActiveReplay = new Replay();
         isRecording = true;
         startTime = System.currentTimeMillis();
     }

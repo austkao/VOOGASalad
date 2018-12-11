@@ -141,7 +141,6 @@ public class ReplayScreen extends Screen {
             String file = (String)replayList.getSelectionModel().getSelectedItem();
             File replayFile = new File(replayDirectory,file);
             replayPlayer.load(replayFile);
-            System.out.println("Stage Name: "+replayPlayer.getStageName());
             stageName.setText(replayPlayer.getStageName());
             date.setText(replayPlayer.getDate());
             gameMode.setText(replayPlayer.getGameMode());

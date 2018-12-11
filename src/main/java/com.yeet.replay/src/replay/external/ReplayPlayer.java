@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import messenger.external.Event;
 import replay.internal.Frame;
 import replay.internal.Replay;
+import replay.internal.ReplayHolder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,11 +59,10 @@ public class ReplayPlayer {
             FileInputStream file = new FileInputStream(replayFile);
             ObjectInputStream in = new ObjectInputStream(file);
             // Method for deserialization of object
-            replay = (Replay)in.readObject();
+            ReplayHolder replayHolder = (ReplayHolder)in.readObject();
             in.close();
             file.close();
-            loadedReplay = replay;
-            System.out.println(loadedReplay.getStageName());
+            loadedReplay = replayHolder.replay;
         }
         catch(IOException | ClassNotFoundException | ClassCastException ex)
         {
