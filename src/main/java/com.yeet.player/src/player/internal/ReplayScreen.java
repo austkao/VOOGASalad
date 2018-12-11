@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import player.internal.Elements.MessageBar;
 import renderer.external.Renderer;
 
@@ -27,6 +28,8 @@ public class ReplayScreen extends Screen {
     private MessageBar myMessageBar;
 
     private String[] fileNames;
+    private ListView replayList;
+    private ImageView replayPreview;
 
     public ReplayScreen(Group root, Renderer renderer, Image background, File gameDirectory, SceneSwitch mainMenuSwitch) {
         super(root, renderer);
@@ -51,7 +54,7 @@ public class ReplayScreen extends Screen {
         VBox replayListContainer = new VBox(25.0);
         replayListContainer.setPrefSize(422.0,545.0);
         replayListContainer.setMaxSize(422.0,545.0);
-        replayListContainer.setAlignment(Pos.CENTER);
+        replayListContainer.setAlignment(Pos.CENTER_RIGHT);
         replayListContainer.setStyle("-fx-border-color: red");
 
         //search for replay directory and attempt to create list of replay files
@@ -61,20 +64,43 @@ public class ReplayScreen extends Screen {
         for(int i=0;i<replayDirectory.listFiles().length;i++){
             fileNames[i] = replayDirectory.listFiles()[i].getName();
         }
-        ListView<String> replayList = new ListView<>(FXCollections.observableArrayList(fileNames));
+        replayList = new ListView<>(FXCollections.observableArrayList(fileNames));
         replayList.setPrefSize(422.0,498.0);
         replayList.setOnMousePressed(event -> handleListClick());
+        Text openDirectory = super.getMyRenderer().makeText("Open Replays Folder",false,16,Color.BLACK,0.0,0.0);
+        openDirectory.setOnMousePressed(event -> openReplayDirectory());
         
         VBox replayDisplayContainer = new VBox(25.0);
         replayDisplayContainer.setPrefSize(513.0,539.0);
         replayDisplayContainer.setMaxSize(513.0,539.0);
-        replayDisplayContainer.setAlignment(Pos.CENTER);
+        replayDisplayContainer.setAlignment(Pos.TOP_CENTER);
         replayDisplayContainer.setStyle("-fx-border-color: blue");
+        replayPreview = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("replay_placeholder.png")));
+        replayPreview.setFitWidth(513.0);
+        replayPreview.setFitHeight(321.0);
+        HBox replayInfoContainer = new HBox(25.0);
+        replayInfoContainer.setPrefSize(513.0,173.0);
+        replayInfoContainer.setAlignment(Pos.TOP_LEFT);
+        replayInfoContainer.setStyle("-fx-border-color: green");
+        HBox characterPreview = new HBox(15.0);
+        characterPreview.setPrefSize(311.0,66.0);
+        characterPreview.setAlignment(Pos.CENTER);
+        characterPreview.setStyle("-fx-border-color: purple");
+        VBox replayInfo = new VBox(25.0);
+        replayInfo.setPrefSize(175.0,173.0);
+        replayInfo.setAlignment(Pos.TOP_RIGHT);
+        replayInfo.setStyle("-fx-border-color: cyan");
 
-        replayListContainer.getChildren().addAll(replayList);
+        replayListContainer.getChildren().addAll(replayList,openDirectory);
+        replayInfoContainer.getChildren().addAll(characterPreview,replayInfo);
+        replayDisplayContainer.getChildren().addAll(replayPreview,replayInfoContainer);
         replayMainContainer.getChildren().addAll(replayListContainer,replayDisplayContainer);
         mainContainer.getChildren().addAll(replayMainContainer);
         super.getMyRoot().getChildren().addAll(bg,mainContainer,topBar);
+    }
+
+    private void openReplayDirectory() {
+
     }
 
     private void handleListClick() {
