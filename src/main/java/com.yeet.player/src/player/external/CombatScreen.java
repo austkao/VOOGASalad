@@ -174,9 +174,9 @@ public class CombatScreen extends Screen {
         myMessageBus.register(myCombatSystem);
         //replay system
         try {
-            myRecorder = new Recorder(myMessageBus,myGameDirectory);
+            myRecorder = new Recorder(myMessageBus,myGameDirectory,stageName,characterNames);
         } catch (InvalidDirectoryException e) {
-            myRecorder = new Recorder(myMessageBus);
+            myRecorder = new Recorder(myMessageBus,stageName,characterNames);
         }
         //music and audio
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
