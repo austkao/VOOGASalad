@@ -1,18 +1,17 @@
 package player.external;
 
+import audio.external.AudioSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-import messenger.external.EventBusFactory;
-import messenger.external.TestSuccesfulEvent;
+import messenger.external.*;
 import player.internal.*;
 import renderer.external.Renderer;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 /** Visualizer for game data and gameplay
  *  @author bpx
@@ -24,19 +23,13 @@ public class Player {
     private Renderer myRenderer;
     private Scene originalScene;
 
-
-
-    private MediaPlayer myBGMPlayer;
-    private Media myBGM;
-    private MediaPlayer myFightMusicPlayer;
-    private Media myFightMusic;
+    private Consumer<Scene> myEditorLink;
 
     private LoadingScreen myLoadingScreen;
     private SplashScreen mySplashScreen;
     private MainMenuScreen myMainMenuScreen;
     private SettingsScreen mySettingsScreen;
     private SoundsSettingsScreen mySoundsSettingsScreen;
-    private ControlsSettingsScreen myControlsSettingsScreen;
     private CharacterSelectScreen myCharacterSelectScreen;
     private MatchRulesScreen myMatchRulesScreen;
     private StageSelectScreen myStageSelectScreen;
@@ -52,6 +45,8 @@ public class Player {
         myDirectory = gameDirectory;
         //create loading screen
         myLoadingScreen = new LoadingScreen(new Group(),myRenderer);
+        AudioSystem myAudioSystem = new AudioSystem(gameDirectory);
+        myMessageBus.register(myAudioSystem);
     }
 
     /** Gives control of the {@code Stage} to the {@code Player} and begins sub-screen loading*/
@@ -59,34 +54,27 @@ public class Player {
         originalScene = myStage.getScene();
         myStage.setScene(myLoadingScreen);
         //pre-load all other screens
-        myBGM = new Media(new File(myDirectory.getPath()).toURI().toString()+"Theme.m4a");
-        myBGMPlayer = new MediaPlayer(myBGM);
-        myBGMPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        myFightMusic = new Media(new File(myDirectory.getPath()).toURI().toString()+"Fight.m4a");
-        myFightMusicPlayer = new MediaPlayer(myFightMusic);
-        myFightMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mySplashScreen = new SplashScreen(new Group(), myRenderer, myDirectory, () -> {
             myStage.setScene(myMainMenuScreen);
-            myBGMPlayer.play();
+            myMessageBus.post(new MenuStartEvent());
         });
-        mySettingsScreen = new SettingsScreen(new Group(),myRenderer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myStage.setScene(myControlsSettingsScreen));
-        mySoundsSettingsScreen = new SoundsSettingsScreen(new Group(),myRenderer);
-        myControlsSettingsScreen = new ControlsSettingsScreen(new Group(),myRenderer);
+        mySettingsScreen = new SettingsScreen(new Group(),myRenderer,()->myStage.setScene(myMainMenuScreen),()->myStage.setScene(mySoundsSettingsScreen),()->myEditorLink.accept(mySettingsScreen));
         myMainMenuScreen = new MainMenuScreen(new Group(), myRenderer, ()-> {
-            myBGMPlayer.stop();
-            myFightMusicPlayer.play();
+            myMessageBus.post(new ExitMenuEvent());
+            myMessageBus.post(new FightStartEvent()); // FightStartEvent is the character select screen!
             myStage.setScene(myCharacterSelectScreen);
 
         },()-> {
-            myBGMPlayer.stop();
+            myMessageBus.post(new ExitMenuEvent());
             myStage.setScene(originalScene);
         },()-> {
             myStage.setScene(mySettingsScreen);
         });
+        mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,()->myStage.setScene(mySettingsScreen),(volume)->myMainMenuScreen.setSelectVolume(volume));
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
             myStage.setScene(myMainMenuScreen);
-            myFightMusicPlayer.stop();
-            myBGMPlayer.play();
+            myMessageBus.post(new FightEndEvent());
+            myMessageBus.post(new MenuStartEvent());
         },()-> {
             myStage.setScene(myStageSelectScreen);
         });
@@ -94,7 +82,7 @@ public class Player {
         myStageSelectScreen = new StageSelectScreen(new Group(),myRenderer,myDirectory,()-> {
             myStage.setScene(myCharacterSelectScreen);
         },()-> {
-            myFightMusicPlayer.stop();
+            myMessageBus.post(new FightEndEvent());
             myStage.setScene(myLoadingScreen);
             myCombatScreen.setupCombatScene(myCharacterSelectScreen.getCharacterMap(), myCharacterSelectScreen.getColorMap(),myCharacterSelectScreen.getGamemode(),myCharacterSelectScreen.getTypeValue(),myCharacterSelectScreen.getBots(),myStageSelectScreen.getStage());
             myStage.setScene(myCombatScreen);
@@ -102,13 +90,13 @@ public class Player {
         });
         myCombatScreen =  new CombatScreen(new Group(),myRenderer,myDirectory,()->myStage.setScene(myCharacterSelectScreen),(winnerID,rankList)-> {
             //setup combat results screen
-            myBGMPlayer.play();
+            myMessageBus.post(new MenuStartEvent());
             myCombatResultsScreen.setWinner(myCharacterSelectScreen.getCharacterList(),rankList, myCharacterSelectScreen.getCharacterChooserList());
             myStage.setScene(myCombatResultsScreen);
         });
         myCombatResultsScreen = new CombatResultsScreen(new Group(),myRenderer,()-> {
-            myBGMPlayer.stop();
-            myFightMusicPlayer.play();
+            myMessageBus.post(new ExitMenuEvent());
+            myMessageBus.post(new FightStartEvent());
             myStage.setScene(myCharacterSelectScreen);
         });
         //finished loading
@@ -126,6 +114,10 @@ public class Player {
     public void doSomething(){
         TestSuccesfulEvent testSuccesfulEvent = new TestSuccesfulEvent();
         myMessageBus.post(testSuccesfulEvent);
+    }
+
+    public void setEditorLink(Consumer<Scene> editorScene){
+        myEditorLink = editorScene;
     }
 
     @Subscribe

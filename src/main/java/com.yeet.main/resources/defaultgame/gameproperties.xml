@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding ="utf-8"?>
-<game name="Example Game" author="yeet">
+<VOOGASalad author="yeet">
     <file>ExampleGame</file>
-</game>
+    <volume music="100" sound="100" voice="100"></volume>
+</VOOGASalad>

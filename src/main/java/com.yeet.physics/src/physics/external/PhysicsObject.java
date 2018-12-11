@@ -3,20 +3,28 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class of an object affected by physics forces
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public abstract class PhysicsObject {
 
     protected double myMass;
     protected List<PhysicsVector> currentForces = new ArrayList<>();
-    protected CoordinateBody myCoordinateBody;
+    protected CoordinateObject myCoordinateBody;
     protected double myDirection; //0: right, PI: left
     protected PhysicsVector myAcceleration;
     protected PhysicsVector myVelocity;
     protected boolean isGrounded;
+    protected Dimensions hurtBoxDimensions;
     protected int id;
 
-    public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims) {
+    public PhysicsObject(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord) {
         this.myMass = mass;
-        this.myCoordinateBody = new CoordinateBody(start, dims);
+        this.myCoordinateBody = cord;
         this.myMass = mass;
         this.myAcceleration = new PhysicsVector(0, 0);
         this.myVelocity = new PhysicsVector(0, 0);
@@ -24,6 +32,7 @@ public abstract class PhysicsObject {
         this.myDirection = 0; // start facing right
         this.id = id;
         this.isGrounded = false;
+        this.hurtBoxDimensions = new Dimensions(40, 20);
     }
 
     public void applyForce(PhysicsVector force){ // ONLY CALL ONCE PER FRAME
@@ -48,7 +57,7 @@ public abstract class PhysicsObject {
         this.myVelocity = velocity;
     }
 
-    public CoordinateBody getMyCoordinateBody() {
+    public CoordinateObject getMyCoordinateBody() {
         return myCoordinateBody;
     }
     public boolean isPhysicsAttack() {
@@ -89,11 +98,15 @@ public abstract class PhysicsObject {
 
     public abstract PhysicsVector getYVelocity();
 
-    public void setGrounded(boolean b){
-        this.isGrounded = b;
+    public int getParentID() {
+        return 0;
     }
 
-    public boolean isGrounded(){
-        return this.isGrounded;
+    public Dimensions getHurtBoxDimensions() {
+        return this.hurtBoxDimensions;
+    }
+
+    public void setHurtBoxDimensions(Dimensions dims) {
+        this.hurtBoxDimensions = dims;
     }
 }

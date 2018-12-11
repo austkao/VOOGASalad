@@ -6,13 +6,12 @@ import com.google.common.eventbus.Subscribe;
 import javafx.application.Application;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import messenger.external.ActionEvent;
-import messenger.external.EventBusFactory;
-import messenger.external.KeyInputEvent;
+import messenger.external.*;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class InputTester extends Application {
     private static final String GAME_DIR_STRING = "/src/main/java/com.yeet.main/resources/defaultgame";
@@ -36,20 +35,17 @@ public class InputTester extends Application {
         KeyInputEvent test4 = new KeyInputEvent(KeyCode.A);
         myMessageBus.post(test4);
 
-        KeyInputEvent test5 = new KeyInputEvent(KeyCode.D);
+        KeyInputEvent test5 = new KeyInputEvent(KeyCode.B);
         myMessageBus.post(test5);
         KeyInputEvent test = new KeyInputEvent(KeyCode.P);
         myMessageBus.post(test);
 
-        KeyInputEvent test2 = new KeyInputEvent(KeyCode.O);
-        myMessageBus.post(test2);
 
-        //KeyInputEvent test3 = new KeyInputEvent(KeyCode.I);
-        //myMessageBus.post(test3);
-
-
-        //GameStartEvent start1 = new GameStartEvent(new ArrayList<Integer>());
+        var start1 = new MenuStartEvent();
         //myMessageBus.post(start1);
+
+        GameOverEvent over = new GameOverEvent(0, new ArrayList<Integer>());
+        //myMessageBus.post(over);
 
         //KeyInputEvent test3 = new KeyInputEvent(KeyCode.S);
         //myMessageBus.post(test3);

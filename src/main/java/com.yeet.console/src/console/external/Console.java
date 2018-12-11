@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Console {
 
@@ -52,7 +51,7 @@ public class Console {
         if (event.equalsIgnoreCase("test")) {
             myEventBus.post(new TestSuccesfulEvent());
         }
-        else if(event.matches("gameover [0-3] \\([1-4]{2,4}\\)")){
+        else if(event.matches("gameover [0-3] \\([0-3]{2,4}\\)")){
             int winnerID = Integer.parseInt(event.substring(9,10));
 //            LinkedList<Integer> rankList = new LinkedList<>();
             String[] rawRankList = event.split("[()]")[1].split("");
@@ -74,6 +73,8 @@ public class Console {
     @Subscribe
     public  void printEvent(Event event){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        System.out.println("["+timestamp+"]"+" Console: "+event.getName());
+        if(!"PositionsUpdateEvent".equals(event.getName())){
+            System.out.println("["+timestamp+"]"+" Console: "+event.getName());
+        }
     }
 }

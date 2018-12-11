@@ -65,4 +65,8 @@ public class SliderBox extends HBox {
     public Slider getSlider(){
         return mySlider;
     }
+
+    public void setSliderWidth(double width){
+        mySlider.setMinWidth(width);
+    }
 }

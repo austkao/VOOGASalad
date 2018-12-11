@@ -9,6 +9,11 @@ import physics.external.PhysicsSystem;
 
 import java.util.*;
 
+/*
+    Responsible for any interaction with player-related data
+    @author xp19
+ */
+
 public class PlayerManager {
     private static final int INITIAL_ID = 0;
     EventBus eventBus = EventBusFactory.getEventBus();
@@ -26,6 +31,20 @@ public class PlayerManager {
             playerMap.put(id, new Player(id));
         }
     }
+
+    public PlayerManager(int numOfPlayers, Map<Integer, ArrayList<Double>> stats){
+        playerMap = new HashMap<>();
+        ranking = new LinkedList<>();
+        this.numOfPlayers = numOfPlayers;
+        for(int id = INITIAL_ID; id < numOfPlayers; id++){
+            ArrayList<Double> stat = stats.get(id);
+            playerMap.put(id, new Player(id, stat.get(0), stat.get(1), stat.get(2)));
+        }
+
+
+
+    }
+
 
     public Player getPlayerByID(int id){
         if(id >= INITIAL_ID + numOfPlayers)

@@ -3,6 +3,14 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Determines new acceleration and velocity based on any new forces
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class AccelerationCalculator {
 
     private PhysicsVector newForce;

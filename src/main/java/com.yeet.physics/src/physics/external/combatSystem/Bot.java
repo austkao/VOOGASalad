@@ -4,10 +4,13 @@ import messenger.external.*;
 
 import java.util.*;
 
+/*
+    Base class for AI implementation using Markov chain.
+    @author xp19
+ */
+
 public abstract class Bot extends Player{
 
-    // how many possible states to step to
-    // moving, move, jump, attack, crouch
     protected PlayerState[] states = {PlayerState.MOVING, PlayerState.SINGLE_JUMP, PlayerState.ATTACKING, PlayerState.CROUCH};
     protected static Map<PlayerState, Integer> map;
     protected static EventBus eventBus = EventBusFactory.getEventBus();
@@ -27,6 +30,7 @@ public abstract class Bot extends Player{
         map.put(PlayerState.CROUCH, 3);
     }
 
+    /* set the transition matrix of a markov chain */
     protected void setTransitionMatrix(Double[][] transitionMatrix){
         if(transitionMatrix.length!=transitionMatrix[0].length){
             throw new IllegalArgumentException("Not a square matrix");
@@ -62,6 +66,7 @@ public abstract class Bot extends Player{
         return states[stateIndex];
     }
 
+    /* start the bot's action */
     public void start(){
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -89,6 +94,7 @@ public abstract class Bot extends Player{
         }
     }
 
+    /* move the bot in either direction by equal chance */
     protected void moveRandomly(){
         if(Math.random() < 0.5) {
             eventBus.post(new MoveEvent(id, true));

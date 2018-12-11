@@ -78,9 +78,10 @@ public class Main extends Application {
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
         //set up systems
-
+        em = new EditorManager(primaryStage,homeScene,myDirectory);
         myRenderSystem = new RenderSystem();
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
+        myPlayer.setEditorLink(em.getInputSceneSwitcher());
         myDataSystem = new DataSystem();
         myConsole = new Console();
         myDirectoryChooser = myRenderSystem.makeDirectoryChooser();
@@ -115,7 +116,6 @@ public class Main extends Application {
         root.getChildren().add(playButton);
         //program start
         myPlayer.doSomething();
-        em = new EditorManager(primaryStage,homeScene,myDirectory);
         newButton.setOnMouseClicked(event -> makeGameDirectory());
 
     }

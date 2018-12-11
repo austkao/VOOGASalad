@@ -42,7 +42,7 @@ public class InputSystem {
                     try {
                         var inputs = myParser.parse(commandHolder); // Should return  mapping of player number to commands
                         for (Map.Entry<Integer, List<String>> pair : inputs.entrySet()) {
-                            //System.out.println(pair.getKey()+ " " +pair.getValue());
+                            System.out.println(pair.getKey()+ " " +pair.getValue());
                             if(pair.getValue().isEmpty()){
                                 myMessageBus.post(new IdleEvent(pair.getKey()));
                             }
@@ -59,7 +59,7 @@ public class InputSystem {
                 //Set how long before to start calling the TimerTask (in milliseconds)
                 0,
                 //Set the amount of time between each execution (in milliseconds)
-                100);
+                250);
     }
 
 

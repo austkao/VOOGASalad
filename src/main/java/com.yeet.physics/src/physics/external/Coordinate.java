@@ -3,6 +3,13 @@ package physics.external;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents an object's position in space
+ *
+ * @author skm44
+ * @author jrf36
+ */
+
 public class Coordinate {
 
     private List<Double> cord;

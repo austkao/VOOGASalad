@@ -7,15 +7,8 @@ import java.awt.geom.Point2D;
 import java.util.*;
 
 /*
-    What can this bot do? More intelligent than the dummy bot:
-//        when health is high:
-    1. get closer to the nearest player (how to determine which one)
-    2.
-                Move Jump Attack Crouch
-        Move  { 0.8  0.1   0.01   0.09 }
-        Jump  {                        }
-        Attack{                        }
-        Crouch{                        }
+    An implementation of AI that is more intelligent than the dummy bot.
+    Will search for the closest player and move towards him to attack.
  */
 
 public class NormalBot extends Bot {
