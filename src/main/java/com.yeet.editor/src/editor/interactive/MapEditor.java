@@ -62,8 +62,8 @@ public class MapEditor extends EditorSuper {
      * Constructs the Map Editor object given the root and the editor manager
      * @param em
      */
-    public MapEditor(EditorManager em){
-        super(new Group(), em);
+    public MapEditor(EditorManager em, Scene prev){
+        super(new Group(), em, prev);
         myBackgroundImage = DEFAULT_BACKGROUND_IMAGE;
         myBGMFileName = DEFAULT_BGM;
         try {
@@ -84,8 +84,8 @@ public class MapEditor extends EditorSuper {
         backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
     }
 
-    public MapEditor(EditorManager em, File xmlFile, boolean isEdit) {
-        this(em);
+    public MapEditor(EditorManager em, Scene prev, File xmlFile, boolean isEdit) {
+        this(em, prev);
         File stageProperties = Paths.get(xmlFile.getPath(), "stageproperties.xml").toFile();
         if(isEdit) {
             loadMapFile(stageProperties);
@@ -213,6 +213,11 @@ public class MapEditor extends EditorSuper {
 
     public String toString(){
         return "Map Editor";
+    }
+
+    @Override
+    public String getDirectoryString() {
+        return myStageDirectory.getPath();
     }
 
     private void snapShot(Node node,String dir) {

@@ -78,7 +78,7 @@ public class Main extends Application {
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
         //set up systems
-        em = new EditorManager(primaryStage,homeScene,myDirectory);
+        em = new EditorManager(primaryStage,homeScene,new Group(), myDirectory);
         myRenderSystem = new RenderSystem();
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
         myPlayer.setEditorLink(em.getInputSceneSwitcher());
