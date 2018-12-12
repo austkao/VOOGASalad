@@ -76,8 +76,6 @@ public class CharacterEditor extends EditorSuper {
     private File myDirectory;
     private InputEditor inputEditor;
 
-
-
     private CharacterEditor(EditorManager em, InputEditor editor, Scene prev){
         super(new Group(),em, prev);
         this.inputEditor = editor;
@@ -203,8 +201,6 @@ public class CharacterEditor extends EditorSuper {
         this.thumbnail = thumbnail;
         portraitRectangle = portraitRect;
     }
-
-
     private void getRectOnImageView(String message, ImageView imgview, Color color, Rectangle ret, double ratio){
         Stage popUpPicture = new Stage();
         imgview.setFitHeight(600);
@@ -235,6 +231,7 @@ public class CharacterEditor extends EditorSuper {
             popUpPicture.showAndWait();
         }
     }
+
     private void selectNewAnimationFromScroll(Scrollable b){
         if (currentAnimation != null){
             currentAnimation.jumpTo(new Duration(0));
@@ -253,7 +250,6 @@ public class CharacterEditor extends EditorSuper {
         mySpritePane.getChildren().remove(currentSprite);
         File sprites = chooseImage("Choose Sprite Sheet");
 
-        /*
         TextInputDialog text = new TextInputDialog("");
         resetText("Enter X Offset of initial frame", text);
         double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
@@ -264,9 +260,7 @@ public class CharacterEditor extends EditorSuper {
         resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
         initializeSpriteSheet(sprites, offsetX, offsetY, width, height);
-        */
-
-        initializeSpriteSheet(sprites, 6, 14, 60, 60);
+        //initializeSpriteSheet(sprites, 6, 14, 60, 60);
     }
     private void initializeSpriteSheet(File sprites, double offsetX, double offsetY, double width, double height) {
         if (testNull(sprites, "File not valid")){
@@ -397,16 +391,13 @@ public class CharacterEditor extends EditorSuper {
         if (testNull(spriteSheet, "Sprite Sheet Not Set")){
             return;
         }
+        List<String> inputString = getCombo();
 
         TextInputDialog text = new TextInputDialog("");
         resetText("Enter Animation Name", text);
         String name = text.showAndWait().orElse("unknown");
         resetText("Enter Attack Power", text);
         int power = Integer.parseInt(text.showAndWait().orElse("0"));
-
-        List<String> inputString = getCombo();
-        /*
-        TextInputDialog text = new TextInputDialog();
         resetText("Enter Time In seconds", text);
         double time = Double.parseDouble(text.showAndWait().orElse("0"));
         resetText("Enter Frame Count", text);
@@ -421,13 +412,17 @@ public class CharacterEditor extends EditorSuper {
         double width = Double.parseDouble(text.showAndWait().orElse("0"));
         resetText("Enter Height", text);
         double height = Double.parseDouble(text.showAndWait().orElse("0"));
-        SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
-                offsetX, offsetY, width, height);
-        */
 
-        SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(2), 11, 11,
-                6.0, 640.0, 61.0, 60.0);
-        initializeSpriteAnimation(inputString, power, myAnimation, name);
+        try{
+            SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(time), count, columns,
+                    offsetX, offsetY, width, height);
+            initializeSpriteAnimation(inputString, power, myAnimation, name);
+        }
+        catch (Exception e){
+            testNull(null, "Can't create animation from given parameters");
+        }
+        //SpriteAnimation myAnimation = new SpriteAnimation(currentSprite, Duration.seconds(2), 11, 11,
+        //        6.0, 640.0, 61.0, 60.0);
     }
     private void initializeSpriteAnimation(List<String> inputString, double power, SpriteAnimation myAnimation, String name) {
         myAnimation.setCycleCount(Animation.INDEFINITE);
@@ -439,7 +434,6 @@ public class CharacterEditor extends EditorSuper {
 
         animationFrame.put(myAnimation, new AnimationInfo(myAnimation.getCount(), inputString, power, name));
     }
-
 
     private String showAlertInputOptions(int num){
         Set<String> options = inputEditor.getMoveSet();
@@ -503,6 +497,9 @@ public class CharacterEditor extends EditorSuper {
             ArrayList<String> health = data.get("health");
             ArrayList<String> attack = data.get("attack");
             ArrayList<String> defense = data.get("defense");
+            healthSlider.setNewValue(Double.parseDouble(health.get(0)));
+            attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
+            defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
 
             HashMap<String, ArrayList<String>> portraitBoxInfo = parser.parseFileForElement("portrait");
             HashMap<String, ArrayList<String>> thumbnailBoxInfo = parser.parseFileForElement("thumbnail");
@@ -515,33 +512,25 @@ public class CharacterEditor extends EditorSuper {
             double portY = Double.parseDouble(portraitBoxInfo.get("y").get(0));
             double portS = Double.parseDouble(portraitBoxInfo.get("size").get(0));
 
-            healthSlider.setNewValue(Double.parseDouble(health.get(0)));
-            attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
-            defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
-
             System.out.println(myDirectory.getPath() + myDirectory.getName());
             File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
             setPortrait(portraitFile.toURI().toString(), new Rectangle(thumbX, thumbY, thumbW, thumbH),
                     new Rectangle(portX, portY, portS, portS));
 
         } catch (Exception ex) {
-            System.out.println("Cannot load Character Information");
+            System.out.println("Error in loading Character Information");
         }
     }
     private void loadAttacksData(File file) {
         try {
             XMLParser parser = loadXMLFile(file);
             HashMap<String, ArrayList<String>> attacks = parser.parseFileForElement("attack");
-            HashMap<String, ArrayList<String>> frames = parser.parseFileForElement("frame");
 
             int numAttacks = 0;
             int numFrames = 0;
 
             if (attacks.containsKey("attackPower")){
                 numAttacks = attacks.get("attackPower").size();
-            }
-            if (frames.containsKey("hitHeight")){
-                numFrames = frames.get("hitHeight").size();
             }
 
             List<String> inputs = attacks.get("inputCombo");
@@ -553,10 +542,14 @@ public class CharacterEditor extends EditorSuper {
                 initializeSpriteAnimation(Arrays.asList(inputs.get(i).split("-")),
                         Double.parseDouble(powers.get(i)), newAnim, names.get(i));
             }
+
+            HashMap<String, ArrayList<String>> frames = parser.parseFileForElement("frame");
+            if (frames.containsKey("hitHeight")){
+                numFrames = frames.get("hitHeight").size();
+            }
             for (int i = 0; i < numFrames; i++){
                 setUpAnimationInfo(frames, i);
             }
-
         } catch (Exception ex) {
             System.out.println("Cannot load attacks file");
         }
@@ -606,12 +599,10 @@ public class CharacterEditor extends EditorSuper {
             double x = Double.parseDouble(sprites.get("offsetX").get(0));
             double y = Double.parseDouble(sprites.get("offsetY").get(0));
 
-
             File spriteSheetFile = Paths.get(myDirectory.getPath(), "sprites","spritesheet" + ".png").toFile();
             initializeSpriteSheet(spriteSheetFile, x, y, w, h);
-
         } catch (Exception ex) {
-            System.out.println("Cannot load Sprite file");
+            System.out.println("Cannot load Spritesheet and initial sprite");
         }
     }
 
@@ -739,7 +730,6 @@ public class CharacterEditor extends EditorSuper {
         }
     }
 
-
     /**
      * general method for choosing an image
      * @returns file chosen
@@ -766,8 +756,6 @@ public class CharacterEditor extends EditorSuper {
         }
         return false;
     }
-
-
 
     private ImageView initializeImageView(int width, int height, int x, int y){
         ImageView picture = new ImageView();
