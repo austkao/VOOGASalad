@@ -40,6 +40,10 @@ import java.util.function.Consumer;
  */
 
 public class CharacterEditor extends EditorSuper {
+    private static final double SPRITE_PANE_WIDTH= 300;
+    private static final double SPRITE_PANE_HEIGHT = 300;
+
+
     private static final String DEFAULT_PORTRAIT = "lucinaglasses.png";
     private static final String HIT_TEXT = "HITBOX";
     private static final String HURT_TEXT = "HURTBOX";
@@ -167,8 +171,8 @@ public class CharacterEditor extends EditorSuper {
         mySpritePane.setStyle("-fx-background-color: " + SPRITEPANE_COLOR);
         mySpritePane.setLayoutX(600);
         mySpritePane.setLayoutY(400);
-        mySpritePane.setMinSize(300, 300);
-        mySpritePane.setMaxSize(300, 300);
+        mySpritePane.setMinSize(SPRITE_PANE_WIDTH, SPRITE_PANE_HEIGHT);
+        mySpritePane.setMaxSize(SPRITE_PANE_WIDTH, SPRITE_PANE_HEIGHT);
         root.getChildren().add(mySpritePane);
         //idea of anchor came form here:
         //https://coderanch.com/t/689100/java/rectangle-dragging-image
@@ -695,20 +699,24 @@ public class CharacterEditor extends EditorSuper {
             data.get("height").add(ani.getHeight()+"");
             data.get("attackPower").add(aniInfo.getAttackPower()+"");
             data.get("inputCombo").add(aniInfo.getInputAsString());
+
+            double widthRatio = ani.getWidth()/SPRITE_PANE_WIDTH;
+            double heightRatio = ani.getHeight()/SPRITE_PANE_HEIGHT;
+
             for(int i = 1; i <= aniInfo.getTotalFrames(); i++){
                 aniInfo.setCurrentFrame(i);
                 Rectangle hitBox = aniInfo.getHitBox();
                 Rectangle hurtBox = aniInfo.getHurtBox();
                 data.get("fname").add(aniInfo.getName());
                 data.get("number").add(Integer.toString(i));
-                data.get("hitXPos").add(hitBox.getX()+"");
-                data.get("hitYPos").add(hitBox.getY()+"");
-                data.get("hurtXPos").add(hurtBox.getX()+"");
-                data.get("hurtYPos").add(hurtBox.getY()+"");
-                data.get("hitWidth").add(hitBox.getWidth()+"");
-                data.get("hitHeight").add(hitBox.getHeight()+"");
-                data.get("hurtWidth").add(hurtBox.getWidth()+"");
-                data.get("hurtHeight").add(hurtBox.getHeight()+"");
+                data.get("hitXPos").add(hitBox.getX()*widthRatio+"");
+                data.get("hitYPos").add(hitBox.getY()*heightRatio+"");
+                data.get("hurtXPos").add(hurtBox.getX()*widthRatio+"");
+                data.get("hurtYPos").add(hurtBox.getY()*heightRatio+"");
+                data.get("hitWidth").add(hitBox.getWidth()*widthRatio+"");
+                data.get("hitHeight").add(hitBox.getHeight()*heightRatio+"");
+                data.get("hurtWidth").add(hurtBox.getWidth()*widthRatio+"");
+                data.get("hurtHeight").add(hurtBox.getHeight()*heightRatio+"");
             }
         }
         try {
