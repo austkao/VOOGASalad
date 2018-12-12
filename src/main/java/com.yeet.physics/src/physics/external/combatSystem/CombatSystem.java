@@ -3,6 +3,7 @@ package physics.external.combatSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.*;
+import physics.external.PhysicsBody;
 import physics.external.PhysicsSystem;
 import xml.XMLParser;
 
@@ -74,14 +75,15 @@ public class CombatSystem {
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
 //            System.out.println("MIN X: " + playerMap.get(i).getX());
-            physicsSystem.addPhysicsObject(playerID, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60);
+            physicsSystem.addPhysicsObject(playerID, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60, (int)playerMap.get(i).getX(), (int)playerMap.get(i).getY());
             playerID++;
         }
         // register tiles to physics engine
         for(int i=0;i < tileMap.keySet().size(); i++){
-            physicsSystem.addPhysicsObject(tileID,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
+            physicsSystem.addPhysicsObject(tileID,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight(), (int)tileMap.get(i).getX(), (int)tileMap.get(i).getY());
             tileID++;
         }
+
 
         // get hit boxes and hurt boxes information
         for(int id: characterNames.keySet()){
@@ -249,7 +251,21 @@ public class CombatSystem {
     public void onPlayerDeath(PlayerDeathEvent playerDeathEvent){
         int id = playerDeathEvent.getId();
         playerManager.respawnPlayer(id, characterStats.get(id));
-        physicsSystem.addPhysicsObject(id, physicsSystem.DEFAULT_MASS, tileMap.get(id).getX(), tileMap.get(id).getY(), 40, 60);
+        ((PhysicsBody)physicsSystem.getGameObjects().get(id)).respawn();
+//        physicsSystem.addPhysicsObject(id, physicsSystem.DEFAULT_MASS, tileMap.get(id).getX(), tileMap.get(id).getY(), 40, 60);
+    }
+
+    @Subscribe
+    public void onPositionUpdate(PositionsUpdateEvent positionsUpdateEvent){
+        Map<Integer, Point2D> positionMap = positionsUpdateEvent.getPositions();
+        for(int id: positionMap.keySet()){
+            Point2D pos = positionMap.get(id);
+            if(pos.getX()+40<0||pos.getX()-40>1200||pos.getY()+60<0||pos.getY()-60>800){
+                int remainingLife = playerManager.outOfScreen(id);
+                eventBus.post(new PlayerDeathEvent(id, remainingLife));
+            }
+        }
+
     }
 
 }

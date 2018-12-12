@@ -140,7 +140,10 @@ public class MapEditor extends EditorSuper {
      * @returns file chosen
      */
     private File chooseImage(String message){
-        FileChooser fileChooser = myRS.makeFileChooser("image");
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("*png only",
+                "*.png");
+        fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setTitle(message);
         return fileChooser.showOpenDialog(getWindow());
     }
@@ -164,17 +167,22 @@ public class MapEditor extends EditorSuper {
         File tileFile = chooseImage("Choose Tile Image");
         try{
             Image image = new Image(tileFile.toURI().toString());
-            if (image != null) {
-                currentTileFile = image;
-                myCurrentTileName = tileFile.getName();
+            if (image == null){
+                throw new IllegalArgumentException("Image not found");
             }
+
+                currentTileFile = image;
+
+
             myScrollablePane.addItem(new ScrollItem(currentTileFile, new Text()));
             int size = myScrollablePane.getItems().size();
-            myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image, myCurrentTileName));
+
+            String name = tileFile.getName();
+            name = name.substring(0, name.length()-4);
+            String finalName = name;
+            myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image, finalName));
             updateToUnsaved();
             File destination = Paths.get(myEM.getGameDirectoryString(),"data","tiles",tileFile.getName()).toFile();
-            System.out.println(tileFile.getPath());
-            System.out.println(destination.getPath());
             importResource(tileFile, destination);
         }
         catch (Exception e){

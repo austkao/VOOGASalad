@@ -21,7 +21,7 @@ import java.util.*;
 
 public class InputEditor extends EditorSuper {
     private static final int DEFAULT_NUM_TABS = 4;
-    private static final String[] DEFAULT_MOVES = {"JUMP","DOWN","LEFT","RIGHT"};
+    private static final String[] DEFAULT_MOVES = {"JUMP","DOWN","LEFT","RIGHT","ATTACK"};
 
     private List<TextField> userInputs;
     private List<ObservableList> inputTypes;
