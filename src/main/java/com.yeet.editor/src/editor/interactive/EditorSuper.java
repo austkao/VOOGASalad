@@ -56,6 +56,16 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         return back;
     }
 
+    /**
+     * Creates a back button to the specified scene, not just a regular back button to editor home scene
+     * @param scene, the Scene you want to have a reference to
+     */
+    public void createBack(Scene scene){
+        Button buttonBack = myRS.makeStringButton("Back", Color.BLACK, true, Color.WHITE, 30.0, myEC.BACKBUTTONXPOSITION.getValue(), 0.0, 150.0, 50.0);
+        buttonBack.setOnMouseClicked(e -> myEM.changeScene(scene));
+        root.getChildren().add(buttonBack);
+    }
+
     public XMLParser loadXMLFile(File xmlFile) {
         try {
             if(xmlFile != null) {
@@ -113,5 +123,9 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
             isSaved = false;
             root.getChildren().remove(saved);
         }
+    }
+
+    public Scene getScene(){
+        return this;
     }
 }
