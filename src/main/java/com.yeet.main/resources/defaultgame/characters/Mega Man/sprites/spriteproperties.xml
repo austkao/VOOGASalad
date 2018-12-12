@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<VOOGASalad author="yeet">
-    <sprite offsetX="0.0" offsetY="62.0" width="112.0" height="62.0" />
-    <thumbnail thumbX="95" thumbY="106" w="132" h="95"></thumbnail>
-    <portrait x="83" y="68" size="152"></portrait>
-</VOOGASalad>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><VOOGASalad author="yeet"><sprite height="62.0" offsetX="0.0" offsetY="62.0" width="112.0"/></VOOGASalad>

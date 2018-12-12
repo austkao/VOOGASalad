@@ -154,7 +154,8 @@ public class GameModeEditor extends EditorSuper {
 
     public void createSaveFile() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        structure.put("music", new ArrayList<>(List.of("mFile")));
+        structure.put("volume", new ArrayList<>(List.of("music", "sound", "voice")));
+        structure.put("musicFile", new ArrayList<>(List.of("mFile")));
         structure.put("splash", new ArrayList<>(List.of("bgFile")));
         structure.put("stock", new ArrayList<>(List.of("numLives")));
         structure.put("time", new ArrayList<>(List.of("numMinutes")));
@@ -163,6 +164,10 @@ public class GameModeEditor extends EditorSuper {
         data.put("mFile", new ArrayList<>(List.of(bgMusic.getName())));
         data.put("numLives", new ArrayList<>(List.of(maxMinutes+"")));
         data.put("numMinutes", new ArrayList<>(List.of(maxStock+"")));
+
+        data.put("music", new ArrayList<>(List.of("100.0")));
+        data.put("voice", new ArrayList<>(List.of("100.0")));
+        data.put("sound", new ArrayList<>(List.of("100.0")));
         try {
             File xmlFile = Paths.get(myEM.getGameDirectoryString(),"gameproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
