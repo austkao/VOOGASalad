@@ -3,6 +3,7 @@ package physics.external.combatSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.*;
+import physics.external.PhysicsBody;
 import physics.external.PhysicsSystem;
 import xml.XMLParser;
 
@@ -252,7 +253,7 @@ public class CombatSystem {
     public void onPlayerDeath(PlayerDeathEvent playerDeathEvent){
         int id = playerDeathEvent.getId();
         playerManager.respawnPlayer(id, characterStats.get(id));
-        
+        ((PhysicsBody)physicsSystem.getGameObjects().get(id)).respawn();
 //        physicsSystem.addPhysicsObject(id, physicsSystem.DEFAULT_MASS, tileMap.get(id).getX(), tileMap.get(id).getY(), 40, 60);
     }
 
