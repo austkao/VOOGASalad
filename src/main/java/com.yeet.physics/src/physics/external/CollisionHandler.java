@@ -1,5 +1,9 @@
 package physics.external;
 
+import com.google.common.eventbus.EventBus;
+import messenger.external.AttackIntersectEvent;
+import messenger.external.EventBusFactory;
+
 import java.util.*;
 
 import static java.lang.Math.PI;
@@ -14,15 +18,18 @@ import static physics.external.PassiveForceHandler.DEFAULT_GRAVITY_ACCELERATION;
 
 public class CollisionHandler {
 
-    public static double defaultAttackMagnitude = 2000000;
+    public static double defaultAttackMagnitude = 200000;
     public static final double timeOfFrame = 0.016666666; // Assume each frame is 1/8 of a sec
     public static final double KINETIC_FRICTION_THRESHOLD = 10;
 
     private List<Collision> myCollisions;
     private List<Integer> groundCollisions = new ArrayList<>();
     private List<List<Integer>> attackCollisions = new ArrayList<>();
+    private EventBus bus;
 
     public CollisionHandler(List<Collision> collisions){
+        this.bus = EventBusFactory.getEventBus();
+        bus.register(this);
         filterCollisions(collisions);
     }
 
@@ -66,6 +73,7 @@ public class CollisionHandler {
             two = c.getCollider2();
             if(one.isPhysicsBody() && two.isPhysicsAttack()){ // body+attack
                 attackCollisions.add(playerAndAttack(one, two));
+                bus.post(new AttackIntersectEvent(two.getParentID(), one.getId()));
             } if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){// body+ground
                 PhysicsGround ground = (PhysicsGround)two;
                 applyReactiveForce(one);

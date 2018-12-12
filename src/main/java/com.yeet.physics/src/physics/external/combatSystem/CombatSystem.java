@@ -77,7 +77,7 @@ public class CombatSystem {
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
 //            System.out.println("MIN X: " + playerMap.get(i).getX());
-            physicsSystem.addPhysicsObject(playerID, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60, (int)playerMap.get(i).getX(), (int)playerMap.get(i).getY());
+            physicsSystem.addPhysicsObject(playerID, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60, 600, 100);
             playerID++;
         }
         // register tiles to physics engine
@@ -206,16 +206,18 @@ public class CombatSystem {
     @Subscribe
     public void onAttackIntersectEvent(AttackIntersectEvent event){
         Map<Integer, Double> playersBeingRekt = new HashMap<>();
-        for(List<Integer> list: event.getAttackPlayers()){
-            Player playerBeingAttacked = playerManager.getPlayerByID(list.get(0));
-            Player playerAttacking = playerManager.getPlayerByID(list.get(1));
+        int attacker = event.getAttacker();
+        int beingAttacked = event.getAttacked();
+//        for(List<Integer> list: event.getAttackPlayers()){
+            Player playerBeingAttacked = playerManager.getPlayerByID(beingAttacked);
+            Player playerAttacking = playerManager.getPlayerByID(attacker);
             playerAttacking.addAttackingTargets(playerBeingAttacked);
-            boolean result = playerManager.hurt(list.get(0), list.get(1));
+            boolean result = playerManager.hurt(beingAttacked, attacker);
             if(result){
                 eventBus.post(new GameOverEvent(playerManager.winnerID, playerManager.getRanking()));
             }
-            playersBeingRekt.put(playerBeingAttacked.id, playerManager.getPlayerByID(list.get(0)).getHealth());
-        }
+            playersBeingRekt.put(playerBeingAttacked.id, playerManager.getPlayerByID(beingAttacked).getHealth());
+//        }
         eventBus.post(new GetRektEvent(playersBeingRekt));
     }
 

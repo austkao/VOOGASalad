@@ -13,7 +13,7 @@ public class PhysicsGround extends PhysicsObject {
 
     PhysicsGround(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord) {
         super(id, mass, start, dims, cord);
-        this.frictionCoef = .5;
+        this.frictionCoef = .7;
     }
 
     PhysicsGround(int id, double mass, Coordinate start, Dimensions dims, double frictionCoef, CoordinateObject cord) {

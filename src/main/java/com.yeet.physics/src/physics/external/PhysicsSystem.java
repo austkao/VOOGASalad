@@ -26,7 +26,7 @@ public class PhysicsSystem {
     public static final double DEFAULT_JUMP_HEIGHT = 50000;
     public static final double DEFAULT_MOVEMENT_SPEED = 5000;
     public static final double DEFAULT_ATTACK_SPACE = 10;
-    public static final double TERMINAL_VELOCITY = 200;
+    public static final double TERMINAL_VELOCITY = 300;
 
     private int playerId;
     private int groundId;
@@ -57,14 +57,19 @@ public class PhysicsSystem {
         List<List<Integer>> attackCollisions = collHandler.getAttackCollisions();
         applyForces();
         updatePositions();
+        for(int obj: gameObjects.keySet()){
+            if(gameObjects.get(obj).isPhysicsAttack()){
+                ((PhysicsMelee)gameObjects.get(obj)).step();
+            }
+        }
         GroundIntersectEvent groundedPlayers = new GroundIntersectEvent(groundCollisions);
         if (groundCollisions.size() > 0) {
             myMessageBus.post(groundedPlayers);
         }
-        AttackIntersectEvent attackPlayers = new AttackIntersectEvent(attackCollisions);
-        if (attackPlayers.getAttackPlayers().size() > 0) {
-            myMessageBus.post(attackCollisions);
-        }
+        //AttackIntersectEvent attackPlayers = new AttackIntersectEvent(attackCollisions);
+        //if (attackPlayers.getAttackPlayers().size() > 0) {
+           // myMessageBus.post(attackCollisions);
+        //}
         myMessageBus.post(new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()));
     }
 
