@@ -244,18 +244,32 @@ public class CombatScreen extends Screen {
     public void update(PositionsUpdateEvent positionsUpdateEvent){
         Map<Integer, Point2D> characterMap = positionsUpdateEvent.getPositions();
         Map<Integer, Double> directionsMap = positionsUpdateEvent.getDirections();
-        for(int i=0;i<mySpriteMap.keySet().size();i++){
+
+        for(int i: mySpriteMap.keySet()){
             mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
             mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());
             if(directionsMap.get(i)==0){
                 // face right
                 mySpriteMap.get(i).setScaleX(-1);
             }
-            else if(directionsMap.get(i)==Math.PI){
+            else if(directionsMap.get(i+1)==Math.PI){
                 //face left
                 mySpriteMap.get(i).setScaleX(1);
             }
         }
+
+//        for(int i=0;i<mySpriteMap.keySet().size();i++){
+//            mySpriteMap.get(i).setLayoutX(characterMap.get(i).getX());
+//            mySpriteMap.get(i).setLayoutY(characterMap.get(i).getY());
+//            if(directionsMap.get(i)==0){
+//                // face right
+//                mySpriteMap.get(i).setScaleX(-1);
+//            }
+//            else if(directionsMap.get(i)==Math.PI){
+//                //face left
+//                mySpriteMap.get(i).setScaleX(1);
+//            }
+//        }
     }
 
     @Subscribe
