@@ -9,9 +9,13 @@ package physics.external;
 
 public class PhysicsBody extends PhysicsObject {
 
-    
-    public PhysicsBody(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord){
+    private int respawnX;
+    private int respawnY;
+
+    public PhysicsBody(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord, int respawnX, int respawnY){
         super(id, mass, start, dims, cord);
+        this.respawnX = respawnX;
+        this.respawnY = respawnY;
     }
 
     @Override
@@ -31,6 +35,18 @@ public class PhysicsBody extends PhysicsObject {
     @Override
     public boolean isPhysicsBody(){
         return true;
+    }
+
+    public void respawn(){
+        this.getMyCoordinateBody().setPos(this.getRespawnX(), this.getRespawnY());
+    }
+
+    public double getRespawnX(){
+        return this.respawnX;
+    }
+
+    public double getRespawnY(){
+        return this.respawnY;
     }
 
 }
