@@ -13,7 +13,7 @@ import java.util.*;
 
 public class NormalBot extends Bot {
     protected PhysicsSystem physicsSystem;
-    protected static final double DETECTION_RADIUS = 1.0;
+    protected static final double DETECTION_RADIUS = 20.0;
 
     Double[][] matrix = {{0.1,0.1,0.7,0.1},
                          {0.1,0.1,0.8,0.0},
@@ -56,6 +56,8 @@ public class NormalBot extends Bot {
     protected void moveCloserToTarget(Player target, Map<Integer, Point2D> positions){
         Point2D selfPos = positions.get(this.id);
         Point2D targetPos = positions.get(target.id);
+        System.out.println(selfPos);
+        System.out.println(targetPos);
 
         // first decrease the horizontal distance difference
         double dx = targetPos.getX() - selfPos.getX();
