@@ -41,7 +41,7 @@ public class HealthDisplay  extends StackPane {
         heartIcon.setFitHeight(15.0);
         livesText = new Text();
         livesText.setFont(playerText.getFont());
-        livesText.setStyle("-fx-font-size: 20;");
+        livesText.setStyle("-fx-font-size: 20; -fx-stroke: white;");
         setLives(initialLives);
         livesDisplay.getChildren().addAll(livesSpacer,heartIcon,livesText);
         this.getChildren().addAll(livesDisplay);
