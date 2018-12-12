@@ -311,6 +311,8 @@ public class CombatScreen extends Screen {
         catch (NullPointerException e){
 
         }
+        System.out.println(deathEvent.getId());
+        myHealthMap.get(deathEvent.getId()).setHealth(100);
         if(deathEvent.getRemainingLife()==0){
             myHealthMap.get(deathEvent.getId()).setOpacity(0.2);
         }
