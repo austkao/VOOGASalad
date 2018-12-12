@@ -171,6 +171,7 @@ public class CombatScreen extends Screen {
         }
         //set up combat systems
         myInputSystem = new InputSystem(myGameDirectory);
+        myInputSystem.resetBindings();
         myMessageBus.register(myInputSystem);
         myPhysicsSystem = new PhysicsSystem();
         myGameLoop = new GameLoop(myPhysicsSystem,this);
