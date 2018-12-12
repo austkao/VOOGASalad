@@ -57,11 +57,21 @@ public class DataSystem {
         String tilePath = myFP.DEFAULTTILE.getPath();
         String splashPath = myFP.DEFAULTSPLASH.getPath();
         String comboPath = myFP.DEFAULTCOMBO.getPath();
+        String themePath = myFP.DEFAULTTHEME.getPath();
+        String fightPath = myFP.DEFAULTFIGHT.getPath();
+        String koPath = myFP.DEFAULTKO.getPath();
+        String victoryPath = myFP.DEFAULTVICTORY.getPath();
+        String fanfarePath = myFP.DEFAULTFANFARE.getPath();
         myFileSystem.copyFile(new File(defaultGamePath + backgroundPath), new File(defaultFile.getPath()+ backgroundPath));
         myFileSystem.copyFile(new File(defaultGamePath + musicPath), new File(defaultFile.getPath()+ musicPath));
         myFileSystem.copyFile(new File(defaultGamePath + tilePath), new File(defaultFile.getPath()+ tilePath));
         myFileSystem.copyFile(new File(defaultGamePath + splashPath), new File(defaultFile.getPath()+ splashPath));
         myFileSystem.copyFile(new File(defaultGamePath + comboPath), new File(defaultFile.getPath()+ comboPath));
+        myFileSystem.copyFile(new File(defaultGamePath + themePath), new File(defaultFile.getPath()+ themePath));
+        myFileSystem.copyFile(new File(defaultGamePath + fightPath), new File(defaultFile.getPath()+ fightPath));
+        myFileSystem.copyFile(new File(defaultGamePath + koPath), new File(defaultFile.getPath()+ koPath));
+        myFileSystem.copyFile(new File(defaultGamePath + victoryPath), new File(defaultFile.getPath()+ victoryPath));
+        myFileSystem.copyFile(new File(defaultGamePath + fanfarePath), new File(defaultFile.getPath()+ fanfarePath));
     }
 
     /**
