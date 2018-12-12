@@ -34,6 +34,10 @@ public class CombatSystem {
     private File gameDir;
     private HashMap<Integer, ArrayList<Double>> characterStats;
     private HashMap<Integer, Rectangle2D> tileMap;
+    private static final int TILE_STARTING_ID = 1000;
+    private static int tileID = TILE_STARTING_ID;
+    private static final int PLAYER_STARTING_ID = 1;
+    private static int playerID = PLAYER_STARTING_ID;
 
 
 //    public CombatSystem(Player bot){
@@ -101,7 +105,6 @@ public class CombatSystem {
     public PlayerState getPlayerState(int id){
         return playerManager.getPlayerByID(id).getPlayerState();
     }
-
 
 
     @Subscribe
