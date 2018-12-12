@@ -16,10 +16,13 @@ import player.internal.Elements.MessageBar;
 import renderer.external.Renderer;
 import replay.external.InvalidReplayFileException;
 import replay.external.ReplayPlayer;
+import xml.XMLParser;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static player.internal.Elements.CharacterChooseDisplay.FORMAT_RECT;
 import static player.internal.MainMenuScreen.*;
@@ -33,6 +36,7 @@ public class ReplayScreen extends Screen {
 
     private MessageBar myMessageBar;
 
+    private File gameDirectory;
     private File replayDirectory;
 
     private ReplayPlayer replayPlayer;
@@ -48,6 +52,7 @@ public class ReplayScreen extends Screen {
 
     public ReplayScreen(Group root, Renderer renderer, Image background, File gameDirectory, SceneSwitch mainMenuSwitch) {
         super(root, renderer);
+        this.gameDirectory = gameDirectory;
         ImageView bg = new ImageView(background);
         bg.setFitHeight(800.0);
         bg.setFitWidth(1280.0);
@@ -144,6 +149,30 @@ public class ReplayScreen extends Screen {
             stageName.setText(replayPlayer.getStageName());
             date.setText(replayPlayer.getDate());
             gameMode.setText(replayPlayer.getGameMode());
+            //get map image
+            File parse = new File(String.format("%s/%s",new File(new File(gameDirectory,"stages"),replayPlayer.getStageName()).getPath(),"stageproperties.xml"));
+            XMLParser parser = new XMLParser(parse);
+            HashMap<String, ArrayList<String>> bgmap = parser.parseFileForElement("background");
+            replayPreview.setImage(new Image(gameDirectory.toURI()+"data/background/"+bgmap.get("bgFile").get(0)));
+            //make mini portraits
+            characterPreview.getChildren().clear();
+            for(Integer i : replayPlayer.getCharacterMap().keySet()){
+                StackPane portraitContainer = new StackPane();
+                portraitContainer.setPrefSize(66.0,66.0);
+                portraitContainer.setMaxSize(66.0,66.0);
+                portraitContainer.setStyle("-fx-background-color: "+replayPlayer.getColorMap().get(i));
+                XMLParser characterPropertiesParser = new XMLParser(new File(gameDirectory.getPath()+"/characters/"+replayPlayer.getCharacterMap().get(i)+"/characterproperties.xml"));
+                double x = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","x").get(0));
+                double y = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","y").get(0));
+                double size = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("portrait","size").get(0));
+                ImageView healthPortrait = new ImageView(new Image(gameDirectory.toURI()+"/characters/"+replayPlayer.getCharacterMap().get(i)+"/"+replayPlayer.getCharacterMap().get(i)+".png"));
+                healthPortrait.setViewport(new javafx.geometry.Rectangle2D(x,y,size,size));
+                ImageView portraitView = healthPortrait;
+                portraitView.setFitWidth(66.0);
+                portraitView.setFitHeight(66.0);
+                portraitContainer.getChildren().addAll(portraitView);
+                characterPreview.getChildren().add(portraitContainer);
+            }
         } catch (InvalidReplayFileException e) {
             //TODO bad replay file
             e.printStackTrace();
