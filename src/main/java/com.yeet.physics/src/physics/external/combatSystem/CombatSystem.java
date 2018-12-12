@@ -206,16 +206,18 @@ public class CombatSystem {
     @Subscribe
     public void onAttackIntersectEvent(AttackIntersectEvent event){
         Map<Integer, Double> playersBeingRekt = new HashMap<>();
-        for(List<Integer> list: event.getAttackPlayers()){
-            Player playerBeingAttacked = playerManager.getPlayerByID(list.get(0));
-            Player playerAttacking = playerManager.getPlayerByID(list.get(1));
+        int attacker = event.getAttacker();
+        int beingAttacked = event.getAttacked();
+//        for(List<Integer> list: event.getAttackPlayers()){
+            Player playerBeingAttacked = playerManager.getPlayerByID(beingAttacked);
+            Player playerAttacking = playerManager.getPlayerByID(attacker);
             playerAttacking.addAttackingTargets(playerBeingAttacked);
-            boolean result = playerManager.hurt(list.get(0), list.get(1));
+            boolean result = playerManager.hurt(beingAttacked, attacker);
             if(result){
                 eventBus.post(new GameOverEvent(playerManager.winnerID, playerManager.getRanking()));
             }
-            playersBeingRekt.put(playerBeingAttacked.id, playerManager.getPlayerByID(list.get(0)).getHealth());
-        }
+            playersBeingRekt.put(playerBeingAttacked.id, playerManager.getPlayerByID(beingAttacked).getHealth());
+//        }
         eventBus.post(new GetRektEvent(playersBeingRekt));
     }
 
