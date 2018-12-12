@@ -66,6 +66,11 @@ public class Console {
             healthmap.put(Integer.parseInt(event.split(" ")[1]), Double.parseDouble(event.split(" ")[2]));
             myEventBus.post(new GetRektEvent(healthmap));
         }
+        else if(event.matches("kill [0-3] [0-9]+")){
+            int playerID = Integer.parseInt(event.substring(5,6));
+            int livesLeft = Integer.parseInt(event.substring(7));
+            myEventBus.post(new PlayerDeathEvent(playerID,livesLeft));
+        }
     }
 
 
@@ -73,7 +78,7 @@ public class Console {
     @Subscribe
     public  void printEvent(Event event){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        if(!"PositionsUpdateEvent".equals(event.getName())){
+        if(!"PositionsUpdateEvent".equals(event.getName()) && !"GroundIntersectingEvent".equalsIgnoreCase(event.getName())){
             System.out.println("["+timestamp+"]"+" Console: "+event.getName());
         }
     }
