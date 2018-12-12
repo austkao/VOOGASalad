@@ -100,18 +100,20 @@ public class CombatSystem {
         return playerManager.getPlayerByID(id).getPlayerState();
     }
 
+
+
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
         int id = event.getInitiatorID();
         if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);
         }
-
     }
 
     @Subscribe
     public void onIdleEvent(IdleEvent idleEvent){
         int id = idleEvent.getId();
+        if(!characterStats.keySet().contains(id)) return;
         if(playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.SINGLE_JUMP
                 && playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.DOUBLE_JUMP){
             playerManager.setToInitialStateByID(id);
@@ -193,6 +195,12 @@ public class CombatSystem {
     @Subscribe
     public void onTimeUpEvent(TimeUpEvent timeUpEvent){
         eventBus.post(new GameOverEvent(playerManager.winnerID, playerManager.getRanking()));
+    }
+
+    @Subscribe
+    public void onPlayerDeath(PlayerDeathEvent playerDeathEvent){
+        int id = playerDeathEvent.getId();
+        playerManager.respawnPlayer(id, characterStats.get(id));
     }
 
 }
