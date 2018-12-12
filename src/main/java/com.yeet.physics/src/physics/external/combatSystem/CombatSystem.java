@@ -3,6 +3,7 @@ package physics.external.combatSystem;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import messenger.external.*;
+import physics.external.PhysicsBody;
 import physics.external.PhysicsSystem;
 import xml.XMLParser;
 
@@ -33,6 +34,11 @@ public class CombatSystem {
     private XMLParser xmlParser;
     private File gameDir;
     private HashMap<Integer, ArrayList<Double>> characterStats;
+    private HashMap<Integer, Rectangle2D> tileMap;
+    private static final int TILE_STARTING_ID = 1000;
+    private static int tileID = TILE_STARTING_ID;
+    private static final int PLAYER_STARTING_ID = 0;
+    private static int playerID = PLAYER_STARTING_ID;
 
 
 //    public CombatSystem(Player bot){
@@ -65,16 +71,17 @@ public class CombatSystem {
         this.playerMap = playerMap;
 //        playerManager = new PlayerManager(playerMap.keySet().size());
         this.physicsSystem = physicsSystem;
+        this.tileMap = tileMap;
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
 //            System.out.println("MIN X: " + playerMap.get(i).getX());
-            physicsSystem.addPhysicsObject(0, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),
-                    40,60, (int)playerMap.get(i).getX(), (int)playerMap.get(i).getY());
+            physicsSystem.addPhysicsObject(playerID, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60, (int)playerMap.get(i).getX(), (int)playerMap.get(i).getY());
+            playerID++;
         }
         // register tiles to physics engine
         for(int i=0;i < tileMap.keySet().size(); i++){
-            physicsSystem.addPhysicsObject(2,0, tileMap.get(i).getX(),tileMap.get(i).getY(),
-                    tileMap.get(i).getWidth(),tileMap.get(i).getHeight(), (int)tileMap.get(i).getX(), (int)tileMap.get(i).getY());
+            physicsSystem.addPhysicsObject(tileID,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight(), (int)tileMap.get(i).getX(), (int)tileMap.get(i).getY());
+            tileID++;
         }
 
         // get hit boxes and hurt boxes information
@@ -142,7 +149,6 @@ public class CombatSystem {
     public PlayerState getPlayerState(int id){
         return playerManager.getPlayerByID(id).getPlayerState();
     }
-
 
 
     @Subscribe
@@ -244,6 +250,8 @@ public class CombatSystem {
     public void onPlayerDeath(PlayerDeathEvent playerDeathEvent){
         int id = playerDeathEvent.getId();
         playerManager.respawnPlayer(id, characterStats.get(id));
+        ((PhysicsBody)physicsSystem.getGameObjects().get(id)).respawn();
+//        physicsSystem.addPhysicsObject(id, physicsSystem.DEFAULT_MASS, tileMap.get(id).getX(), tileMap.get(id).getY(), 40, 60);
     }
 
 }
