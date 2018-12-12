@@ -21,17 +21,19 @@ import messenger.external.CreateGameEvent;
 import messenger.external.EventBusFactory;
 import player.external.Player;
 import renderer.external.RenderSystem;
+import renderer.external.Structures.TextBox;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Consumer;
 
 public class Main extends Application {
     private static final String RESOURCE_PATH = "/src/main/java/com.yeet.main/resources";
     private static final String DEFAULT_GAME_DIRECTORY = "/src/main/java/com.yeet.main/resources/game0";
 
-
+    private Stage newGamePopup;
     private Stage myStage;
     private Stage myPopup;
     private static Console myConsole;
@@ -78,8 +80,8 @@ public class Main extends Application {
         homeScene.setFill(Color.web("#91C7E8"));
         primaryStage.show();
         //set up systems
-        em = new EditorManager(primaryStage,homeScene,myDirectory);
         myRenderSystem = new RenderSystem();
+        em = new EditorManager(primaryStage,homeScene,new Group(), myDirectory,myRenderSystem);
         myPlayer = new Player(primaryStage, myDirectory, myRenderSystem);
         myPlayer.setEditorLink(em.getInputSceneSwitcher());
         myDataSystem = new DataSystem();
@@ -101,6 +103,7 @@ public class Main extends Application {
         titleText.setWrappingWidth(389.0);
         root.getChildren().add(titleText);
         Button newButton = myRenderSystem.makeStringButton("New Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,183.36,307.21,94.6);
+        newButton.setOnMouseClicked(e -> nameNewObject("Create New Game","Game Name"));
         root.getChildren().add(newButton);
         editButton = myRenderSystem.makeStringButton("Edit Game",Color.web("#4E82D1"),true,Color.WHITE,30.0,891.0,311.68,307.21,94.6);
         editButton.setOnMouseClicked(event -> openGameList(true));
@@ -219,5 +222,26 @@ public class Main extends Application {
             });
         }
         edit.show();
+    }
+
+    protected void nameNewObject(String title, String label) {
+        newGamePopup = new Stage();
+        Consumer consumer = new Consumer() {
+            @Override
+            public void accept(Object o) {
+                o = o;
+            }
+        };
+        newGamePopup.setTitle(title);
+        TextBox stageName = myRenderSystem.makeTextField(consumer, "", 100.0,20.0,200.0,30.0, myRenderSystem.getPlainFont());
+        Text stageLabel = myRenderSystem.makeText(label, false, 12, Color.BLACK, 20.0, 50.0);
+        Button create = myRenderSystem.makeStringButton("Create", Color.BLACK, false, Color.WHITE, 12.0,50.0, 100.0, 100.0, 30.0);
+        Button cancel = myRenderSystem.makeStringButton("Cancel", Color.BLACK, false, Color.WHITE, 12.0,200.0, 100.0, 100.0, 30.0);
+        //create.setOnMouseClicked(e -> createNewObject(stageName.getText())); not sure how to implement
+        cancel.setOnMouseClicked(e -> newGamePopup.close());
+        Scene creationScene = new Scene(new Group(stageName, stageLabel, create, cancel), 400, 200);
+        newGamePopup.setScene(creationScene);
+        newGamePopup.show();
+        System.out.println("HI");
     }
 }

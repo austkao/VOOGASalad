@@ -3,7 +3,6 @@ package editor.home;
 import editor.EditorManager;
 import editor.interactive.MapEditor;
 import javafx.scene.Group;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBase;
 import messenger.external.CreateStageEvent;
 import java.io.File;
@@ -26,8 +25,7 @@ public class MapHome extends EditorHome {
     }
 
     public void setEditor(File directory, boolean isEdit){
-        myEditor = new MapEditor(em, directory, isEdit);
-        myEditor.createBack(this);
+        myEditor = new MapEditor(em, this, directory, isEdit);
         em.changeScene(myEditor);
     }
     public String getDir(){
@@ -43,9 +41,7 @@ public class MapHome extends EditorHome {
         //System.out.println(directory.getPath());
         if(bb != null) {
             String stageName = bb.getText();
-            System.out.println(stageName);
             File stageDirectory = Paths.get(em.getGameDirectoryString(), "stages", stageName).toFile();
-            System.out.println(stageDirectory.getPath());
             setEditor(stageDirectory, true);
             return;
         } else if(directory != null) {

@@ -6,6 +6,7 @@ import javafx.animation.Animation;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
@@ -69,8 +70,8 @@ public class CharacterEditor extends EditorSuper {
 
 
 
-    public CharacterEditor(EditorManager em, InputEditor editor){
-        super(new Group(),em);
+    public CharacterEditor(EditorManager em, InputEditor editor, Scene prev){
+        super(new Group(),em, prev);
         this.inputEditor = editor;
         portrait = initializeImageView(200, 300, 275, 25);
 
@@ -92,8 +93,8 @@ public class CharacterEditor extends EditorSuper {
         initializeSpritePane();
     }
 
-    public CharacterEditor(EditorManager em, InputEditor editor, File characterDirectory, boolean isEdit) {
-        this(em, editor);
+    public CharacterEditor(EditorManager em, InputEditor editor, Scene prev, File characterDirectory, boolean isEdit) {
+        this(em, editor, prev);
         myDirectory = characterDirectory;
         isSaved = isEdit;
         if(isEdit) {
@@ -389,15 +390,15 @@ public class CharacterEditor extends EditorSuper {
 
 
     private String showAlertInputOptions(int num){
-        //Set<String> options = inputEditor.getInputTypes();
+        Set<String> options = inputEditor.getMoveSet();
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Enter input #" + num);
 
-//        for (String option: options){
-//            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
-//            dialog.getDialogPane().getButtonTypes().add(optionButton);
-//            dialog.getDialogPane().lookupButton(optionButton).setDisable(false);
-//        }
+       for (String option: options){
+            ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
+           dialog.getDialogPane().getButtonTypes().add(optionButton);
+           dialog.getDialogPane().lookupButton(optionButton).setDisable(false);
+       }
 
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         ButtonType input = dialog.showAndWait().orElse(ButtonType.CLOSE);
@@ -425,8 +426,14 @@ public class CharacterEditor extends EditorSuper {
         return combo;
     }
 
+    @Override
     public String toString(){
         return "Character Editor";
+    }
+
+    @Override
+    public String getDirectoryString() {
+        return myDirectory.getPath();
     }
 
     private void loadFiles(File directory) {

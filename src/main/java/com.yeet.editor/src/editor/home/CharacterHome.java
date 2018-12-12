@@ -20,7 +20,7 @@ public class CharacterHome extends EditorHome {
         super(new Group(), em);
         setInputEditor();
         //setEditor();
-        Button input = getRender().makeStringButton("Edit Inputs",Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
+        Button input = rs.makeStringButton("Edit Inputs",Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
         getMyBox().getChildren().add(input);
         input.setOnMouseClicked(e-> em.changeScene(inputEditor));
         myScroll = initializeScroll("characters");
@@ -30,14 +30,12 @@ public class CharacterHome extends EditorHome {
     }
 
     private void setInputEditor(){
-        inputEditor = new InputEditor(em);
-        inputEditor.createBack(this);
+        inputEditor = new InputEditor(em, this);
     }
 
     public void setEditor(File directory, boolean isEdit){
 
-        myEditor = new CharacterEditor(em, inputEditor, directory, isEdit);
-        myEditor.createBack(this);
+        myEditor = new CharacterEditor(em, inputEditor, this, directory, isEdit);
         em.changeScene(myEditor);
     }
 

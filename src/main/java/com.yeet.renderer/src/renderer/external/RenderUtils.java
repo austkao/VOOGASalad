@@ -25,9 +25,6 @@ public class RenderUtils {
     }
 
     public static void throwErrorAlert(String header, String content){
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setHeaderText(header);
-        errorAlert.setContentText(content);
-        errorAlert.showAndWait();
+        RenderSystem.createErrorAlert(header, content);
     }
 }

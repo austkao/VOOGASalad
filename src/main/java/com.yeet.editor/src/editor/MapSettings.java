@@ -1,5 +1,6 @@
 package editor;
 
+import editor.interactive.MapEditor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -37,12 +38,12 @@ public class MapSettings {
     private RenderSystem rs;
     private VBox v1;
     private File stageMusic;
-    private EditorScreen prev;
+    private MapEditor prev;
     private SliderBox gravityBox;
     private SliderBox frictionBox;
     private SliderBox terminalBox;
 
-    public MapSettings(EditorScreen prevScene){
+    public MapSettings(MapEditor prevScene){
         prev = prevScene;
         dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -147,14 +148,15 @@ public class MapSettings {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         structure.put("gravity", new ArrayList<>(List.of("gValue")));
         structure.put("friction", new ArrayList<>(List.of("meuValue")));
-        structure.put("terminal velocity", new ArrayList<>(List.of("vtValue")));
+        structure.put("terminalVelocity", new ArrayList<>(List.of("vtValue")));
         HashMap<String, ArrayList<String>> data = new HashMap<>();
-        double[] physicsValues = getPhysicsValues();
         data.put("gValue", new ArrayList<>(List.of(gravityBox.getValue()+"")));
         data.put("meuValue", new ArrayList<>(List.of(frictionBox.getValue()+"")));
         data.put("vtValue", new ArrayList<>(List.of(terminalBox.getValue()+"")));
+        System.out.println(structure);
+        System.out.println(data);
         try {
-            File xmlFile = Paths.get(prev.getGameDirectoryString(), "physicsproperties.xml").toFile();
+            File xmlFile = Paths.get(prev.getDirectoryString(), "physicsproperties.xml").toFile();
             if (xmlFile != null) {
                 new XMLSaveBuilder(structure, data, xmlFile);
             } else {
