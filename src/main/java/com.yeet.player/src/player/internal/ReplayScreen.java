@@ -33,6 +33,9 @@ public class ReplayScreen extends Screen {
     public static final double REPLAY_MAIN_WIDTH = 1200.0;
     public static final double REPLAY_MAIN_HEIGHT = 600.0;
     public static final double REPLAY_MAIN_SPACING = 100.0;
+    public static final String STAGE_DEFAULT = "Stage Name";
+    public static final String DATE_DEFAULT = "Date";
+    public static final String GAME_MODE_DEFAULT = "Game Mode";
 
     private MessageBar myMessageBar;
 
@@ -49,6 +52,8 @@ public class ReplayScreen extends Screen {
     private Text stageName;
     private Text date;
     private Text gameMode;
+
+    private Image defaultimage;
 
     public ReplayScreen(Group root, Renderer renderer, Image background, File gameDirectory, SceneSwitch mainMenuSwitch) {
         super(root, renderer);
@@ -76,7 +81,6 @@ public class ReplayScreen extends Screen {
         replayListContainer.setPrefSize(422.0,545.0);
         replayListContainer.setMaxSize(422.0,545.0);
         replayListContainer.setAlignment(Pos.CENTER_RIGHT);
-        replayListContainer.setStyle("-fx-border-color: red");
 
         //search for replay directory and attempt to create list of replay files
         replayDirectory = new File(gameDirectory,"replays");
@@ -95,33 +99,29 @@ public class ReplayScreen extends Screen {
         replayDisplayContainer.setPrefSize(513.0,539.0);
         replayDisplayContainer.setMaxSize(513.0,539.0);
         replayDisplayContainer.setAlignment(Pos.TOP_CENTER);
-        replayDisplayContainer.setStyle("-fx-border-color: blue");
         StackPane replayPreviewContainer = new StackPane();
         replayPreviewContainer.setPrefSize(513.0,321.0);
         replayPreviewContainer.setAlignment(Pos.CENTER);
         replayPreviewContainer.setStyle("-fx-border-color: black;-fx-border-width: 2");
-        replayPreview = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("replay_placeholder.png")));
+        defaultimage = new Image(this.getClass().getClassLoader().getResourceAsStream("replay_placeholder.png"));
+        replayPreview = new ImageView(defaultimage);
         replayPreview.setFitWidth(513.0);
         replayPreview.setFitHeight(321.0);
         playButton = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("play_button.png")));
-        playButton.setFitWidth(92.0);
-        playButton.setFitHeight(92.0);
-        playButton.setOpacity(0.0);
+        playButton = makeButton(playButton,"Play","View this replay!",92.0,92.0,0.0,0.0,myMessageBar,event -> handlePlayClick());
+        hidePlayButton();
         HBox replayInfoContainer = new HBox(25.0);
         replayInfoContainer.setPrefSize(513.0,173.0);
         replayInfoContainer.setAlignment(Pos.TOP_LEFT);
-        replayInfoContainer.setStyle("-fx-border-color: green");
         characterPreview = new HBox(15.0);
         characterPreview.setPrefSize(311.0,66.0);
         characterPreview.setAlignment(Pos.CENTER);
-        characterPreview.setStyle("-fx-border-color: purple");
         VBox replayInfo = new VBox(25.0);
         replayInfo.setPrefSize(175.0,173.0);
         replayInfo.setAlignment(Pos.TOP_RIGHT);
-        replayInfo.setStyle("-fx-border-color: cyan");
-        stageName = super.getMyRenderer().makeText("Stage Name",false,30,Color.BLACK,0.0,0.0);
-        date = super.getMyRenderer().makeText("Date",false,30,Color.BLACK,0.0,0.0);
-        gameMode = super.getMyRenderer().makeText("Game Mode",false,30,Color.BLACK,0.0,0.0);
+        stageName = super.getMyRenderer().makeText(STAGE_DEFAULT,false,30,Color.BLACK,0.0,0.0);
+        date = super.getMyRenderer().makeText(DATE_DEFAULT,false,30,Color.BLACK,0.0,0.0);
+        gameMode = super.getMyRenderer().makeText(GAME_MODE_DEFAULT,false,30,Color.BLACK,0.0,0.0);
         replayInfo.getChildren().addAll(stageName,date,gameMode);
         replayListContainer.getChildren().addAll(replayList,openDirectory);
         replayInfoContainer.getChildren().addAll(characterPreview,replayInfo);
@@ -129,7 +129,7 @@ public class ReplayScreen extends Screen {
         replayDisplayContainer.getChildren().addAll(replayPreviewContainer,replayInfoContainer);
         replayMainContainer.getChildren().addAll(replayListContainer,replayDisplayContainer);
         mainContainer.getChildren().addAll(replayMainContainer);
-        super.getMyRoot().getChildren().addAll(bg,mainContainer,topBar);
+        super.getMyRoot().getChildren().addAll(bg,mainContainer,myMessageBar,topBar);
     }
 
     private void openReplayDirectory() {
@@ -173,12 +173,35 @@ public class ReplayScreen extends Screen {
                 portraitContainer.getChildren().addAll(portraitView);
                 characterPreview.getChildren().add(portraitContainer);
             }
+            showPlayButton();
         } catch (InvalidReplayFileException e) {
-            //TODO bad replay file
             e.printStackTrace();
+            hidePlayButton();
+            reset();
         } catch (NullPointerException e){
-            //TODO no file selected in bar, no biggie
+            hidePlayButton();
         }
+    }
+
+    private void handlePlayClick(){
+
+    }
+
+    private void reset(){
+        replayPreview.setImage(defaultimage);
+        stageName.setText(STAGE_DEFAULT);
+        date.setText(DATE_DEFAULT);
+        gameMode.setText(GAME_MODE_DEFAULT);
+    }
+
+    private void showPlayButton(){
+        playButton.setOpacity(1.0);
+        playButton.setDisable(false);
+    }
+
+    private void hidePlayButton(){
+        playButton.setDisable(true);
+        playButton.setOpacity(0.0);
     }
 
 }

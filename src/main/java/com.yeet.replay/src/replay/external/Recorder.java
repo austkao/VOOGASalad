@@ -2,7 +2,7 @@ package replay.external;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import messenger.external.Event;
+import messenger.external.*;
 import replay.internal.Frame;
 import replay.internal.Replay;
 import replay.internal.ReplayHolder;
@@ -131,14 +131,43 @@ public class Recorder {
         return("replay_"+timestamp+".yeet");
     }
 
-    /** Promiscuously listens for all {@code Event} objects passing through the target {@code EventBus},
-     *  but only records them if in recording mode.
-     */
-    @Subscribe
-    public void getEvent(Event event){
+    private void capture(Event event){
         if(isRecording){
             myActiveReplay.add(new Frame(event,System.currentTimeMillis()-startTime));
         }
+    }
+
+    /** Below are methods for capturing front-end updating events
+     *  but only records them if in recording mode.
+     */
+    @Subscribe
+    public void getPositionupdate(PositionsUpdateEvent event){
+        capture(event);
+    }
+
+    @Subscribe
+    public void getAttackAnimation(AttackSuccessfulEvent event){
+        capture(event);
+    }
+
+    @Subscribe
+    public void getMoveAnimation(MoveSuccessfulEvent event){
+        capture(event);
+    }
+
+    @Subscribe
+    public void getGameOver(GameOverEvent event){
+        capture(event);
+    }
+
+    @Subscribe
+    public void getDamage(GetRektEvent event){
+        capture(event);
+    }
+
+    @Subscribe
+    public void getDeath(PlayerDeathEvent event){
+        capture(event);
     }
 
 
