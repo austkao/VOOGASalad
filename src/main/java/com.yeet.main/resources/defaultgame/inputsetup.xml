@@ -1,1 +1,20 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><VOOGASalad author="yeet"><input DOWN="D" JUMP="E" LEFT="S" RIGHT="F"/><input DOWN=" " JUMP=" " LEFT=" " RIGHT=" "/><input DOWN=" " JUMP=" " LEFT=" " RIGHT=" "/><input DOWN=" " JUMP=" " LEFT=" " RIGHT=" "/><players numPlayers="4"/></VOOGASalad>
+=======
+=======
+>>>>>>> 0ba869fc93490ad2b38b6de9e913f54cd4146172
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<VOOGASalad author="yeet">
+    <input DOWN="S" LEFT="A" RIGHT="D" JUMP="W" JAB="R"/>
+    <input DOWN="K" LEFT="J" RIGHT="L" JUMP="I" JAB="P"/>
+    <input DOWN="X" LEFT="C" RIGHT="V" JUMP="Z" JAB="Y"/>
+    <input DOWN="G" LEFT="B" RIGHT="N" JUMP="T" JAB="H"/>
+    <players numPlayers="4"/>
+</VOOGASalad>
+
+<<<<<<< HEAD
+
+>>>>>>> fc6bdce3470ff9d0672f3e7782fb02018dd945b1
+=======
+>>>>>>> 0ba869fc93490ad2b38b6de9e913f54cd4146172

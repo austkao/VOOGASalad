@@ -87,14 +87,55 @@ public class CombatSystem {
             xmlParser = new XMLParser(Paths.get(gameDir.getPath(), "characters", name, "attacks", "attackproperties.xml").toFile());
             HashMap<String, ArrayList<String>> map = xmlParser.parseFileForElement("frame");
 
+
+            double animationWidth = Double.parseDouble(xmlParser.parseFileForElement("attack").get("width").get(0));
+            double animationHeight = Double.parseDouble(xmlParser.parseFileForElement("attack").get("height").get(0));
+
+
+            double hitX = Double.parseDouble(map.get("hitXPos").get(0));
+            double hitY = Double.parseDouble(map.get("hitYPos").get(0));
+            double hitW = Double.parseDouble(map.get("hitWidth").get(0));
+            double hitH = Double.parseDouble(map.get("hitHeight").get(0));
+            double hurtX = Double.parseDouble(map.get("hurtXPos").get(0));
+            double hurtY = Double.parseDouble(map.get("hurtYPos").get(0));
+            double hurtW = Double.parseDouble(map.get("hurtWidth").get(0));
+            double hurtH = Double.parseDouble(map.get("hurtHeight").get(0));
+
+
+
+
+
+            hitX = hitX*40/animationWidth;
+            hitY = hitY*60/animationHeight;
+            hurtX = hurtX*40/animationWidth;
+            hurtY = hurtY*60/animationHeight;
+
+            hitW = hitW*40/animationWidth;
+            hitH = hitH*60/animationHeight;
+            hurtW = hurtW*40/animationWidth;
+            hurtH = hurtH*60/animationHeight;
+
+
+            System.out.println(hitX);
+            System.out.println(hitY);
+            System.out.println(hitW);
+            System.out.println(hitH);
+            System.out.println();
+            System.out.println(hurtW);
+            System.out.println(hurtH);
+            System.out.println(hurtX);
+            System.out.println(hurtY);
+
             // set hitbox
             physicsSystem.setHitBox(0, id,
-                    Double.parseDouble(map.get("hitXPos").get(0)), Double.parseDouble(map.get("hitYPos").get(0)),
-                    Double.parseDouble(map.get("hitWidth").get(0)), Double.parseDouble(map.get("hitHeight").get(0)));
+                    hitX, hitY, hitW, hitH);
             // set hurtbox
             physicsSystem.setHitBox(1, id,
+                    hurtX, hurtY, hurtW, hurtH);
+           /* // set hurtbox
+            physicsSystem.setHitBox(1, id,
                     Double.parseDouble(map.get("hurtXPos").get(0)), Double.parseDouble(map.get("hurtYPos").get(0)),
-                    Double.parseDouble(map.get("hurtWidth").get(0)), Double.parseDouble(map.get("hurtHeight").get(0)));
+                    Double.parseDouble(map.get("hurtWidth").get(0)), Double.parseDouble(map.get("hurtHeight").get(0)));*/
         }
 
     }
