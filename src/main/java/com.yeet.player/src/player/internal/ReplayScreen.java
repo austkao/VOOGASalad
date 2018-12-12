@@ -1,6 +1,7 @@
 package player.internal;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.ListView;
@@ -48,6 +49,7 @@ public class ReplayScreen extends Screen {
     private SceneSwitch replayViewerSwitch;
 
     private String[] fileNames;
+    private ObservableList fileList;
     private ListView replayList;
     private ImageView replayPreview;
     private ImageView playButton;
@@ -94,12 +96,15 @@ public class ReplayScreen extends Screen {
         for(int i=0;i<replayDirectory.listFiles().length;i++){
             fileNames[i] = replayDirectory.listFiles()[i].getName();
         }
-        replayList = new ListView<>(FXCollections.observableArrayList(fileNames));
+        fileList = FXCollections.observableArrayList(fileNames);
+        replayList = new ListView<>(fileList);
         replayList.setPrefSize(422.0,498.0);
         replayList.setOnMousePressed(event -> handleListClick());
+        HBox textContainer = new HBox(30.0);
         Text openDirectory = super.getMyRenderer().makeText("Open Replays Folder",false,16,Color.BLACK,0.0,0.0);
+        Text refresh = super.getMyRenderer().makeText("Refresh",false,16,Color.BLACK,0.0,0.0);
+        refresh.setOnMousePressed(event -> refresh());
         openDirectory.setOnMousePressed(event -> openReplayDirectory());
-        
         VBox replayDisplayContainer = new VBox(25.0);
         replayDisplayContainer.setPrefSize(513.0,539.0);
         replayDisplayContainer.setMaxSize(513.0,539.0);
@@ -129,7 +134,8 @@ public class ReplayScreen extends Screen {
         gameMode = super.getMyRenderer().makeText(GAME_MODE_DEFAULT,false,30,Color.BLACK,0.0,0.0);
         gameMode.setTextAlignment(TextAlignment.RIGHT);
         replayInfo.getChildren().addAll(stageName,date,gameMode);
-        replayListContainer.getChildren().addAll(replayList,openDirectory);
+        textContainer.getChildren().addAll(refresh,openDirectory);
+        replayListContainer.getChildren().addAll(replayList,textContainer);
         replayInfoContainer.getChildren().addAll(characterPreview,replayInfo);
         replayPreviewContainer.getChildren().addAll(replayPreview,playButton);
         replayDisplayContainer.getChildren().addAll(replayPreviewContainer,replayInfoContainer);
@@ -186,6 +192,13 @@ public class ReplayScreen extends Screen {
             reset();
         } catch (NullPointerException e){
             hidePlayButton();
+        }
+    }
+
+    private void refresh() {
+        fileList.clear();
+        for(int i=0;i<replayDirectory.listFiles().length;i++){
+            fileList.add(replayDirectory.listFiles()[i].getName());
         }
     }
 
