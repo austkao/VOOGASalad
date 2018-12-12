@@ -75,14 +75,12 @@ public class CombatSystem {
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
 //            System.out.println("MIN X: " + playerMap.get(i).getX());
-            physicsSystem.addPhysicsObject(0, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),
-                    40,60, (int)playerMap.get(i).getX(), (int)playerMap.get(i).getY());
+            physicsSystem.addPhysicsObject(playerID, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60, (int)playerMap.get(i).getX(), (int)playerMap.get(i).getY());
             playerID++;
         }
         // register tiles to physics engine
         for(int i=0;i < tileMap.keySet().size(); i++){
-            physicsSystem.addPhysicsObject(2,0, tileMap.get(i).getX(),tileMap.get(i).getY(),
-                    tileMap.get(i).getWidth(),tileMap.get(i).getHeight(), (int)tileMap.get(i).getX(), (int)tileMap.get(i).getY());
+            physicsSystem.addPhysicsObject(tileID,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight(), (int)tileMap.get(i).getX(), (int)tileMap.get(i).getY());
             tileID++;
         }
 

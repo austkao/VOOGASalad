@@ -52,6 +52,7 @@ public class CharacterEditor extends EditorSuper {
     private static final Color HITBOX_COLOR = Color.RED;
     private static final Color HURTBOX_COLOR = Color.BLUE;
     private static final Color BOX_FILL = null;
+    private static final Color DEFAULT_HITBOX_COLOR = Color.DEEPPINK;
 
     private static final double thumbnailAspectRatio = 132.0/95.0; //
     private static final double portraitAspectRatio = 1.0;
@@ -63,6 +64,7 @@ public class CharacterEditor extends EditorSuper {
     private Rectangle portraitRectangle;
     private Image spriteSheet;
     private Sprite currentSprite;
+    private Rectangle defaultHitBox;
 
     //Animation variables
     private SpriteAnimation currentAnimation;
@@ -257,8 +259,7 @@ public class CharacterEditor extends EditorSuper {
         }
         if (currentAnimation != null && currentAnimation == nameToAnimation.get(b.getButton().getText())){ //deselect
             currentAnimation = null;
-
-            return;
+            frameText.setText("Animation not selected. Draw on sprite to get hitbox");
         }
         else{
             currentAnimation = nameToAnimation.get(b.getButton().getText());
@@ -355,45 +356,61 @@ public class CharacterEditor extends EditorSuper {
 
 
     private Point2D startHitHurtBoxSelection(MouseEvent e, Point2D anchor){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return anchor;
-        }
-
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        Rectangle newBox = new Rectangle();
-        newBox.setX(e.getX());
-        newBox.setY(e.getY());
-        newBox.setFill(BOX_FILL);
-        newBox.setStrokeWidth(BOX_STROKE);
-        if (hitOrHurt.getState().equals(HIT_TEXT)){
-            mySpritePane.getChildren().remove(frame.getHitBox());
-            newBox.setStroke(HITBOX_COLOR);
-            frame.setHitBox(newBox);
-            mySpritePane.getChildren().add(frame.getHitBox());
+        if (currentAnimation == null){
+            if (testNull(spriteSheet, "Sprite sheet not set")){
+                return anchor;
+            }
+            mySpritePane.getChildren().remove(defaultHitBox);
+           defaultHitBox = new Rectangle();
+           defaultHitBox.setX(e.getX());
+           defaultHitBox.setY(e.getY());
+            defaultHitBox.setFill(BOX_FILL);
+            defaultHitBox.setStrokeWidth(BOX_STROKE);
+            defaultHitBox.setStroke(DEFAULT_HITBOX_COLOR);
+            mySpritePane.getChildren().add(defaultHitBox);
         }
         else{
-            mySpritePane.getChildren().remove(frame.getHurtBox());
-            newBox.setStroke(HURTBOX_COLOR);
-            frame.setHurtBox(newBox);
-            mySpritePane.getChildren().add(frame.getHurtBox());
+            AnimationInfo frame = animationFrame.get(currentAnimation);
+            Rectangle newBox = new Rectangle();
+            newBox.setX(e.getX());
+            newBox.setY(e.getY());
+            newBox.setFill(BOX_FILL);
+            newBox.setStrokeWidth(BOX_STROKE);
+            if (hitOrHurt.getState().equals(HIT_TEXT)){
+                mySpritePane.getChildren().remove(frame.getHitBox());
+                newBox.setStroke(HITBOX_COLOR);
+                frame.setHitBox(newBox);
+                mySpritePane.getChildren().add(frame.getHitBox());
+            }
+            else{
+                mySpritePane.getChildren().remove(frame.getHurtBox());
+                newBox.setStroke(HURTBOX_COLOR);
+                frame.setHurtBox(newBox);
+                mySpritePane.getChildren().add(frame.getHurtBox());
+            }
         }
-
         anchor = new Point2D(e.getX(), e.getY());
         return anchor;
     }
     private void dragHitHurtBoxSelection(MouseEvent e, Point2D anchor){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return;
-        }
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        Rectangle selection;
-        if (hitOrHurt.getState().equals(HIT_TEXT)){
-            selection = frame.getHitBox();
+        if (currentAnimation == null){
+            if (testNull(spriteSheet, "Sprite sheet not set")){
+                return;
+            }
+            updateRectangle(e, anchor, defaultHitBox, -1);
         }
         else{
-            selection = frame.getHurtBox();
+            AnimationInfo frame = animationFrame.get(currentAnimation);
+            Rectangle selection;
+            if (hitOrHurt.getState().equals(HIT_TEXT)){
+                selection = frame.getHitBox();
+            }
+            else{
+                selection = frame.getHurtBox();
+            }
+            updateRectangle(e, anchor, selection, -1);
         }
-        updateRectangle(e, anchor, selection, -1);
+
     }
     private void updateRectangle(MouseEvent e, Point2D anchor, Rectangle rect, double ratio){
         rect.setWidth(Math.abs(e.getX() - anchor.getX()));
