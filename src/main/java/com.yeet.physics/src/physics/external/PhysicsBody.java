@@ -12,6 +12,12 @@ public class PhysicsBody extends PhysicsObject {
     private int respawnX;
     private int respawnY;
 
+    public PhysicsBody(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord){
+         super(id, mass, start, dims, cord);
+         this.respawnX = 250;
+         this.respawnY = 250; 
+     }
+
     public PhysicsBody(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord, int respawnX, int respawnY){
         super(id, mass, start, dims, cord);
         this.respawnX = respawnX;
