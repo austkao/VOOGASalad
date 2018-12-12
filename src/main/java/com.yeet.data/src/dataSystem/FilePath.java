@@ -26,7 +26,12 @@ public enum FilePath {
     DEFAULTBGM("/data/bgm/BGM.mp3"),
     DEFAULTTILE("/data/tiles/acacia_planks.png"),
     DEFAULTSPLASH("/data/splash/splash.png"),
-    DEFAULTCOMBO("/combosetup.xml");
+    DEFAULTCOMBO("/combosetup.xml"),
+    DEFAULTTHEME("/data/bgm/Theme.m4a"),
+    DEFAULTFIGHT("/data/bgm/Fight.m4a"),
+    DEFAULTKO("/data/bgm/ko.mp3"),
+    DEFAULTFANFARE("/data/bgm/Fanfare.m4a"),
+    DEFAULTVICTORY("/data/bgm/Victory.m4a");
 
     private String myPath;
 
