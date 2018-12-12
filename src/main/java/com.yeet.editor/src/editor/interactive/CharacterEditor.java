@@ -96,6 +96,7 @@ public class CharacterEditor extends EditorSuper {
         makeSliders();
         makeButtons();
         initializeSpritePane();
+        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 25.0, 225.0);
     }
     public CharacterEditor(EditorManager em, InputEditor editor, Scene prev, File characterDirectory, boolean isEdit) {
         this(em, editor, prev);

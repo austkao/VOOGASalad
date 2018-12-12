@@ -171,11 +171,15 @@ public class MapEditor extends EditorSuper {
             myScrollablePane.addItem(new ScrollItem(currentTileFile, new Text()));
             int size = myScrollablePane.getItems().size();
             myScrollablePane.getItems().get(size-1).getButton().setOnMouseClicked(e->selectTileFromScroll(image, myCurrentTileName));
-            isSaved = false;
-            root.getChildren().remove(saved);
+            updateToUnsaved();
+            File destination = Paths.get(myEM.getGameDirectoryString(),"data","tiles",tileFile.getName()).toFile();
+            System.out.println(tileFile.getPath());
+            System.out.println(destination.getPath());
+            importResource(tileFile, destination);
         }
         catch (Exception e){
             System.out.println("Invalid image");
+            e.printStackTrace();
         }
     }
 
