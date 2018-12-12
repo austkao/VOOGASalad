@@ -255,4 +255,16 @@ public class CombatSystem {
 //        physicsSystem.addPhysicsObject(id, physicsSystem.DEFAULT_MASS, tileMap.get(id).getX(), tileMap.get(id).getY(), 40, 60);
     }
 
+    @Subscribe
+    public void onPositionUpdate(PositionsUpdateEvent positionsUpdateEvent){
+        Map<Integer, Point2D> positionMap = positionsUpdateEvent.getPositions();
+        for(int id: positionMap.keySet()){
+            Point2D pos = positionMap.get(id);
+            if(pos.getX()+40<0||pos.getX()-40>1200||pos.getY()+60<0||pos.getY()-60>800){
+                eventBus.post(new PlayerDeathEvent(id, playerManager.getPlayerByID(id).loseLife()));
+            }
+        }
+
+    }
+
 }
