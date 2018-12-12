@@ -38,6 +38,16 @@ public class AudioSystem {
         ko = new AudioClip(GameDirectory.toURI()+"/ko.mp3");
         myMessageBus = EventBusFactory.getEventBus();
         myPlayer= new Player();
+        String menuPath = path + "/Theme.m4a";
+        String bgmPath = path + "/data/bgm/BGM.mp3";
+        String fightPath = path + "/Fight.m4a";
+        try {
+            menuMP = new MediaPlayer(new Media(new File(menuPath).toURI().toURL().toString()));
+            bgmMP = new MediaPlayer(new Media(new File(bgmPath).toURI().toURL().toString()));
+            fightMP = new MediaPlayer(new Media(new File(fightPath).toURI().toURL().toString()));
+        } catch (MalformedURLException e) {
+            //bad url
+        }
     }
 
     /**
@@ -48,7 +58,6 @@ public class AudioSystem {
         //String newPath = path + "/characters/Lucina1/sounds/" + event.getName() +".mp3";
         String newPath = path + "/characters/Lucina1/sounds/" + "JAB.mp3";
         //String newPath = "/example_character_1/attacks/JAB.mp3";
-
         //System.out.println(newPath);
         myPlayer.playClip(newPath, fxvol);
     }
@@ -76,9 +85,7 @@ public class AudioSystem {
 
     @Subscribe
     public void playGameMusic(GameStartEvent event) throws MalformedURLException {
-        String newPath = path + "/data/bgm/BGM.mp3";
-        //backgroundMusic = new AudioClip(new File(newPath).toURI().toURL().toString());
-        bgmMP = new MediaPlayer(new Media(new File(newPath).toURI().toURL().toString()));
+        menuMP.pause();
         playMusic(bgmMP, bgmvol);
     }
 
@@ -87,23 +94,16 @@ public class AudioSystem {
         bgmvol = newVol.getVolume();
         menuvol = newVol.getVolume();
         fightvol = newVol.getVolume();
-        if(bgmMP!=null){
-            bgmMP.setVolume(newVol.getVolume());
-        }
-        if(menuMP!=null){
-            menuMP.setVolume(newVol.getVolume());
-        }
-        if(fightMP!=null){
-            fightMP.setVolume(newVol.getVolume());
-        }
+        bgmMP.setVolume(newVol.getVolume());
+        menuMP.setVolume(newVol.getVolume());
+        fightMP.setVolume(newVol.getVolume());
     }
 
 
     @Subscribe
     public void playMenuMusic(MenuStartEvent event) throws MalformedURLException {
-        String newPath = path + "/Theme.m4a";
-        menuMP = new MediaPlayer(new Media(new File(newPath).toURI().toURL().toString()));
-        playMusic(menuMP, menuvol);
+        menuMP.play();
+        bgmMP.stop();
     }
 
     @Subscribe
@@ -113,8 +113,6 @@ public class AudioSystem {
 
     @Subscribe
     public void selectScreen(FightStartEvent event) throws MalformedURLException {
-        String newPath = path + "/Fight.m4a";
-        fightMP = new MediaPlayer(new Media(new File(newPath).toURI().toURL().toString()));
         playMusic(fightMP, fightvol);
     }
 

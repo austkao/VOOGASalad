@@ -212,19 +212,24 @@ public class CombatScreen extends Screen {
     }
 
     public void stopLoop(){
-        myTimer.pause();
-        myRecorder.stop();
-        if(isRecording){
-            try {
-                myRecorder.save();
-            } catch (SaveReplayFailedException e) {
-                e.printStackTrace();
-                myMessageBus.post(new SaveReplayFailedEvent());
+        if(myTimer!=null){
+            myTimer.pause();
+        }
+        if(myRecorder!=null){
+            myRecorder.stop();
+            if(isRecording){
+                try {
+                    myRecorder.save();
+                } catch (SaveReplayFailedException e) {
+                    e.printStackTrace();
+                    myMessageBus.post(new SaveReplayFailedEvent());
+                }
             }
         }
-
         //TODO: stops game loop
-        myGameLoop.stopLoop();
+        if(myGameLoop!=null){
+            myGameLoop.stopLoop();
+        }
     }
 
     public HashMap<Integer, Point2D> getCharacterMap(){
@@ -266,7 +271,7 @@ public class CombatScreen extends Screen {
     }
 
     @Subscribe
-    public synchronized void endCombat(GameOverEvent gameOverEvent){
+    public void endCombat(GameOverEvent gameOverEvent){
         Platform.runLater(
                 () -> {
                     stopLoop();

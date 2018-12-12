@@ -8,7 +8,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import messenger.external.EventBusFactory;
-import messenger.external.FightEndEvent;
+import messenger.external.ExitMenuEvent;
+import messenger.external.GameOverEvent;
 import messenger.external.MenuStartEvent;
 import player.external.CombatScreen;
 import player.internal.Elements.MessageBar;
@@ -32,6 +33,8 @@ public class ReplayViewerScreen extends Screen {
 
     private EventBus myEventBus;
 
+    private SceneSwitch backSwitch;
+
     private File gameDirectory;
     private MessageBar myMessageBar;
     private ReplayPlayer replayPlayer;
@@ -42,7 +45,8 @@ public class ReplayViewerScreen extends Screen {
 
     public ReplayViewerScreen(Group root, Renderer renderer, File gameDirectory, Image background, ReplayPlayer replayPlayer, SceneSwitch backSwitch) {
         super(root, renderer);
-        myEventBus = EventBusFactory.getEventBus();
+        this.backSwitch = backSwitch;
+        myEventBus = new EventBus();
         this.gameDirectory = gameDirectory;
         this.replayPlayer = replayPlayer;
         ImageView bg = new ImageView(background);
@@ -55,11 +59,7 @@ public class ReplayViewerScreen extends Screen {
         StackPane topBar = makeTopBar(super.getMyRenderer().makeText("Replay Viewer",true,55, Color.BLACK,0.0,0.0),
                 makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png"))),
                         "Back","Return to the replays screen!",53.74,60.72,0.0,0.0,myMessageBar,
-                        event-> {
-                            myEventBus.post(new FightEndEvent());
-                            myEventBus.post(new MenuStartEvent());
-                            backSwitch.switchScene();
-                        }));
+                        event-> handleBack()));
         StackPane mainContainer = new StackPane();
         mainContainer.setPrefSize(SCREEN_WIDTH,SCREEN_HEIGHT);
         mainContainer.setAlignment(Pos.CENTER);
@@ -73,16 +73,27 @@ public class ReplayViewerScreen extends Screen {
         super.getMyRoot().getChildren().addAll(bg, mainContainer,myMessageBar,topBar);
     }
 
+    private void handleBack() {
+        EventBusFactory.getEventBus().post(new MenuStartEvent());
+        myEventBus.post(new GameOverEvent(0,new ArrayList<>()));
+        replayPlayer.stop();
+        backSwitch.switchScene();
+    }
+
     public void setUpReplayViewer(HashMap<Integer, String> characterNames, HashMap<Integer, Color> characterColors, String gameMode, Integer typeValue,String stageName) {
         myCombatScreen = new CombatScreen(new Group(),super.getMyRenderer(),gameDirectory,false,()->doNothing(),(i,list)->doNothing());
         myEventBus.register(myCombatScreen);
+        myEventBus.post(new ExitMenuEvent());
         myCombatScreen.setupCombatScene(characterNames,characterColors,gameMode,typeValue, new ArrayList<>(),stageName);
+        replayViewContainer.getChildren().clear();
         replayViewContainer.getChildren().addAll(myCombatScreen.getMyRoot());
         replayViewContainer.setScaleX(VIEWER_WIDTH/SCREEN_WIDTH);
         replayViewContainer.setScaleY(VIEWER_HEIGHT/SCREEN_HEIGHT);
+        replayPlayer.setEventBus(myEventBus);
         replayPlayer.play();
     }
 
     private void doNothing() {
     }
 }
+

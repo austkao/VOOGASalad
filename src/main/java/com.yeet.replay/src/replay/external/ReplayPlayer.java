@@ -43,13 +43,14 @@ public class ReplayPlayer {
             currentFrame++;
         }
         catch(IndexOutOfBoundsException e){
-            try {
-                myTimer.wait();
-            } catch (InterruptedException e1) {
-                myTimer.cancel();
-            }
+            resetTimer();
         }
 
+    }
+
+    private void resetTimer() {
+        myTimer.cancel();
+        myTimer = new Timer();
     }
 
     /** Loads a replay from a {@code File}, throws {@code replay.external.InvalidReplayFileException} if an error occurs */
@@ -111,5 +112,13 @@ public class ReplayPlayer {
 
     public int getTypeValue(){
         return loadedReplay.getTypeValue();
+    }
+
+    public void stop() {
+        resetTimer();
+    }
+
+    public void setEventBus(EventBus eventBus){
+        this.myEventBus = eventBus;
     }
 }
