@@ -63,8 +63,8 @@ public class CharacterGrid extends VBox {
                     portrait.setPreserveRatio(true);
                     portrait.setFitWidth(132);
                     XMLParser characterPropertiesParser = new XMLParser(new File(directory.getPath()+"/characters/"+files.get((charactersPerRow*(i))+j).getName()+"/characterproperties.xml"));
-                    double x = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","x").get(0));
-                    double y = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","y").get(0));
+                    double x = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","thumbX").get(0));
+                    double y = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","thumbY").get(0));
                     double w = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","w").get(0));
                     double h = Double.parseDouble(characterPropertiesParser.parseFileForAttribute("thumbnail","h").get(0));
                     portrait.setViewport(new Rectangle2D(x,y, w, h));

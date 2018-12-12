@@ -139,7 +139,7 @@ public class Main extends Application {
     private void setDirectory(File directory){
         try {
             if(directory!=null && checkDirectory(directory)){
-                Image splash = new Image(String.format("%s%s",directory.toURI(),"splash.png"));
+                Image splash = new Image(String.format("%s%s",myDirectory.toURI(),"data/splash/splash.png"));
                 if(!splash.isError()){
                     mySplashDisplay.setImage(splash);
                     myDirectory = directory;
@@ -153,7 +153,7 @@ public class Main extends Application {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Game directory is invalid");
+            myRenderSystem.createErrorAlert("Invalid Game directory","Please check code logic");
         }
     }
 

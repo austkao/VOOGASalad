@@ -193,7 +193,6 @@ public class CharacterEditor extends EditorSuper {
         Rectangle portRec = new Rectangle();
         getRectOnImageView("Draw Portrait, then close window to continue",
                 new ImageView(new Image(portraitFile.toURI().toString())), Color.PEACHPUFF, portRec, portraitAspectRatio);
-
         setPortrait(portraitFile.toURI().toString(), thumbRec, portRec);
     }
     private void setPortrait(String portraitURL, Rectangle thumbnail, Rectangle portraitRect){
