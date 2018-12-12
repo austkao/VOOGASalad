@@ -28,4 +28,8 @@ public class Parser {
         return output;
     }
 
+    public void resetKeys(){
+        handler.setUpMapping();
+    }
+
 }

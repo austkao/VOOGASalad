@@ -126,6 +126,7 @@ public class PlayerManager {
             map.put(id, rank);
             rank--;
         }
+        ranking = new LinkedList<>();
         return new ArrayList<>(map.values());
     }
 
