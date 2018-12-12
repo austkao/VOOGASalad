@@ -43,7 +43,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         Button back = createBack();
         root.getChildren().addAll(back, t);
         isSaved = true;
-        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 200.0, 60.0);
+        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 640.0, 60.0);
     }
 
     /**
