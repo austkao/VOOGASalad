@@ -56,10 +56,12 @@ public class DataSystem {
         String musicPath = myFP.DEFAULTBGM.getPath();
         String tilePath = myFP.DEFAULTTILE.getPath();
         String splashPath = myFP.DEFAULTSPLASH.getPath();
+        String comboPath = myFP.DEFAULTCOMBO.getPath();
         myFileSystem.copyFile(new File(defaultGamePath + backgroundPath), new File(defaultFile.getPath()+ backgroundPath));
         myFileSystem.copyFile(new File(defaultGamePath + musicPath), new File(defaultFile.getPath()+ musicPath));
         myFileSystem.copyFile(new File(defaultGamePath + tilePath), new File(defaultFile.getPath()+ tilePath));
         myFileSystem.copyFile(new File(defaultGamePath + splashPath), new File(defaultFile.getPath()+ splashPath));
+        myFileSystem.copyFile(new File(defaultGamePath + comboPath), new File(defaultFile.getPath()+ comboPath));
     }
 
     /**
