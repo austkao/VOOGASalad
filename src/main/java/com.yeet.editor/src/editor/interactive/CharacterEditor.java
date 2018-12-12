@@ -52,6 +52,8 @@ public class CharacterEditor extends EditorSuper {
     private static final double thumbnailAspectRatio = 132.0/95.0; //
     private static final double portraitAspectRatio = 1.0;
 
+    private static final String SPRITEPANE_COLOR = "beige";
+
     private ImageView portrait;
     private Rectangle thumbnail;
     private Rectangle portraitRectangle;
@@ -164,11 +166,17 @@ public class CharacterEditor extends EditorSuper {
     }
     private void initializeSpritePane(){
         mySpritePane = new Pane();
+        mySpritePane.setStyle("-fx-background-color: " + SPRITEPANE_COLOR);
         mySpritePane.setLayoutX(600);
         mySpritePane.setLayoutY(400);
         mySpritePane.setMinSize(300, 300);
         mySpritePane.setMaxSize(300, 300);
         root.getChildren().add(mySpritePane);
+        //idea of anchor came form here:
+        //https://coderanch.com/t/689100/java/rectangle-dragging-image
+        AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
+        mySpritePane.setOnMousePressed(e -> anchor.set(startHitHurtBoxSelection(e, anchor.get())));
+        mySpritePane.setOnMouseDragged(e -> dragHitHurtBoxSelection(e, anchor.get()));
     }
     private void initializeScrollPane(){
         newAnimationList = new ScrollablePaneNew(30.0, 350.0, 200.0, 400.0);
@@ -182,9 +190,11 @@ public class CharacterEditor extends EditorSuper {
         if (testNull(portraitFile, "File not valid"))
             return;
         Rectangle thumbRec = new Rectangle();
-        getRectOnImageView("Draw Thumbnail, then close window to continue", new ImageView(new Image(portraitURL)), Color.PURPLE, thumbRec, thumbnailAspectRatio);
+        getRectOnImageView("Draw Thumbnail, then close window to continue",
+                new ImageView(new Image(portraitFile.toURI().toString())), Color.PURPLE, thumbRec, thumbnailAspectRatio);
         Rectangle portRec = new Rectangle();
-        getRectOnImageView("Draw Portrait, then close window to continue", new ImageView(new Image(portraitURL)), Color.PEACHPUFF, portRec, portraitAspectRatio);
+        getRectOnImageView("Draw Portrait, then close window to continue",
+                new ImageView(new Image(portraitFile.toURI().toString())), Color.PEACHPUFF, portRec, portraitAspectRatio);
 
         setPortrait(portraitFile.toURI().toString(), thumbRec, portRec);
     }
@@ -268,14 +278,6 @@ public class CharacterEditor extends EditorSuper {
         currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
 
         mySpritePane.getChildren().add(currentSprite);
-
-
-        //idea of anchor came form here:
-        //https://coderanch.com/t/689100/java/rectangle-dragging-image
-        AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
-        currentSprite.setOnMousePressed(e -> anchor.set(startHitHurtBoxSelection(e, anchor.get())));
-        currentSprite.setOnMouseDragged(e -> dragHitHurtBoxSelection(e, anchor.get()));
-
         currentAnimation = null;
         animationFrame = new HashMap<>();
         nameToAnimation = new HashMap<>();
@@ -345,17 +347,17 @@ public class CharacterEditor extends EditorSuper {
         newBox.setY(e.getY());
         newBox.setFill(BOX_FILL);
         newBox.setStrokeWidth(BOX_STROKE);
-        mySpritePane.getChildren().add(newBox);
-
         if (hitOrHurt.getState().equals(HIT_TEXT)){
             mySpritePane.getChildren().remove(frame.getHitBox());
             newBox.setStroke(HITBOX_COLOR);
             frame.setHitBox(newBox);
+            mySpritePane.getChildren().add(frame.getHitBox());
         }
         else{
             mySpritePane.getChildren().remove(frame.getHurtBox());
             newBox.setStroke(HURTBOX_COLOR);
             frame.setHurtBox(newBox);
+            mySpritePane.getChildren().add(frame.getHurtBox());
         }
 
         anchor = new Point2D(e.getX(), e.getY());
@@ -502,22 +504,22 @@ public class CharacterEditor extends EditorSuper {
             ArrayList<String> attack = data.get("attack");
             ArrayList<String> defense = data.get("defense");
 
-
             HashMap<String, ArrayList<String>> portraitBoxInfo = parser.parseFileForElement("portrait");
             HashMap<String, ArrayList<String>> thumbnailBoxInfo = parser.parseFileForElement("thumbnail");
 
-            Double thumbX = Double.parseDouble(thumbnailBoxInfo.get("thumbX").get(0));
-            Double thumbY = Double.parseDouble(thumbnailBoxInfo.get("thumbY").get(0));
-            Double thumbW = Double.parseDouble(thumbnailBoxInfo.get("w").get(0));
-            Double thumbH = Double.parseDouble(thumbnailBoxInfo.get("g").get(0));
-            Double portX = Double.parseDouble(portraitBoxInfo.get("x").get(0));
-            Double portY = Double.parseDouble(portraitBoxInfo.get("y").get(0));
-            Double portS = Double.parseDouble(portraitBoxInfo.get("size").get(0));
+            double thumbX = Double.parseDouble(thumbnailBoxInfo.get("thumbX").get(0));
+            double thumbY = Double.parseDouble(thumbnailBoxInfo.get("thumbY").get(0));
+            double thumbW = Double.parseDouble(thumbnailBoxInfo.get("w").get(0));
+            double thumbH = Double.parseDouble(thumbnailBoxInfo.get("h").get(0));
+            double portX = Double.parseDouble(portraitBoxInfo.get("x").get(0));
+            double portY = Double.parseDouble(portraitBoxInfo.get("y").get(0));
+            double portS = Double.parseDouble(portraitBoxInfo.get("size").get(0));
 
             healthSlider.setNewValue(Double.parseDouble(health.get(0)));
             attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
             defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
 
+            System.out.println(myDirectory.getPath() + myDirectory.getName());
             File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
             setPortrait(portraitFile.toURI().toString(), new Rectangle(thumbX, thumbY, thumbW, thumbH),
                     new Rectangle(portX, portY, portS, portS));
@@ -532,9 +534,15 @@ public class CharacterEditor extends EditorSuper {
             HashMap<String, ArrayList<String>> attacks = parser.parseFileForElement("attack");
             HashMap<String, ArrayList<String>> frames = parser.parseFileForElement("frame");
 
-            int numAttacks = attacks.get("attackPower").size();
-            int numFrames = frames.get("hitHeight").size();
+            int numAttacks = 0;
+            int numFrames = 0;
 
+            if (attacks.containsKey("attackPower")){
+                numAttacks = attacks.get("attackPower").size();
+            }
+            if (frames.containsKey("hitHeight")){
+                numFrames = frames.get("hitHeight").size();
+            }
 
             List<String> inputs = attacks.get("inputCombo");
             List<String> powers = attacks.get("attackPower");
@@ -551,7 +559,6 @@ public class CharacterEditor extends EditorSuper {
 
         } catch (Exception ex) {
             System.out.println("Cannot load attacks file");
-            ex.printStackTrace();
         }
     }
     private void setUpAnimationInfo(HashMap<String, ArrayList<String>> frames, int index) {
@@ -589,7 +596,6 @@ public class CharacterEditor extends EditorSuper {
         double height = Double.parseDouble(attacks.get("height").get(index));
         return new SpriteAnimation(currentSprite, duration, count, columns, offsetX, offsetY, width, height);
     }
-
     private void loadSpriteData(File file) {
         try {
             XMLParser parser = loadXMLFile(file);
@@ -608,7 +614,11 @@ public class CharacterEditor extends EditorSuper {
             System.out.println("Cannot load Sprite file");
         }
     }
+
     private void createSaveFile() {
+        if (testNull(portrait.getImage(),"Portrait not chosen")){
+            return;
+        }
         saveCharacterProperties();
         saveAttackProperties();
         saveSpriteProperties();
