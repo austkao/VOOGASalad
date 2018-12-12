@@ -49,6 +49,8 @@ public class CombatSystem {
 
     public CombatSystem(HashMap<Integer, Point2D> playerMap, HashMap<Integer, Rectangle2D> tileMap, PhysicsSystem physicsSystem, File gameDir, Map<Integer, String> characterNames){
         characterStats = new HashMap<>();
+        tileID = TILE_STARTING_ID;
+        playerID = PLAYER_STARTING_ID;
         // get character stats
         for(int id: characterNames.keySet()){
             String name = characterNames.get(id);
@@ -155,9 +157,12 @@ public class CombatSystem {
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
         int id = event.getInitiatorID();
-        if(!botList.contains(id)){
+//        if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);
-        }
+//        }
+//        else{
+//            System.out.println("Bot id: " + id);
+//        }
     }
 
     @Subscribe
@@ -238,7 +243,7 @@ public class CombatSystem {
             ((Bot)playerManager.getPlayerByID(id)).setPlayerGraph(graph);
         }
         for(int id: botList){
-            ((NormalBot)playerManager.getPlayerByID(id)).start();
+            ((HardBot)playerManager.getPlayerByID(id)).start();
         }
     }
 
@@ -261,10 +266,20 @@ public class CombatSystem {
         for(int id: positionMap.keySet()){
             Point2D pos = positionMap.get(id);
             if(pos.getX()+40<0||pos.getX()-40>1200||pos.getY()+60<0||pos.getY()-60>800){
-                eventBus.post(new PlayerDeathEvent(id, playerManager.getPlayerByID(id).loseLife()));
+                int remainingLife = playerManager.outOfScreen(id);
+                eventBus.post(new PlayerDeathEvent(id, remainingLife));
             }
         }
 
+    }
+
+    @Subscribe
+    public void onGameOver(GameOverEvent gameOverEvent){
+        for(int id: characterStats.keySet()){
+            if(playerManager.getPlayerByID(id).isBot()){
+                ((HardBot)playerManager.getPlayerByID(id)).stop();
+            }
+        }
     }
 
 }

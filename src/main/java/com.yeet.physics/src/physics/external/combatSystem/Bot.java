@@ -17,6 +17,7 @@ public abstract class Bot extends Player{
     protected final int NUM_OF_STATES = states.length;
     Double[][] transitionMatrix;
     PlayerGraph playerGraph;
+    Timer timer;
 
     protected Bot(){
         setIsBot(true);
@@ -68,13 +69,17 @@ public abstract class Bot extends Player{
 
     /* start the bot's action */
     public void start(){
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 step();
             }
-        }, 1000, 500);
+        }, 1000, 100);
+    }
+
+    public void stop(){
+        timer.cancel();
     }
 
     protected void takeActionBasedOnNextState(PlayerState nextState){

@@ -56,7 +56,7 @@ public class CombatResultsScreen extends Screen {
         winnerBanner.getChildren().addAll(winnerBannerImage,winnerTextContainer);
         mainContainer.getChildren().addAll(topSpacer,winnerBanner,midSpacer,playerBoxContainer);
         this.getMyRoot().getChildren().addAll(background,mainContainer);
-        this.setOnKeyPressed(event -> {
+        this.setOnMousePressed(event -> {
             nextScene.switchScene();
             this.reset();
         });
