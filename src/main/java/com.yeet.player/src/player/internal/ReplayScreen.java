@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import messenger.external.EventBusFactory;
 import player.internal.Elements.MessageBar;
 import renderer.external.Renderer;
@@ -116,12 +117,13 @@ public class ReplayScreen extends Screen {
         characterPreview = new HBox(15.0);
         characterPreview.setPrefSize(311.0,66.0);
         characterPreview.setAlignment(Pos.CENTER);
-        VBox replayInfo = new VBox(25.0);
+        VBox replayInfo = new VBox(20.0);
         replayInfo.setPrefSize(175.0,173.0);
         replayInfo.setAlignment(Pos.TOP_RIGHT);
         stageName = super.getMyRenderer().makeText(STAGE_DEFAULT,false,30,Color.BLACK,0.0,0.0);
         date = super.getMyRenderer().makeText(DATE_DEFAULT,false,30,Color.BLACK,0.0,0.0);
         gameMode = super.getMyRenderer().makeText(GAME_MODE_DEFAULT,false,30,Color.BLACK,0.0,0.0);
+        gameMode.setTextAlignment(TextAlignment.RIGHT);
         replayInfo.getChildren().addAll(stageName,date,gameMode);
         replayListContainer.getChildren().addAll(replayList,openDirectory);
         replayInfoContainer.getChildren().addAll(characterPreview,replayInfo);
@@ -195,7 +197,7 @@ public class ReplayScreen extends Screen {
         else{
             formattedTypeValue = String.valueOf(typeValue);
         }
-        return formattedGameMode+formattedTypeValue;
+        return formattedGameMode+"\n"+formattedTypeValue;
     }
 
     private void handlePlayClick(){
