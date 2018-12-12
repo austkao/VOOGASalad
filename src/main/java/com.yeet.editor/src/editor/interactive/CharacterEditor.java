@@ -255,8 +255,9 @@ public class CharacterEditor extends EditorSuper {
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
         }
-        if (currentAnimation == nameToAnimation.get(b.getButton().getText())){
+        if (currentAnimation != null && currentAnimation == nameToAnimation.get(b.getButton().getText())){ //deselect
             currentAnimation = null;
+
             return;
         }
         else{
