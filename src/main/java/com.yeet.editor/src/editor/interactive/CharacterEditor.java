@@ -583,12 +583,17 @@ public class CharacterEditor extends EditorSuper {
         SpriteAnimation currentAnimation = nameToAnimation.get(fname);
         AnimationInfo frameInfo = animationFrame.get(currentAnimation);
 
+        double widthRatio = SPRITE_PANE_WIDTH/currentAnimation.getWidth();
+        double heightRatio = SPRITE_PANE_HEIGHT/currentAnimation.getHeight();
+
         frameInfo.setCurrentFrame(frameNumber);
-        frameInfo.setHitBox(new Rectangle(hix, hiy, hiw, hih));
+        frameInfo.setHitBox(new Rectangle(hix*widthRatio, hiy*heightRatio,
+                hiw*widthRatio, hih*heightRatio));
         frameInfo.getHitBox().setStrokeWidth(BOX_STROKE);
         frameInfo.getHitBox().setStroke(HITBOX_COLOR);
         frameInfo.getHitBox().setFill(BOX_FILL);
-        frameInfo.setHurtBox(new Rectangle(hux, huy, huw, huh));
+        frameInfo.setHurtBox(new Rectangle(hux*widthRatio, huy*heightRatio,
+                huw*widthRatio, huh*heightRatio));
         frameInfo.getHurtBox().setStrokeWidth(BOX_STROKE);
         frameInfo.getHurtBox().setStroke(HURTBOX_COLOR);
         frameInfo.getHurtBox().setFill(BOX_FILL);
