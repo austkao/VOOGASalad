@@ -68,9 +68,9 @@ public class PhysicsSystem {
         myMessageBus.post(new PositionsUpdateEvent(getPositionsMap(), getDirectionsMap()));
     }
 
-    public void addPhysicsObject(int id, double mass, double XCoordinate, double YCoordinate, double XDimension, double YDimension) { // type 0: player, type 1: attack, type 2: ground
+    public void addPhysicsObject(int id, double mass, double XCoordinate, double YCoordinate, double XDimension, double YDimension, int respawnX, int respawnY) { // type 0: player, type 1: attack, type 2: ground
         if (id < 0 && id < 100) {
-            gameObjects.put(id, new PhysicsBody(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension), new CoordinateBody(new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension))));
+            gameObjects.put(id, new PhysicsBody(id, mass, new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension), new CoordinateBody(new Coordinate(XCoordinate,YCoordinate), new Dimensions(XDimension,YDimension)), respawnX, respawnY));
             playerCharacteristics.add(new PlayerCharacteristics(id, DEFAULT_STRENGTH, DEFAULT_JUMP_HEIGHT, DEFAULT_MOVEMENT_SPEED));
             playerId++;
         } else {
