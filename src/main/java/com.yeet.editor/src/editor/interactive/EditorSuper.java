@@ -1,5 +1,6 @@
 package editor.interactive;
 
+import com.google.common.eventbus.EventBus;
 import editor.EditorConstant;
 import editor.EditorManager;
 import editor.EditorScreen;
@@ -10,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import messenger.external.CreateCopyEvent;
+import messenger.external.EventBusFactory;
 import renderer.external.RenderSystem;
 import xml.XMLParser;
 import xml.XMLSaveBuilder;
@@ -32,6 +35,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     protected EditorConstant myEC;
     protected boolean isSaved;
     protected Text saved;
+    protected EventBus myEB;
 
     public EditorSuper(Group root, EditorManager em, Scene prev){
         super(root);
@@ -43,7 +47,8 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
         Button back = createBack();
         root.getChildren().addAll(back, t);
         isSaved = true;
-        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 200.0, 60.0);
+        saved = myRS.makeText("Saved", true, 20, Color.BLACK, 640.0, 60.0);
+        myEB = EventBusFactory.getEventBus();
     }
 
     /**
@@ -127,5 +132,9 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
 
     public Scene getScene(){
         return this;
+    }
+
+    public void importResource(File source, File directory) {
+        myEB.post(new CreateCopyEvent("Copy File", source, directory));
     }
 }

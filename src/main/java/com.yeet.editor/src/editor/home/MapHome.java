@@ -65,7 +65,7 @@ public class MapHome extends EditorHome {
             myScroll.removeItem();
             String stageName = bb.getText();
             File stageDirectory = Paths.get(em.getGameDirectoryString(), "stages", stageName).toFile();
-            deleteDirectory(stageDirectory);
+            confirmDelete(stageDirectory);
         }
     }
 }

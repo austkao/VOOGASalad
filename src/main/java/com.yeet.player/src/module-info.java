@@ -11,5 +11,6 @@ module com.yeet.player {
     requires com.google.common;
     requires com.yeet.data;
     requires com.yeet.physics;
+    requires com.yeet.replay;
     exports player.external;
 }

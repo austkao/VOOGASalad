@@ -25,7 +25,8 @@ public enum FilePath {
     DEFAULTBACKGROUND("/data/background/fd.jpg"),
     DEFAULTBGM("/data/bgm/BGM.mp3"),
     DEFAULTTILE("/data/tiles/acacia_planks.png"),
-    DEFAULTSPLASH("/data/splash/splash.png");
+    DEFAULTSPLASH("/data/splash/splash.png"),
+    DEFAULTCOMBO("/combosetup.xml");
 
     private String myPath;
 

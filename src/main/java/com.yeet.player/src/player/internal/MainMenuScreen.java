@@ -4,13 +4,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import player.internal.Elements.MessageBar;
 import renderer.external.Renderer;
-
-import java.io.File;
 
 /** Central hub for access to all game functionality
  *  @author bpx
@@ -33,13 +30,13 @@ public class MainMenuScreen extends Screen {
     private MediaPlayer selectSE;
     private MessageBar myMessageBar;
 
-    public MainMenuScreen(Group root, Renderer renderer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch) {
+    public MainMenuScreen(Group root, Renderer renderer, Image bg, MediaPlayer sePlayer, SceneSwitch smashSceneSwitch, SceneSwitch quitSceneSwitch, SceneSwitch settingsSceneSwitch, SceneSwitch replaySceneSwitch) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(DEFAULT_TITLE,true, MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(DEFAULT_MSG,false, MESSAGEBAR_MSG_FONTSIZE, Color.BLACK,0.0,0.0),
                 MESSAGEBAR_X, MESSAGEBAR_Y);
-        selectSE = new MediaPlayer(new Media(new File("src/main/java/com.yeet.player/resources/select.mp3").toURI().toString()));
-        ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("mainmenu_bg.png")));
+        selectSE = sePlayer;
+        ImageView background = new ImageView(bg);
         background.setFitHeight(800.0);
         background.setFitWidth(1280.0);
         ImageView smashButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("smash_button.png"))), SMASH_TITLE, SMASH_MSG,880.0,523.0,74.0,85.0, myMessageBar, event -> {
@@ -57,7 +54,14 @@ public class MainMenuScreen extends Screen {
             selectSE.play();
         });
         ImageView quitButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("quit_button.png"))),QUIT_TITLE, QUIT_MSG,610.0,132.0,649.0,436.0, myMessageBar, event -> quitSceneSwitch.switchScene());
-        super.getMyRoot().getChildren().addAll(background,myMessageBar,smashButton,settingsButton,quitButton);
+        ImageView replayButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("replay_button.png"))),"Replays","Relive your past matches!",192.0,192.0,1012.0,26.0,myMessageBar,event -> {
+            selectSE.setOnEndOfMedia(() -> {
+                replaySceneSwitch.switchScene();
+                selectSE.stop();
+            });
+            selectSE.play();
+        });
+        super.getMyRoot().getChildren().addAll(background,myMessageBar,smashButton,settingsButton,quitButton,replayButton);
     }
 
     static ImageView makeButton(ImageView buttonImage, String messageTitle, String messageContent, double width, double height, double x, double y, MessageBar messageBar, EventHandler clickHandler) {
@@ -81,9 +85,5 @@ public class MainMenuScreen extends Screen {
         });
         button.setOnMousePressed(clickHandler);
         return button;
-    }
-
-    public void setSelectVolume(Double volume){
-        selectSE.setVolume(volume);
     }
 }

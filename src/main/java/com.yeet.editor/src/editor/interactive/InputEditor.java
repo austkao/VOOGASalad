@@ -21,7 +21,7 @@ import java.util.*;
 
 public class InputEditor extends EditorSuper {
     private static final int DEFAULT_NUM_TABS = 4;
-    private static final String[] DEFAULT_MOVES = {"UP","DOWN","LEFT","RIGHT"};
+    private static final String[] DEFAULT_MOVES = {"JUMP","DOWN","LEFT","RIGHT"};
 
     private List<TextField> userInputs;
     private List<ObservableList> inputTypes;
@@ -230,7 +230,7 @@ public class InputEditor extends EditorSuper {
         }
         structure.put("players", new ArrayList<>(List.of("numPlayers")));
         data.put("numPlayers", new ArrayList<>(List.of(Integer.toString(numTabs))));
-        File save = Paths.get(myEM.getGameDirectoryString(), "inputsetuptest.xml").toFile();
+        File save = Paths.get(myEM.getGameDirectoryString(), "inputsetup.xml").toFile();
         generateSave(structure, data, save);
     }
 }
