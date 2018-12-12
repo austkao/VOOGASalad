@@ -44,10 +44,8 @@ public class PhysicsBody extends PhysicsObject {
     }
 
     public void respawn(){
+        this.setVelocity(new PhysicsVector(0,0));
         this.getMyCoordinateBody().setPos(this.getRespawnX(), this.getRespawnY());
-        System.out.println(); 
-        System.out.println("RESPAWN");
-        System.out.println();
     }
 
     public double getRespawnX(){
