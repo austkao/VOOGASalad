@@ -133,7 +133,7 @@ public class CharacterEditor extends EditorSuper {
                 Color.WHITE, 20.0, 725.0, 100.0, 200.0, 50.0);
         setInputCombo.setOnMouseClicked(e -> setInputCombo());
 
-        Button playAnimation = myRS.makeStringButton("Play Animation", Color.DARKVIOLET, true,
+        Button playAnimation = myRS.makeStringButton("Play/Pause", Color.DARKVIOLET, true,
                 Color.WHITE, 20.0, 500.0, 175.0, 200.0, 50.0);
         playAnimation.setOnMouseClicked(e -> playAnimation());
 
@@ -304,8 +304,6 @@ public class CharacterEditor extends EditorSuper {
         initializeScrollPane();
     }
 
-
-
     private void playAnimation(){
         if (testNull(currentAnimation, "Current Animation not set")){
             return;
@@ -354,7 +352,6 @@ public class CharacterEditor extends EditorSuper {
         }
         stepAnimation(-1);
     }
-
 
     private Point2D startHitHurtBoxSelection(MouseEvent e, Point2D anchor){
         if (currentAnimation == null){
