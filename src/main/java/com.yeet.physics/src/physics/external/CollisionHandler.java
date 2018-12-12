@@ -73,7 +73,7 @@ public class CollisionHandler {
             two = c.getCollider2();
             if(one.isPhysicsBody() && two.isPhysicsAttack()){ // body+attack
                 attackCollisions.add(playerAndAttack(one, two));
-                bus.post(new AttackIntersectEvent(one.getId(), two.getParentID()));
+                bus.post(new AttackIntersectEvent(two.getParentID(), one.getId()));
             } if(one.isPhysicsBody() && two.isPhysicsGround() && c.getSide().getMySide().equals("BOTTOM")){// body+ground
                 PhysicsGround ground = (PhysicsGround)two;
                 applyReactiveForce(one);
