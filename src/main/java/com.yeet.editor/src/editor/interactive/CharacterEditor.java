@@ -21,6 +21,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import renderer.external.Scrollable;
 import renderer.external.Structures.*;
@@ -30,6 +31,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -47,7 +49,12 @@ public class CharacterEditor extends EditorSuper {
     private static final Color HURTBOX_COLOR = Color.BLUE;
     private static final Color BOX_FILL = null;
 
+    private static final double thumbnailAspectRatio = 132.0/95.0; //
+    private static final double portraitAspectRatio = 1.0;
+
     private ImageView portrait;
+    private Rectangle thumbnail;
+    private Rectangle portraitRectangle;
     private Image spriteSheet;
     private Sprite currentSprite;
 
@@ -58,7 +65,6 @@ public class CharacterEditor extends EditorSuper {
     private Map<String, SpriteAnimation> nameToAnimation;
     private Map<SpriteAnimation, AnimationInfo> animationFrame;
 
-    private VBox mySliders;
     private SliderBox healthSlider;
     private SliderBox attackSlider;
     private SliderBox defenseSlider;
@@ -70,7 +76,7 @@ public class CharacterEditor extends EditorSuper {
 
 
 
-    public CharacterEditor(EditorManager em, InputEditor editor, Scene prev){
+    private CharacterEditor(EditorManager em, InputEditor editor, Scene prev){
         super(new Group(),em, prev);
         this.inputEditor = editor;
         portrait = initializeImageView(200, 300, 275, 25);
@@ -78,8 +84,7 @@ public class CharacterEditor extends EditorSuper {
         nameToAnimation = new HashMap<>();
         initializeScrollPane();
 
-        this.setImageView(portrait, DEFAULT_PORTRAIT);
-
+        //this.setPortrait(DEFAULT_PORTRAIT);
 
         consumer = new Consumer() {
             @Override
@@ -92,7 +97,6 @@ public class CharacterEditor extends EditorSuper {
         makeButtons();
         initializeSpritePane();
     }
-
     public CharacterEditor(EditorManager em, InputEditor editor, Scene prev, File characterDirectory, boolean isEdit) {
         this(em, editor, prev);
         myDirectory = characterDirectory;
@@ -101,7 +105,6 @@ public class CharacterEditor extends EditorSuper {
             loadFiles(characterDirectory);
         }
     }
-
     private void makeButtons(){
         Button addPortrait = myRS.makeStringButton("set portrait", Color.BLACK,true,Color.WHITE,
                 30.0,25.0,250.0,200.0,50.0);
@@ -149,7 +152,7 @@ public class CharacterEditor extends EditorSuper {
                 setInputCombo, stepForward, stepBackward, frameText, hitOrHurt );
     }
     private void makeSliders(){
-        mySliders = new VBox(10);
+        VBox mySliders = new VBox(10);
         healthSlider = myRS.makeSlider("health",50.0,consumer,0.0,0.0,400.0);
         attackSlider = myRS.makeSlider("attack",50.0,consumer,0.0,0.0,400.0);
         defenseSlider = myRS.makeSlider("defense",50.0,consumer,0.0,0.0,400.0);
@@ -171,6 +174,57 @@ public class CharacterEditor extends EditorSuper {
         newAnimationList = new ScrollablePaneNew(30.0, 350.0, 200.0, 400.0);
         root.getChildren().add(newAnimationList.getScrollPane());
     }
+    /**
+     * User selects background, and it is applied to level.
+     */
+    private void choosePortrait(){
+        File portraitFile = chooseImage("Choose Portrait File");
+        if (testNull(portraitFile, "File not valid"))
+            return;
+        Rectangle thumbRec = new Rectangle();
+        getRectOnImageView("Draw Thumbnail, then close window to continue", new ImageView(new Image(portraitURL)), Color.PURPLE, thumbRec, thumbnailAspectRatio);
+        Rectangle portRec = new Rectangle();
+        getRectOnImageView("Draw Portrait, then close window to continue", new ImageView(new Image(portraitURL)), Color.PEACHPUFF, portRec, portraitAspectRatio);
+
+        setPortrait(portraitFile.toURI().toString(), thumbRec, portRec);
+    }
+    private void setPortrait(String portraitURL, Rectangle thumbnail, Rectangle portraitRect){
+        portrait.setImage(new Image(portraitURL));
+        this.thumbnail = thumbnail;
+        portraitRectangle = portraitRect;
+    }
+
+
+    private void getRectOnImageView(String message, ImageView imgview, Color color, Rectangle ret, double ratio){
+        Stage popUpPicture = new Stage();
+        imgview.setFitHeight(600);
+        imgview.setPreserveRatio(true);
+        popUpPicture.setTitle(message);
+        Group newRoot = new Group();
+        Scene pictureWindow = new Scene(newRoot);
+        popUpPicture.setScene(pictureWindow);
+
+
+        newRoot.getChildren().add(imgview);
+        AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0.0, 0.0));
+        imgview.setOnMousePressed(e -> {
+            ret.setFill(BOX_FILL);
+            ret.setStroke(color);
+            ret.setStrokeWidth(BOX_STROKE);
+            anchor.set(new Point2D(e.getX(), e.getY()));
+            ret.setX(e.getX());
+            ret.setY(e.getY());
+        });
+        imgview.setOnMouseDragged(e -> {
+            updateRectangle(e, anchor.get(), ret, ratio);
+        });
+
+        newRoot.getChildren().add(ret);
+
+        while (ret.getWidth() == 0 || ret.getHeight() == 0){
+            popUpPicture.showAndWait();
+        }
+    }
     private void selectNewAnimationFromScroll(Scrollable b){
         if (currentAnimation != null){
             currentAnimation.jumpTo(new Duration(0));
@@ -185,15 +239,50 @@ public class CharacterEditor extends EditorSuper {
         currentAnimation.stop();;
         stepForwardAnimation();
     }
-    private ImageView initializeImageView(int width, int height, int x, int y){
-        ImageView picture = new ImageView();
-        picture.setFitWidth(width);
-        picture.setFitHeight(height);
-        picture.setLayoutX(x);
-        picture.setLayoutY(y);
-        root.getChildren().add(picture);
-        return picture;
+    private void chooseSpriteSheet(){
+        mySpritePane.getChildren().remove(currentSprite);
+        File sprites = chooseImage("Choose Sprite Sheet");
+
+        /*
+        TextInputDialog text = new TextInputDialog("");
+        resetText("Enter X Offset of initial frame", text);
+        double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
+        resetText("Enter Y Offset", text);
+        double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
+        resetText("Enter Width", text);
+        double width = Double.parseDouble(text.showAndWait().orElse("0"));
+        resetText("Enter Height", text);
+        double height = Double.parseDouble(text.showAndWait().orElse("0"));
+        initializeSpriteSheet(sprites, offsetX, offsetY, width, height);
+        */
+
+        initializeSpriteSheet(sprites, 6, 14, 60, 60);
     }
+    private void initializeSpriteSheet(File sprites, double offsetX, double offsetY, double width, double height) {
+        if (testNull(sprites, "File not valid")){
+            return;
+        }
+        spriteSheet = new Image(sprites.toURI().toString());
+        currentSprite = myRS.makeSprite(spriteSheet, offsetX, offsetY, width, height);
+        currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
+        currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
+
+        mySpritePane.getChildren().add(currentSprite);
+
+
+        //idea of anchor came form here:
+        //https://coderanch.com/t/689100/java/rectangle-dragging-image
+        AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
+        currentSprite.setOnMousePressed(e -> anchor.set(startHitHurtBoxSelection(e, anchor.get())));
+        currentSprite.setOnMouseDragged(e -> dragHitHurtBoxSelection(e, anchor.get()));
+
+        currentAnimation = null;
+        animationFrame = new HashMap<>();
+        nameToAnimation = new HashMap<>();
+        initializeScrollPane();
+    }
+
+
 
     private void playAnimation(){
         if (testNull(currentAnimation, "Current Animation not set")){
@@ -244,50 +333,8 @@ public class CharacterEditor extends EditorSuper {
         stepAnimation(-1);
     }
 
-    private void chooseSpriteSheet(){
-        mySpritePane.getChildren().remove(currentSprite);
-        File sprites = chooseImage("Choose Sprite Sheet");
 
-        /*
-        TextInputDialog text = new TextInputDialog("");
-        resetText("Enter X Offset of initial frame", text);
-        double offsetX = Double.parseDouble(text.showAndWait().orElse("0"));
-        resetText("Enter Y Offset", text);
-        double offsetY = Double.parseDouble(text.showAndWait().orElse("0"));
-        resetText("Enter Width", text);
-        double width = Double.parseDouble(text.showAndWait().orElse("0"));
-        resetText("Enter Height", text);
-        double height = Double.parseDouble(text.showAndWait().orElse("0"));
-        initializeSpriteSheet(sprites, offsetX, offsetY, width, height);
-        */
-
-        initializeSpriteSheet(sprites, 6, 14, 60, 60);
-    }
-    private void initializeSpriteSheet(File sprites, double offsetX, double offsetY, double width, double height) {
-        if (testNull(sprites, "File not valid")){
-            return;
-        }
-        spriteSheet = new Image(sprites.toURI().toString());
-        currentSprite = myRS.makeSprite(spriteSheet, offsetX, offsetY, width, height);
-        currentSprite.fitWidthProperty().bind(mySpritePane.maxWidthProperty());
-        currentSprite.fitHeightProperty().bind(mySpritePane.maxHeightProperty());
-
-        mySpritePane.getChildren().add(currentSprite);
-
-
-        //idea of anchor came form here:
-        //https://coderanch.com/t/689100/java/rectangle-dragging-image
-        AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0, 0));
-        currentSprite.setOnMousePressed(e -> anchor.set(startSelection(e, anchor.get())));
-        currentSprite.setOnMouseDragged(e -> dragSelection(e, anchor.get()));
-
-        currentAnimation = null;
-        animationFrame = new HashMap<>();
-        nameToAnimation = new HashMap<>();
-        initializeScrollPane();
-    }
-
-    private Point2D startSelection(MouseEvent e, Point2D anchor){
+    private Point2D startHitHurtBoxSelection(MouseEvent e, Point2D anchor){
         if (testNull(currentAnimation, "Animation Not Set")){
             return anchor;
         }
@@ -314,31 +361,34 @@ public class CharacterEditor extends EditorSuper {
         anchor = new Point2D(e.getX(), e.getY());
         return anchor;
     }
-    private void dragSelection(MouseEvent e, Point2D anchor){
+    private void dragHitHurtBoxSelection(MouseEvent e, Point2D anchor){
         if (testNull(currentAnimation, "Animation Not Set")){
             return;
         }
         AnimationInfo frame = animationFrame.get(currentAnimation);
-        Rectangle selection = new Rectangle();
+        Rectangle selection;
         if (hitOrHurt.getState().equals(HIT_TEXT)){
             selection = frame.getHitBox();
         }
         else{
             selection = frame.getHurtBox();
         }
-        selection.setWidth(Math.abs(e.getX() - anchor.getX()));
-        selection.setHeight(Math.abs(e.getY() - anchor.getY()));
-        selection.setX(Math.min(anchor.getX(), e.getX()));
-        selection.setY(Math.min(anchor.getY(), e.getY()));
+        updateRectangle(e, anchor, selection, -1);
     }
-
-    /**
-     * User selects background, and it is applied to level.
-     */
-    private void choosePortrait(){
-        File portraitFile = chooseImage("Choose Portrait File");
-        if (!testNull(portraitFile, "File not valid"))
-            setImageView(portrait, portraitFile.toURI().toString());
+    private void updateRectangle(MouseEvent e, Point2D anchor, Rectangle rect, double ratio){
+        rect.setWidth(Math.abs(e.getX() - anchor.getX()));
+        rect.setHeight(Math.abs(e.getY() - anchor.getY()));
+       if (ratio != -1)
+       {
+            if (rect.getWidth() > rect.getHeight()*ratio){
+                rect.setHeight(rect.getWidth()/ratio);
+            }
+            else{
+                rect.setWidth(rect.getHeight()*ratio);
+            }
+       }
+        rect.setX(Math.min(anchor.getX(), e.getX()));
+        rect.setY(Math.min(anchor.getY(), e.getY()));
     }
 
     private void makeNewSpriteAnimation(){
@@ -444,7 +494,6 @@ public class CharacterEditor extends EditorSuper {
         File attackProperties = Paths.get(directory.getPath(), "attacks","attackproperties.xml").toFile();
         loadAttacksData(attackProperties);
     }
-
     private void loadCharacterData(File file) {
         try {
             XMLParser parser = loadXMLFile(file);
@@ -453,15 +502,25 @@ public class CharacterEditor extends EditorSuper {
             ArrayList<String> attack = data.get("attack");
             ArrayList<String> defense = data.get("defense");
 
-            //todo: finish portrait and thumbnail
-            HashMap<String, ArrayList<String>> portraitBox = parser.parseFileForElement("portrait");
+
+            HashMap<String, ArrayList<String>> portraitBoxInfo = parser.parseFileForElement("portrait");
+            HashMap<String, ArrayList<String>> thumbnailBoxInfo = parser.parseFileForElement("thumbnail");
+
+            Double thumbX = Double.parseDouble(thumbnailBoxInfo.get("thumbX").get(0));
+            Double thumbY = Double.parseDouble(thumbnailBoxInfo.get("thumbY").get(0));
+            Double thumbW = Double.parseDouble(thumbnailBoxInfo.get("w").get(0));
+            Double thumbH = Double.parseDouble(thumbnailBoxInfo.get("g").get(0));
+            Double portX = Double.parseDouble(portraitBoxInfo.get("x").get(0));
+            Double portY = Double.parseDouble(portraitBoxInfo.get("y").get(0));
+            Double portS = Double.parseDouble(portraitBoxInfo.get("size").get(0));
 
             healthSlider.setNewValue(Double.parseDouble(health.get(0)));
             attackSlider.setNewValue(Double.parseDouble(attack.get(0)));
             defenseSlider.setNewValue(Double.parseDouble(defense.get(0)));
 
             File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
-            setImageView(portrait, portraitFile.toURI().toString());
+            setPortrait(portraitFile.toURI().toString(), new Rectangle(thumbX, thumbY, thumbW, thumbH),
+                    new Rectangle(portX, portY, portS, portS));
 
         } catch (Exception ex) {
             System.out.println("Cannot load Character Information");
@@ -558,20 +617,27 @@ public class CharacterEditor extends EditorSuper {
     }
     private void saveCharacterProperties() {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
-        ArrayList<String> characterAttributes = new ArrayList<>(List.of("health","attack","defense"));
-        structure.put("character", characterAttributes);
+        structure.put("character", new ArrayList<>(List.of("health","attack","defense")));
+        structure.put("thumbnail", new ArrayList<>(List.of("thumbX", "thumbY", "w", "h")));
+        structure.put("portrait", new ArrayList<>(List.of("x", "y", "size")));
+
+
         HashMap<String, ArrayList<String>> data = new HashMap<>();
-        ArrayList<String> healthList = new ArrayList<>(List.of(Double.toString(healthSlider.getValue())));
-        ArrayList<String> attackList = new ArrayList<>(List.of(Double.toString(attackSlider.getValue())));
-        ArrayList<String> defenseList = new ArrayList<>(List.of(Double.toString(defenseSlider.getValue())));
-        data.put("health", healthList);
-        data.put("attack", attackList);
-        data.put("defense", defenseList);
-        //structure.put("thumbnail", new ArrayList<>(List.of("xThumb","yThumb","w","h")));
-        structure.put("portrait", new ArrayList<>(List.of("x","y","size")));
-        data.put("x", new ArrayList<>(List.of(Double.toString(portrait.getX()))));
-        data.put("y", new ArrayList<>(List.of(Double.toString(portrait.getY()))));
-        data.put("size", new ArrayList<>(List.of(Double.toString(portrait.getFitWidth()))));
+
+
+        data.put("health", new ArrayList<>(List.of(Double.toString(healthSlider.getValue()))));
+        data.put("attack", new ArrayList<>(List.of(Double.toString(attackSlider.getValue()))));
+        data.put("defense", new ArrayList<>(List.of(Double.toString(defenseSlider.getValue()))));
+
+        data.put("x", new ArrayList<>(List.of(Double.toString(portraitRectangle.getX()))));
+        data.put("y", new ArrayList<>(List.of(Double.toString(portraitRectangle.getY()))));
+        data.put("size", new ArrayList<>(List.of(Double.toString(portraitRectangle.getWidth()))));
+
+        data.put("thumbX", new ArrayList<>(List.of(Double.toString(thumbnail.getX()))));
+        data.put("thumbY", new ArrayList<>(List.of(Double.toString(thumbnail.getY()))));
+        data.put("w", new ArrayList<>(List.of(Double.toString(thumbnail.getWidth()))));
+        data.put("h", new ArrayList<>(List.of(Double.toString(thumbnail.getHeight()))));
+
         try {
             File xmlFile = Paths.get(myDirectory.getPath(), "characterproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
@@ -690,8 +756,17 @@ public class CharacterEditor extends EditorSuper {
         }
         return false;
     }
-    private void setImageView(ImageView img, String portraitURL){
-        img.setImage(new Image(portraitURL));
+
+
+
+    private ImageView initializeImageView(int width, int height, int x, int y){
+        ImageView picture = new ImageView();
+        picture.setFitWidth(width);
+        picture.setFitHeight(height);
+        picture.setLayoutX(x);
+        picture.setLayoutY(y);
+        root.getChildren().add(picture);
+        return picture;
     }
     private void resetText (String message, TextInputDialog text){
         text.setContentText(message);
