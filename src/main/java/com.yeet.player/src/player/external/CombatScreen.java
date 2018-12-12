@@ -9,7 +9,6 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import messenger.external.*;
@@ -24,6 +23,9 @@ import player.internal.Screen;
 import renderer.external.Renderer;
 import renderer.external.Structures.Sprite;
 import renderer.external.Structures.SpriteAnimation;
+import replay.external.InvalidDirectoryException;
+import replay.external.Recorder;
+import replay.external.SaveReplayFailedException;
 import xml.XMLParser;
 
 import java.awt.geom.Point2D;
@@ -35,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static renderer.external.RenderUtils.toRGBCode;
+
 /** Displays a stage and visualizes character combat animation
  *  @author bpx
  */
@@ -42,6 +46,9 @@ public class CombatScreen extends Screen {
 
     public static final double TILE_SIZE = 40.0;
     private EventBus myMessageBus;
+    private Recorder myRecorder;
+
+    private boolean isRecording;
 
     private SceneSwitch prevScene;
     private BiConsumer<Integer, ArrayList<Integer>> nextScene;
@@ -54,10 +61,6 @@ public class CombatScreen extends Screen {
     private XMLParser myParser;
 
     private File myGameDirectory;
-
-    private String myStageName;
-
-    private MediaPlayer myBGMPlayer;
 
     private HashMap<Integer, Point2D> myCharacterMap;
     private HashMap<Integer, Rectangle2D> myTileMap;
@@ -74,8 +77,9 @@ public class CombatScreen extends Screen {
 
     private ScreenTimer myTimer;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, ArrayList<Integer>> nextScene) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, boolean record, SceneSwitch prevScene, BiConsumer<Integer, ArrayList<Integer>> nextScene) {
         super(root, renderer);
+        isRecording = record;
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
         myMessageBus.register(this);
@@ -173,6 +177,16 @@ public class CombatScreen extends Screen {
         myMessageBus.register(myPhysicsSystem);
         myCombatSystem = new CombatSystem(getCharacterMap(),getTileMap(),myPhysicsSystem, myGameDirectory, characterNames);
         myMessageBus.register(myCombatSystem);
+        //replay system
+        HashMap<Integer, String> hexmap = new HashMap<>();
+        for(Integer i : characterColors.keySet()){
+            hexmap.put(i,toRGBCode(characterColors.get(i)));
+        }
+        try {
+            myRecorder = new Recorder(myMessageBus,myGameDirectory,stageName,characterNames,hexmap,gameMode,typeValue);
+        } catch (InvalidDirectoryException e) {
+            myRecorder = new Recorder(myMessageBus,stageName,characterNames,hexmap,gameMode,typeValue);
+        }
         //music and audio
         myMessageBus.post(new GameStartEvent(gameMode, typeValue, botList));
         //ui elements
@@ -194,11 +208,28 @@ public class CombatScreen extends Screen {
     public void startLoop(){
         myTimer.play();
         myGameLoop.startLoop();
+        myRecorder.record();
     }
 
     public void stopLoop(){
-        myTimer.pause();
+        if(myTimer!=null){
+            myTimer.pause();
+        }
+        if(myRecorder!=null){
+            myRecorder.stop();
+            if(isRecording){
+                try {
+                    myRecorder.save();
+                } catch (SaveReplayFailedException e) {
+                    e.printStackTrace();
+                    myMessageBus.post(new SaveReplayFailedEvent());
+                }
+            }
+        }
         //TODO: stops game loop
+        if(myGameLoop!=null){
+            myGameLoop.stopLoop();
+        }
     }
 
     public HashMap<Integer, Point2D> getCharacterMap(){
@@ -224,10 +255,6 @@ public class CombatScreen extends Screen {
                 //face left
                 mySpriteMap.get(i).setScaleX(1);
             }
-            /*System.out.println("Retrieving state for player: "+i);
-            if(myCombatSystem.getPlayerState(i).equals(PlayerState.INITIAL)){
-                mySpriteMap.get(i).defaultViewport();
-            }*/
         }
     }
 
@@ -244,11 +271,10 @@ public class CombatScreen extends Screen {
     }
 
     @Subscribe
-    public synchronized void endCombat(GameOverEvent gameOverEvent){
+    public void endCombat(GameOverEvent gameOverEvent){
         Platform.runLater(
                 () -> {
-                    myBGMPlayer.stop();
-                    myGameLoop.stopLoop();
+                    stopLoop();
                     nextScene.accept(gameOverEvent.getWinnerID(),gameOverEvent.getRankList());
                 }
         );
@@ -259,6 +285,15 @@ public class CombatScreen extends Screen {
         //TODO add other functionality when hit happens
         for(int i : getRektEvent.getPeopleBeingRekt().keySet()){
             myHealthMap.get(i).setHealth((int)Math.round(getRektEvent.getPeopleBeingRekt().get(i)));
+        }
+    }
+
+    @Subscribe
+    public void onDeath(PlayerDeathEvent deathEvent){
+        //TODO add other on death visuals
+        myHealthMap.get(deathEvent.getId()).setLives(deathEvent.getRemainingLife());
+        if(deathEvent.getRemainingLife()==0){
+            myHealthMap.get(deathEvent.getId()).setOpacity(0.2);
         }
     }
 }

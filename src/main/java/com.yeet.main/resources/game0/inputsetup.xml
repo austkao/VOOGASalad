@@ -2,7 +2,6 @@
 <VOOGASalad author="yeet">
     <players numPlayers = "2"></players>
     <input LEFT = "P" DOWN = "L" UP = "O" RIGHT = "I" ></input>
-    <input LEFT=""
 
 </VOOGASalad>
 

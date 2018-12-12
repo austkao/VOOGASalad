@@ -81,17 +81,56 @@ public class CombatSystem {
             xmlParser = new XMLParser(Paths.get(gameDir.getPath(), "characters", name, "attacks", "attackproperties.xml").toFile());
             HashMap<String, ArrayList<String>> map = xmlParser.parseFileForElement("frame");
 
+
+            double animationWidth = Double.parseDouble(xmlParser.parseFileForElement("attack").get("width").get(0));
+            double animationHeight = Double.parseDouble(xmlParser.parseFileForElement("attack").get("height").get(0));
+
+
+            double hitX = Double.parseDouble(map.get("hitXPos").get(0));
+            double hitY = Double.parseDouble(map.get("hitYPos").get(0));
+            double hitW = Double.parseDouble(map.get("hitWidth").get(0));
+            double hitH = Double.parseDouble(map.get("hitHeight").get(0));
+            double hurtX = Double.parseDouble(map.get("hurtXPos").get(0));
+            double hurtY = Double.parseDouble(map.get("hurtYPos").get(0));
+            double hurtW = Double.parseDouble(map.get("hurtWidth").get(0));
+            double hurtH = Double.parseDouble(map.get("hurtHeight").get(0));
+
+
+
+
+
+            hitX = hitX*40/animationWidth;
+            hitY = hitY*60/animationHeight;
+            hurtX = hurtX*40/animationWidth;
+            hurtY = hurtY*60/animationHeight;
+
+            hitW = hitW*40/animationWidth;
+            hitH = hitH*60/animationHeight;
+            hurtW = hurtW*40/animationWidth;
+            hurtH = hurtH*60/animationHeight;
+
+
+            System.out.println(hitX);
+            System.out.println(hitY);
+            System.out.println(hitW);
+            System.out.println(hitH);
+            System.out.println();
+            System.out.println(hurtW);
+            System.out.println(hurtH);
+            System.out.println(hurtX);
+            System.out.println(hurtY);
+
             // set hitbox
             physicsSystem.setHitBox(0, id,
-                    Double.parseDouble(map.get("hitXPos").get(0)), Double.parseDouble(map.get("hitYPos").get(0)),
-                    Double.parseDouble(map.get("hitWidth").get(0)), Double.parseDouble(map.get("hitHeight").get(0)));
+                    hitX, hitY, hitW, hitH);
             // set hurtbox
             physicsSystem.setHitBox(1, id,
+                    hurtX, hurtY, hurtW, hurtH);
+           /* // set hurtbox
+            physicsSystem.setHitBox(1, id,
                     Double.parseDouble(map.get("hurtXPos").get(0)), Double.parseDouble(map.get("hurtYPos").get(0)),
-                    Double.parseDouble(map.get("hurtWidth").get(0)), Double.parseDouble(map.get("hurtHeight").get(0)));
+                    Double.parseDouble(map.get("hurtWidth").get(0)), Double.parseDouble(map.get("hurtHeight").get(0)));*/
         }
-
-
 
     }
 
@@ -102,18 +141,20 @@ public class CombatSystem {
         return playerManager.getPlayerByID(id).getPlayerState();
     }
 
+
+
     @Subscribe
     public void onCombatEvent(CombatActionEvent event){
         int id = event.getInitiatorID();
         if(!botList.contains(id)){
             playerManager.changePlayerStateByIDOnEvent(id, event);
         }
-
     }
 
     @Subscribe
     public void onIdleEvent(IdleEvent idleEvent){
         int id = idleEvent.getId();
+        if(!characterStats.keySet().contains(id)) return;
         if(playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.SINGLE_JUMP
                 && playerManager.getPlayerByID(id).getPlayerState()!=PlayerState.DOUBLE_JUMP){
             playerManager.setToInitialStateByID(id);
@@ -195,6 +236,12 @@ public class CombatSystem {
     @Subscribe
     public void onTimeUpEvent(TimeUpEvent timeUpEvent){
         eventBus.post(new GameOverEvent(playerManager.winnerID, playerManager.getRanking()));
+    }
+
+    @Subscribe
+    public void onPlayerDeath(PlayerDeathEvent playerDeathEvent){
+        int id = playerDeathEvent.getId();
+        playerManager.respawnPlayer(id, characterStats.get(id));
     }
 
 }

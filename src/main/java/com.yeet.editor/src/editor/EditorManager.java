@@ -71,7 +71,7 @@ public class EditorManager extends Scene {
 
     public void setGameDirectory(File gameDirectory){
         this.gameDirectory = gameDirectory;
-
+        myEditorHomes = makeEditorHomes();
     }
 
 
@@ -105,6 +105,7 @@ public class EditorManager extends Scene {
     private List<EditorScreen> makeEditorHomes(){
         List<EditorScreen> editors = new ArrayList<>();
         Collections.addAll(editors,new MapHome(this), new CharacterHome(this),new GameModeEditor(this,this),new InputEditor(this,this));//;, new GameModeHome(this));
+
         return editors;
     }
 

@@ -10,7 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import messenger.external.BGMVolumeEvent;
 import messenger.external.EventBusFactory;
@@ -49,7 +48,7 @@ public class SoundsSettingsScreen extends Screen {
     private SliderBox soundSlider;
     private SliderBox voiceSlider;
 
-    public SoundsSettingsScreen(File gameDirectory, Group root, Renderer renderer, SceneSwitch settingsSwitch, Consumer<Double> seChanger) {
+    public SoundsSettingsScreen(File gameDirectory, Group root, Renderer renderer, Image bg, SceneSwitch settingsSwitch, Consumer<Double> seChanger) {
         super(root, renderer);
         myMessageBar = new MessageBar(this.getMyRenderer().makeText(SOUNDS_TITLE,true,MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText(SOUNDS_MSG,false,MESSAGEBAR_MSG_FONTSIZE,Color.BLACK,0.0,0.0),
@@ -62,25 +61,14 @@ public class SoundsSettingsScreen extends Screen {
         HBox musicBox = createVolumeSlider("music_icon.png", "Music", this::setMusicVolume);
         HBox soundBox = createVolumeSlider("sound_icon.png","Sound", this::setSoundVolume);
         HBox voiceBox = createVolumeSlider("voice_icon.png","Voice", this::setVoiceVolume);
-        ImageView background = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("mainmenu_bg.png")));
+        ImageView background = new ImageView(bg);
         background.setFitHeight(SCREEN_HEIGHT);
         background.setFitWidth(SCREEN_WIDTH);
-        StackPane topBar = new StackPane();
-        topBar.setMinSize(SCREEN_WIDTH,80.0);
-        topBar.setPrefSize(SCREEN_WIDTH,80.0);
-        topBar.setAlignment(Pos.CENTER);
-        topBar.setStyle("-fx-background-color: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.2));");
-        topBar.setLayoutX(0.0);
-        topBar.setLayoutY(0.0);
-        HBox backButtonContainer = new HBox();
-        backButtonContainer.setPrefSize(SCREEN_WIDTH,80.0);
-        backButtonContainer.setAlignment(Pos.CENTER_LEFT);
-        Rectangle buttonSpacer = new Rectangle(30.0,80.0,Color.TRANSPARENT);
-        ImageView backButton = makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png"))),"Back","Return to the settings screen!",53.74,60.72,0.0,0.0,myMessageBar,event->settingsSwitch.switchScene());
-        backButtonContainer.getChildren().addAll(buttonSpacer,backButton);
-        Text titleText = super.getMyRenderer().makeText("Sounds",true,55,Color.BLACK,0.0,0.0);
-        titleText.setFill(Color.rgb(0,0,0,0.71));
-        topBar.getChildren().addAll(titleText,backButtonContainer);
+        StackPane topBar = makeTopBar(super.getMyRenderer().makeText("Sounds",true,55,Color.BLACK,0.0,0.0),
+                makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png"))),
+                "Back","Return to the main menu!",53.74,60.72,0.0,0.0,myMessageBar,
+                event->settingsSwitch.switchScene()));
+                new StackPane();
         StackPane mainContainer = new StackPane();
         mainContainer.setPrefSize(SCREEN_WIDTH,SCREEN_HEIGHT);
         mainContainer.setAlignment(Pos.CENTER);

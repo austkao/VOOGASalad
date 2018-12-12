@@ -40,6 +40,10 @@ import java.util.function.Consumer;
  */
 
 public class CharacterEditor extends EditorSuper {
+    private static final double SPRITE_PANE_WIDTH= 300;
+    private static final double SPRITE_PANE_HEIGHT = 300;
+
+
     private static final String DEFAULT_PORTRAIT = "lucinaglasses.png";
     private static final String HIT_TEXT = "HITBOX";
     private static final String HURT_TEXT = "HURTBOX";
@@ -167,8 +171,8 @@ public class CharacterEditor extends EditorSuper {
         mySpritePane.setStyle("-fx-background-color: " + SPRITEPANE_COLOR);
         mySpritePane.setLayoutX(600);
         mySpritePane.setLayoutY(400);
-        mySpritePane.setMinSize(300, 300);
-        mySpritePane.setMaxSize(300, 300);
+        mySpritePane.setMinSize(SPRITE_PANE_WIDTH, SPRITE_PANE_HEIGHT);
+        mySpritePane.setMaxSize(SPRITE_PANE_WIDTH, SPRITE_PANE_HEIGHT);
         root.getChildren().add(mySpritePane);
         //idea of anchor came form here:
         //https://coderanch.com/t/689100/java/rectangle-dragging-image
@@ -188,11 +192,20 @@ public class CharacterEditor extends EditorSuper {
         if (testNull(portraitFile, "File not valid"))
             return;
         Rectangle thumbRec = new Rectangle();
-        getRectOnImageView("Draw Thumbnail, then close window to continue",
+        double thumbScale = getRectOnImageView("Draw Thumbnail, then close window to continue",
                 new ImageView(new Image(portraitFile.toURI().toString())), Color.PURPLE, thumbRec, thumbnailAspectRatio);
         Rectangle portRec = new Rectangle();
-        getRectOnImageView("Draw Portrait, then close window to continue",
+        double portScale = getRectOnImageView("Draw Portrait, then close window to continue",
                 new ImageView(new Image(portraitFile.toURI().toString())), Color.PEACHPUFF, portRec, portraitAspectRatio);
+        thumbRec.setWidth(thumbRec.getWidth()*thumbScale);
+        thumbRec.setHeight(thumbRec.getHeight()*thumbScale);
+        thumbRec.setX(thumbRec.getX()*thumbScale);
+        thumbRec.setY(thumbRec.getY()*thumbScale);
+
+        portRec.setWidth(portRec.getWidth()*portScale);
+        portRec.setHeight(portRec.getHeight()*portScale);
+        portRec.setX(portRec.getX()*portScale);
+        portRec.setY(portRec.getY()*portScale);
 
         setPortrait(portraitFile.toURI().toString(), thumbRec, portRec);
     }
@@ -201,19 +214,20 @@ public class CharacterEditor extends EditorSuper {
         this.thumbnail = thumbnail;
         portraitRectangle = portraitRect;
     }
-    private void getRectOnImageView(String message, ImageView imgview, Color color, Rectangle ret, double ratio){
+    private double getRectOnImageView(String message, ImageView imgview, Color color, Rectangle ret, double ratio){
         Stage popUpPicture = new Stage();
+
+        double scale = imgview.getImage().getHeight()/600.0;
         imgview.setFitHeight(600);
-        imgview.setPreserveRatio(true);
+
         popUpPicture.setTitle(message);
         Group newRoot = new Group();
         Scene pictureWindow = new Scene(newRoot);
         popUpPicture.setScene(pictureWindow);
-
-
         newRoot.getChildren().add(imgview);
+        imgview.setPreserveRatio(true);
         AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0.0, 0.0));
-        imgview.setOnMousePressed(e -> {
+        pictureWindow.setOnMousePressed(e -> {
             ret.setFill(BOX_FILL);
             ret.setStroke(color);
             ret.setStrokeWidth(BOX_STROKE);
@@ -221,15 +235,16 @@ public class CharacterEditor extends EditorSuper {
             ret.setX(e.getX());
             ret.setY(e.getY());
         });
-        imgview.setOnMouseDragged(e -> {
+        pictureWindow.setOnMouseDragged(e -> {
             updateRectangle(e, anchor.get(), ret, ratio);
         });
 
         newRoot.getChildren().add(ret);
-
         while (ret.getWidth() == 0 || ret.getHeight() == 0){
             popUpPicture.showAndWait();
         }
+
+        return scale;
     }
 
     private void selectNewAnimationFromScroll(Scrollable b){
@@ -512,7 +527,6 @@ public class CharacterEditor extends EditorSuper {
             double portY = Double.parseDouble(portraitBoxInfo.get("y").get(0));
             double portS = Double.parseDouble(portraitBoxInfo.get("size").get(0));
 
-            System.out.println(myDirectory.getPath() + myDirectory.getName());
             File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
             setPortrait(portraitFile.toURI().toString(), new Rectangle(thumbX, thumbY, thumbW, thumbH),
                     new Rectangle(portX, portY, portS, portS));
@@ -569,12 +583,17 @@ public class CharacterEditor extends EditorSuper {
         SpriteAnimation currentAnimation = nameToAnimation.get(fname);
         AnimationInfo frameInfo = animationFrame.get(currentAnimation);
 
+        double widthRatio = SPRITE_PANE_WIDTH/currentAnimation.getWidth();
+        double heightRatio = SPRITE_PANE_HEIGHT/currentAnimation.getHeight();
+
         frameInfo.setCurrentFrame(frameNumber);
-        frameInfo.setHitBox(new Rectangle(hix, hiy, hiw, hih));
+        frameInfo.setHitBox(new Rectangle(hix*widthRatio, hiy*heightRatio,
+                hiw*widthRatio, hih*heightRatio));
         frameInfo.getHitBox().setStrokeWidth(BOX_STROKE);
         frameInfo.getHitBox().setStroke(HITBOX_COLOR);
         frameInfo.getHitBox().setFill(BOX_FILL);
-        frameInfo.setHurtBox(new Rectangle(hux, huy, huw, huh));
+        frameInfo.setHurtBox(new Rectangle(hux*widthRatio, huy*heightRatio,
+                huw*widthRatio, huh*heightRatio));
         frameInfo.getHurtBox().setStrokeWidth(BOX_STROKE);
         frameInfo.getHurtBox().setStroke(HURTBOX_COLOR);
         frameInfo.getHurtBox().setFill(BOX_FILL);
@@ -685,20 +704,24 @@ public class CharacterEditor extends EditorSuper {
             data.get("height").add(ani.getHeight()+"");
             data.get("attackPower").add(aniInfo.getAttackPower()+"");
             data.get("inputCombo").add(aniInfo.getInputAsString());
+
+            double widthRatio = ani.getWidth()/SPRITE_PANE_WIDTH;
+            double heightRatio = ani.getHeight()/SPRITE_PANE_HEIGHT;
+
             for(int i = 1; i <= aniInfo.getTotalFrames(); i++){
                 aniInfo.setCurrentFrame(i);
                 Rectangle hitBox = aniInfo.getHitBox();
                 Rectangle hurtBox = aniInfo.getHurtBox();
                 data.get("fname").add(aniInfo.getName());
                 data.get("number").add(Integer.toString(i));
-                data.get("hitXPos").add(hitBox.getX()+"");
-                data.get("hitYPos").add(hitBox.getY()+"");
-                data.get("hurtXPos").add(hurtBox.getX()+"");
-                data.get("hurtYPos").add(hurtBox.getY()+"");
-                data.get("hitWidth").add(hitBox.getWidth()+"");
-                data.get("hitHeight").add(hitBox.getHeight()+"");
-                data.get("hurtWidth").add(hurtBox.getWidth()+"");
-                data.get("hurtHeight").add(hurtBox.getHeight()+"");
+                data.get("hitXPos").add(hitBox.getX()*widthRatio+"");
+                data.get("hitYPos").add(hitBox.getY()*heightRatio+"");
+                data.get("hurtXPos").add(hurtBox.getX()*widthRatio+"");
+                data.get("hurtYPos").add(hurtBox.getY()*heightRatio+"");
+                data.get("hitWidth").add(hitBox.getWidth()*widthRatio+"");
+                data.get("hitHeight").add(hitBox.getHeight()*heightRatio+"");
+                data.get("hurtWidth").add(hurtBox.getWidth()*widthRatio+"");
+                data.get("hurtHeight").add(hurtBox.getHeight()*heightRatio+"");
             }
         }
         try {
