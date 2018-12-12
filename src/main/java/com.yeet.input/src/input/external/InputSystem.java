@@ -123,4 +123,8 @@ public class InputSystem {
         timer.purge();
     }
 
+    public void resetBindings(){
+        myParser.resetKeys();
+    }
+
 }

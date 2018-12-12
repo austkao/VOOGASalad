@@ -98,7 +98,7 @@ public class ComboHandler {
     /**
      Obtains the key mappings from the Data Reciever
      */
-    private void setUpMapping(){
+    public void setUpMapping(){
         attackMapping = DR.getKeys();
     }
 }
