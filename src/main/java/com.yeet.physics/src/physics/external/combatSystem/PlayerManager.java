@@ -40,9 +40,6 @@ public class PlayerManager {
             ArrayList<Double> stat = stats.get(id);
             playerMap.put(id, new Player(id, stat.get(0), stat.get(1), stat.get(2)));
         }
-
-
-
     }
 
 
@@ -117,6 +114,10 @@ public class PlayerManager {
         for(int id: playerMap.keySet()){
             playerMap.get(id).setNumOfLives(numOfLives);
         }
+    }
+
+    public void respawnPlayer(int id, ArrayList<Double> stats){
+        getPlayerByID(id).resetCombatStats(stats);
     }
 
     // check if the id passed in exists in the map
