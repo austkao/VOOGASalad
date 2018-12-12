@@ -7,12 +7,17 @@ import editor.interactive.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import messenger.external.CreateStageEvent;
 import renderer.external.RenderSystem;
+import renderer.external.Structures.TextBox;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,43 +29,40 @@ import java.util.function.Consumer;
  */
 
 public class EditorManager extends Scene {
-    private List<EditorSuper> myEditors;
-    private List<EditorHome> myEditorHomes;
+    private List<EditorScreen> myEditorHomes;
     private Group myRoot;
     private Stage myStage;
     private Scene homeScene;
     private File gameDirectory;
     private RenderSystem rs;
-    private EditorSuper mySettingsEditor;
 
-    public EditorManager(Stage stage, Scene scene, Group root, File directory){
+    public EditorManager(Stage stage, Scene scene, Group root, File directory, RenderSystem rs){
         super(root);
         myStage = stage;
         homeScene = scene;
         myRoot = root;
         gameDirectory = directory;
-        myEditors = makeEditors();
         myEditorHomes = makeEditorHomes();
-        rs = new RenderSystem();
-        Button back = createBack();
-        back.setOnMouseClicked(e -> goBack());
-        arrangeButtons();
+        this.rs = rs;
         Text title = createTitle();
-        myRoot.getChildren().addAll(back, title);
+        myRoot.getChildren().addAll(title, arrangeButtons());
     }
 
-    private void arrangeButtons() {
+    private VBox arrangeButtons() {
+        VBox mainButtons = new VBox(50);
         for (int i = 0; i < myEditorHomes.size(); i++) {
             String name = myEditorHomes.get(i).toString();
             final int pos = i;
             Button nextEditor = rs.makeStringButton(name, Color.BLACK, true, Color.WHITE, 30.0, 800.0, 100.0 * i, 350.0, 50.0);
-            nextEditor.setOnMouseClicked(e -> changeScene(myEditorHomes.get(pos)));
-            myRoot.getChildren().add(nextEditor);
+            nextEditor.setOnMouseClicked(e -> changeSceneEditor(myEditorHomes.get(pos)));
+            mainButtons.getChildren().add(nextEditor);
         }
-        Button settings = rs.makeStringButton("Game Settings", Color.BLACK, true, Color.WHITE, 30.0, 800.0, 100.0 * 2, 350.0, 50.0);
-        mySettingsEditor = myEditors.get(myEditors.size()-1);
-        settings.setOnMouseClicked(e -> changeScene(mySettingsEditor));
-        myRoot.getChildren().add(settings);
+        Button back  = createBack();
+        back.setOnMouseClicked(e -> goBack());
+        mainButtons.getChildren().add(back);
+        mainButtons.setLayoutX(500);
+        mainButtons.setLayoutY(250);
+        return mainButtons;
     }
 
     public void setEditorHomeScene(){
@@ -72,15 +74,18 @@ public class EditorManager extends Scene {
 
     }
 
-    public Text createTitle() {
+
+
+
+    private Text createTitle() {
         return rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
     }
 
-    public void goBack() {
+    private void goBack() {
         myStage.setScene(homeScene);
     }
 
-    public Button createBack() {
+    private Button createBack() {
         return rs.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,800.0,300.0,350.0,50.0);
     }
 
@@ -93,14 +98,13 @@ public class EditorManager extends Scene {
         myStage.setScene(scene);
     }
 
-    private List<EditorSuper> makeEditors(){
-        List<EditorSuper> editors = new ArrayList<>();
-        Collections.addAll(editors,new MapEditor(this, this),new CharacterEditor(this, new InputEditor(this, this), this),new InputEditor(this, this),new GameModeEditor(this,this));
-        return editors;
+    public void changeSceneEditor(EditorScreen screen){
+        myStage.setScene(screen.getScene());
     }
-    private List<EditorHome> makeEditorHomes(){
-        List<EditorHome> editors = new ArrayList<>();
-        Collections.addAll(editors,new MapHome(this), new CharacterHome(this));//;, new GameModeHome(this));
+
+    private List<EditorScreen> makeEditorHomes(){
+        List<EditorScreen> editors = new ArrayList<>();
+        Collections.addAll(editors,new MapHome(this), new CharacterHome(this),new InputEditor(this,this));//;, new GameModeHome(this));
         return editors;
     }
 
@@ -115,9 +119,11 @@ public class EditorManager extends Scene {
         };
     }
 
-    public void goToInput(Scene scene){
-        InputEditor input = new InputEditor(this, this);
-        changeScene(input);
+    private void goToInput(Scene scene){
+        EditorScreen editor = myEditorHomes.get(myEditorHomes.size() - 1);
+        EditorSuper inputEditor = (EditorSuper) editor;
+        inputEditor.createBack(scene);
+        changeScene(inputEditor);
     }
 
     @Override
