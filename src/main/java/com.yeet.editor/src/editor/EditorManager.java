@@ -50,7 +50,7 @@ public class EditorManager extends Scene {
 
     private VBox arrangeButtons() {
         VBox mainButtons = new VBox(50);
-        for (int i = 0; i < myEditorHomes.size(); i++) {
+        for (int i = 0; i < myEditorHomes.size()-1; i++) {
             String name = myEditorHomes.get(i).toString();
             final int pos = i;
             Button nextEditor = rs.makeStringButton(name, Color.BLACK, true, Color.WHITE, 30.0, 800.0, 100.0 * i, 350.0, 50.0);
@@ -104,7 +104,8 @@ public class EditorManager extends Scene {
 
     private List<EditorScreen> makeEditorHomes(){
         List<EditorScreen> editors = new ArrayList<>();
-        Collections.addAll(editors,new MapHome(this), new CharacterHome(this),new GameModeEditor(this,this));//;, new GameModeHome(this));
+        Collections.addAll(editors,new MapHome(this), new CharacterHome(this),new GameModeEditor(this,this),new InputEditor(this,this));//;, new GameModeHome(this));
+
         return editors;
     }
 

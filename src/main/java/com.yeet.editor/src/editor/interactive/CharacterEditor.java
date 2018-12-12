@@ -29,6 +29,7 @@ import xml.XMLParser;
 
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
@@ -52,6 +53,7 @@ public class CharacterEditor extends EditorSuper {
     private static final Color HITBOX_COLOR = Color.RED;
     private static final Color HURTBOX_COLOR = Color.BLUE;
     private static final Color BOX_FILL = null;
+    private static final Color DEFAULT_HITBOX_COLOR = Color.DEEPPINK;
 
     private static final double thumbnailAspectRatio = 132.0/95.0; //
     private static final double portraitAspectRatio = 1.0;
@@ -63,6 +65,7 @@ public class CharacterEditor extends EditorSuper {
     private Rectangle portraitRectangle;
     private Image spriteSheet;
     private Sprite currentSprite;
+    private Rectangle defaultHitBox;
 
     //Animation variables
     private SpriteAnimation currentAnimation;
@@ -255,12 +258,19 @@ public class CharacterEditor extends EditorSuper {
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
         }
-        currentAnimation = nameToAnimation.get(b.getButton().getText());
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        frame.setCurrentFrame(1);
-        currentAnimation.jumpTo(new Duration(0));
-        currentAnimation.stop();;
-        stepForwardAnimation();
+        if (currentAnimation != null && currentAnimation == nameToAnimation.get(b.getButton().getText())){ //deselect
+            currentAnimation = null;
+            frameText.setText("Animation not selected. Draw on sprite to get hitbox");
+        }
+        else{
+            currentAnimation = nameToAnimation.get(b.getButton().getText());
+            AnimationInfo frame = animationFrame.get(currentAnimation);
+            frame.setCurrentFrame(1);
+            currentAnimation.jumpTo(new Duration(0));
+            currentAnimation.stop();;
+            stepForwardAnimation();
+        }
+
     }
     private void chooseSpriteSheet(){
         mySpritePane.getChildren().remove(currentSprite);
@@ -347,58 +357,74 @@ public class CharacterEditor extends EditorSuper {
 
 
     private Point2D startHitHurtBoxSelection(MouseEvent e, Point2D anchor){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return anchor;
-        }
-
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        Rectangle newBox = new Rectangle();
-        newBox.setX(e.getX());
-        newBox.setY(e.getY());
-        newBox.setFill(BOX_FILL);
-        newBox.setStrokeWidth(BOX_STROKE);
-        if (hitOrHurt.getState().equals(HIT_TEXT)){
-            mySpritePane.getChildren().remove(frame.getHitBox());
-            newBox.setStroke(HITBOX_COLOR);
-            frame.setHitBox(newBox);
-            mySpritePane.getChildren().add(frame.getHitBox());
+        if (currentAnimation == null){
+            if (testNull(spriteSheet, "Sprite sheet not set")){
+                return anchor;
+            }
+            mySpritePane.getChildren().remove(defaultHitBox);
+            defaultHitBox = new Rectangle();
+            defaultHitBox.setX(e.getX());
+            defaultHitBox.setY(e.getY());
+            defaultHitBox.setFill(BOX_FILL);
+            defaultHitBox.setStrokeWidth(BOX_STROKE);
+            defaultHitBox.setStroke(DEFAULT_HITBOX_COLOR);
+            mySpritePane.getChildren().add(defaultHitBox);
         }
         else{
-            mySpritePane.getChildren().remove(frame.getHurtBox());
-            newBox.setStroke(HURTBOX_COLOR);
-            frame.setHurtBox(newBox);
-            mySpritePane.getChildren().add(frame.getHurtBox());
+            AnimationInfo frame = animationFrame.get(currentAnimation);
+            Rectangle newBox = new Rectangle();
+            newBox.setX(e.getX());
+            newBox.setY(e.getY());
+            newBox.setFill(BOX_FILL);
+            newBox.setStrokeWidth(BOX_STROKE);
+            if (hitOrHurt.getState().equals(HIT_TEXT)){
+                mySpritePane.getChildren().remove(frame.getHitBox());
+                newBox.setStroke(HITBOX_COLOR);
+                frame.setHitBox(newBox);
+                mySpritePane.getChildren().add(frame.getHitBox());
+            }
+            else{
+                mySpritePane.getChildren().remove(frame.getHurtBox());
+                newBox.setStroke(HURTBOX_COLOR);
+                frame.setHurtBox(newBox);
+                mySpritePane.getChildren().add(frame.getHurtBox());
+            }
         }
-
         anchor = new Point2D(e.getX(), e.getY());
         return anchor;
     }
     private void dragHitHurtBoxSelection(MouseEvent e, Point2D anchor){
-        if (testNull(currentAnimation, "Animation Not Set")){
-            return;
-        }
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        Rectangle selection;
-        if (hitOrHurt.getState().equals(HIT_TEXT)){
-            selection = frame.getHitBox();
+        if (currentAnimation == null){
+            if (testNull(spriteSheet, "Sprite sheet not set")){
+                return;
+            }
+            updateRectangle(e, anchor, defaultHitBox, -1);
         }
         else{
-            selection = frame.getHurtBox();
+            AnimationInfo frame = animationFrame.get(currentAnimation);
+            Rectangle selection;
+            if (hitOrHurt.getState().equals(HIT_TEXT)){
+                selection = frame.getHitBox();
+            }
+            else{
+                selection = frame.getHurtBox();
+            }
+            updateRectangle(e, anchor, selection, -1);
         }
-        updateRectangle(e, anchor, selection, -1);
+
     }
     private void updateRectangle(MouseEvent e, Point2D anchor, Rectangle rect, double ratio){
         rect.setWidth(Math.abs(e.getX() - anchor.getX()));
         rect.setHeight(Math.abs(e.getY() - anchor.getY()));
-       if (ratio != -1)
-       {
+        if (ratio != -1)
+        {
             if (rect.getWidth() > rect.getHeight()*ratio){
                 rect.setHeight(rect.getWidth()/ratio);
             }
             else{
                 rect.setWidth(rect.getHeight()*ratio);
             }
-       }
+        }
         rect.setX(Math.min(anchor.getX(), e.getX()));
         rect.setY(Math.min(anchor.getY(), e.getY()));
     }
@@ -456,11 +482,11 @@ public class CharacterEditor extends EditorSuper {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Enter input #" + num);
 
-       for (String option: options){
+        for (String option: options){
             ButtonType optionButton = new ButtonType(option, ButtonBar.ButtonData.OK_DONE);
-           dialog.getDialogPane().getButtonTypes().add(optionButton);
-           dialog.getDialogPane().lookupButton(optionButton).setDisable(false);
-       }
+            dialog.getDialogPane().getButtonTypes().add(optionButton);
+            dialog.getDialogPane().lookupButton(optionButton).setDisable(false);
+        }
 
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         ButtonType input = dialog.showAndWait().orElse(ButtonType.CLOSE);
@@ -618,9 +644,26 @@ public class CharacterEditor extends EditorSuper {
             double w = Double.parseDouble(sprites.get("width").get(0));
             double x = Double.parseDouble(sprites.get("offsetX").get(0));
             double y = Double.parseDouble(sprites.get("offsetY").get(0));
-
             File spriteSheetFile = Paths.get(myDirectory.getPath(), "sprites","spritesheet" + ".png").toFile();
             initializeSpriteSheet(spriteSheetFile, x, y, w, h);
+
+
+            double widthRatio = SPRITE_PANE_WIDTH/w;
+            double heightRatio = SPRITE_PANE_HEIGHT/h;
+
+            sprites = parser.parseFileForElement("defaultHitBox");
+
+            double hitX = Double.parseDouble(sprites.get("hitX").get(0))*widthRatio;
+            double hitY = Double.parseDouble(sprites.get("hitY").get(0))*heightRatio;
+            double hitW = Double.parseDouble(sprites.get("hitW").get(0))*widthRatio;
+            double hitH = Double.parseDouble(sprites.get("hitH").get(0))*heightRatio;
+
+            defaultHitBox = new Rectangle(hitX, hitY, hitW, hitH);
+            defaultHitBox.setFill(BOX_FILL);
+            defaultHitBox.setStrokeWidth(BOX_STROKE);
+            defaultHitBox.setStroke(DEFAULT_HITBOX_COLOR);
+            mySpritePane.getChildren().add(defaultHitBox);
+
         } catch (Exception ex) {
             System.out.println("Cannot load Spritesheet and initial sprite");
         }
@@ -628,6 +671,9 @@ public class CharacterEditor extends EditorSuper {
 
     private void createSaveFile() {
         if (testNull(portrait.getImage(),"Portrait not chosen")){
+            return;
+        }
+        if (testNull(defaultHitBox,"Default hitbox not set")){
             return;
         }
         saveCharacterProperties();
@@ -736,16 +782,30 @@ public class CharacterEditor extends EditorSuper {
         HashMap<String, ArrayList<String>> structure = new HashMap<>();
         ArrayList<String> spriteAttributes = new ArrayList<>(List.of("offsetX", "offsetY", "width", "height"));
         structure.put("sprite", spriteAttributes);
+        structure.put("defaultHitBox", new ArrayList<>(List.of("hitX", "hitY", "hitW", "hitH")));
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         ArrayList<String> offsetX = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getMinX())));
         ArrayList<String> offsetY = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getMinY())));
         ArrayList<String> width = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getWidth())));
         ArrayList<String> height = new ArrayList<>(List.of(Double.toString(currentSprite.getDefaultViewport().getHeight())));
 
+        double widthRatio = currentSprite.getDefaultViewport().getWidth()/SPRITE_PANE_WIDTH;
+        double heightRatio = currentSprite.getDefaultViewport().getHeight()/SPRITE_PANE_HEIGHT;
+
+        ArrayList<String> hitX = new ArrayList<>(List.of(Double.toString(defaultHitBox.getX()*widthRatio)));
+        ArrayList<String> hitY = new ArrayList<>(List.of(Double.toString(defaultHitBox.getY()*heightRatio)));
+        ArrayList<String> hitW = new ArrayList<>(List.of(Double.toString(defaultHitBox.getWidth()*widthRatio)));
+        ArrayList<String> hitH = new ArrayList<>(List.of(Double.toString(defaultHitBox.getHeight()*heightRatio)));
+
         data.put("offsetX", offsetX);
         data.put("offsetY", offsetY);
         data.put("width", width);
         data.put("height", height);
+
+        data.put("hitX", hitX);
+        data.put("hitY", hitY);
+        data.put("hitW", hitW);
+        data.put("hitH", hitH);
         try {
             File xmlFile = Paths.get(myDirectory.getPath(), "sprites", "spriteproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
@@ -768,9 +828,9 @@ public class CharacterEditor extends EditorSuper {
         return fileChooser.showOpenDialog(getWindow());
     }
     /**
-    Alert system found at:
-    https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
-    **/
+     Alert system found at:
+     https://stackoverflow.com/questions/8309981/how-to-create-and-show-common-dialog-error-warning-confirmation-in-javafx-2
+     **/
     private boolean testNull(Object object, String message){
         if (object == null){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
