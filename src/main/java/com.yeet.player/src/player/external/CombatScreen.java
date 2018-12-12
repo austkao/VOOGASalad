@@ -306,7 +306,14 @@ public class CombatScreen extends Screen {
     @Subscribe
     public void onDeath(PlayerDeathEvent deathEvent){
         //TODO add other on death visuals
-        myHealthMap.get(deathEvent.getId()).setLives(deathEvent.getRemainingLife());
+        try{
+            myHealthMap.get(deathEvent.getId()).setLives(deathEvent.getRemainingLife());
+        }
+        catch (NullPointerException e){
+
+        }
+        System.out.println(deathEvent.getId());
+        myHealthMap.get(deathEvent.getId()).setHealth(100);
         if(deathEvent.getRemainingLife()==0){
             myHealthMap.get(deathEvent.getId()).setOpacity(0.2);
         }
