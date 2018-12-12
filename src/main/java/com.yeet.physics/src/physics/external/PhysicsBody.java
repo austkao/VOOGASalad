@@ -1,5 +1,9 @@
 package physics.external;
 
+import static java.lang.Math.PI;
+import static physics.external.CollisionHandler.timeOfFrame;
+import static physics.external.PassiveForceHandler.DEFAULT_GRAVITY_ACCELERATION;
+
 /**
  * Concrete class of PhysicsObject representing a player
  *
@@ -44,7 +48,9 @@ public class PhysicsBody extends PhysicsObject {
     }
 
     public void respawn(){
-        this.setVelocity(new PhysicsVector(0,0));
+        double gravityMag = Math.round(this.getMass() * DEFAULT_GRAVITY_ACCELERATION);
+        this.addCurrentForce(new PhysicsVector(-this.myMass*this.getXVelocity().getMagnitude()/timeOfFrame, 0));
+        this.addCurrentForce(new PhysicsVector(Math.round(this.myMass*this.getYVelocity().getMagnitude()/(timeOfFrame) + gravityMag), -PI/2));
         this.getMyCoordinateBody().setPos(this.getRespawnX(), this.getRespawnY());
     }
 

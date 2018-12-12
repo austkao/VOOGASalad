@@ -48,6 +48,11 @@ import java.util.List;
             return this.hitBox;
         }
 
+        public void setHitBox(Rectangle2D box) {
+            this.hitBox = box;
+
+            System.out.println("just set hitbox");
+        }
         public List<SubRectangle> getSubRects(){
             return this.subRects;
         }
