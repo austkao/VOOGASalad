@@ -182,9 +182,9 @@ public class CharacterEditor extends EditorSuper {
         if (testNull(portraitFile, "File not valid"))
             return;
         Rectangle thumbRec = new Rectangle();
-        getRectOnImageView("Draw Thumbnail, then close window to continue", new ImageView(new Image(portraitURL)), Color.PURPLE, thumbRec, thumbnailAspectRatio);
+        getRectOnImageView("Draw Thumbnail, then close window to continue", new ImageView(new Image(portraitFile.toURI().toString())), Color.PURPLE, thumbRec, thumbnailAspectRatio);
         Rectangle portRec = new Rectangle();
-        getRectOnImageView("Draw Portrait, then close window to continue", new ImageView(new Image(portraitURL)), Color.PEACHPUFF, portRec, portraitAspectRatio);
+        getRectOnImageView("Draw Portrait, then close window to continue", new ImageView(new Image(portraitFile.toURI().toString())), Color.PEACHPUFF, portRec, portraitAspectRatio);
 
         setPortrait(portraitFile.toURI().toString(), thumbRec, portRec);
     }
