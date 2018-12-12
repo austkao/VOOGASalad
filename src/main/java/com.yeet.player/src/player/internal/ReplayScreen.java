@@ -148,7 +148,7 @@ public class ReplayScreen extends Screen {
             replayPlayer.load(replayFile);
             stageName.setText(replayPlayer.getStageName());
             date.setText(replayPlayer.getDate());
-            gameMode.setText(replayPlayer.getGameMode());
+            gameMode.setText(createGameModeText(replayPlayer.getGameMode(),replayPlayer.getTypeValue()));
             //get map image
             File parse = new File(String.format("%s/%s",new File(new File(gameDirectory,"stages"),replayPlayer.getStageName()).getPath(),"stageproperties.xml"));
             XMLParser parser = new XMLParser(parse);
@@ -181,6 +181,21 @@ public class ReplayScreen extends Screen {
         } catch (NullPointerException e){
             hidePlayButton();
         }
+    }
+
+    private String createGameModeText(String gameMode, int typeValue){
+        String formattedGameMode = gameMode.substring(0,1) + gameMode.substring(1).toLowerCase() + " Mode: ";
+        String formattedTypeValue;
+        if(gameMode.equalsIgnoreCase("STOCK")){
+            formattedTypeValue = typeValue + " lives";
+        }
+        else if(gameMode.equalsIgnoreCase("TIME")){
+            formattedTypeValue = typeValue + " min.";
+        }
+        else{
+            formattedTypeValue = String.valueOf(typeValue);
+        }
+        return formattedGameMode+formattedTypeValue;
     }
 
     private void handlePlayClick(){
