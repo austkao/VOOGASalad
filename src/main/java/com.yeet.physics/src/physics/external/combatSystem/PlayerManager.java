@@ -82,7 +82,6 @@ public class PlayerManager {
         Player playerBeingAttacked = getPlayerByID(beingAttacked);
         Player playerAttacking = getPlayerByID(attacker);
         double health = playerBeingAttacked.reduceHealth(playerAttacking.getAttackDamage());
-
         if(health<=0.0){
             int remainingLife = playerBeingAttacked.loseLife();
             eventBus.post(new PlayerDeathEvent(beingAttacked, remainingLife));
