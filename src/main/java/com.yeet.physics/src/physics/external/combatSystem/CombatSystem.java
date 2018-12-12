@@ -33,6 +33,7 @@ public class CombatSystem {
     private XMLParser xmlParser;
     private File gameDir;
     private HashMap<Integer, ArrayList<Double>> characterStats;
+    private HashMap<Integer, Rectangle2D> tileMap;
 
 
 //    public CombatSystem(Player bot){
@@ -65,6 +66,7 @@ public class CombatSystem {
         this.playerMap = playerMap;
 //        playerManager = new PlayerManager(playerMap.keySet().size());
         this.physicsSystem = physicsSystem;
+        this.tileMap = tileMap;
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
 //            System.out.println("MIN X: " + playerMap.get(i).getX());
@@ -201,6 +203,7 @@ public class CombatSystem {
     public void onPlayerDeath(PlayerDeathEvent playerDeathEvent){
         int id = playerDeathEvent.getId();
         playerManager.respawnPlayer(id, characterStats.get(id));
+        physicsSystem.addPhysicsObject(0, physicsSystem.DEFAULT_MASS, tileMap.get(id).getX(), tileMap.get(id).getY(), 40, 60);
     }
 
 }
