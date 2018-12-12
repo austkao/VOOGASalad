@@ -91,8 +91,6 @@ public class CombatSystem {
                     Double.parseDouble(map.get("hurtWidth").get(0)), Double.parseDouble(map.get("hurtHeight").get(0)));
         }
 
-
-
     }
 
     /** Returns the {@code PlayerState} of the player specified
