@@ -85,6 +85,10 @@ public class DataSystem {
             System.out.println("Could not create stage file");
         }
     }
+    @Subscribe
+    public void createCopyFile(CreateCopyEvent event) {
+        myFileSystem.copyFile(event.getSource(), event.getDirectory());
+    }
     @Deprecated
     private void overwriteGameFile(File xmlFile) {
         XMLParser parser = new XMLParser(xmlFile);

@@ -28,7 +28,8 @@ public class ScrollablePaneNew extends Pane {
 
     public ScrollablePaneNew(File dir,double x, double y, double width, double height){
         this(x,y, width, height);
-        loadFiles(dir);
+        loadFiles(dir,".png");
+        loadFiles(dir,".jpg");
     }
 
     public ScrollablePaneNew(double x, double y, double width, double height){
@@ -147,11 +148,11 @@ public class ScrollablePaneNew extends Pane {
 
 
 
-    public void loadFiles(File dir){
+    public void loadFiles(File dir, String extension){
         for(File imgFile : dir.listFiles()) {
-            if(imgFile.toString().endsWith(".png")){
+            if(imgFile.toString().endsWith(extension)){
                 Image itemImage = new Image(imgFile.toURI().toString());
-                String imageName = imgFile.getName().replace(".png","");
+                String imageName = imgFile.getName().replace(extension,"");
                 addItem(itemImage, imageName);
             }
         }
