@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <VOOGASalad author="yeet">
-    <input DOWN="S" LEFT="A" RIGHT="D" JUMP="W"/>
-    <input DOWN="L" LEFT="I" RIGHT="P" JUMP="O"/>
-    <input DOWN="X" LEFT="C" RIGHT="V" JUMP="Z"/>
-    <input DOWN="G" LEFT="B" RIGHT="N" JUMP="T"/>
+    <input DOWN="S" LEFT="A" RIGHT="D" JUMP="W" JAB="R"/>
+    <input DOWN="K" LEFT="J" RIGHT="L" JUMP="I" JAB="P"/>
+    <input DOWN="X" LEFT="C" RIGHT="V" JUMP="Z" JAB="Y"/>
+    <input DOWN="G" LEFT="B" RIGHT="N" JUMP="T" JAB="H"/>
     <players numPlayers="4"/>
 </VOOGASalad>
-
-

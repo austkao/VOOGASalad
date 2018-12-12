@@ -359,9 +359,11 @@ public class CharacterEditor extends EditorSuper {
                 return anchor;
             }
             mySpritePane.getChildren().remove(defaultHitBox);
+
             defaultHitBox = new Rectangle();
             defaultHitBox.setX(e.getX());
             defaultHitBox.setY(e.getY());
+
             defaultHitBox.setFill(BOX_FILL);
             defaultHitBox.setStrokeWidth(BOX_STROKE);
             defaultHitBox.setStroke(DEFAULT_HITBOX_COLOR);
