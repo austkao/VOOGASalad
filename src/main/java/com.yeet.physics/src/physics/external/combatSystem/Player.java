@@ -17,7 +17,7 @@ public class Player {
     protected int id;
     private String name;
     private double health = 100.0;
-    private int numOfLives;
+    private int numOfLives = 999;
     private int powerLevel;
     private int score;
     private double attackDamage = 10.0;
