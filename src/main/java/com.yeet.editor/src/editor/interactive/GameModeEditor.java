@@ -71,8 +71,8 @@ public class GameModeEditor extends EditorSuper {
             splashScreen = new Image(splashFile.toURI().toString());
             splashView.setImage(splashScreen);
             splashView.setPreserveRatio(true);
-            splashView.setFitHeight(200.0);
-            splashView.setLayoutX(400.0);
+            splashView.setFitHeight(400.0);
+            splashView.setLayoutX(500.0);
             splashView.setLayoutY(100.0);
             updateToUnsaved();
         });
@@ -90,7 +90,7 @@ public class GameModeEditor extends EditorSuper {
 
         HBox musicbox = new HBox(5);
         Button pickMusic = myRS.makeStringButton("pick main music",Color.BLACK,true,Color.WHITE,20.0,60.0,200.0,200.0,50.0);
-        musicLabel = myRS.makeText("[Current Music]", false, 30, Color.BLACK, 50.0, 0.0);
+        musicLabel = myRS.makeText("", false, 30, Color.BLACK, 30.0, 0.0);
         pickMusic.setOnMouseClicked(e -> getMusicFile());
         musicbox.getChildren().addAll(pickMusic,musicLabel);
 

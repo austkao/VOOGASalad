@@ -91,7 +91,6 @@ public class Main extends Application {
         EventBusFactory.getEventBus().register(myPlayer);
         EventBusFactory.getEventBus().register(myConsole);
         //display setup
-
         myPopup = createErrorPopup();
         ImageView displayFiller = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("home_splash_filler.png")));
         displayFiller.setX(80.0);
@@ -119,17 +118,14 @@ public class Main extends Application {
         root.getChildren().add(playButton);
         //program start
         myPlayer.doSomething();
-        newButton.setOnMouseClicked(event -> makeGameDirectory());
-
     }
 
-    private void makeGameDirectory(){
+    private void makeGameDirectory(String game){
+        newGamePopup.close();
         Path userPath = Paths.get(System.getProperty("user.dir"));
-        File resources = new File(userPath+RESOURCE_PATH);
-        int numGames = resources.listFiles(filter).length;
-        File defaultFile = new File(resources.getPath() + "/game" + numGames);
-        myEB.post(new CreateGameEvent("new game", defaultFile));
-        initializeGameEditor(defaultFile);
+        myDirectory = new File(userPath+RESOURCE_PATH + "/"+game);
+        myEB.post(new CreateGameEvent("new game", myDirectory));
+        initializeGameEditor(myDirectory);
     }
 
     private void initializeGameEditor(File gameFile) {
@@ -237,11 +233,10 @@ public class Main extends Application {
         Text stageLabel = myRenderSystem.makeText(label, false, 12, Color.BLACK, 20.0, 50.0);
         Button create = myRenderSystem.makeStringButton("Create", Color.BLACK, false, Color.WHITE, 12.0,50.0, 100.0, 100.0, 30.0);
         Button cancel = myRenderSystem.makeStringButton("Cancel", Color.BLACK, false, Color.WHITE, 12.0,200.0, 100.0, 100.0, 30.0);
-        //create.setOnMouseClicked(e -> createNewObject(stageName.getText())); not sure how to implement
+        create.setOnMouseClicked(e -> makeGameDirectory(stageName.getText()));
         cancel.setOnMouseClicked(e -> newGamePopup.close());
         Scene creationScene = new Scene(new Group(stageName, stageLabel, create, cancel), 400, 200);
         newGamePopup.setScene(creationScene);
         newGamePopup.show();
-        System.out.println("HI");
     }
 }

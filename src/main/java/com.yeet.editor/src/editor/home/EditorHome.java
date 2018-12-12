@@ -113,7 +113,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     protected void nameNewObject(String title, String label) {
         popupStage = new Stage();
         popupStage.setTitle(title);
-        TextBox stageName = rs.makeTextField(consumer, "", 100.0,20.0,200.0,30.0, rs.getPlainFont());
+        TextBox stageName = rs.makeTextField(consumer, "", 150.0,20.0,200.0,30.0, rs.getPlainFont());
         Text stageLabel = rs.makeText(label, false, 12, Color.BLACK, 20.0, 50.0);
         Button create = rs.makeStringButton("Create", Color.BLACK, false, Color.WHITE, 12.0,50.0, 100.0, 100.0, 30.0);
         Button cancel = rs.makeStringButton("Cancel", Color.BLACK, false, Color.WHITE, 12.0,200.0, 100.0, 100.0, 30.0);
@@ -133,6 +133,19 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         myRoot.getChildren().remove(myScroll);
         myScroll = initializeScroll(directory);
         myRoot.getChildren().add(myScroll);
+    }
+
+    protected void confirmDelete(File directory) {
+        popupStage = new Stage();
+        popupStage.setTitle("Delete");
+        Text deleteLabel = rs.makeText("Are you sure you want to delete this?", false, 16, Color.BLACK, 20.0, 50.0);
+        Button delete = rs.makeStringButton("Delete", Color.BLACK, false, Color.WHITE, 12.0,50.0, 100.0, 100.0, 30.0);
+        Button cancel = rs.makeStringButton("Cancel", Color.BLACK, false, Color.WHITE, 12.0,200.0, 100.0, 100.0, 30.0);
+        delete.setOnMouseClicked(e -> deleteDirectory(directory));
+        cancel.setOnMouseClicked(e -> popupStage.close());
+        Scene creationScene = new Scene(new Group(deleteLabel, delete, cancel), 400, 200);
+        popupStage.setScene(creationScene);
+        popupStage.show();
     }
 
     @Override
