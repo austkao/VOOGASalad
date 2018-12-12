@@ -103,6 +103,8 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         return buttonBack;
     }
 
+
+
     @Override
     public void goBack() {
         em.setEditorHomeScene();
@@ -113,8 +115,8 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         popupStage.setTitle(title);
         TextBox stageName = rs.makeTextField(consumer, "", 100.0,20.0,200.0,30.0, rs.getPlainFont());
         Text stageLabel = rs.makeText(label, false, 12, Color.BLACK, 20.0, 50.0);
-        Button create = rs.makeStringButton("Create", Color.BLACK, false, Color.GRAY, 12.0,50.0, 100.0, 100.0, 30.0);
-        Button cancel = rs.makeStringButton("Cancel", Color.BLACK, false, Color.GRAY, 12.0,200.0, 100.0, 100.0, 30.0);
+        Button create = rs.makeStringButton("Create", Color.BLACK, false, Color.WHITE, 12.0,50.0, 100.0, 100.0, 30.0);
+        Button cancel = rs.makeStringButton("Cancel", Color.BLACK, false, Color.WHITE, 12.0,200.0, 100.0, 100.0, 30.0);
         create.setOnMouseClicked(e -> createNewObject(stageName.getText()));
         cancel.setOnMouseClicked(e -> popupStage.close());
         Scene creationScene = new Scene(new Group(stageName, stageLabel, create, cancel), 400, 200);

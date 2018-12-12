@@ -7,12 +7,17 @@ import editor.interactive.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import messenger.external.CreateStageEvent;
 import renderer.external.RenderSystem;
+import renderer.external.Structures.TextBox;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,21 +44,25 @@ public class EditorManager extends Scene {
         gameDirectory = directory;
         myEditorHomes = makeEditorHomes();
         this.rs = rs;
-        Button back = createBack();
-        back.setOnMouseClicked(e -> goBack());
-        arrangeButtons();
         Text title = createTitle();
-        myRoot.getChildren().addAll(back, title);
+        myRoot.getChildren().addAll(title, arrangeButtons());
     }
 
-    private void arrangeButtons() {
+    private VBox arrangeButtons() {
+        VBox mainButtons = new VBox(50);
         for (int i = 0; i < myEditorHomes.size(); i++) {
             String name = myEditorHomes.get(i).toString();
             final int pos = i;
             Button nextEditor = rs.makeStringButton(name, Color.BLACK, true, Color.WHITE, 30.0, 800.0, 100.0 * i, 350.0, 50.0);
             nextEditor.setOnMouseClicked(e -> changeSceneEditor(myEditorHomes.get(pos)));
-            myRoot.getChildren().add(nextEditor);
+            mainButtons.getChildren().add(nextEditor);
         }
+        Button back  = createBack();
+        back.setOnMouseClicked(e -> goBack());
+        mainButtons.getChildren().add(back);
+        mainButtons.setLayoutX(500);
+        mainButtons.setLayoutY(250);
+        return mainButtons;
     }
 
     public void setEditorHomeScene(){
@@ -64,6 +73,9 @@ public class EditorManager extends Scene {
         this.gameDirectory = gameDirectory;
 
     }
+
+
+
 
     private Text createTitle() {
         return rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
@@ -108,8 +120,10 @@ public class EditorManager extends Scene {
     }
 
     private void goToInput(Scene scene){
-        //InputEditor input = new InputEditor(this, this);
-        changeScene(myEditorHomes.get(myEditorHomes.size()-1).getScene());
+        EditorScreen editor = myEditorHomes.get(myEditorHomes.size() - 1);
+        EditorSuper inputEditor = (EditorSuper) editor;
+        inputEditor.createBack(scene);
+        changeScene(inputEditor);
     }
 
     @Override
