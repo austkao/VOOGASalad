@@ -18,12 +18,14 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import renderer.external.RenderUtils;
+import renderer.external.Structures.SliderBox;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.zip.GZIPOutputStream;
 
 
@@ -44,6 +46,9 @@ public class GameModeEditor extends EditorSuper {
     private TextField stockField;
     private VBox myBox;
     private Stage popupStage;
+    private SliderBox soundVol;
+    private SliderBox musicVol;
+    private SliderBox voiceVol;
 
 
     public GameModeEditor(EditorManager em, Scene prev) {
@@ -106,11 +111,24 @@ public class GameModeEditor extends EditorSuper {
         Text stockLabel = new Text("Maximum Lives");
         minbox.getChildren().addAll(minLabel,minutesField,minutes);
         stockbox.getChildren().addAll(stockLabel,stockField,stock);
-
-        myBox.getChildren().addAll(saveFile,pickSplash,musicbox,minbox,stockbox);
+        Consumer consumer = new Consumer() {
+            @Override
+            public void accept(Object o) {
+                o = o;
+            }
+        };
+        soundVol = myRS.makeSlider("Sound",100.0, consumer,0.0,0.0,500.0);
+        soundVol.getSlider().setMin(1.0);
+        soundVol.getSlider().setMax(100.0);
+        musicVol = myRS.makeSlider("Music",100.0,consumer,0.0,0.0,500.0);
+        musicVol.getSlider().setMin(0.0);
+        musicVol.getSlider().setMax(100.0);
+        voiceVol = myRS.makeSlider("Voice",100.0,consumer,0.0,0.0,500.0);
+        voiceVol.getSlider().setMin(0.0);
+        voiceVol.getSlider().setMax(100.0);
+        myBox.getChildren().addAll(saveFile,pickSplash,musicbox,minbox,stockbox, soundVol, musicVol, voiceVol);
         myBox.setLayoutX(50.0);
         myBox.setLayoutY(100.0);
-
     }
 
     private void getMusicFile(){
@@ -159,15 +177,17 @@ public class GameModeEditor extends EditorSuper {
         structure.put("splash", new ArrayList<>(List.of("bgFile")));
         structure.put("stock", new ArrayList<>(List.of("numLives")));
         structure.put("time", new ArrayList<>(List.of("numMinutes")));
+        structure.put("volume", new ArrayList<>(List.of("sound","music","voice")));
         HashMap<String, ArrayList<String>> data = new HashMap<>();
         data.put("bgFile", new ArrayList<>(List.of(splashFile.getName())));
         data.put("mFile", new ArrayList<>(List.of(bgMusic.getName())));
         data.put("numLives", new ArrayList<>(List.of(maxMinutes+"")));
         data.put("numMinutes", new ArrayList<>(List.of(maxStock+"")));
 
-        data.put("music", new ArrayList<>(List.of("100.0")));
-        data.put("voice", new ArrayList<>(List.of("100.0")));
-        data.put("sound", new ArrayList<>(List.of("100.0")));
+        data.put("sound", new ArrayList<>(List.of(soundVol.getValue()+"")));
+        data.put("music", new ArrayList<>(List.of(musicVol.getValue()+"")));
+        data.put("voice", new ArrayList<>(List.of(voiceVol.getValue()+"")));
+
         try {
             File xmlFile = Paths.get(myEM.getGameDirectoryString(),"gameproperties.xml").toFile();
             generateSave(structure, data, xmlFile);
@@ -177,5 +197,4 @@ public class GameModeEditor extends EditorSuper {
             System.out.println("Invalid save");
         }
     }
-
 }

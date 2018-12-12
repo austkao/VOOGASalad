@@ -35,12 +35,12 @@ public class AudioSystem {
         fightvol = 1;
         GameDir = GameDirectory;
         setRootPath();
-        ko = new AudioClip(GameDirectory.toURI()+"/ko.mp3");
+        ko = new AudioClip(GameDirectory.toURI()+"/data/bgm/ko.mp3");
         myMessageBus = EventBusFactory.getEventBus();
         myPlayer= new Player();
-        String menuPath = path + "/Theme.m4a";
+        String menuPath = path + "/data/bgm/Theme.m4a";
         String bgmPath = path + "/data/bgm/BGM.mp3";
-        String fightPath = path + "/Fight.m4a";
+        String fightPath = path + "/data/bgm/Fight.m4a";
         try {
             menuMP = new MediaPlayer(new Media(new File(menuPath).toURI().toURL().toString()));
             bgmMP = new MediaPlayer(new Media(new File(bgmPath).toURI().toURL().toString()));
