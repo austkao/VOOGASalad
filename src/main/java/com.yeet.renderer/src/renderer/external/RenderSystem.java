@@ -89,7 +89,7 @@ public class RenderSystem implements Renderer{
         button.setMaxSize(width,height);
         Font finalFont = font;
         //BUTTON_SCALE: Double xScale, Double yScale
-        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
+        button.setOnMouseEntered(event->button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(Color.DARKGOLDENROD),finalFont.getName(),height,fontSize, myButtonScaleFactor,myButtonScaleFactor)));
         button.setOnMouseExited(event -> button.setStyle(String.format(BUTTON_FORMAT+BUTTON_SCALE,toRGBCode(buttonColor),finalFont.getName(),height,fontSize,1.0,1.0)));
         return button;
     }
@@ -334,7 +334,7 @@ public class RenderSystem implements Renderer{
         return fileList;
     }
 
-    public void createErrorAlert(String title, String text){
+    public static void createErrorAlert(String title, String text){
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setHeaderText(title);
         errorAlert.setContentText(text);

@@ -45,6 +45,7 @@ public class MapEditor extends EditorSuper {
     private static final String DEFAULT_IMAGE_DIR = "/data/tiles";
     private static final String TAG_PATH = "tags";
     private static final String DEFAULT_BGM = "BGM.mp3";
+    private static final String[] BUTTONS = {"Save File","Choose Tile","Set Background","Reset Grid","Map Settings"};
 
     private Image currentTileFile;
     private String myCurrentTileName;
@@ -55,7 +56,7 @@ public class MapEditor extends EditorSuper {
     private ResourceBundle myTags;
     private File myStageDirectory;
     private File backgroundFile;
-    private HBox myButtons;
+    private HBox myButtonBox;
 
     /**
      * Constructs the Map Editor object given the root and the editor manager
@@ -66,7 +67,7 @@ public class MapEditor extends EditorSuper {
         myBackgroundImage = DEFAULT_BACKGROUND_IMAGE;
         myBGMFileName = DEFAULT_BGM;
         try {
-            initializeLevel(1008, 630, 260, 120,
+            initializeLevel(960, 600, 260, 150,
                     this.getClass().getClassLoader().getResource(DEFAULT_BACKGROUND_IMAGE).toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -78,7 +79,7 @@ public class MapEditor extends EditorSuper {
         myCurrentTileName = si.getButton().getText();
         level.setOnMouseClicked(e -> clickProcessTile(e));
         initializeButtons();
-        root.getChildren().add(myButtons);
+        root.getChildren().add(myButtonBox);
         backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
     }
 
@@ -94,42 +95,32 @@ public class MapEditor extends EditorSuper {
 
     private void initializeScrollPane(){
         File paneFile = new File(myEM.getGameDirectoryString()+DEFAULT_IMAGE_DIR);
-        myScrollablePane = new ScrollablePaneNew(paneFile,15,120.0, 250, 600);
+        myScrollablePane = new ScrollablePaneNew(paneFile,15,147.0, 240, 600);
         for(Scrollable b: myScrollablePane.getItems()){
             b.getButton().setOnMouseClicked(e -> selectTileFromScroll(b.getImage(), b.getButton().getText()));
         }
         root.getChildren().add(myScrollablePane.getScrollPane());
     }
 
+
     private void initializeButtons(){
-        myButtons = new HBox(5);
-        Button addBG = myRS.makeStringButton("Set Background", Color.CRIMSON,true,Color.WHITE,
-                20.0,0.0,0.0,200.0,50.0);
-        addBG.setOnMouseClicked(e -> chooseBackground());
-
-        Button resetGrid = myRS.makeStringButton("Reset Grid", Color.CRIMSON, true, Color.WHITE,
-                20.0,0.0, 0.0, 200.0, 50.0);
-        resetGrid.setOnMouseClicked(e -> level.resetGrid());
-
-        Button chooseTile = myRS.makeStringButton("Choose Tile", Color.CRIMSON, true, Color.WHITE,
-                20.0,0.0, 0.0, 200.0, 50.0);
-        chooseTile.setOnMouseClicked(e -> chooseTileImage());
-
-        Button saveFile = myRS.makeStringButton("Save File", Color.CRIMSON, true, Color.WHITE,
-                20.0,0.0, 0.0, 200.0, 50.0);
-        saveFile.setOnMouseClicked(e -> createSaveFile());
-        Button input = myRS.makeStringButton("go to input", Color.CRIMSON, true, Color.WHITE,
-                20.0,0.0, 0.0, 200.0, 50.0);
-        input.setOnMouseClicked(e -> myEM.goToInput(this));
-        Button settings = myRS.makeStringButton("Map Settings", Color.CRIMSON, true, Color.WHITE,
-                20.0,0.0, 0.0, 200.0, 50.0);
-        settings.setOnMouseClicked(e -> {
+        myButtonBox = new HBox(30);
+        List<Button> buttons = new ArrayList<>();
+        for(int i = 0; i < BUTTONS.length; i++){
+            Button b = myRS.makeStringButton(BUTTONS[i],Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
+            myButtonBox.getChildren().add(b);
+            buttons.add(b);
+        }
+        buttons.get(0).setOnMouseClicked(e -> createSaveFile());
+        buttons.get(1).setOnMouseClicked(e -> chooseTileImage());
+        buttons.get(2).setOnMouseClicked(e -> chooseBackground());
+        buttons.get(3).setOnMouseClicked(e -> level.resetGrid());
+        buttons.get(4).setOnMouseClicked(e -> {
             MapSettings s = new MapSettings(this);
             s.setScene();
         });
-        myButtons.getChildren().addAll(saveFile,chooseTile,settings,resetGrid,addBG,input);
-        myButtons.setLayoutX(60.0);
-        myButtons.setLayoutY(70.0);
+        myButtonBox.setLayoutX(90.0);
+        myButtonBox.setLayoutY(70.0);
     }
 
     /**
