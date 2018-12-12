@@ -36,7 +36,7 @@ public class CombatSystem {
     private HashMap<Integer, Rectangle2D> tileMap;
     private static final int TILE_STARTING_ID = 1000;
     private static int tileID = TILE_STARTING_ID;
-    private static final int PLAYER_STARTING_ID = 1;
+    private static final int PLAYER_STARTING_ID = 0;
     private static int playerID = PLAYER_STARTING_ID;
 
 
@@ -74,11 +74,13 @@ public class CombatSystem {
         // register players to physics engine
         for(int i = 0; i < playerMap.keySet().size(); i++){
 //            System.out.println("MIN X: " + playerMap.get(i).getX());
-            physicsSystem.addPhysicsObject(0, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60);
+            physicsSystem.addPhysicsObject(playerID, PhysicsSystem.DEFAULT_MASS, playerMap.get(i).getX(), playerMap.get(i).getY(),40,60);
+            playerID++;
         }
         // register tiles to physics engine
         for(int i=0;i < tileMap.keySet().size(); i++){
-            physicsSystem.addPhysicsObject(2,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
+            physicsSystem.addPhysicsObject(tileID,0, tileMap.get(i).getX(),tileMap.get(i).getY(),tileMap.get(i).getWidth(),tileMap.get(i).getHeight());
+            tileID++;
         }
 
         // get hit boxes and hurt boxes information
@@ -247,7 +249,7 @@ public class CombatSystem {
     public void onPlayerDeath(PlayerDeathEvent playerDeathEvent){
         int id = playerDeathEvent.getId();
         playerManager.respawnPlayer(id, characterStats.get(id));
-        physicsSystem.addPhysicsObject(0, physicsSystem.DEFAULT_MASS, tileMap.get(id).getX(), tileMap.get(id).getY(), 40, 60);
+        physicsSystem.addPhysicsObject(id, physicsSystem.DEFAULT_MASS, tileMap.get(id).getX(), tileMap.get(id).getY(), 40, 60);
     }
 
 }
