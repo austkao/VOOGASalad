@@ -63,6 +63,7 @@ public class CharacterGrid extends VBox {
                     portrait.setPreserveRatio(true);
                     portrait.setFitWidth(132);
                     XMLParser characterPropertiesParser = new XMLParser(new File(directory.getPath()+"/characters/"+files.get((charactersPerRow*(i))+j).getName()+"/characterproperties.xml"));
+
                     HashMap<String, ArrayList<String>> thumbnailBoxInfo = characterPropertiesParser.parseFileForElement("thumbnail");
 
                     double x = Double.parseDouble(thumbnailBoxInfo.get("thumbX").get(0));
