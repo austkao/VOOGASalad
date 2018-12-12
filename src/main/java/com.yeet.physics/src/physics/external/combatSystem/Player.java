@@ -115,6 +115,12 @@ public class Player {
         }
     }
 
+    public void resetCombatStats(ArrayList<Double> stats){
+        this.attackDamage = stats.get(0);
+        this.defense = stats.get(1);
+        this.health = stats.get(2);
+    }
+
     public boolean isBot(){
         return isBot;
     }

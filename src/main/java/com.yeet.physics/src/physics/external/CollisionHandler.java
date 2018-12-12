@@ -36,7 +36,7 @@ public class CollisionHandler {
             PhysicsObject one = col.getCollider1();
             PhysicsObject two = col.getCollider2();
             if(one.getId() == 1 && two.getId() > 100){
-                System.out.println(col.getSide().getMySide());
+                //System.out.println(col.getSide().getMySide());
             }
             if (one.isPhysicsBody() && two.isPhysicsGround()) {
                 filterGroundCollisions(groundCols, one, col);

@@ -188,11 +188,20 @@ public class CharacterEditor extends EditorSuper {
         if (testNull(portraitFile, "File not valid"))
             return;
         Rectangle thumbRec = new Rectangle();
-        getRectOnImageView("Draw Thumbnail, then close window to continue",
+        double thumbScale = getRectOnImageView("Draw Thumbnail, then close window to continue",
                 new ImageView(new Image(portraitFile.toURI().toString())), Color.PURPLE, thumbRec, thumbnailAspectRatio);
         Rectangle portRec = new Rectangle();
-        getRectOnImageView("Draw Portrait, then close window to continue",
+        double portScale = getRectOnImageView("Draw Portrait, then close window to continue",
                 new ImageView(new Image(portraitFile.toURI().toString())), Color.PEACHPUFF, portRec, portraitAspectRatio);
+        thumbRec.setWidth(thumbRec.getWidth()*thumbScale);
+        thumbRec.setHeight(thumbRec.getHeight()*thumbScale);
+        thumbRec.setX(thumbRec.getX()*thumbScale);
+        thumbRec.setY(thumbRec.getY()*thumbScale);
+
+        portRec.setWidth(portRec.getWidth()*portScale);
+        portRec.setHeight(portRec.getHeight()*portScale);
+        portRec.setX(portRec.getX()*portScale);
+        portRec.setY(portRec.getY()*portScale);
 
         setPortrait(portraitFile.toURI().toString(), thumbRec, portRec);
     }
@@ -201,19 +210,20 @@ public class CharacterEditor extends EditorSuper {
         this.thumbnail = thumbnail;
         portraitRectangle = portraitRect;
     }
-    private void getRectOnImageView(String message, ImageView imgview, Color color, Rectangle ret, double ratio){
+    private double getRectOnImageView(String message, ImageView imgview, Color color, Rectangle ret, double ratio){
         Stage popUpPicture = new Stage();
+
+        double scale = imgview.getImage().getHeight()/600.0;
         imgview.setFitHeight(600);
-        imgview.setPreserveRatio(true);
+
         popUpPicture.setTitle(message);
         Group newRoot = new Group();
         Scene pictureWindow = new Scene(newRoot);
         popUpPicture.setScene(pictureWindow);
-
-
         newRoot.getChildren().add(imgview);
+        imgview.setPreserveRatio(true);
         AtomicReference<Point2D> anchor = new AtomicReference<>(new Point2D(0.0, 0.0));
-        imgview.setOnMousePressed(e -> {
+        pictureWindow.setOnMousePressed(e -> {
             ret.setFill(BOX_FILL);
             ret.setStroke(color);
             ret.setStrokeWidth(BOX_STROKE);
@@ -221,15 +231,16 @@ public class CharacterEditor extends EditorSuper {
             ret.setX(e.getX());
             ret.setY(e.getY());
         });
-        imgview.setOnMouseDragged(e -> {
+        pictureWindow.setOnMouseDragged(e -> {
             updateRectangle(e, anchor.get(), ret, ratio);
         });
 
         newRoot.getChildren().add(ret);
-
         while (ret.getWidth() == 0 || ret.getHeight() == 0){
             popUpPicture.showAndWait();
         }
+
+        return scale;
     }
 
     private void selectNewAnimationFromScroll(Scrollable b){
@@ -512,7 +523,6 @@ public class CharacterEditor extends EditorSuper {
             double portY = Double.parseDouble(portraitBoxInfo.get("y").get(0));
             double portS = Double.parseDouble(portraitBoxInfo.get("size").get(0));
 
-            System.out.println(myDirectory.getPath() + myDirectory.getName());
             File portraitFile = Paths.get(myDirectory.getPath(), myDirectory.getName() + ".png").toFile();
             setPortrait(portraitFile.toURI().toString(), new Rectangle(thumbX, thumbY, thumbW, thumbH),
                     new Rectangle(portX, portY, portS, portS));

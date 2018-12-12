@@ -53,7 +53,7 @@ public class MapSettings {
         initPhysicsValues();
         initConsumers();
         buildScene();
-        Button save = rs.makeStringButton("Save", Color.BLACK,true, Color.WHITE,15.0,250.0,200.0,150.0,40.0);
+        Button save = rs.makeStringButton("Save", Color.BLACK,true, Color.WHITE,15.0,250.0,170.0,150.0,40.0);
         save.setOnMouseClicked(e -> createSaveFile());
         root.getChildren().add(save);
     }
@@ -128,13 +128,13 @@ public class MapSettings {
 //    }
 
     private List<SliderBox> initSliderBoxes(){
-        gravityBox = rs.makeSlider("Gravity",1.0,consumerG,0.0,0.0,400.0);
+        gravityBox = rs.makeSlider("Gravity",1.0,consumerG,0.0,0.0,500.0);
         gravityBox.getSlider().setMin(-1.0);
         gravityBox.getSlider().setMax(800.0);
-        frictionBox = rs.makeSlider("Friction",25.0,consumerF,0.0,0.0,400.0);
+        frictionBox = rs.makeSlider("Friction",25.0,consumerF,0.0,0.0,500.0);
         frictionBox.getSlider().setMin(0.0);
         frictionBox.getSlider().setMax(5);
-        terminalBox = rs.makeSlider("Terminal Velocity",25.0,consumerT,0.0,0.0,400.0);
+        terminalBox = rs.makeSlider("Terminal Velocity",25.0,consumerT,0.0,0.0,500.0);
         terminalBox.getSlider().setMin(0.0);
         terminalBox.getSlider().setMax(600.0);
         List<SliderBox> s = new ArrayList<>();
@@ -153,8 +153,6 @@ public class MapSettings {
         data.put("gValue", new ArrayList<>(List.of(gravityBox.getValue()+"")));
         data.put("meuValue", new ArrayList<>(List.of(frictionBox.getValue()+"")));
         data.put("vtValue", new ArrayList<>(List.of(terminalBox.getValue()+"")));
-        System.out.println(structure);
-        System.out.println(data);
         try {
             File xmlFile = Paths.get(prev.getDirectoryString(), "physicsproperties.xml").toFile();
             if (xmlFile != null) {
@@ -163,7 +161,7 @@ public class MapSettings {
                 throw new IOException("Invalid save location");
             }
         } catch (IOException e) {
-            System.out.println("An error occurred during the save process");
+            rs.createErrorAlert("Save error occurred","Check code logic");
         }
     }
 

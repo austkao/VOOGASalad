@@ -44,7 +44,6 @@ public class MapEditor extends EditorSuper {
     private static final String DEFAULT_BACKGROUND_IMAGE = "fd.jpg";
     private static final String DEFAULT_IMAGE_DIR = "/data/tiles";
     private static final String TAG_PATH = "tags";
-    private static final String ALL_MAPS = "allmaps/";
     private static final String DEFAULT_BGM = "BGM.mp3";
     private static final String[] BUTTONS = {"Save File","Choose Tile","Set Background","Reset Grid","Map Settings"};
 
@@ -210,7 +209,7 @@ public class MapEditor extends EditorSuper {
         return myStageDirectory.getPath();
     }
 
-    private void snapShot(Node node,String dir) {
+    private void snapShot(Node node) {
         WritableImage img = node.snapshot(new SnapshotParameters(), null);
         File file = Paths.get(myStageDirectory.getPath(), myStageDirectory.getName()+".png").toFile();
         try {
@@ -236,12 +235,11 @@ public class MapEditor extends EditorSuper {
         try {
             File xmlFile = Paths.get(myStageDirectory.getPath(), "stageproperties.xml").toFile();
             generateSave(structure, levelMap, xmlFile);
-            snapShot(level,ALL_MAPS);
-
+            snapShot(level);
             root.getChildren().add(saved);
             isSaved = true;
         } catch (Exception ex) {
-            System.out.println("Invalid save");
+            myRS.createErrorAlert("Could not save file","Please check code logic");
         }
     }
 
@@ -265,8 +263,7 @@ public class MapEditor extends EditorSuper {
                 level.processTile(Integer.parseInt(xPos.get(i)), Integer.parseInt(yPos.get(i)), new Image(imageFile.toURI().toString()), image.get(i));
             }
         } catch (Exception ex) {
-            System.out.println("Cannot load file");
-            ex.printStackTrace();
+            myRS.createErrorAlert("Could not load file","Please check resources folder");
         }
     }
 }
