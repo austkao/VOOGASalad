@@ -39,10 +39,10 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     private Consumer consumer;
     protected EventBus myEB;
 
-    public EditorHome(Group root, EditorManager em) {
+    public EditorHome(Group root, EditorManager prev) {
         super(root);
         myRoot = root;
-        this.em = em;
+        em = prev;
         rs = new RenderSystem();
         myEB = EventBusFactory.getEventBus();
         initializeVBox();
@@ -82,7 +82,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         buttonNew = rs.makeStringButton("New " + toString().split(" ")[0], Color.BLACK, true, Color.WHITE, 30.0, 0.0, 0.0, 300.0, 50.0);
         buttonEdit = rs.makeStringButton("Edit " + toString().split(" ")[0], Color.BLACK, true, Color.WHITE, 30.0, 0.0, 0.0, 300.0, 50.0);
         buttonDelete = rs.makeStringButton("Delete " + toString().split(" ")[0], Color.BLACK, true, Color.WHITE, 30.0, 0.0, 0.0, 300.0, 50.0);
-        Button buttonBack = createBack(new Scene(new Group()));
+        Button buttonBack = createBack();
         buttonNew.setOnMouseClicked(e -> em.changeScene(myEditor));
         myBox.getChildren().addAll(buttonNew, buttonEdit, buttonDelete, buttonBack);
         myBox.setLayoutX(800);
@@ -99,10 +99,15 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         return rs.makeText(toString(), true, 20, Color.BLACK, 50.0, 50.0);
     }
 
-    public Button createBack(Scene scene) {
+    public Button createBack() {
         Button buttonBack = rs.makeStringButton("Back", Color.BLACK, true, Color.WHITE, 30.0, 0.0, 0.0, 300.0, 50.0);
-        buttonBack.setOnMouseClicked(e -> em.setEditorHomeScene());
+        buttonBack.setOnMouseClicked(e -> goBack());
         return buttonBack;
+    }
+
+    @Override
+    public void goBack() {
+        em.setEditorHomeScene();
     }
 
     protected void nameNewObject(String title, String label) {
@@ -131,7 +136,7 @@ public abstract class EditorHome extends Scene implements EditorScreen {
     }
 
     @Override
-    public String getGameDirectoryString() {
+    public String getDirectoryString() {
         return em.getGameDirectoryString();
     }
 }

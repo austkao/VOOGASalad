@@ -27,18 +27,21 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
 
     protected Group root;
     protected EditorManager myEM;
+    protected Scene myPrevScreen;
     protected RenderSystem myRS;
     protected EditorConstant myEC;
     protected boolean isSaved;
     protected Text saved;
 
-    public EditorSuper(Group root, EditorManager em){
+    public EditorSuper(Group root, EditorManager em, Scene prev){
         super(root);
         this.root = root;
         myEM = em;
         myRS = new RenderSystem();
+        myPrevScreen = prev;
         Text t = createTitle();
-        root.getChildren().add(t);
+        Button back = createBack();
+        root.getChildren().addAll(back, t);
         isSaved = true;
         saved = myRS.makeText("Saved", true, 20, Color.BLACK, 200.0, 60.0);
     }
@@ -46,34 +49,11 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     /**
      * Creates back button to the editor landing page
      */
-    public Button createBack(Scene scene){
+    @Override
+    public Button createBack(){
         Button back = myRS.makeStringButton("Back", Color.BLACK,true,Color.WHITE,30.0,myEC.BACKBUTTONXPOSITION.getValue(),0.0,150.0,50.0);
-        back.setOnMouseClicked(e -> {
-            if(isSaved) {
-                myEM.changeScene(scene);
-                if(scene instanceof MapHome) {
-                    MapHome home = (MapHome) scene;
-                    home.updateScroll("stages");
-                } else if(scene instanceof CharacterHome) {
-                    CharacterHome home = (CharacterHome) scene;
-                    home.updateScroll("characters");
-                }
-            } else {
-                myRS.createErrorAlert("Not Allowed to Go Back", "Please save your changes first");
-            }
-        });
-        root.getChildren().add(back);
+        back.setOnMouseClicked(e -> goBack());
         return back;
-    }
-
-    /**
-     * Creates save button to the editor landing page
-     */
-    public void createSave(){
-        Button save = myRS.makeStringButton("Save", Color.BLACK,true,Color.WHITE,30.0,800.0,0.0,150.0,50.0);
-        //TODO figure out save functionality
-        //save.setOnMouseClicked(e -> em.setEditorHomeScene());
-        root.getChildren().add(save);
     }
 
     public XMLParser loadXMLFile(File xmlFile) {
@@ -84,7 +64,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
                 throw new IOException("Cannot load file");
             }
         } catch (IOException e) {
-            System.out.println("An error has occurred.");
+            myRS.createErrorAlert("Invalid XML File","Please check your resources folder");
             return null;
         }
     }
@@ -97,7 +77,7 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
                 throw new IOException("Invalid save location");
             }
         } catch (IOException e) {
-            System.out.println("An error occurred during the save process");
+            myRS.createErrorAlert("Invalid save structures", "Please check your save logic");
         }
     }
 
@@ -108,7 +88,30 @@ public abstract class EditorSuper extends Scene implements EditorScreen {
     }
 
     @Override
-    public String getGameDirectoryString() {
+    public String getDirectoryString() {
         return myEM.getGameDirectoryString();
+    }
+
+    @Override
+    public void goBack() {
+        if(isSaved) {
+            myEM.changeScene(myPrevScreen);
+            if(myPrevScreen instanceof MapHome) {
+                MapHome home = (MapHome) myPrevScreen;
+                home.updateScroll("stages");
+            } else if(myPrevScreen instanceof CharacterHome) {
+                CharacterHome home = (CharacterHome) myPrevScreen;
+                home.updateScroll("characters");
+            }
+        } else {
+            myRS.createErrorAlert("Not Allowed to Go Back", "Please save your changes first");
+        }
+    }
+
+    protected void updateToUnsaved() {
+        if(isSaved) {
+            isSaved = false;
+            root.getChildren().remove(saved);
+        }
     }
 }

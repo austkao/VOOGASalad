@@ -16,8 +16,7 @@ public class GameModeHome extends EditorHome {
 
     @Override
     public void setEditor() {
-        myEditor = new GameModeEditor(new Group(),em);
-        myEditor.createBack(this);
+        myEditor = new GameModeEditor(em, this);
     }
 
     @Override
