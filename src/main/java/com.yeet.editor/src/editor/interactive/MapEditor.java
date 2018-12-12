@@ -45,7 +45,7 @@ public class MapEditor extends EditorSuper {
     private static final String DEFAULT_IMAGE_DIR = "/data/tiles";
     private static final String TAG_PATH = "tags";
     private static final String DEFAULT_BGM = "BGM.mp3";
-    private static final String[] BUTTONS = {"Save File","Choose Tile","Set Background","Reset Grid","Map Settings"};
+    private static final String[] BUTTONS = {"Save File","Choose Tile","Choose Music","Set Background","Reset Grid","Map Settings"};
 
     private Image currentTileFile;
     private String myCurrentTileName;
@@ -56,6 +56,7 @@ public class MapEditor extends EditorSuper {
     private ResourceBundle myTags;
     private File myStageDirectory;
     private File backgroundFile;
+    private File musicFile;
     private HBox myButtonBox;
 
     /**
@@ -81,6 +82,7 @@ public class MapEditor extends EditorSuper {
         initializeButtons();
         root.getChildren().add(myButtonBox);
         backgroundFile = Paths.get(myEM.getGameDirectoryString(), "data","background").toFile();
+        musicFile = Paths.get(myEM.getGameDirectoryString(), "data","bgm").toFile();
     }
 
     public MapEditor(EditorManager em, Scene prev, File xmlFile, boolean isEdit) {
@@ -107,15 +109,16 @@ public class MapEditor extends EditorSuper {
         myButtonBox = new HBox(30);
         List<Button> buttons = new ArrayList<>();
         for(int i = 0; i < BUTTONS.length; i++){
-            Button b = myRS.makeStringButton(BUTTONS[i],Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,200.0,50.0);
+            Button b = myRS.makeStringButton(BUTTONS[i],Color.BLACK,true,Color.WHITE,20.0,0.0,0.0,150.0,50.0);
             myButtonBox.getChildren().add(b);
             buttons.add(b);
         }
         buttons.get(0).setOnMouseClicked(e -> createSaveFile());
         buttons.get(1).setOnMouseClicked(e -> chooseTileImage());
-        buttons.get(2).setOnMouseClicked(e -> chooseBackground());
-        buttons.get(3).setOnMouseClicked(e -> level.resetGrid());
-        buttons.get(4).setOnMouseClicked(e -> {
+        buttons.get(2).setOnMouseClicked(e -> chooseMusic());
+        buttons.get(3).setOnMouseClicked(e -> chooseBackground());
+        buttons.get(4).setOnMouseClicked(e -> level.resetGrid());
+        buttons.get(5).setOnMouseClicked(e -> {
             MapSettings s = new MapSettings(this);
             s.setScene();
         });
@@ -158,6 +161,17 @@ public class MapEditor extends EditorSuper {
         backgroundList.setOnMouseClicked(e -> {
             myBackgroundImage = backgroundList.getSelectionModel().getSelectedItem();
             level.setBackground(backgroundFile.toURI()+"/"+myBackgroundImage);
+            edit.close();
+        });
+        edit.show();
+    }
+
+    private void chooseMusic(){
+        ListView<String> musicList = myRS.makeDirectoryFileList(musicFile, false);
+        Stage edit = new Stage();
+        edit.setScene(new Scene(new Group(musicList)));
+        musicList.setOnMouseClicked(e -> {
+            myBGMFileName = musicList.getSelectionModel().getSelectedItem();
             edit.close();
         });
         edit.show();
