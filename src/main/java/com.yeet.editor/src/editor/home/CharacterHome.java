@@ -66,7 +66,7 @@ public class CharacterHome extends EditorHome {
             myScroll.removeItem();
             String characterName = bb.getText();
             File stageDirectory = Paths.get(em.getGameDirectoryString(), "characters", characterName).toFile();
-            deleteDirectory(stageDirectory);
+            confirmDelete(stageDirectory);
         }
     }
 

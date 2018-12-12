@@ -91,7 +91,6 @@ public class Main extends Application {
         EventBusFactory.getEventBus().register(myPlayer);
         EventBusFactory.getEventBus().register(myConsole);
         //display setup
-
         myPopup = createErrorPopup();
         ImageView displayFiller = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("home_splash_filler.png")));
         displayFiller.setX(80.0);
@@ -122,6 +121,7 @@ public class Main extends Application {
     }
 
     private void makeGameDirectory(String game){
+        newGamePopup.close();
         Path userPath = Paths.get(System.getProperty("user.dir"));
         myDirectory = new File(userPath+RESOURCE_PATH + "/"+game);
         myEB.post(new CreateGameEvent("new game", myDirectory));
