@@ -261,7 +261,8 @@ public class CombatSystem {
         for(int id: positionMap.keySet()){
             Point2D pos = positionMap.get(id);
             if(pos.getX()+40<0||pos.getX()-40>1200||pos.getY()+60<0||pos.getY()-60>800){
-                eventBus.post(new PlayerDeathEvent(id, playerManager.getPlayerByID(id).loseLife()));
+                int remainingLife = playerManager.outOfScreen(id);
+                eventBus.post(new PlayerDeathEvent(id, remainingLife));
             }
         }
 

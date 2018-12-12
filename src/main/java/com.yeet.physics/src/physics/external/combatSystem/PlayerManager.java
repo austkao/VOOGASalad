@@ -27,6 +27,7 @@ public class PlayerManager {
         playerMap = new HashMap<>();
         ranking = new LinkedList<>();
         this.numOfPlayers = numOfPlayers;
+        this.numOfAlivePlayers = numOfPlayers;
         for(int id = INITIAL_ID; id < numOfPlayers; id++){
             playerMap.put(id, new Player(id));
         }
@@ -36,6 +37,7 @@ public class PlayerManager {
         playerMap = new HashMap<>();
         ranking = new LinkedList<>();
         this.numOfPlayers = numOfPlayers;
+        this.numOfAlivePlayers = numOfPlayers;
         for(int id = INITIAL_ID; id < numOfPlayers; id++){
             ArrayList<Double> stat = stats.get(id);
             playerMap.put(id, new Player(id, stat.get(0), stat.get(1), stat.get(2)));
@@ -95,6 +97,24 @@ public class PlayerManager {
             }
         }
         return false;
+    }
+
+    public int outOfScreen(int id){
+        int remainingLife = getPlayerByID(id).loseLife();
+        if(remainingLife<=0){
+            ranking.offer(id);
+            if(--numOfAlivePlayers==1){
+                for(int i: playerMap.keySet()){
+                    if(playerMap.get(i).isAlive()){
+                        winnerID = i;
+                        ranking.offer(winnerID);
+                        eventBus.post(new GameOverEvent(winnerID, getRanking()));
+                        break;
+                    }
+                }
+            }
+        }
+        return remainingLife;
     }
 
 //    <0,3,1,2> 2 is first place
