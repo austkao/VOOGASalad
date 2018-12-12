@@ -27,6 +27,7 @@ public class Player {
     private Player beingAttackedBy;
     private PlayerState playerState;
     private boolean isBot;
+    private boolean isAlive = true;
 
     public Player(){
         playerState = PlayerState.INITIAL;
@@ -89,6 +90,7 @@ public class Player {
 
     public int loseLife(){
         this.numOfLives -= 1;
+        if(numOfLives<=0) isAlive = false;
         return this.numOfLives;
     }
 
@@ -123,6 +125,10 @@ public class Player {
 
     public boolean isBot(){
         return isBot;
+    }
+
+    public boolean isAlive(){
+        return isAlive;
     }
 
     @Override

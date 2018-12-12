@@ -9,9 +9,19 @@ package physics.external;
 
 public class PhysicsBody extends PhysicsObject {
 
-    
+    private int respawnX;
+    private int respawnY;
+
     public PhysicsBody(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord){
+         super(id, mass, start, dims, cord);
+         this.respawnX = 250;
+         this.respawnY = 250; 
+     }
+
+    public PhysicsBody(int id, double mass, Coordinate start, Dimensions dims, CoordinateObject cord, int respawnX, int respawnY){
         super(id, mass, start, dims, cord);
+        this.respawnX = respawnX;
+        this.respawnY = respawnY;
     }
 
     @Override
@@ -31,6 +41,19 @@ public class PhysicsBody extends PhysicsObject {
     @Override
     public boolean isPhysicsBody(){
         return true;
+    }
+
+    public void respawn(){
+        this.setVelocity(new PhysicsVector(0,0));
+        this.getMyCoordinateBody().setPos(this.getRespawnX(), this.getRespawnY());
+    }
+
+    public double getRespawnX(){
+        return this.respawnX;
+    }
+
+    public double getRespawnY(){
+        return this.respawnY;
     }
 
 }
