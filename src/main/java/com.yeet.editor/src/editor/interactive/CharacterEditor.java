@@ -255,12 +255,19 @@ public class CharacterEditor extends EditorSuper {
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHitBox());
             mySpritePane.getChildren().remove(animationFrame.get(currentAnimation).getHurtBox());
         }
-        currentAnimation = nameToAnimation.get(b.getButton().getText());
-        AnimationInfo frame = animationFrame.get(currentAnimation);
-        frame.setCurrentFrame(1);
-        currentAnimation.jumpTo(new Duration(0));
-        currentAnimation.stop();;
-        stepForwardAnimation();
+        if (currentAnimation == nameToAnimation.get(b.getButton().getText())){
+            currentAnimation = null;
+            return;
+        }
+        else{
+            currentAnimation = nameToAnimation.get(b.getButton().getText());
+            AnimationInfo frame = animationFrame.get(currentAnimation);
+            frame.setCurrentFrame(1);
+            currentAnimation.jumpTo(new Duration(0));
+            currentAnimation.stop();;
+            stepForwardAnimation();
+        }
+
     }
     private void chooseSpriteSheet(){
         mySpritePane.getChildren().remove(currentSprite);
