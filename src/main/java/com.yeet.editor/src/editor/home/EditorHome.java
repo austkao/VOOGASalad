@@ -63,7 +63,8 @@ public abstract class EditorHome extends Scene implements EditorScreen {
         ScrollablePaneNew scrollPane = new ScrollablePaneNew(200,150, 520, 600);
         for(File file : dir.listFiles()) {
             if(file.isDirectory()) {
-                scrollPane.loadFiles(file);
+                scrollPane.loadFiles(file,".png");
+                scrollPane.loadFiles(file,".jpg");
             }
         }
         switchView = rs.makeStringButton("Switch", Color.BLACK,true, Color.WHITE,20.0,20.0,100.0,100.0,30.0);
