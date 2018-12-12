@@ -48,6 +48,8 @@ public class CombatScreen extends Screen {
     private EventBus myMessageBus;
     private Recorder myRecorder;
 
+    private boolean isRecording;
+
     private SceneSwitch prevScene;
     private BiConsumer<Integer, ArrayList<Integer>> nextScene;
 
@@ -75,8 +77,9 @@ public class CombatScreen extends Screen {
 
     private ScreenTimer myTimer;
 
-    public CombatScreen(Group root, Renderer renderer, File gameDirectory, SceneSwitch prevScene, BiConsumer<Integer, ArrayList<Integer>> nextScene) {
+    public CombatScreen(Group root, Renderer renderer, File gameDirectory, boolean record, SceneSwitch prevScene, BiConsumer<Integer, ArrayList<Integer>> nextScene) {
         super(root, renderer);
+        isRecording = record;
         //set up message bus
         myMessageBus = EventBusFactory.getEventBus();
         myMessageBus.register(this);
@@ -211,12 +214,15 @@ public class CombatScreen extends Screen {
     public void stopLoop(){
         myTimer.pause();
         myRecorder.stop();
-        try {
-            myRecorder.save();
-        } catch (SaveReplayFailedException e) {
-            e.printStackTrace();
-            myMessageBus.post(new SaveReplayFailedEvent());
+        if(isRecording){
+            try {
+                myRecorder.save();
+            } catch (SaveReplayFailedException e) {
+                e.printStackTrace();
+                myMessageBus.post(new SaveReplayFailedEvent());
+            }
         }
+
         //TODO: stops game loop
         myGameLoop.stopLoop();
     }

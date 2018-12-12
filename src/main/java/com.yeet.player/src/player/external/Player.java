@@ -38,6 +38,7 @@ public class Player {
     private SoundsSettingsScreen mySoundsSettingsScreen;
     private CharacterSelectScreen myCharacterSelectScreen;
     private ReplayScreen myReplayScreen;
+    private ReplayViewerScreen myReplayViewerScreen;
     private MatchRulesScreen myMatchRulesScreen;
     private StageSelectScreen myStageSelectScreen;
     private CombatScreen myCombatScreen;
@@ -82,7 +83,12 @@ public class Player {
             myStage.setScene(myReplayScreen);
         });
         mySoundsSettingsScreen = new SoundsSettingsScreen(myDirectory,new Group(),myRenderer,backgroundImage,()->myStage.setScene(mySettingsScreen),(volume)->mySEPlayer.setVolume(volume));
-        myReplayScreen = new ReplayScreen(new Group(),myRenderer,backgroundImage,myDirectory,()->myStage.setScene(myMainMenuScreen));
+        myReplayScreen = new ReplayScreen(new Group(),myRenderer,backgroundImage,myDirectory,()->myStage.setScene(myMainMenuScreen),
+                ()-> {
+                    myReplayViewerScreen.setUpReplayViewer(myReplayScreen.getCharacters(),myReplayScreen.getColors(),myReplayScreen.getGameMode(),myReplayScreen.getTypeValue(),myReplayScreen.getStageName());
+                    myStage.setScene(myReplayViewerScreen);
+                });
+        myReplayViewerScreen = new ReplayViewerScreen(new Group(),myRenderer,myDirectory,backgroundImage,myReplayScreen.getReplayPlayer(),()->myStage.setScene(myReplayScreen));
         myCharacterSelectScreen = new CharacterSelectScreen(new Group(), myRenderer, myDirectory, ()-> {
             myStage.setScene(myMainMenuScreen);
             myMessageBus.post(new FightEndEvent());
@@ -100,7 +106,7 @@ public class Player {
             myStage.setScene(myCombatScreen);
             myCombatScreen.startLoop();
         });
-        myCombatScreen =  new CombatScreen(new Group(),myRenderer,myDirectory,()->myStage.setScene(myCharacterSelectScreen),(winnerID,rankList)-> {
+        myCombatScreen =  new CombatScreen(new Group(),myRenderer,myDirectory,true,()->myStage.setScene(myCharacterSelectScreen),(winnerID,rankList)-> {
             //setup combat results screen
             myMessageBus.post(new MenuStartEvent());
             myCombatResultsScreen.setWinner(myCharacterSelectScreen.getCharacterList(),rankList, myCharacterSelectScreen.getCharacterChooserList());

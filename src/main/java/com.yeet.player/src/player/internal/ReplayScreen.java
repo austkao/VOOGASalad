@@ -45,6 +45,8 @@ public class ReplayScreen extends Screen {
 
     private ReplayPlayer replayPlayer;
 
+    private SceneSwitch replayViewerSwitch;
+
     private String[] fileNames;
     private ListView replayList;
     private ImageView replayPreview;
@@ -56,9 +58,10 @@ public class ReplayScreen extends Screen {
 
     private Image defaultimage;
 
-    public ReplayScreen(Group root, Renderer renderer, Image background, File gameDirectory, SceneSwitch mainMenuSwitch) {
+    public ReplayScreen(Group root, Renderer renderer, Image background, File gameDirectory, SceneSwitch mainMenuSwitch, SceneSwitch replayViewerSwitch) {
         super(root, renderer);
         this.gameDirectory = gameDirectory;
+        this.replayViewerSwitch = replayViewerSwitch;
         ImageView bg = new ImageView(background);
         bg.setFitHeight(800.0);
         bg.setFitWidth(1280.0);
@@ -66,6 +69,7 @@ public class ReplayScreen extends Screen {
         myMessageBar = new MessageBar(this.getMyRenderer().makeText("Replays",true,MESSAGEBAR_TITLE_FONTSIZE, Color.WHITE,0.0,0.0),
                 this.getMyRenderer().makeText("Relive your past matches!",false,MESSAGEBAR_MSG_FONTSIZE,Color.BLACK,0.0,0.0),
                 MESSAGEBAR_X,MESSAGEBAR_Y);
+        myMessageBar.hide();
         StackPane topBar = makeTopBar(super.getMyRenderer().makeText("Replays",true,55, Color.BLACK,0.0,0.0),
                 makeButton(new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("back_button.png"))),
                         "Back","Return to the main menu!",53.74,60.72,0.0,0.0,myMessageBar,
@@ -201,7 +205,7 @@ public class ReplayScreen extends Screen {
     }
 
     private void handlePlayClick(){
-
+        replayViewerSwitch.switchScene();
     }
 
     private void reset(){
@@ -219,6 +223,34 @@ public class ReplayScreen extends Screen {
     private void hidePlayButton(){
         playButton.setDisable(true);
         playButton.setOpacity(0.0);
+    }
+
+    public HashMap<Integer, String> getCharacters(){
+        return (HashMap<Integer, String>) replayPlayer.getCharacterMap().clone();
+    }
+
+    public HashMap<Integer, Color> getColors(){
+        HashMap<Integer, Color> colorMap = new HashMap<>();
+        for(Integer i : replayPlayer.getColorMap().keySet()){
+            colorMap.put(i,Color.web(replayPlayer.getColorMap().get(i)));
+        }
+        return colorMap;
+    }
+
+    public String getGameMode(){
+        return replayPlayer.getGameMode();
+    }
+
+    public int getTypeValue(){
+        return replayPlayer.getTypeValue();
+    }
+
+    public String getStageName(){
+        return replayPlayer.getStageName();
+    }
+
+    public ReplayPlayer getReplayPlayer(){
+        return replayPlayer;
     }
 
 }

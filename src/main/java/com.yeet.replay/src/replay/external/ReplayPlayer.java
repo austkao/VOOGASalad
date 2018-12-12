@@ -30,13 +30,16 @@ public class ReplayPlayer {
 
     public ReplayPlayer(EventBus eventBus){
         myEventBus = eventBus;
+        myEventBus.register(this);
         myTimer = new Timer();
         currentFrame = 0;
     }
 
     private void advanceReplay(){
         try{
-            myEventBus.post(eventList[currentFrame]);
+            if(eventList[currentFrame]!=null){
+                myEventBus.post(eventList[currentFrame]);
+            }
             currentFrame++;
         }
         catch(IndexOutOfBoundsException e){
