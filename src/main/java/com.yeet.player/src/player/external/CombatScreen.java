@@ -252,7 +252,7 @@ public class CombatScreen extends Screen {
                 // face right
                 mySpriteMap.get(i).setScaleX(-1);
             }
-            else if(directionsMap.get(i+1)==Math.PI){
+            else if(directionsMap.get(i)==Math.PI){
                 //face left
                 mySpriteMap.get(i).setScaleX(1);
             }

@@ -6,4 +6,3 @@
     <input DOWN="G" LEFT="B" RIGHT="N" JUMP="T" JAB="H"/>
     <players numPlayers="4"/>
 </VOOGASalad>
-
