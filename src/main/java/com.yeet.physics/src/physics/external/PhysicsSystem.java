@@ -46,6 +46,7 @@ public class PhysicsSystem {
         this.groundId = 1000;
     }
 
+    //Overall game loop for the physics engine, checks for passive forces, detects and handles collisions, applys forces, then updates new positions for each object
     public void update() {
         PassiveForceHandler passHandler = new PassiveForceHandler(gameObjects);
         passHandler.update();
